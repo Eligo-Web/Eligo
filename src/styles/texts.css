@@ -1,8 +1,8 @@
-.card-title {
+.card-title, .card-text {
     font-family: 'Inter';
     font-style: normal;
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     line-height: 1.2;
     letter-spacing: 0.00938em;
     color: #000;
@@ -10,4 +10,12 @@
     margin-top: 0.5rem;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
+}
+
+.card-title {
+    font-weight: 600;
+}
+
+.card-text {
+    font-weight: 400;
 }
