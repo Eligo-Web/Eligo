@@ -1,0 +1,12 @@
+.btn-primary {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2.5rem;
+
+  background-color: #b1e9a3;
+  /* mix-blend-mode: hard-light; */
+  border-radius: 50px;
+  border-width: 0;
+}

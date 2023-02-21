@@ -1,8 +1,12 @@
 import Card from "../components/Card";
+import PrimaryButton from "../components/Buttons/PrimaryButton";
 
 function InAppContainer() {
   return (
-    <Card />
+    <div>
+      <Card />
+      <PrimaryButton />
+    </div>
   );
 }
 

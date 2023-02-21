@@ -1,21 +1,33 @@
-.card-title, .card-text {
-    font-family: 'Inter';
-    font-style: normal;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: 0.00938em;
-    color: #000;
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+body {
+  font-family: "Inter";
+}
+
+.btn-primary {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  color: #003c0a;
+}
+
+.card-title,
+.card-text {
+  font-style: normal;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.00938em;
+  color: #000;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .card-title {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .card-text {
-    font-weight: 400;
+  font-weight: 400;
 }
