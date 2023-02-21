@@ -1,0 +1,13 @@
+.card-title {
+    font-family: 'Inter';
+    font-style: normal;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.00938em;
+    color: #000;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}

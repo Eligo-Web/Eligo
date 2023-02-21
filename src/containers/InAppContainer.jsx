@@ -1,5 +1,9 @@
+import Card from "../components/Card";
+
 function InAppContainer() {
-  return;
+  return (
+    <Card />
+  );
 }
 
-export default App;
+export default InAppContainer;
