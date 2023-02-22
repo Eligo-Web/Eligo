@@ -22,6 +22,16 @@ body {
   border-width: 0;
 }
 
+.btn-transparent {
+  border-width: 0;
+  margin: 0% 0% 0% 0%;
+  padding: 0% 0% 0% 0%;
+}
+
+.btn-transparent:hover {
+  border-width: 0;
+}
+
 .card {
   width: 23rem;
   height: 10rem;
