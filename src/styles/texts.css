@@ -38,3 +38,7 @@ body {
   color: rgba(0, 6, 13, 0.65);
   margin-top: 3.5rem;
 }
+
+.poll-card-title {
+  text-align: center;
+}

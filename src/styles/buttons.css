@@ -47,3 +47,14 @@ body {
   cursor: pointer;
   border-width: 0;
 }
+
+.poll-card {
+  width: 9rem;
+  height: 4rem;
+  border: 5px solid rgba(0, 6, 13, 0.65);
+  background-color: #b2c6ed;
+  mix-blend-mode: hard-light;
+  border-radius: 1rem;
+  border-width: 0;
+  justify-content: center;
+}
