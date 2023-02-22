@@ -21,8 +21,10 @@
   color: #00060d;
   margin-left: 5rem;
   line-height: 5rem;
+  max-height: 5rem;
 }
 
-.menu-bar-top-right {
-  margin-left: 70%;
+.menu-bar-detail {
+  margin-right: 2rem;
+  text-align: right;
 }

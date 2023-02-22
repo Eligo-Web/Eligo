@@ -2,24 +2,26 @@ body {
   background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
 }
 
-.btn-primary {
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:disabled {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 1rem 2.5rem;
-
-  background-color: #b1e9a3;
   mix-blend-mode: hard-light;
   border-radius: 50px;
   border-width: 0;
 }
 
+.btn-primary {
+  background-color: #b1e9a3;
+}
+
 .btn-primary:hover {
   background-color: #286f16;
-  mix-blend-mode: hard-light;
-  border-radius: 50px;
-  border-width: 0;
 }
 
 .btn-transparent {
