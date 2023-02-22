@@ -1,3 +1,7 @@
+body {
+  background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
+}
+
 .btn-primary {
   display: flex;
   flex-direction: row;
@@ -6,14 +10,14 @@
   padding: 1rem 2.5rem;
 
   background-color: #b1e9a3;
-  /* mix-blend-mode: hard-light; */
+  mix-blend-mode: hard-light;
   border-radius: 50px;
   border-width: 0;
 }
 
 .btn-primary:hover {
   background-color: #286f16;
-  /* mix-blend-mode: hard-light; */
+  mix-blend-mode: hard-light;
   border-radius: 50px;
   border-width: 0;
 }
@@ -22,5 +26,14 @@
   width: 23rem;
   height: 10rem;
   background-color: #b2c6ed;
+  mix-blend-mode: hard-light;
   border-radius: 1rem;
+  border-width: 0;
+}
+
+.card:hover {
+  background-color: #b2c6ed;
+  mix-blend-mode: overlay;
+  cursor: pointer;
+  border-width: 0;
 }

@@ -1,9 +1,9 @@
 body {
   font-family: "Inter";
+  font-style: normal;
 }
 
 .btn-primary {
-  font-style: normal;
   font-weight: 600;
   font-size: 1.2rem;
   color: #003c0a;
@@ -12,8 +12,6 @@ body {
 .card-title,
 .card-subtitle,
 .card-id {
-  font-style: normal;
-  font-weight: 600;
   margin-left: 0.2rem;
   margin-right: 0.2rem;
 }
