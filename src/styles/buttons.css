@@ -10,3 +10,17 @@
   border-radius: 50px;
   border-width: 0;
 }
+
+.btn-primary:hover {
+  background-color: #286f16;
+  /* mix-blend-mode: hard-light; */
+  border-radius: 50px;
+  border-width: 0;
+}
+
+.card {
+  width: 23rem;
+  height: 10rem;
+  background-color: #b2c6ed;
+  border-radius: 1rem;
+}

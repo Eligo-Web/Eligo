@@ -6,28 +6,37 @@ body {
   font-style: normal;
   font-weight: 600;
   font-size: 1.2rem;
-  line-height: 1.2;
   color: #003c0a;
 }
 
 .card-title,
-.card-text {
+.card-subtitle,
+.card-id {
   font-style: normal;
-  font-size: 1rem;
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.00938em;
-  color: #000;
-  margin-bottom: 0.5rem;
-  margin-top: 0.5rem;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
 }
 
 .card-title {
   font-weight: 600;
+  font-size: 1.1rem;
+  color: #00060d;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
 }
 
-.card-text {
+.card-subtitle {
   font-weight: 400;
+  font-size: 1.1rem;
+  color: rgba(0, 6, 13, 0.75);
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+}
+
+.card-id {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: rgba(0, 6, 13, 0.65);
+  margin-top: 3.5rem;
 }
