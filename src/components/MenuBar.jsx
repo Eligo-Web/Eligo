@@ -1,17 +1,23 @@
+import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { IoIosMenu } from "react-icons/io";
+import Menu from "./Menu";
+
 import "../styles/texts.css";
 import "../styles/menu.css";
 
 function MenuBar(props) {
+  function openMenu() {
+    document.querySelector(".menu").style.width = "25%";
+  }
   return (
     <Container fluid className="menu-bar">
       <Row className="menu-bar-items">
         <Col className="menu-bar-icon">
-          <Button variant="transparent">
+          <Button variant="transparent" onClick={openMenu}>
             <IoIosMenu size="3rem" />
           </Button>
         </Col>

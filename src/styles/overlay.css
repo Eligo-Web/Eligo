@@ -1,0 +1,15 @@
+.overlay {
+    position: absolute;
+    width: 0;
+    height: 100%;
+    left: 0;
+    overflow-x: hidden;
+}
+
+.menu {
+    display: block;
+    z-index: 1;
+    background: linear-gradient(163.19deg, #B8E3FB -8.42%, #80A7E1 189.03%);
+    box-shadow: 15px 0px 40px rgba(5, 32, 65, 0.15);
+    transition: 0.5s;
+}

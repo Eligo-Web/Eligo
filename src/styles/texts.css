@@ -42,3 +42,14 @@ body {
 .poll-card-title {
   text-align: center;
 }
+
+.session-card-title {
+  font-weight: 500;
+  text-align: left;
+}
+
+.session-card-subtitle {
+  font-weight: 400;
+  text-align: right;
+}
+
