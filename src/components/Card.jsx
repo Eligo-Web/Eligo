@@ -1,8 +1,6 @@
 import "../styles/texts.css";
 import "../styles/buttons.css";
 
-import Button from "react-bootstrap/Button";
-
 function Card(props) {
   return (
     <div className="card clickable">

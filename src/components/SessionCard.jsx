@@ -10,10 +10,10 @@ import Button from "react-bootstrap/Button";
 function PollCard(props) {
   return (
     <Container className="card session-card clickable">
-        <Row>
-            <Col className="card-title session-card-title">Session 1</Col>
-            <Col className="card-title session-card-subtitle">Active</Col>
-        </Row>
+      <Row>
+        <Col className="card-title session-card-title">Session 1</Col>
+        <Col className="card-title session-card-subtitle">Active</Col>
+      </Row>
     </Container>
   );
 }

@@ -11,7 +11,9 @@ import "../styles/menu.css";
 
 function MenuBar(props) {
   function openMenu() {
-    document.querySelector(".menu").style.width = "25%";
+    document.querySelector(".menu-overlay-bg").style.pointerEvents = "all";
+    document.querySelector(".menu-overlay-bg").style.opacity = 100;
+    document.querySelector(".menu").style.width = "20rem";
   }
   return (
     <Container fluid className="menu-bar">

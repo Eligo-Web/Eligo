@@ -3,12 +3,6 @@ body {
   font-style: normal;
 }
 
-.btn-primary {
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: #003c0a;
-}
-
 .card-title,
 .card-subtitle,
 .card-id {
@@ -52,4 +46,3 @@ body {
   font-weight: 400;
   text-align: right;
 }
-

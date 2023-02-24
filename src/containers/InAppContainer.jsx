@@ -4,16 +4,20 @@ import PrimaryButton from "../components/Buttons/PrimaryButton";
 import MenuBar from "../components/MenuBar";
 import SessionCard from "../components/SessionCard";
 import Menu from "../components/Menu";
+import Overlay from "../components/Overlay";
 
 function InAppContainer() {
   return (
-    <div>
+    <div style={{display: "flex"}}>
       <Menu />
       <MenuBar />
-      <Card />
-      <PrimaryButton />
-      <PollCard />
-      <SessionCard />
+      <Overlay />
+      <div style={{padding: "5rem", display: "flex", justifyContent: "center", flexDirection: "column"}}>
+        <Card />
+        <PrimaryButton />
+        <PollCard />
+        <SessionCard />
+      </div>
     </div>
   );
 }

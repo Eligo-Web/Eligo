@@ -1,10 +1,13 @@
 body {
   background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
+  margin-top: 5rem;
+  height: 100%;
 }
 
 .btn-primary,
 .btn-primary:hover,
 .btn-primary:active,
+.btn-primary:focus,
 .btn-primary:disabled {
   display: flex;
   flex-direction: row;
@@ -14,14 +17,32 @@ body {
   mix-blend-mode: hard-light;
   border-radius: 50px;
   border-width: 0;
+  font-weight: 600;
 }
 
 .btn-primary {
   background-color: #b1e9a3;
+  font-size: 1.2rem;
+  color: #003c0a;
+  font-weight: 600;
 }
 
 .btn-primary:hover {
-  background-color: #286f16;
+  background-color: #73c160;
+  color: #002e08;
+  font-weight: 600;
+}
+
+.btn-primary:active {
+  background-color: #41bb51;
+  color: #002e08;
+  font-weight: 600;
+}
+
+.btn-primary:disabled {
+  background-color: #73c160;
+  color: #002e08;
+  font-weight: 600;
 }
 
 .btn-transparent {

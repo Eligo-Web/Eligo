@@ -1,15 +1,50 @@
 .overlay {
-    position: absolute;
-    width: 0;
-    height: 100%;
-    left: 0;
-    overflow-x: hidden;
+  position: fixed;
+  display: flex;
+  z-index: 3;
+  transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.01);
+  top: 0;
+}
+
+.menu-overlay-bg,
+.overlay-bg {
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  background-color: #032a4a77;
+  opacity: 0;
+  transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.01);
 }
 
 .menu {
-    display: block;
-    z-index: 1;
-    background: linear-gradient(163.19deg, #B8E3FB -8.42%, #80A7E1 189.03%);
-    box-shadow: 15px 0px 40px rgba(5, 32, 65, 0.15);
-    transition: 0.5s;
+  left: 0;
+  width: 0;
+  height: 100%;
+  overflow-x: hidden;
+  background: linear-gradient(163.19deg, #b8e3fb -8.42%, #80a7e1 189.03%);
+  box-shadow: .5rem 0 2rem rgba(5, 32, 65, 0.15);
+}
+
+.pop-up {
+  top: 100%;
+  flex-direction: column;
+  padding: 30px 40px;
+  gap: 30px;
+
+  width: auto;
+  height: auto;
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 10%;
+
+  background: radial-gradient(
+    136.93% 283.65% at -13.74% -14.37%,
+    #b1cefb 0%,
+    #7ba3c7 100%
+  );
+  box-shadow: 0 .5rem 2rem rgba(5, 32, 65, 0.15);
+  border-radius: 2.5rem;
 }
