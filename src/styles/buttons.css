@@ -1,48 +1,42 @@
-body {
-  background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
-  margin-top: 5rem;
-  height: 100%;
-}
-
 .btn-primary,
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus,
-.btn-primary:disabled {
-  display: flex;
+.btn-primary:disabled,
+.btn-secondary {
+  flex: 1;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 1rem 2.5rem;
+  padding: 0.6rem 2rem;
   mix-blend-mode: hard-light;
   border-radius: 50px;
   border-width: 0;
   font-weight: 600;
+  font-size: 1.3rem;
+  box-shadow: none !important;
+  border: solid 0.25rem transparent;
 }
 
 .btn-primary {
   background-color: #b1e9a3;
-  font-size: 1.2rem;
   color: #003c0a;
-  font-weight: 600;
 }
 
 .btn-primary:hover {
-  background-color: #73c160;
+  background-color: #80d06c;
   color: #002e08;
-  font-weight: 600;
 }
 
-.btn-primary:active {
-  background-color: #41bb51;
+.btn-primary:focus {
+  background-color: #80d06c;
   color: #002e08;
-  font-weight: 600;
+  border-color: #084913a0;
 }
 
 .btn-primary:disabled {
-  background-color: #73c160;
-  color: #002e08;
-  font-weight: 600;
+  background-color: #aec3a9;
+  color: #002e0879;
 }
 
 .btn-transparent {
@@ -53,6 +47,27 @@ body {
 
 .btn-transparent:hover {
   border-width: 0;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #001a39a6;
+  border-width: 0.25rem;
+  border-color: #001a39a6;
+}
+
+.btn-secondary:hover {
+  background-color: #0d325017;
+  color: #001938d9;
+  border-width: 0.25rem;
+  border-color: #001938d9;
+}
+
+.btn-secondary:focus {
+  background-color: #22374f3d;
+  color: #031b37cb;
+  border-width: 0.25rem;
+  border-color: #0f27406c;
 }
 
 .card {

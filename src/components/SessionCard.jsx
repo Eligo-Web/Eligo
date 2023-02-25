@@ -2,10 +2,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import "../styles/texts.css";
+import "../styles/text.css";
 import "../styles/buttons.css";
-
-import Button from "react-bootstrap/Button";
 
 function PollCard(props) {
   return (

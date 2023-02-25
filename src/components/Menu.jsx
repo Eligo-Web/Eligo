@@ -1,4 +1,4 @@
-import "../styles/texts.css";
+import "../styles/text.css";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
 import { IoIosArrowBack } from "react-icons/io";

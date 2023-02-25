@@ -4,9 +4,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { IoIosMenu } from "react-icons/io";
-import Menu from "./Menu";
 
-import "../styles/texts.css";
+import "../styles/text.css";
 import "../styles/menu.css";
 
 function MenuBar(props) {
@@ -17,14 +16,12 @@ function MenuBar(props) {
   }
   return (
     <Container fluid className="menu-bar">
+      <Button variant="transparent" onClick={openMenu}>
+        <IoIosMenu size="3rem" />
+      </Button>
       <Row className="menu-bar-items">
-        <Col className="menu-bar-icon">
-          <Button variant="transparent" onClick={openMenu}>
-            <IoIosMenu size="3rem" />
-          </Button>
-        </Col>
-        <Col xs="auto">Your Courses</Col>
-        <Col className="menu-bar-detail">EN.601.229</Col>
+        <Col className="large-title">Your Courses</Col>
+        <Col className="large-title">EN.601.229</Col>
       </Row>
     </Container>
   );

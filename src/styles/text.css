@@ -1,6 +1,9 @@
 body {
   font-family: "Inter";
   font-style: normal;
+  color: rgb(0, 6, 13);
+  background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
+  margin-top: 5rem;
 }
 
 .card-title,
@@ -13,7 +16,6 @@ body {
 .card-title {
   font-weight: 600;
   font-size: 1.1rem;
-  color: #00060d;
   margin-top: 0.1rem;
   margin-bottom: 0.1rem;
 }
@@ -21,7 +23,7 @@ body {
 .card-subtitle {
   font-weight: 400;
   font-size: 1.1rem;
-  color: rgba(0, 6, 13, 0.75);
+  opacity: 75%;
   margin-top: 0.1rem;
   margin-bottom: 0.1rem;
 }
@@ -29,8 +31,13 @@ body {
 .card-id {
   font-weight: 400;
   font-size: 0.9rem;
-  color: rgba(0, 6, 13, 0.65);
+  opacity: 65%;
   margin-top: 3.5rem;
+}
+
+.menu-overlay-title {
+  font-weight: 500;
+  font-size: 2rem;
 }
 
 .poll-card-title {
@@ -45,4 +52,11 @@ body {
 .session-card-subtitle {
   font-weight: 400;
   text-align: right;
+}
+
+.large-title {
+  font-weight: 500;
+  font-size: 1.5rem;
+  max-width: fit-content;
+  min-width: fit-content;
 }

@@ -5,32 +5,38 @@ import MenuBar from "../components/MenuBar";
 import SessionCard from "../components/SessionCard";
 import Menu from "../components/Menu";
 import Overlay from "../components/Overlay";
+import Form from "react-bootstrap/Form";
+import "../styles/overlay.css";
+import { Container } from "react-bootstrap";
 
 function InAppContainer() {
   function openPopup() {
     document.querySelector(".overlay-bg").style.pointerEvents = "all";
     document.querySelector(".overlay-bg").style.opacity = 100;
-    document.querySelector(".pop-up").style.top = 0;
+    document.querySelector(".pop-up").style.opacity = 100;
+    document.querySelector(".overlay-wrapper").style.height = "100%";
   }
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{overflow: "hidden"}}>
       <Menu />
       <MenuBar />
-      <Overlay />
-      <div
-        style={{
-          padding: "5rem",
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "column",
-        }}
-      >
+      <Overlay
+        contents={
+          <div className="pop-up-content">
+            <Form.Control className="input-field" placeholder="Field" />
+            <div className="button-row">
+              <PrimaryButton variant="secondary" label="Cancel" />
+              <PrimaryButton variant="primary" label="Submit" />
+            </div>
+          </div>
+        }
+      />
+      <Container>
         <Card />
-        <PrimaryButton />
         <PollCard onClick={openPopup} />
         <SessionCard />
-      </div>
+      </Container>
     </div>
   );
 }
