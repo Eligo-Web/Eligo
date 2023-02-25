@@ -4,7 +4,7 @@ import "../styles/overlay.css";
 import { IoIosArrowBack } from "react-icons/io";
 
 import { useRef, useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Col, Container } from "react-bootstrap";
 
 function Menu(props) {
   const menuRef = useRef(null);
@@ -25,15 +25,18 @@ function Menu(props) {
   function closeMenu() {
     document.querySelector(".menu-overlay-bg").style.pointerEvents = "none";
     document.querySelector(".menu-overlay-bg").style.opacity = 0;
-    document.querySelector(".menu").style.width = 0;
+    document.querySelector(".menu").style.left = "-17rem";
   }
 
   return (
     <div>
       <div className="overlay menu" ref={menuRef}>
-        <Button variant="transparent">
-          <IoIosArrowBack size="3rem" onClick={closeMenu} />
+        <Container className="menu-overlay-header">
+        <Button variant="transparent" className="menu-overlay-back">
+          <IoIosArrowBack size="2.3rem" onClick={closeMenu} />
         </Button>
+        <div className="menu-overlay-title">EduPoll</div>
+        </Container>
       </div>
       <div className="menu-overlay-bg" />
     </div>

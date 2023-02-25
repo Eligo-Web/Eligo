@@ -13,7 +13,7 @@ function MenuBar(props) {
   function openMenu() {
     document.querySelector(".menu-overlay-bg").style.pointerEvents = "all";
     document.querySelector(".menu-overlay-bg").style.opacity = 100;
-    document.querySelector(".menu").style.width = "20rem";
+    document.querySelector(".menu").style.left = 0;
   }
   return (
     <Container fluid className="menu-bar">

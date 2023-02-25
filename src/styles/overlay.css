@@ -2,7 +2,7 @@
   position: fixed;
   display: flex;
   z-index: 3;
-  transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.01);
+  transition: 0.5s cubic-bezier(0, 1, 0.32, 1);
   top: 0;
 }
 
@@ -16,16 +16,40 @@
   height: 100%;
   background-color: #032a4a77;
   opacity: 0;
-  transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.01);
+  transition: 0.5s cubic-bezier(0, 1, 0.32, 1);
 }
 
 .menu {
-  left: 0;
-  width: 0;
+  left: -17rem;
+  width: 17rem;
   height: 100%;
   overflow-x: hidden;
   background: linear-gradient(163.19deg, #b8e3fb -8.42%, #80a7e1 189.03%);
   box-shadow: .5rem 0 2rem rgba(5, 32, 65, 0.15);
+  align-items: flex-start;
+}
+
+.menu-overlay-header {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1.2rem 0 1.2rem;
+  mix-blend-mode: hard-light;
+  border-bottom: 0.25rem solid rgba(5, 32, 65, 0.24);
+  height: 5.1rem;
+}
+
+.menu-overlay-title {
+  font-weight: 500;
+  font-size: 2rem;
+  color: #00060d;
+}
+
+.menu-overlay-back {
+  position: absolute;
+  align-self: center;
+  justify-self: flex-start;
+  padding: 1rem 0 1rem 0;
 }
 
 .pop-up {
@@ -35,10 +59,11 @@
   gap: 30px;
 
   width: auto;
+  min-width: 25rem;
   height: auto;
   left: 50%;
   transform: translate(-50%);
-  margin-top: 10%;
+  margin-top: 25%;
 
   background: radial-gradient(
     136.93% 283.65% at -13.74% -14.37%,

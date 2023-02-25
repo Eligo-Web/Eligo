@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 
 function PollCard(props) {
   return (
-    <div className="card poll-card clickable">
+    <div className="card poll-card clickable" onClick={props.onClick}>
       <p className="card-title poll-card-title">Poll 1</p>
     </div>
   );
