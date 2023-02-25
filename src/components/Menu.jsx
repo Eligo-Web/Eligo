@@ -32,10 +32,10 @@ function Menu(props) {
     <div>
       <div className="overlay menu" ref={menuRef}>
         <Container className="menu-overlay-header">
-        <Button variant="transparent" className="menu-overlay-back">
-          <IoIosArrowBack size="2.3rem" onClick={closeMenu} />
-        </Button>
-        <div className="menu-overlay-title">EduPoll</div>
+          <Button variant="transparent" className="menu-overlay-back">
+            <IoIosArrowBack size="2.3rem" onClick={closeMenu} />
+          </Button>
+          <div className="menu-overlay-title">EduPoll</div>
         </Container>
       </div>
       <div className="menu-overlay-bg" />

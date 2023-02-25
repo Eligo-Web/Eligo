@@ -25,7 +25,7 @@
   height: 100%;
   overflow-x: hidden;
   background: linear-gradient(163.19deg, #b8e3fb -8.42%, #80a7e1 189.03%);
-  box-shadow: .5rem 0 2rem rgba(5, 32, 65, 0.15);
+  box-shadow: 0.5rem 0 2rem rgba(5, 32, 65, 0.15);
   align-items: flex-start;
 }
 
@@ -70,6 +70,6 @@
     #b1cefb 0%,
     #7ba3c7 100%
   );
-  box-shadow: 0 .5rem 2rem rgba(5, 32, 65, 0.15);
+  box-shadow: 0 0.5rem 2rem rgba(5, 32, 65, 0.15);
   border-radius: 2.5rem;
 }
