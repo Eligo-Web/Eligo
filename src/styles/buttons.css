@@ -23,12 +23,13 @@
   color: #003c0a;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:focus {
   background-color: #80d06c;
   color: #002e08;
 }
 
-.btn-primary:focus {
+.btn-primary:active {
   background-color: #80d06c;
   color: #002e08;
   border-color: #084913a0;
@@ -56,14 +57,15 @@
   border-color: #001a39a6;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.btn-secondary:focus {
   background-color: #0d325017;
   color: #001938d9;
   border-width: 0.25rem;
   border-color: #001938d9;
 }
 
-.btn-secondary:focus {
+.btn-secondary:active {
   background-color: #22374f3d;
   color: #031b37cb;
   border-width: 0.25rem;

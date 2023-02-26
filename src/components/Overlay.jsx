@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { IoIosClose } from "react-icons/io";
 import "../styles/overlay.css";
 
@@ -28,17 +28,17 @@ function Overlay(props) {
 
   return (
     <div className="overlay-wrapper">
-      <Container className="overlay pop-up" ref={popupRef}>
-        <Container className="pop-up-header">
+      <div className="overlay pop-up" ref={popupRef}>
+        <div className="pop-up-header">
           <Row className="pop-up-title large-title">
             {props.title || "Untitled Overlay QWERTYUIOPYGQIDYF"}
           </Row>
-          <Col onClick={closePopup}>
-            <IoIosClose size={"3rem"} />
-          </Col>
-        </Container>
-        <div>{props.contents}</div>
-      </Container>
+          <Button variant="transparent">
+            <IoIosClose size={"3rem"} onClick={closePopup} />
+          </Button>
+        </div>
+        {props.contents}
+      </div>
       <div className="overlay-bg" />
     </div>
   );
