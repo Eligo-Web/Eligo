@@ -8,7 +8,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 0.6rem 2rem;
+  padding: 0.6rem 0;
   mix-blend-mode: hard-light;
   border-radius: 50px;
   border-width: 0;
@@ -71,8 +71,8 @@
 }
 
 .card {
-  width: 23rem;
-  height: 10rem;
+  width: min-content;
+  height: min-content;
   background-color: #b2c6ed;
   mix-blend-mode: hard-light;
   border-radius: 1rem;

@@ -18,7 +18,7 @@ function InAppContainer() {
   }
 
   return (
-    <div style={{ overflow: "hidden" }}>
+    <div>
       <Menu />
       <MenuBar />
       <Overlay
