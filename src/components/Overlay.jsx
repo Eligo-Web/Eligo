@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { IoIosClose } from "react-icons/io";
 import "../styles/overlay.css";
 
@@ -33,7 +33,9 @@ function Overlay(props) {
           <Row className="pop-up-title large-title">
             {props.title || "Untitled Overlay QWERTYUIOPYGQIDYF"}
           </Row>
-          <IoIosClose size={"3rem"} />
+          <Col onClick={closePopup}>
+            <IoIosClose size={"3rem"} />
+          </Col>
         </Container>
         <div>{props.contents}</div>
       </Container>

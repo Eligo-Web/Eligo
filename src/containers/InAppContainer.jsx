@@ -18,7 +18,7 @@ function InAppContainer() {
   }
 
   return (
-    <div style={{overflow: "hidden"}}>
+    <div style={{ overflow: "hidden" }}>
       <Menu />
       <MenuBar />
       <Overlay
@@ -32,7 +32,20 @@ function InAppContainer() {
           </div>
         }
       />
-      <Container>
+      <Container
+        style={{
+          display: "grid",
+          gap: "1rem",
+          padding: "1rem 0",
+          justifyContent: "center",
+          justifyItems: "center",
+          overflow: "clip",
+        }}
+      >
+        <Card />
+        <Card />
+        <Card />
+        <Card />
         <Card />
         <PollCard onClick={openPopup} />
         <SessionCard />
