@@ -15,24 +15,31 @@ body {
 
 .card-title {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   margin-top: 0.1rem;
   margin-bottom: 0.1rem;
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .card-subtitle {
-  font-weight: 400;
-  font-size: 1.1rem;
+  font-weight: 500;
+  font-size: 1.2rem;
   opacity: 75%;
-  margin-top: 0.1rem;
-  margin-bottom: 0.1rem;
 }
 
 .card-id {
-  font-weight: 400;
-  font-size: 0.9rem;
+  font-weight: 500;
+  font-size: 1rem;
   opacity: 65%;
-  margin-top: 3.5rem;
+}
+
+.form-control,
+.form-control::placeholder {
+  font-weight: 600;
+  color: rgb(0, 6, 13, 0.65) !important;
 }
 
 .menu-overlay-title {
@@ -50,7 +57,7 @@ body {
 }
 
 .session-card-subtitle {
-  font-weight: 400;
+  font-weight: 500;
   text-align: right;
 }
 

@@ -1,8 +1,8 @@
+.btn-primary:focus-visible {
+  border-color: black;
+}
+
 .btn-primary,
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary:focus,
-.btn-primary:disabled,
 .btn-secondary {
   flex: 1;
   flex-direction: row;
@@ -11,7 +11,6 @@
   padding: 0.6rem 0;
   mix-blend-mode: hard-light;
   border-radius: 50px;
-  border-width: 0;
   font-weight: 600;
   font-size: 1.3rem;
   box-shadow: none !important;
@@ -26,13 +25,14 @@
 .btn-primary:hover,
 .btn-primary:focus {
   background-color: #80d06c;
+  border-color: transparent;
   color: #002e08;
 }
 
 .btn-primary:active {
-  background-color: #80d06c;
-  color: #002e08;
+  background-color: #6fc55a;
   border-color: #084913a0;
+  color: #002e08;
 }
 
 .btn-primary:disabled {
@@ -73,12 +73,18 @@
 }
 
 .card {
-  width: min-content;
+  width: calc(50% + 0.5rem);
   height: min-content;
   background-color: #b2c6ed;
   mix-blend-mode: hard-light;
   border-radius: 1rem;
   border-width: 0;
+  flex: 1;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
@@ -110,4 +116,22 @@
 .session-card:hover {
   border: 0.2rem solid rgba(0, 6, 13, 0.65);
   cursor: pointer;
+}
+
+.form-control,
+.form-control:focus {
+  flex: none;
+  display: flex;
+  padding: 0.5rem 1.2rem;
+  mix-blend-mode: hard-light;
+  background-color: #c2d3f3;
+  border-radius: 10rem;
+  border-width: 0;
+  margin: 0 0.5rem;
+  box-shadow: none !important;
+  width: auto;
+}
+
+.form-control:focus {
+  background-color: #d6e3fb;
 }

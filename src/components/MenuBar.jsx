@@ -10,6 +10,8 @@ import "../styles/menu.css";
 
 function MenuBar(props) {
   function openMenu() {
+    document.body.style.overflow = "hidden";
+    console.log("opened menu");
     document.querySelector(".menu-overlay-bg").style.pointerEvents = "all";
     document.querySelector(".menu-overlay-bg").style.opacity = 100;
     document.querySelector(".menu").style.left = 0;

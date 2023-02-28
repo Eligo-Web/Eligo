@@ -1,0 +1,10 @@
+.card-container {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+  max-width: 60rem;
+}
+.card-container > * {
+  flex: 0 calc(50% - 0.5rem);
+}

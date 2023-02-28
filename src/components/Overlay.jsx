@@ -1,45 +1,34 @@
 import { useRef, useEffect } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { IoIosClose } from "react-icons/io";
+import { Default } from "./Popups";
 import "../styles/overlay.css";
 
 function Overlay(props) {
-  const popupRef = useRef(null);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        closePopup();
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [popupRef]);
-
   function closePopup() {
-    document.querySelector(".overlay-bg").style.pointerEvents = "none";
-    document.querySelector(".overlay-bg").style.opacity = 0;
-    document.querySelector(".pop-up").style.opacity = 0;
-    document.querySelector(".overlay-wrapper").style.height = 0;
+    console.log("closed", props.id);
+    document.body.style.overflow = "auto";
+    const thisOverlay = document.getElementById(props.id);
+    thisOverlay.querySelector(".overlay-bg").style.pointerEvents = "none";
+    thisOverlay.querySelector(".overlay-bg").style.opacity = 0;
+    thisOverlay.querySelector(".pop-up").style.opacity = 0;
+    thisOverlay.style.height = 0;
   }
 
   return (
-    <div className="overlay-wrapper">
-      <div className="overlay pop-up" ref={popupRef}>
+    <div className="overlay-wrapper" id={props.id}>
+      <div className="overlay pop-up">
         <div className="pop-up-header">
           <Row className="pop-up-title large-title">
-            {props.title || "Untitled Overlay QWERTYUIOPYGQIDYF"}
+            {props.title || "Overlay Title"}
           </Row>
           <Button variant="transparent">
             <IoIosClose size={"3rem"} onClick={closePopup} />
           </Button>
         </div>
-        {props.contents}
+        {props.content || <Default />}
       </div>
-      <div className="overlay-bg" />
+      <div className="overlay-bg" onClick={closePopup} />
     </div>
   );
 }
