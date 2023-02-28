@@ -1,4 +1,3 @@
-import { useRef, useEffect } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { IoIosClose } from "react-icons/io";
 import { Default } from "./Popups";
