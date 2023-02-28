@@ -1,7 +1,12 @@
 import InAppContainer from "./containers/InAppContainer";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
-  return <InAppContainer />;
+  return (
+    <BrowserRouter>
+      <InAppContainer />
+    </BrowserRouter>
+  );
 }
 
 export default App;

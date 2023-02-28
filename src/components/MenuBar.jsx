@@ -22,8 +22,8 @@ function MenuBar(props) {
         <IoIosMenu size="3rem" />
       </Button>
       <Row className="menu-bar-items">
-        <Col className="large-title">Your Courses</Col>
-        <Col className="large-title">EN.601.229</Col>
+        <Col className="large-title">{props.title}</Col>
+        <Col className="large-title">{props.description}</Col>
       </Row>
     </Container>
   );
