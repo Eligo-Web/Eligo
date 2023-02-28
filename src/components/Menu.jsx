@@ -1,8 +1,8 @@
 import "../styles/text.css";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
-import { IoIosArrowBack } from "react-icons/io";
-import PrimaryButton from "../components/Buttons/PrimaryButton.jsx";
+import { IoIosArrowBack, IoMdExit, IoMdAddCircleOutline } from "react-icons/io";
+import IconButton from "../components/Buttons/IconButton";
 import { Button, Container } from "react-bootstrap";
 
 function Menu(props) {
@@ -24,8 +24,8 @@ function Menu(props) {
           <div className="menu-overlay-title">EduPoll</div>
         </Container>
         <Container className="d-flex flex-column p-3 gap-2">
-          <PrimaryButton />
-          <PrimaryButton />
+          <IconButton label="Join Class" icon={<IoMdAddCircleOutline size="2rem"/>}/>
+          <IconButton label="Sign Out" variant="sign-out" icon={<IoMdExit size="2rem"/>}/>
         </Container>
       </div>
       <div className="menu-overlay-bg" onClick={closeMenu} />

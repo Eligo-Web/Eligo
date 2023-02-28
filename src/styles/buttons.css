@@ -3,8 +3,11 @@
 }
 
 .btn-primary,
-.btn-secondary {
+.btn-secondary,
+.btn-icon,
+.btn-sign-out {
   flex: 1;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -17,25 +20,38 @@
   border: solid 0.25rem transparent;
 }
 
-.btn-primary {
+.btn-icon,
+.btn-sign-out {
+  justify-content: flex-start;
+  gap: 1.5rem;
+  padding-left: 1.5rem;
+  border-radius: 1rem;
+}
+
+.btn-primary,
+.btn-icon {
   background-color: #b1e9a3;
   color: #003c0a;
 }
 
 .btn-primary:hover,
-.btn-primary:focus {
+.btn-primary:focus,
+.btn-icon:hover,
+.btn-icon:focus {
   background-color: #80d06c;
   border-color: transparent;
   color: #002e08;
 }
 
-.btn-primary:active {
+.btn-primary:active,
+.btn-icon:active {
   background-color: #6fc55a;
   border-color: #084913a0;
   color: #002e08;
 }
 
-.btn-primary:disabled {
+.btn-primary:disabled
+.btn-icon:disabled {
   background-color: #aec3a9;
   color: #002e0879;
 }
@@ -70,6 +86,18 @@
   color: #031b37cb;
   border-width: 0.25rem;
   border-color: #0f27406c;
+}
+
+.btn-sign-out {
+  background-color: #EF9174;
+  color: #650000;
+}
+
+.btn-sign-out:hover,
+.btn-sign-out:focus {
+  background-color: #e66a4d;
+  color: #650000;
+  border-color: transparent;
 }
 
 .card {
