@@ -5,13 +5,15 @@ import Button from "react-bootstrap/Button";
 
 function PollCard(props) {
   function openPopup(id) {
-    console.log("opened", id);
-    document.body.style.overflow = "hidden";
-    const overlay1 = document.getElementById(id);
-    overlay1.querySelector(".overlay-bg").style.pointerEvents = "all";
-    overlay1.querySelector(".overlay-bg").style.opacity = 100;
-    overlay1.querySelector(".pop-up").style.opacity = 100;
-    overlay1.style.height = "100vh";
+    const overlay = document.getElementById(id);
+    if (overlay) {
+      console.log("opened", id);
+      document.body.style.overflow = "hidden";
+      overlay.querySelector(".overlay-bg").style.pointerEvents = "all";
+      overlay.querySelector(".overlay-bg").style.opacity = 100;
+      overlay.querySelector(".pop-up").style.opacity = 100;
+      overlay.style.height = "100vh";
+    }
   }
 
   return (
