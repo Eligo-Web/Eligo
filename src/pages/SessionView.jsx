@@ -10,7 +10,7 @@ function SessionView(props) {
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Menu />
       <MenuBar title="Course Name" description="Course Description" />
-      <Overlay id="Poll 1" title="Poll 1" content={Poll()} />
+      <Overlay title="Poll 1" content={Poll()} />
       <Container className="poll-card-container">
         <PollCard title="Poll 1" />
         <PollCard title="Poll 2" />
@@ -19,7 +19,6 @@ function SessionView(props) {
         <PollCard title="Poll 1" />
         <PollCard title="Poll 2" />
         <PollCard title="Poll 1" />
-        <PollCard title="Poll 2" />
         <PollCard title="Poll 2" />
         <PollCard title="Poll 2" />
         <PollCard title="Poll 2" />

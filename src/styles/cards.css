@@ -1,0 +1,136 @@
+.card,
+.poll-card {
+  width: calc(50% + 0.5rem);
+  height: min-content;
+  background-color: #b2c6ed;
+  mix-blend-mode: hard-light;
+  border-radius: 1rem;
+  border-color: transparent;
+  border-width: 0.25rem;
+  transition: 0.1s ease-in-out;
+  flex: 1;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 9rem;
+}
+
+.card:hover,
+.card:focus,
+.poll-card:hover,
+.poll-card:focus {
+  background-color: #bbcdf2;
+  border-color: #474c56b6;
+  cursor: pointer;
+}
+
+.card:active,
+.poll-card:active {
+  background-color: #b2c6ed;
+  border-color: #313948b6;
+  cursor: pointer;
+}
+
+.poll-card {
+  height: 5rem;
+  justify-content: center;
+}
+
+.session-card {
+  width: 25rem;
+  height: 3.5rem;
+  border: 0.2rem solid rgba(0, 6, 13, 0.65);
+  border-radius: 2rem;
+  justify-content: center;
+}
+
+.session-card:hover {
+  border: 0.2rem solid rgba(0, 6, 13, 0.65);
+  cursor: pointer;
+}
+
+.vote-button {
+  height: 6rem;
+  aspect-ratio: 1;
+  background-color: #b2c6ed;
+  mix-blend-mode: hard-light;
+  border-radius: 1.2rem;
+  border-color: transparent;
+  border-width: 0.25rem;
+  font-size: 2.2rem;
+  font-weight: 600;
+  flex: 1;
+}
+
+.vote-button:focus {
+  background-color: #dfeaff;
+  font-weight: 700;
+}
+
+/* ========================================================= */
+/* ==================== Card Containers ==================== */
+/* ========================================================= */
+
+.card-container,
+.poll-card-container {
+  display: flex;
+  gap: 0.6rem;
+  padding: 1rem;
+  padding-bottom: 6rem;
+  flex-wrap: wrap;
+}
+
+.card-container {
+  max-width: 60rem;
+}
+.card-container > * {
+  flex: 0 calc(50% - 0.3rem);
+}
+
+.poll-card-container {
+  max-width: 50rem;
+}
+.poll-card-container > * {
+  flex: 0 calc(25% - 0.45rem);
+}
+
+.vote-btn-container {
+  transition: 0.1s ease-in-out;
+  display: flex;
+  flex-direction: row;
+  gap: 0.8rem;
+}
+
+@media screen and (max-width: 35rem) {
+  .card-container > * {
+    flex: 0 100%;
+  }
+
+  .poll-card-container > * {
+    flex: 0 calc((100% / 3) - 0.4rem);
+  }
+
+  .vote-btn-container {
+    display: grid;
+    width: 15rem;
+  }
+
+  .vote-button {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 25rem) {
+  .poll-card-container > * {
+    flex: 0 calc(50% - 0.3rem);
+  }
+}
+
+@media screen and (max-width: 15rem) {
+  .poll-card-container > * {
+    flex: 0 100%;
+  }
+}

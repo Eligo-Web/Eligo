@@ -4,18 +4,21 @@ import "../styles/overlay.css";
 import { IoIosArrowBack, IoMdExit, IoMdAddCircleOutline } from "react-icons/io";
 import IconButton from "../components/Buttons/IconButton";
 import { Button, Container } from "react-bootstrap";
+import { openPopup } from "./Overlay";
 
 function Menu(props) {
-  function closeMenu() {
-    console.log("closed menu");
-    document.querySelector(".menu-overlay-bg").style.pointerEvents = "none";
-    document.querySelector(".menu-overlay-bg").style.opacity = 0;
-    document.querySelector(".menu").style.left = "-17rem";
+  function closeMenu(overlay) {
+    const menu = document.getElementById("side-menu");
+    menu.querySelector(".overlay-bg").style.pointerEvents = "none";
+    menu.querySelector(".overlay-bg").style.opacity = 0;
+    menu.querySelector(".menu").style.left = "-17rem";
     document.body.style.overflow = "auto";
+    console.log("closed menu");
+    openPopup(overlay);
   }
 
   return (
-    <div>
+    <div id="side-menu">
       <div className="overlay menu">
         <Container className="menu-overlay-header">
           <Button variant="transparent" className="menu-overlay-back">
@@ -24,11 +27,19 @@ function Menu(props) {
           <div className="menu-overlay-title">EduPoll</div>
         </Container>
         <Container className="d-flex flex-column p-3 gap-2">
-          <IconButton label="Join Class" icon={<IoMdAddCircleOutline size="2rem"/>}/>
-          <IconButton label="Sign Out" variant="sign-out" icon={<IoMdExit size="2rem"/>}/>
+          <IconButton
+            label="Join Class"
+            icon={<IoMdAddCircleOutline size="2rem" />}
+            onClick={() => closeMenu("Join Class")}
+          />
+          <IconButton
+            label="Sign Out"
+            variant="sign-out"
+            icon={<IoMdExit size="2rem" />}
+          />
         </Container>
       </div>
-      <div className="menu-overlay-bg" onClick={closeMenu} />
+      <div className="overlay-bg" onClick={closeMenu} />
     </div>
   );
 }

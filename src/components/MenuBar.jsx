@@ -11,10 +11,11 @@ import "../styles/menu.css";
 function MenuBar(props) {
   function openMenu() {
     document.body.style.overflow = "hidden";
+    const menu = document.getElementById("side-menu");
+    menu.querySelector(".overlay-bg").style.pointerEvents = "all";
+    menu.querySelector(".overlay-bg").style.opacity = 100;
+    menu.querySelector(".menu").style.left = 0;
     console.log("opened menu");
-    document.querySelector(".menu-overlay-bg").style.pointerEvents = "all";
-    document.querySelector(".menu-overlay-bg").style.opacity = 100;
-    document.querySelector(".menu").style.left = 0;
   }
   return (
     <Container fluid className="menu-bar">

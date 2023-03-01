@@ -1,8 +1,9 @@
-import "../../styles/buttons.css";
-import "../../styles/text.css";
-
 import Button from "react-bootstrap/Button";
 
+/**
+ *
+ * @param {{variant: string, label: string, onClick: function}} props
+ */
 function PrimaryButton(props) {
   return (
     <Button variant={props.variant || "primary"} onClick={props.onClick}>

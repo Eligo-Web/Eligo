@@ -19,7 +19,6 @@
   overflow: hidden;
 }
 
-.menu-overlay-bg,
 .overlay-bg {
   position: fixed;
   top: 0;
@@ -67,12 +66,9 @@
   margin: 1rem;
   gap: 1rem;
 
-  width: auto;
-  min-width: 20rem;
-  max-width: 35em;
+  max-width: fit-content;
   height: auto;
   opacity: 0;
-  top: 100%;
 
   background: radial-gradient(
     136.93% 283.65% at -13.74% -14.37%,
@@ -96,6 +92,7 @@
 .pop-up-content {
   display: flex;
   flex-direction: column;
+  min-width: 30rem;
   gap: 1rem;
 }
 
@@ -112,4 +109,51 @@
   display: flex;
   flex-direction: row;
   gap: 1rem;
+}
+
+.input-field,
+.section-input {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  margin: 0 0.5rem;
+  gap: 0.1rem;
+  font-weight: 500;
+  color: hsl(212, 86%, 11%, 75%);
+  font-size: 1.1rem;
+  mix-blend-mode: hard-light;
+}
+
+.section-input {
+  flex: 1;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+}
+
+.form-control,
+.form-control:focus {
+  flex: none;
+  display: flex;
+  padding: 0.5rem 1.2rem;
+  mix-blend-mode: hard-light;
+  background-color: #c2d3f3;
+  border-radius: 10rem;
+  border-width: 0;
+  box-shadow: none !important;
+  text-overflow: ellipsis;
+}
+
+.form-control:focus {
+  background-color: #d6e3fb;
+}
+
+@media screen and (max-width: 35rem) {
+  .pop-up-content {
+    min-width: 100%;
+  }
 }

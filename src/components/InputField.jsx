@@ -1,10 +1,10 @@
 import Form from "react-bootstrap/Form";
 
-export default function InputField() {
+export default function InputField(props) {
   return (
-    <div className="input-text">
-      Text
-        <Form.Control placeholder="Sample Text" />
-      </div>
+    <div className={props.class || "input-field"}>
+      {props.label || "Title Text"}
+      <Form.Control placeholder={props.input || "Placeholder Text"} />
+    </div>
   );
 }

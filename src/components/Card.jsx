@@ -3,10 +3,12 @@ import "../styles/buttons.css";
 
 function Card(props) {
   return (
-    <div className="card clickable">
+    <div className="card clickable" onClick={props.onClick}>
       <div className="card-body">
-        <p className="card-title">Computer System Fundamentals</p>
-        <p className="card-subtitle">Dave Hovemeyer</p>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <p className="card-title">Computer System Fundamentals</p>
+          <p className="card-subtitle">Dave Hovemeyer</p>
+        </div>
         <p className="card-id">EN.601.229</p>
       </div>
     </div>
