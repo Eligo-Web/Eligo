@@ -92,12 +92,13 @@ export function createSession() {
 
 export function Poll(props) {
   const [selected, setSelected] = useState("");
+  console.log(this);
 
   function makeSelection(choice) {
-    if (selected == choice) {
+    if (selected === choice) {
       return;
     }
-    if (selected != "") {
+    if (selected !== "") {
       document.getElementById(selected).className = "card btn btn-vote";
     }
     setSelected(choice);
@@ -110,27 +111,27 @@ export function Poll(props) {
       <VoteButton
         label="A"
         onClick={() => makeSelection("A")}
-        pressed={selected == "A"}
+        pressed={selected === "A"}
       />
       <VoteButton
         label="B"
         onClick={() => makeSelection("B")}
-        pressed={selected == "B"}
+        pressed={selected === "B"}
       />
       <VoteButton
         label="C"
         onClick={() => makeSelection("C")}
-        pressed={selected == "C"}
+        pressed={selected === "C"}
       />
       <VoteButton
         label="D"
         onClick={() => makeSelection("D")}
-        pressed={selected == "D"}
+        pressed={selected === "D"}
       />
       <VoteButton
         label="E"
         onClick={() => makeSelection("E")}
-        pressed={selected == "E"}
+        pressed={selected === "E"}
       />
     </div>
   );
