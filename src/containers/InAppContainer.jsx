@@ -1,12 +1,13 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import CourseView from "../pages/CourseView";
+import Overview from "../pages/Overview";
 import SessionView from "../pages/SessionView";
 
 function InAppContainer() {
   return (
     <Routes>
-      <Route path="/" element={<CourseView />} />
+      <Route path="/" element={<Navigate to="/overview" />} />
+      <Route path="/overview" element={<Overview />} />
       <Route path="/session" element={<SessionView />} />
     </Routes>
   );
