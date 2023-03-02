@@ -75,8 +75,9 @@
 
 .btn-transparent {
   border-width: 0;
-  margin: 0% 0% 0% 0%;
-  padding: 0% 0% 0% 0%;
+  aspect-ratio: 1;
+  height: 70%;
+  padding: 0;
 }
 
 .btn-transparent:hover {

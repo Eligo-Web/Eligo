@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import PrimaryButton from "../components/Buttons/PrimaryButton";
 import VoteButton from "./Buttons/VoteButton";
 import InputField from "./InputField";
@@ -90,13 +91,47 @@ export function createSession() {
 }
 
 export function Poll(props) {
+  const [selected, setSelected] = useState("");
+
+  function makeSelection(choice) {
+    if (selected == choice) {
+      return;
+    }
+    if (selected != "") {
+      document.getElementById(selected).className = "card btn btn-vote";
+    }
+    setSelected(choice);
+    document.getElementById(choice).className += " btn-active";
+    console.log(choice);
+  }
+
   return (
     <div className="vote-btn-container">
-      <VoteButton label="A" />
-      <VoteButton label="B" />
-      <VoteButton label="C" />
-      <VoteButton label="D" />
-      <VoteButton label="E" />
+      <VoteButton
+        label="A"
+        onClick={() => makeSelection("A")}
+        pressed={selected == "A"}
+      />
+      <VoteButton
+        label="B"
+        onClick={() => makeSelection("B")}
+        pressed={selected == "B"}
+      />
+      <VoteButton
+        label="C"
+        onClick={() => makeSelection("C")}
+        pressed={selected == "C"}
+      />
+      <VoteButton
+        label="D"
+        onClick={() => makeSelection("D")}
+        pressed={selected == "D"}
+      />
+      <VoteButton
+        label="E"
+        onClick={() => makeSelection("E")}
+        pressed={selected == "E"}
+      />
     </div>
   );
 }

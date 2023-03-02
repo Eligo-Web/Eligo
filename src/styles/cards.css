@@ -22,15 +22,15 @@
 .card:focus,
 .poll-card:hover,
 .poll-card:focus {
-  background-color: #bbcdf2;
-  border-color: #474c56b6;
+  background-color: #bdcff1;
+  border-color: #313948b6;
   cursor: pointer;
 }
 
 .card:active,
 .poll-card:active {
   background-color: #b2c6ed;
-  border-color: #313948b6;
+  border-color: #131823ba;
   cursor: pointer;
 }
 
@@ -52,22 +52,42 @@
   cursor: pointer;
 }
 
-.vote-button {
+.btn-vote {
   height: 6rem;
+  width: 100%;
   aspect-ratio: 1;
+  align-items: center;
+  justify-content: center;
   background-color: #b2c6ed;
+  color: rgba(0, 7, 15, 0.65);
   mix-blend-mode: hard-light;
   border-radius: 1.2rem;
   border-color: transparent;
-  border-width: 0.25rem;
+  border-width: 0.3rem;
   font-size: 2.2rem;
   font-weight: 600;
   flex: 1;
 }
 
-.vote-button:focus {
-  background-color: #dfeaff;
+.btn-vote:hover {
+  border-color: rgba(6, 7, 9, 0.45);
+  color: rgba(0, 7, 15, 0.65);
   font-weight: 700;
+}
+
+.btn-active,
+.btn-vote:focus,
+.btn-vote:visited {
+  background-color: #d3dff6;
+  border-color: #052041;
+  color: #052041;
+  font-weight: 700;
+}
+
+.btn-vote:active {
+  background-color: #dfeaff;
+  border-color: #05254cf6;
+  color: #05254cf6;
 }
 
 /* ========================================================= */
