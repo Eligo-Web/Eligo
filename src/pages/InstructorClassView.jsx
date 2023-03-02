@@ -16,10 +16,12 @@ function InstructorClassView(props) {
           <SessionCard title="Session 2" activity="Inactive"/>
           <SessionCard title="Session 3" activity="Inactive"/>
         </Container>
-        <IconButton
-          label="Join Class"
-          icon={<IoMdAddCircleOutline size="2rem" />}
-        />
+        <div className="position-absolute bottom-0 end-0 p-4">
+          <IconButton
+            label="Create Session"
+            icon={<IoMdAddCircleOutline size="2rem" />}
+          />
+        </div>
       </div>
     );
   }
