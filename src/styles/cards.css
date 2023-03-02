@@ -95,7 +95,8 @@
 /* ========================================================= */
 
 .card-container,
-.poll-card-container {
+.poll-card-container,
+.session-card-container {
   display: flex;
   gap: 0.6rem;
   padding: 1rem;
@@ -106,6 +107,7 @@
 .card-container {
   max-width: 60rem;
 }
+
 .card-container > * {
   flex: 0 calc(50% - 0.3rem);
 }
@@ -115,6 +117,14 @@
 }
 .poll-card-container > * {
   flex: 0 calc(25% - 0.45rem);
+}
+
+.session-card-container {
+  max-width: 60rem;
+}
+
+.session-card-container > * {
+  flex: 0 calc(50% - 0.3rem);
 }
 
 .vote-btn-container {
@@ -153,4 +163,9 @@
   .poll-card-container > * {
     flex: 0 100%;
   }
+}
+
+.inactive {
+  border-color: transparent;
+  color: hsl(212, 100%, 3%, 0.65);
 }

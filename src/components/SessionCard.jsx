@@ -6,11 +6,15 @@ import "../styles/text.css";
 import "../styles/buttons.css";
 
 function PollCard(props) {
+  let activity = "card session-card clickable";
+  if (props.activity === "Inactive") {
+    activity = "card session-card clickable inactive";
+  }
   return (
-    <Container className="card session-card clickable">
+    <Container className={activity}>
       <Row>
-        <Col className="card-title session-card-title">Session 1</Col>
-        <Col className="card-title session-card-subtitle">Active</Col>
+        <Col className="card-title session-card-title">{props.title}</Col>
+        <Col className="card-title session-card-subtitle">{props.activity}</Col>
       </Row>
     </Container>
   );
