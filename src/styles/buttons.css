@@ -75,8 +75,6 @@
 
 .btn-transparent {
   border-width: 0;
-  aspect-ratio: 1;
-  height: 70%;
   padding: 0;
 }
 
