@@ -3,11 +3,13 @@ import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
 import Overlay from "../components/Overlay";
 import Container from "react-bootstrap/Container";
+import { useLocation } from "react-router-dom";
 import { JoinClass } from "../components/Popups";
 import "../styles/overlay.css";
 import "../styles/cards.css";
 
 function OverView(props) {
+  const location = useLocation();
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Menu />

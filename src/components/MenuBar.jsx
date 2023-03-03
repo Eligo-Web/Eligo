@@ -4,12 +4,14 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import IconButton from "./Buttons/IconButton";
+import { useLocation } from "react-router-dom";
 import { IoIosMenu, IoMdCopy } from "react-icons/io";
 
 import "../styles/text.css";
 import "../styles/menu.css";
 
 function MenuBar(props) {
+  const location = useLocation();
   function openMenu() {
     document.body.style.overflow = "hidden";
     const menu = document.getElementById("side-menu");
