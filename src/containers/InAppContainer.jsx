@@ -8,7 +8,7 @@ function InAppContainer() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/signin" />} />
-      <Route path="/signin" element={<SignIn />}/>
+      <Route path="/signin" element={<SignIn />} />
       <Route path="/overview" element={<Overview />} />
       <Route path="/session" element={<SessionView />} />
       <Route path="/instructor" element={<InstructorClassView />} />

@@ -125,7 +125,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #B3D2F7;
+  background: #b3d2f7;
   box-shadow: 0 0.6rem 1.2rem rgba(5, 32, 65, 0.15);
   border-radius: 3rem;
   padding-bottom: 1.5rem;
@@ -149,6 +149,7 @@
   gap: 4rem;
   margin-top: 2rem;
 }
+
 @media screen and (max-width: 40rem) {
   .sign-in-wrapper {
     flex-direction: column;
@@ -164,6 +165,24 @@
     border-radius: 2rem;
     font-size: 2.4rem;
     gap: 2rem;
+  }
+  .sign-in-icon {
+    display: none;
+  }
+}
+
+@media screen and (max-height: 35rem) {
+  .btn-sign-in,
+  .btn-sign-in:hover,
+  .btn-sign-in:focus {
+    height: fit-content;
+    padding: 1rem;
+  }
+  .sign-in-title {
+    padding: 0.5rem 0;
+  }
+  .sign-in-wrapper {
+    margin-top: 1rem;
   }
   .sign-in-icon {
     display: none;

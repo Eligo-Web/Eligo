@@ -18,7 +18,9 @@ function SessionView(props) {
     let overlays = [];
     for (let i = 0; i < 10; i++) {
       let title = `Poll ${i + 1}`;
-      overlays.push(<Overlay title={title} content={Poll(title, "A")} key={title} />);
+      overlays.push(
+        <Overlay title={title} content={Poll(title, "A")} key={title} />
+      );
     }
     return overlays;
   }
