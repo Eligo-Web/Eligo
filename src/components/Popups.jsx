@@ -17,6 +17,7 @@ export function Default() {
 }
 
 function JoinOrCreate(props) {
+  console.log(props);
   return (
     <div className="pop-up-content">
       <InputField label={props.inputLabel} input={props.placeholder} />
@@ -31,6 +32,7 @@ function JoinOrCreate(props) {
           label={props.primary}
           onClick={() => {
             /**TODO */
+            closePopup(props.id);
           }}
         />
       </div>
@@ -79,7 +81,7 @@ export function CreateClass() {
   );
 }
 
-export function createSession() {
+export function CreateSession() {
   return (
     <JoinOrCreate
       id="Create Session"
