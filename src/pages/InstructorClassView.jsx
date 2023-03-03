@@ -7,18 +7,21 @@ import Menu from "../components/Menu";
 import SessionCard from "../components/SessionCard";
 import IconButton from "../components/Buttons/IconButton";
 import Overlay from "../components/Overlay";
-import { CreateSession } from "../components/Popups";
+import { useNavigate, useLocation } from "react-router-dom";
+import { CreateSession, CreateClass } from "../components/Popups";
 import { openPopup } from "../components/Overlay";
 
 function InstructorClassView(props) {
+  const location = useLocation();
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Menu />
       <MenuBar
-        title="Course Name"
-        description="Course Code"
+        title={location.state.className}
+        description={location.state.classId}
         onClick={props.onClick}
       />
+      <Overlay title="Create Class" content={CreateClass()} />
       <Overlay title="Create Session" content={CreateSession()} />
       <Container className="card-container">
         <h3 className="card-title">Today</h3>

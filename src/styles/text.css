@@ -4,6 +4,7 @@ body {
   color: rgb(0, 6, 13);
   background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
   margin-top: 5rem;
+  height: 100vh;
 }
 
 .sign-in-title {

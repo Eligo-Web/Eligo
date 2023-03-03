@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 function SignIn(props) {
   const navigate = useNavigate();
   function handleStudent() {
-    navigate("/overview", { state: { permission: "student" } });
+    navigate("/overview", { state: { permission: "student", email: "student@jhu.edu" } });
   }
   function handleInstructor() {
-    navigate("/instructor", { state: { permission: "instructor" } });
+    navigate("/overview", { state: { permission: "instructor", email: "instructor@jhu.edu" } });
   }
   return (
     <div className="sign-in-title">

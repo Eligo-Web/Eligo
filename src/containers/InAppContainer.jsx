@@ -11,7 +11,7 @@ function InAppContainer() {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/overview" element={<Overview />} />
       <Route path="/session" element={<SessionView />} />
-      <Route path="/instructor" element={<InstructorClassView />} />
+      <Route path="/class" element={<InstructorClassView />} />
     </Routes>
   );
 }

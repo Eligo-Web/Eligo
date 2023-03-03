@@ -3,13 +3,13 @@ import "../styles/buttons.css";
 
 function Card(props) {
   return (
-    <div className="card clickable" href="/session">
+    <div className="card clickable" href="/session" onClick={props.onClick}>
       <div className="card-body">
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <p className="card-title">Computer System Fundamentals</p>
-          <p className="card-subtitle">Dave Hovemeyer</p>
+          <p className="card-title">{props.title}</p>
+          <p className="card-subtitle">{props.instructor}</p>
         </div>
-        <p className="card-id">EN.601.229</p>
+        <p className="card-id">{props.id}</p>
       </div>
     </div>
   );
