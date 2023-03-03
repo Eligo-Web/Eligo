@@ -75,8 +75,21 @@
 }
 
 .btn-transparent {
+  font-weight: 600;
+  font-size: 1.3rem;
   border-width: 0;
   padding: 0;
+}
+
+.btn-outline {
+  padding: 0.6rem 0;
+  font-weight: 600;
+  font-size: 1.3rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  border-width: 0.2rem;
+  border-radius: 1rem;
+  border-color: #001a39a6;
 }
 
 .btn-transparent:hover {

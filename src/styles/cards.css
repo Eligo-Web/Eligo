@@ -95,8 +95,7 @@
 /* ========================================================= */
 
 .card-container,
-.poll-card-container,
-.session-card-container {
+.poll-card-container {
   display: flex;
   gap: 0.6rem;
   padding: 1rem;
@@ -115,16 +114,9 @@
 .poll-card-container {
   max-width: 50rem;
 }
+
 .poll-card-container > * {
   flex: 0 calc(25% - 0.45rem);
-}
-
-.session-card-container {
-  max-width: 60rem;
-}
-
-.session-card-container > * {
-  flex: 0 calc(50% - 0.3rem);
 }
 
 .vote-btn-container {

@@ -11,7 +11,11 @@ function OverView(props) {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Menu />
-      <MenuBar title="Course Name" description="Course Description" onClick={props.onClick} />
+      <MenuBar
+        title="Course Name"
+        description="Course Description"
+        onClick={props.onClick}
+      />
       <Overlay title="Join Class" content={JoinClass()} />
       <Container className="card-container">
         <Card />

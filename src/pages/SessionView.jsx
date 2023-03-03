@@ -25,9 +25,7 @@ function SessionView(props) {
       <Menu />
       <MenuBar title="Course Name" description="Course Description" />
       {renderOverlays()}
-      <Container className="poll-card-container">
-        {renderPollCards()}
-      </Container>
+      <Container className="poll-card-container">{renderPollCards()}</Container>
     </div>
   );
 }
