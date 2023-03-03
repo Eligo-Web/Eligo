@@ -6,6 +6,20 @@ body {
   margin-top: 5rem;
 }
 
+.sign-in-title {
+  background: radial-gradient(118.53% 212.31% at 11.28% -9.85%, #AED6FB 0%, #6A86CE 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+  font-weight: 500;
+  font-size: 5rem;
+  line-height: 116px;
+  text-align: center;
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  padding-top: 8rem;
+  top: 0;
+  color: #052041;
+}
+
 .card-title,
 .card-subtitle,
 .card-id {

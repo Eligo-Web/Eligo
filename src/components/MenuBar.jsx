@@ -29,6 +29,7 @@ function MenuBar(props) {
           className="large-title"
           onClick={() => {
             try {
+              console.log(props.description)
               navigator.clipboard.writeText(props.description);
               console.log("Copied to clipboard!");
             } catch (err) {
@@ -37,6 +38,7 @@ function MenuBar(props) {
           }}
         >
           <IconButton
+            style={{padding: "1rem"}}
             icon={<IoMdCopy size="2rem" />}
             label={props.description || "No description"}
             variant="transparent"

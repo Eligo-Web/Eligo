@@ -9,14 +9,16 @@ function SessionView(props) {
   function renderPollCards() {
     let cards = [];
     for (let i = 0; i < 10; i++) {
-      cards.push(<PollCard title={`Poll ${i + 1}`} />);
+      let title = `Poll ${i + 1}`;
+      cards.push(<PollCard title={title} key={title} />);
     }
     return cards;
   }
   function renderOverlays() {
     let overlays = [];
     for (let i = 0; i < 10; i++) {
-      overlays.push(<Overlay title={`Poll ${i + 1}`} content={Poll()} />);
+      let title = `Poll ${i + 1}`;
+      overlays.push(<Overlay title={title} content={Poll(title, "A")} key={title} />);
     }
     return overlays;
   }

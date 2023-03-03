@@ -77,6 +77,8 @@
 }
 
 .btn-transparent {
+  display: flex;
+  gap: 0.7rem;
   font-weight: 600;
   font-size: 1.3rem;
   border-width: 0;
@@ -114,4 +116,38 @@
   color: #031b37cb;
   border-width: 0.25rem;
   border-color: #0f27406c;
+}
+
+.btn-sign-in,
+.btn-sign-in:hover,
+.btn-sign-in:focus {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #B3D2F7;
+  box-shadow: 0 0.6rem 1.2rem rgba(5, 32, 65, 0.15);
+  border-radius: 3rem;
+  padding-bottom: 1.5rem;
+  border-width: 0.5rem;
+  font-size: 2rem;
+  border-color: transparent;
+  aspect-ratio: 1 !important;
+  height: 16rem;
+  width: 16rem;
+  margin: 0;
+}
+
+.btn-sign-in:hover {
+  box-shadow: 0 1rem 2rem rgba(5, 32, 65, 0.15);
+  background: #bdd9fb;
+}
+
+.sign-in-wrapper {
+  align-items: self-start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  margin-top: 2rem;
 }

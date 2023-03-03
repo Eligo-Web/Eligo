@@ -92,9 +92,8 @@ export function CreateSession() {
   );
 }
 
-export function Poll(props) {
+export function Poll(id) {
   const [selected, setSelected] = useState("");
-  console.log(this);
 
   function makeSelection(choice) {
     if (selected === choice) {
@@ -105,11 +104,10 @@ export function Poll(props) {
     }
     setSelected(choice);
     document.getElementById(choice).className += " btn-active";
-    console.log(choice);
   }
 
   return (
-    <div className="vote-btn-container">
+    <div className="vote-btn-container" id={id}>
       <VoteButton
         label="A"
         onClick={() => makeSelection("A")}

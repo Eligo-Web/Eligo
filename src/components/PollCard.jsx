@@ -12,6 +12,7 @@ function PollCard(props) {
     <div
       className="card poll-card clickable"
       onClick={() => openPopup(props.title)}
+      id={props.title}
     >
       <p className="card-title poll-card-title">{props.title}</p>
     </div>
