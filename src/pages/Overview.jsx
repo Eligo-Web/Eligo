@@ -5,6 +5,7 @@ import Overlay from "../components/Overlay";
 import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
 import { JoinClass, CreateClass } from "../components/Popups";
+import { isMobile } from "react-device-detect";
 import "../styles/overlay.css";
 import "../styles/cards.css";
 
@@ -60,6 +61,13 @@ function OverView(props) {
           <Card />
         </Container>
       </div>
+    );
+  }
+  if (isMobile && location.state.permission === "instructor") {
+    return (
+      <center className="card-subtitle p-4">
+        Please sign in on a desktop device to use Edupoll as an instructor.
+      </center>
     );
   }
   return (

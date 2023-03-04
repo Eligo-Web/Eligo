@@ -2,7 +2,6 @@ import { Button } from "react-bootstrap";
 import { IconBook, IconSchool } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
-
 function SignIn(props) {
   const navigate = useNavigate();
   function handleStudent() {

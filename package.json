@@ -4,12 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently 'vite' 'dotenv -e .env nodemon server.js'",
+    "dev": "concurrently 'vite --host' 'dotenv -e .env nodemon server.js --host'",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tabler/icons": "^2.7.0",
     "@tabler/icons-react": "^2.7.0",
     "bootstrap": "^5.2.3",
     "concurrently": "^7.6.0",
@@ -22,6 +21,7 @@
     "prettier": "^2.8.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.8.2"

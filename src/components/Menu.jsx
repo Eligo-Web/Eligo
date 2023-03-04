@@ -31,24 +31,24 @@ function Menu(props) {
   }
 
   function handleSignOut() {
+    closeMenu();
     navigate("/");
   }
 
   return (
     <div id="side-menu">
       <div className="overlay menu">
-        <Container className="menu-overlay-header">
-          <Button variant="transparent" className="menu-overlay-back">
-            <IoIosArrowBack size="2.3rem" onClick={closeMenu} />
-          </Button>
-          <div className="menu-overlay-title">EduPoll</div>
-        </Container>
-        <Container className="d-flex flex-column p-3 gap-2">
-          <IconButton
-            label={location.state.permission}
-            variant="transparent"
-            icon={<IoMdPerson size="2rem" />}
-          />
+        <Container className="p-0">
+          <Container className="menu-overlay-header">
+            <Button variant="transparent" className="menu-overlay-back">
+              <IoIosArrowBack size="2.3rem" onClick={closeMenu} />
+            </Button>
+            <div className="menu-overlay-title">EduPoll</div>
+          </Container>
+          <Container className="d-flex flex-row p-3 gap-3 card-subtitle">
+            <IoMdPerson size="2rem" />
+            {location.state.permission}
+          </Container>
         </Container>
         <Container className="d-flex flex-column p-3 gap-2">
           <IconButton
