@@ -1,5 +1,5 @@
-import App from './src/App';
-import * as db from './src/data/db.jsx';
+import App from "./src/App";
+import * as db from "./src/data/db.jsx";
 
 db.connect(process.env.DB_URI);
 const PORT = process.env.PORT || 3000;
