@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Overview from "../pages/Overview";
 import SessionView from "../pages/SessionView";
-import InstructorClassView from "../pages/InstructorClassView";
+import CourseView from "../pages/CourseView";
 import SignIn from "../pages/SignIn";
 
 function InAppContainer() {
@@ -11,7 +11,7 @@ function InAppContainer() {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/overview" element={<Overview />} />
       <Route path="/session" element={<SessionView />} />
-      <Route path="/class" element={<InstructorClassView />} />
+      <Route path="/class" element={<CourseView />} />
     </Routes>
   );
 }

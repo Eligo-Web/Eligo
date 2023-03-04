@@ -17,8 +17,8 @@ function OverView(props) {
         permission: location.state.permission,
         email: location.state.email,
         className: className,
-        classId: classId
-      }
+        classId: classId,
+      },
     });
   }
   function studentContent() {
@@ -26,11 +26,14 @@ function OverView(props) {
       <div>
         <Overlay title="Join Class" content={JoinClass()} />
         <Container className="card-container">
-          <Card 
+          <Card
             title="Computer System Fundamentals"
             instructor="Dave Hovemeyer"
             id="EN.601.229"
-            onClick={() => handleViewClass("Computer System Fundamentals", "EN.601.229")}/>
+            onClick={() =>
+              handleViewClass("Computer System Fundamentals", "EN.601.229")
+            }
+          />
           <Card />
           <Card />
           <Card />
@@ -44,7 +47,14 @@ function OverView(props) {
       <div>
         <Overlay title="Create Class" content={CreateClass()} />
         <Container className="card-container">
-          <Card />
+          <Card
+            title="Computer System Fundamentals"
+            instructor="Dave Hovemeyer"
+            id="EN.601.229"
+            onClick={() =>
+              handleViewClass("Computer System Fundamentals", "EN.601.229")
+            }
+          />
           <Card />
           <Card />
           <Card />

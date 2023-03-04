@@ -11,7 +11,7 @@ function PollCard(props) {
     activity = "card session-card clickable inactive";
   }
   return (
-    <Container className={activity}>
+    <Container className={activity} onClick={props.onClick}>
       <Row>
         <Col className="card-title session-card-title">{props.title}</Col>
         <Col className="card-title session-card-subtitle">{props.activity}</Col>
