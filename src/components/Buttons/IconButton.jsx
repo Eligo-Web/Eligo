@@ -8,7 +8,7 @@ function IconButton(props) {
       style={props.style}
     >
       {props.icon}
-      {props.label || "Label"}
+      {props.label}
     </Button>
   );
 }

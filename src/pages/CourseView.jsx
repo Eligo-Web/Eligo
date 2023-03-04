@@ -15,6 +15,7 @@ import {
   JoinSession,
 } from "../components/Popups";
 import { openPopup } from "../components/Overlay";
+import { IconDownload, IconList } from "@tabler/icons-react";
 
 function InstructorClassView(props) {
   const location = useLocation();
@@ -34,44 +35,73 @@ function InstructorClassView(props) {
   }
   function instructorContent() {
     return (
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <Overlay title="Create Class" content={CreateClass()} />
-        <Overlay title="Create Session" content={CreateSession()} />
-        <Container className="card-container">
-          <h3 className="card-title">Today</h3>
-          <SessionCard
-            title="Session 1"
-            activity="Active"
-            onClick={() => handleViewSession("Session 1")}
-          />
-          <SessionCard title="Session 2" activity="Inactive" />
-          <SessionCard title="Session 3" activity="Inactive" />
-          <SessionCard title="Session 4" activity="Inactive" />
-          <h3 className="card-title">Yesterday</h3>
-          <SessionCard title="Session 1" activity="Inactive" />
-          <SessionCard title="Session 2" activity="Inactive" />
-          <SessionCard title="Session 3" activity="Inactive" />
-        </Container>
-        <div className="position-absolute bottom-0 end-0 p-4">
+      <div className="d-flex flex-column ">
+        <div className="card-wrapper">
+          <Overlay title="Create Class" content={CreateClass()} />
+          <Overlay title="Create Session" content={CreateSession()} />
+          <div>
+            <Container className="card-container">
+              <h3 className="card-title divisor">Today</h3>
+              <SessionCard
+                title="Session 1"
+                activity="Active"
+                onClick={() => handleViewSession("Session 1")}
+              />
+              <SessionCard title="Session 2" activity="Inactive" />
+              <SessionCard title="Session 3" activity="Inactive" />
+              <SessionCard title="Session 4" activity="Inactive" />
+              <SessionCard title="Session 5" activity="Inactive" />
+              <SessionCard title="Session 6" activity="Inactive" />
+              <SessionCard title="Session 7" activity="Inactive" />
+            </Container>
+            <Container className="card-container">
+              <h3 className="card-title divisor">Yesterday</h3>
+              <SessionCard title="Session 1" activity="Inactive" />
+              <SessionCard title="Session 2" activity="Inactive" />
+              <SessionCard title="Session 3" activity="Inactive" />
+              <SessionCard title="Session 4" activity="Inactive" />
+              <SessionCard title="Session 5" activity="Inactive" />
+              <SessionCard title="Session 6" activity="Inactive" />
+            </Container>
+            <Container className="card-container">
+              <h3 className="card-title divisor">Older</h3>
+              <SessionCard title="Session 1" activity="Inactive" />
+              <SessionCard title="Session 2" activity="Inactive" />
+              <SessionCard title="Session 2" activity="Inactive" />
+            </Container>
+            <Container className="card-container">
+              <h3 className="card-title divisor">Older</h3>
+              <SessionCard title="Session 1" activity="Inactive" />
+              <SessionCard title="Session 2" activity="Inactive" />
+            </Container>
+            <Container className="card-container">
+              <h3 className="card-title divisor">Older</h3>
+              <SessionCard title="Session 1" activity="Inactive" />
+              <SessionCard title="Session 2" activity="Inactive" />
+            </Container>
+          </div>
+        </div>
+        <div className="menu-bar-items courses-bottom-row bottom-0 gap-3">
+          <div className="row gap-3 p-3">
+            <IconButton
+              label="Download Class Data"
+              icon={<IconDownload size="2rem" />}
+              variant="outline"
+              style={{ maxWidth: "max-content" }}
+            />
+            <IconButton
+              label="View Roster"
+              icon={<IconList size="2rem" />}
+              variant="outline"
+              style={{ maxWidth: "max-content" }}
+            />
+          </div>
           <IconButton
             label="Create Session"
             icon={<IoMdAddCircleOutline size="2rem" />}
             onClick={() => openPopup("Create Session")}
+            style={{ maxWidth: "max-content", zIndex: 5 }}
           />
-        </div>
-        <div className="position-absolute bottom-0 start-0 p-4 d-flex align-items-center flex-row gap-3">
-          <IconButton
-            label="Download Class Data"
-            icon={<IoIosDownload size="2rem" />}
-            variant="outline"
-          />
-          <div>
-            <IconButton
-              label="View Roster"
-              icon={<IoIosList size="2rem" />}
-              variant="outline"
-            />
-          </div>
         </div>
       </div>
     );

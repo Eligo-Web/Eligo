@@ -5,7 +5,6 @@ import Overlay from "../components/Overlay";
 import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
 import { JoinClass, CreateClass } from "../components/Popups";
-import { isMobile } from "react-device-detect";
 import "../styles/overlay.css";
 import "../styles/cards.css";
 
@@ -47,23 +46,43 @@ function OverView(props) {
     return (
       <div>
         <Overlay title="Create Class" content={CreateClass()} />
-        <Container className="card-container">
-          <Card
-            title="Computer System Fundamentals"
-            instructor="Dave Hovemeyer"
-            id="EN.601.229"
-            onClick={() =>
-              handleViewClass("Computer System Fundamentals", "EN.601.229")
-            }
-          />
-          <Card />
-          <Card />
-          <Card />
-        </Container>
+        <div>
+          <Container className="card-container">
+            <h3 className="card-title divisor">Spring 2023</h3>
+            <Card
+              title="Computer System Fundamentals"
+              instructor="Dave Hovemeyer"
+              id="EN.601.229"
+              onClick={() =>
+                handleViewClass("Computer System Fundamentals", "EN.601.229")
+              }
+            />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+          </Container>
+          <Container className="card-container">
+            <h3 className="card-title divisor">Fall 2022</h3>
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+          </Container>
+          <Container className="card-container">
+            <h3 className="card-title divisor">Spring 2022</h3>
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+          </Container>
+        </div>
       </div>
     );
   }
-  if (isMobile && location.state.permission === "instructor") {
+  if (window.innerWidth < 600 && location.state.permission === "instructor") {
     return (
       <center className="card-subtitle p-4">
         Please sign in on a desktop device to use Edupoll as an instructor.

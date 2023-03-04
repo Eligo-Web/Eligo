@@ -58,6 +58,11 @@ body {
   margin: 0 0.2rem;
 }
 
+.divisor {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+}
+
 .vote-btn {
   color: hsl(212, 100%, 3%, 0.75);
 }

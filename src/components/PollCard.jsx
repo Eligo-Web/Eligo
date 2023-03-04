@@ -8,9 +8,13 @@ import { openPopup } from "./Overlay";
  * @param {{title: string}} props
  */
 function PollCard(props) {
+  let inactive = "";
+  if (props.disabled) {
+    inactive = " inactive";
+  }
   return (
     <div
-      className="card poll-card clickable"
+      className={"card poll-card clickable" + inactive}
       onClick={() => openPopup(props.title)}
       id={props.title}
     >

@@ -142,6 +142,11 @@
   background: #bdd9fb;
 }
 
+.courses-bottom-row {
+  background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
+  position: fixed;
+}
+
 .sign-in-wrapper {
   display: flex;
   justify-content: center;

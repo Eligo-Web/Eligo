@@ -19,9 +19,7 @@
 }
 
 .card:hover,
-.card:focus,
-.poll-card:hover,
-.poll-card:focus {
+.card:focus {
   background-color: #bdcff1;
   border-color: #313948b6;
   cursor: pointer;
@@ -37,18 +35,32 @@
 .poll-card {
   height: 5rem;
   justify-content: center;
+  border: 0.2rem solid rgba(0, 6, 13, 0.55);
+}
+
+.poll-card:hover,
+.poll-card:focus {
+  background-color: #bdcff1;
+  border: 0.2rem solid rgba(0, 6, 13, 0.75);
+  cursor: pointer;
+}
+
+.inactive {
+  border: transparent;
+  opacity: 80%;
 }
 
 .session-card {
   width: 25rem;
   height: 3.5rem;
-  border: 0.2rem solid rgba(0, 6, 13, 0.65);
+  border: 0.2rem solid rgba(0, 6, 13, 0.55);
   border-radius: 2rem;
   justify-content: center;
+  margin: 0;
 }
 
 .session-card:hover {
-  border: 0.2rem solid rgba(0, 6, 13, 0.65);
+  border: 0.2rem solid rgba(0, 6, 13, 0.75);
   cursor: pointer;
 }
 
@@ -91,15 +103,20 @@
 }
 
 /* ========================================================= */
-/* ==================== Card Containers ==================== */
+/* ====================== Containers ======================= */
 /* ========================================================= */
+
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10rem;
+}
 
 .card-container,
 .poll-card-container {
   display: flex;
   gap: 0.6rem;
   padding: 1rem;
-  padding-bottom: 6rem;
   flex-wrap: wrap;
 }
 
