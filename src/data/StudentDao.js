@@ -1,9 +1,9 @@
-import User from "../model/User.js";
+import Student from "../model/Student.js";
 import ApiError from "../model/ApiError.js";
 import mongoose from "mongoose";
 import { UserRole } from "../model/UserRole.js";
 
-class UserDao {
+class StudentDao {
   async readAll({ name, email, role }) {
     const filter = {};
     if (name) {
@@ -15,35 +15,35 @@ class UserDao {
     if (role) {
       filter.role = role;
     }
-    const users = await User.find(filter);
-    return users;
+    const students = await Student.find(filter);
+    return students;
   }
 
   async read(id) {
-    const user = await User.findById(id);
-    if (!user) {
+    const student = await Student.findById(id);
+    if (!student) {
       throw new ApiError(404, `User with id ${id} not found`);
     }
-    return user;
+    return student;
   }
 
-  async create(user) {
-    const newUser = new User(user);
-    await newUser.save();
-    return newUser;
+  async create(student) {
+    const newStudent = new Student(student);
+    await newStudent.save();
+    return newStudent;
   }
 
   async delete(id) {
-    const user = await User.findByIdAndDelete(id);
-    if (!user) {
+    const student = await Student.findByIdAndDelete(id);
+    if (!student) {
       throw new ApiError(404, `User with id ${id} not found`);
     }
-    return user;
+    return student;
   }
 
   async deleteAll() {
-    await User.deleteMany({});
+    await Student.deleteMany({});
   }
 }
 
-export default UserDao;
+export default StudentDao;

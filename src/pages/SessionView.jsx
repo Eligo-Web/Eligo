@@ -21,18 +21,18 @@ function SessionView(props) {
           description={location.state.classId}
         />
         {renderOverlays(10)}
-        <Container className="poll-card-container" style={{paddingBottom: 0}}>
+        <Container className="poll-card-container" style={{ paddingBottom: 0 }}>
           <h3 className="card-title divisor">Active Poll</h3>
         </Container>
         <Container className="poll-card-container">
           <PollCard title="Poll 1" key="Poll 1" />
         </Container>
-        <Container className="poll-card-container" style={{paddingBottom: 0}}>
+        <Container className="poll-card-container" style={{ paddingBottom: 0 }}>
           <h3 className="card-title divisor">Inactive Polls</h3>
         </Container>
         <Container className="poll-card-container">
           {renderPollCards(39)}
-        </Container>        
+        </Container>
       </div>
     );
   }
