@@ -15,7 +15,11 @@ function SignIn(props) {
       .get(`${server}/student/?email=${email}`)
       .then((res) => {
         console.log(res);
-        if (res.data.data.length === 0) {
+        if (
+          res.data.data.length === 0 ||
+          res.data.data[0].email !== email ||
+          res.data.data[0].role !== role
+        ) {
           axios
             .post(`${server}/student`, {
               name: name,
@@ -45,7 +49,11 @@ function SignIn(props) {
       .get(`${server}/instructor/?email=${email}`)
       .then((res) => {
         console.log(res);
-        if (res.data.data.length === 0) {
+        if (
+          res.data.data.length === 0 ||
+          res.data.data[0].email !== email ||
+          res.data.data[0].role !== role
+        ) {
           axios
             .post(`${server}/instructor`, {
               name: name,

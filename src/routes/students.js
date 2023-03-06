@@ -5,7 +5,6 @@ import * as db from "../data/db.js";
 
 const Student = express.Router();
 export const studentDao = new StudentDao();
-const server = "http://localhost:3000";
 
 Student.get("/", async (req, res) => {
   const students = await studentDao.readAll(req.query);

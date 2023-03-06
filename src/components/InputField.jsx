@@ -7,6 +7,7 @@ export default function InputField(props) {
       <Form.Control
         placeholder={props.input || "Placeholder Text"}
         defaultValue={props.value}
+        onChange={props.onChange}
       />
     </div>
   );

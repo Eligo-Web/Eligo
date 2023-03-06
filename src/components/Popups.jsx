@@ -3,6 +3,7 @@ import { IconButton, PrimaryButton, VoteButton } from "./Buttons.jsx";
 import { closePopup } from "./Overlay";
 import InputField from "./InputField";
 import NewWindow from "react-new-window";
+import axios from "axios";
 import { IconTrash } from "@tabler/icons-react";
 
 export function Default() {
@@ -64,11 +65,44 @@ export function JoinSession(props) {
 }
 
 export function CreateClass() {
+  const server = "http://localhost:3000";
+  let name = "";
+  let section = "";
+  function storeName(n) {
+    name = n;
+    console.log(name);
+  }
+  function storeSection(s) {
+    section = s;
+    console.log(section);
+  }
+  function postCourse() {
+    axios
+      .post(`${server}/course`, {
+        name: name,
+        section: section,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   return (
     <div className="pop-up-content">
       <div className="input-group">
-        <InputField label="Class Name" input="ex: Intermediate Programming" />
-        <InputField class="section-input" label="Section" input="#" />
+        <InputField
+          label="Class Name"
+          input="ex: Intermediate Programming"
+          onChange={(e) => storeName(e.target.value)}
+        />
+        <InputField
+          class="section-input"
+          label="Section"
+          input="#"
+          onChange={(e) => storeSection(e.target.value)}
+        />
       </div>
       <div className="button-row">
         <PrimaryButton
@@ -76,7 +110,7 @@ export function CreateClass() {
           label="Cancel"
           onClick={() => closePopup("Create Class")}
         />
-        <PrimaryButton variant="primary" label="Create" />
+        <PrimaryButton variant="primary" label="Create" onClick={() => postCourse(name, section)} />
       </div>
     </div>
   );
