@@ -38,8 +38,7 @@ const CourseSchema = new mongoose.Schema({
   SISId: {
     type: String,
     //required: true,
-},
-
+  },
 });
 
 const Course = mongoose.model("Course", CourseSchema);

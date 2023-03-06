@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { IconButton, PrimaryButton, VoteButton } from "./Buttons.jsx";
+import { PrimaryButton, VoteButton } from "./Buttons.jsx";
+import {
+  IconChartBar,
+  IconChartBarOff,
+  IconChartInfographic,
+  IconMaximize,
+  IconMinimize,
+  IconPlayerStopFilled,
+} from "@tabler/icons-react";
 import { closePopup } from "./Overlay";
 import InputField from "./InputField";
 import NewWindow from "react-new-window";
 import axios from "axios";
-import { IconTrash } from "@tabler/icons-react";
+import { Row } from "react-bootstrap";
+import "../styles/newpoll.css";
 
 export function Default() {
   return (
@@ -68,14 +77,17 @@ export function CreateClass() {
   const server = "http://localhost:3000";
   let name = "";
   let section = "";
+
   function storeName(n) {
     name = n;
     console.log(name);
   }
+
   function storeSection(s) {
     section = s;
     console.log(section);
   }
+
   function postCourse() {
     axios
       .post(`${server}/course`, {
@@ -89,6 +101,7 @@ export function CreateClass() {
         console.log(err);
       });
   }
+
   return (
     <div className="pop-up-content">
       <div className="input-group">
@@ -110,7 +123,11 @@ export function CreateClass() {
           label="Cancel"
           onClick={() => closePopup("Create Class")}
         />
-        <PrimaryButton variant="primary" label="Create" onClick={() => postCourse(name, section)} />
+        <PrimaryButton
+          variant="primary"
+          label="Create"
+          onClick={() => postCourse(name, section)}
+        />
       </div>
     </div>
   );
@@ -204,6 +221,166 @@ export function Poll(id) {
   );
 }
 
-export function InstructorPoll(props) {
-  return;
+// ================== New Poll Window Popup ================== //
+
+export function InstructorPoll() {
+  const [minimized, setMinimized] = useState(false);
+  const [showChart, setShowChart] = useState(false);
+  const winWidth = window.outerWidth - window.innerWidth;
+  const winHeight = window.outerHeight - window.innerHeight;
+  let fullHeight = winHeight;
+  let fullWidth = winWidth;
+
+  function resizeToContent() {
+    const content = document.querySelector(".newpoll-pop-up");
+    fullWidth = winWidth + content.offsetWidth;
+    fullHeight = winHeight + content.offsetHeight;
+    window.resizeTo(fullWidth, fullHeight);
+  }
+
+  window.onload = function () {
+    if (window.parent["name"] === "New Poll") {
+      window.document.title = "New Poll";
+      resizeToContent();
+    }
+  };
+
+  window.onresize = function () {
+    window.resizeTo(fullWidth, fullHeight);
+  };
+
+  useEffect(() => {
+    if (document.querySelector(".newpoll-pop-up")) {
+      resizeToContent();
+    }
+  }, [minimized]);
+
+  useEffect(() => {
+    if (document.querySelector(".newpoll-pop-up")) {
+      // resizeToContent();
+    }
+  }, [showChart]);
+
+  return (
+    <div className="newpoll-wrapper" id="New Poll">
+      <div className="newpoll newpoll-pop-up">
+        <div className="newpoll-pop-up-content">
+          <div className="d-flex align-items-center gap-3">
+            <Stopwatch />
+            {showChart ? (
+              <IconChartBarOff
+                className="data-chart"
+                size="2.8rem"
+                onClick={() => setShowChart(!showChart)}
+              />
+            ) : (
+              <IconChartBar
+                className="data-chart"
+                size="2.8rem"
+                onClick={() => setShowChart(!showChart)}
+              />
+            )}
+            {/* {ChartToggle({toggle: showChart, onClick: () => setShowChart(!showChart)})} */}
+            {minimized ? (
+              <IconMaximize
+                className="minimize"
+                size="2.8rem"
+                onClick={() => setMinimized(!minimized)}
+              />
+            ) : (
+              <IconMinimize
+                className="minimize"
+                size="2.8rem"
+                onClick={() => setMinimized(!minimized)}
+              />
+            )}
+          </div>
+          {minimized ? null : (
+            <div className="input-group">
+              <InputField label="Poll Name" input="ex: Question 1" />
+            </div>
+          )}
+          {minimized ? null : (
+            <div className="button-row">
+              <PrimaryButton
+                variant="secondary"
+                label="Discard"
+                onClick={() => {
+                  console.log("discarded poll");
+                  window.close();
+                }}
+              />
+              <PrimaryButton
+                variant="primary"
+                label="Save"
+                onClick={() => {
+                  console.log("saved poll");
+                  window.close();
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Stopwatch() {
+  const [time, setTime] = useState(0);
+  const [running, setRunning] = useState(true);
+
+  function stopTime() {
+    setRunning(false);
+    const btn = document.querySelector(".stop-button");
+    const watch = document.querySelector(".stopwatch");
+    const timeText = document.querySelector(".min-sec");
+    btn.style.opacity = 0;
+    btn.style.width = 0;
+    btn.style.marginRight = 0;
+    watch.style.gap = 0;
+    watch.style.backgroundColor = "#c2d3f3";
+    watch.style.color = "#1b2543";
+    console.log(time);
+    timeText.style.width = "fit-content";
+  }
+
+  useEffect(() => {
+    let interval;
+    if (running) {
+      if (time >= 3600) {
+        setRunning(false);
+      }
+      interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
+    } else if (!running) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [running]);
+
+  return (
+    <div className="stopwatch">
+      <div className="min-sec">
+        <span>{("0" + Math.floor((time / 60) % 60)).slice(-2)}:</span>
+        <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
+      </div>
+      <div className="stopwatch-buttons">
+        <IconPlayerStopFilled
+          className="stop-button"
+          preserveAspectRatio="none"
+          onClick={() => stopTime()}
+        />
+      </div>
+    </div>
+  );
+}
+
+function ChartToggle(props) {
+  const components = { 0: IconChartBar, 1: IconChartBarOff };
+  let ChartButton = components[props.toggle];
+  return (
+    <ChartButton className="data-chart" size="2.8rem" onClick={props.onClick} />
+  );
 }

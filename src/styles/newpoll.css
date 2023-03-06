@@ -1,0 +1,112 @@
+.newpoll {
+  display: flex;
+  height: 100vh;
+  z-index: 3;
+  top: 0;
+}
+
+.newpoll-wrapper {
+  bottom: 0;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  position: fixed;
+  z-index: 3;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.newpoll-pop-up {
+  flex: 1;
+  flex-direction: column;
+  padding: 1.2rem;
+  gap: 1rem;
+  width: fit-content;
+  height: fit-content;
+
+  background: radial-gradient(
+    136.93% 283.65% at -13.74% -14.37%,
+    #b1cefb 0%,
+    #7ba3c7 100%
+  );
+}
+
+.newpoll-pop-up-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  gap: 2rem;
+}
+
+.newpoll-pop-up-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 25rem;
+  gap: 1rem;
+}
+
+.newpoll-pop-up-title {
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 1.5rem;
+  min-width: 0;
+}
+
+.stopwatch {
+  display: flex;
+  justify-content: end;
+  background-color: #fbb8abd7;
+  width: fit-content;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #650000;
+  padding: 0.5rem 1.3rem;
+  border-radius: 10rem;
+  transition: 0.2s ease-in-out;
+  mix-blend-mode: hard-light;
+  gap: 0.7rem;
+}
+
+.stopwatch-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.stop-button {
+  cursor: pointer;
+  position: relative;
+  margin-right: -0.1rem;
+  transition: 0.1s ease-in-out;
+}
+
+.min-sec {
+  width: 4rem;
+  transition: 0.1s ease-in-out;
+}
+
+.minimize,
+.data-chart {
+  cursor: pointer;
+  background-color: #c2d3f3;
+  color: #1b2543;
+  border-radius: 10rem;
+  transition: 0.2s ease-in-out;
+  mix-blend-mode: hard-light;
+  height: 100%;
+}
+
+.minimize {
+  margin-right: 0.5rem;
+  padding: 0.4rem;
+}
+
+.data-chart {
+  padding: 0.5rem;
+}

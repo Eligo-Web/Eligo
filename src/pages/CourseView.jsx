@@ -16,10 +16,21 @@ import {
 } from "../components/Popups";
 import { openPopup } from "../components/Overlay";
 import { IconDownload, IconList } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
 function CourseView(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
+
+  window.onresize = function () {
+    if (window.innerWidth < 900) {
+      setLabels(false);
+    } else if (!buttonLabels) {
+      setLabels(true);
+    }
+  };
+
   function handleViewSession(sessionId) {
     navigate("/session", {
       state: {
@@ -30,9 +41,11 @@ function CourseView(props) {
       },
     });
   }
+
   function studentContent() {
     return <Overlay title="Join Class" content={JoinClass()} />;
   }
+
   function instructorContent() {
     return (
       <div className="d-flex flex-column ">
@@ -90,13 +103,13 @@ function CourseView(props) {
           />
           <div className="row gap-3 p-3">
             <IconButton
-              label="Download Class Data"
+              label={buttonLabels ? "Download Class Data" : null}
               icon={<IconDownload size="2rem" />}
               variant="outline"
               style={{ maxWidth: "max-content" }}
             />
             <IconButton
-              label="View Roster"
+              label={buttonLabels ? "View Roster" : null}
               icon={<IconList size="2rem" />}
               variant="outline"
               style={{ maxWidth: "max-content" }}
