@@ -5,6 +5,7 @@ body {
   background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
   margin-top: 5rem;
   min-height: 60vh;
+  overflow: overlay;
 }
 
 .sign-in-title {
@@ -102,4 +103,33 @@ body {
   font-size: 1.5rem;
   max-width: fit-content;
   min-width: fit-content;
+}
+
+/* =============== Scroll Bar =============== */
+
+/* width */
+::-webkit-scrollbar {
+  width: 1rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  margin-top: 5rem;
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border: 0.25rem solid transparent;
+  background-clip: padding-box;
+  border-radius: 9999px;
+  background-color: #0e215285;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  border: 0.15rem solid transparent;
+  background-clip: padding-box;
+  border-radius: 9999px;
+  background-color: #041233c7;
 }

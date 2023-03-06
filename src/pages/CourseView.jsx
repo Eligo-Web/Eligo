@@ -1,11 +1,11 @@
 import Container from "react-bootstrap/Container";
-import { IoMdAddCircleOutline, IoIosDownload, IoIosList } from "react-icons/io";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import "../styles/cards.css";
 
 import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
 import SessionCard from "../components/SessionCard";
-import IconButton from "../components/Buttons/IconButton";
+import { IconButton } from "../components/Buttons.jsx";
 import Overlay from "../components/Overlay";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -17,7 +17,7 @@ import {
 import { openPopup } from "../components/Overlay";
 import { IconDownload, IconList } from "@tabler/icons-react";
 
-function InstructorClassView(props) {
+function CourseView(props) {
   const location = useLocation();
   const navigate = useNavigate();
   function handleViewSession(sessionId) {
@@ -26,7 +26,7 @@ function InstructorClassView(props) {
         permission: location.state.permission,
         email: location.state.email,
         sessionId: sessionId,
-        classId: location.state.classId,
+        sectionId: location.state.sectionId,
       },
     });
   }
@@ -81,7 +81,13 @@ function InstructorClassView(props) {
             </Container>
           </div>
         </div>
-        <div className="menu-bar-items courses-bottom-row bottom-0 gap-3">
+        <div className="courses-bottom-row bottom-0 gap-3">
+          <IconButton
+            label="Create Session"
+            icon={<IoMdAddCircleOutline size="2rem" />}
+            onClick={() => openPopup("Create Session")}
+            style={{ maxWidth: "max-content" }}
+          />
           <div className="row gap-3 p-3">
             <IconButton
               label="Download Class Data"
@@ -96,23 +102,19 @@ function InstructorClassView(props) {
               style={{ maxWidth: "max-content" }}
             />
           </div>
-          <IconButton
-            label="Create Session"
-            icon={<IoMdAddCircleOutline size="2rem" />}
-            onClick={() => openPopup("Create Session")}
-            style={{ maxWidth: "max-content", zIndex: 5 }}
-          />
         </div>
       </div>
     );
   }
   return (
     <div>
-      <Menu />
+      <Menu leaveAction={location.state.permission === "student"} />
       <MenuBar
-        title={location.state.className}
-        description={location.state.classId}
+        title={location.state.courseName}
+        description={location.state.sectionId}
         onClick={props.onClick}
+        clickable={true}
+        showDescription={location.state.permission !== "student"}
       />
       {location.state.permission === "student"
         ? studentContent()
@@ -121,4 +123,4 @@ function InstructorClassView(props) {
   );
 }
 
-export default InstructorClassView;
+export default CourseView;

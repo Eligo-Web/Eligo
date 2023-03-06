@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 import { IconBook, IconSchool } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +6,7 @@ import axios from "axios";
 function SignIn(props) {
   const server = "http://localhost:3000";
   const navigate = useNavigate();
+
   function handleStudent() {
     const email = "student@jhu.edu";
     const name = "student";

@@ -4,6 +4,7 @@
 
 .btn-primary,
 .btn-secondary,
+.btn-delete,
 .btn-icon,
 .btn-sign-out,
 .btn-outline {
@@ -14,7 +15,7 @@
   align-items: center;
   padding: 0.6rem 0;
   mix-blend-mode: hard-light;
-  border-radius: 50px;
+  border-radius: 10rem;
   font-weight: 600;
   font-size: 1.3rem;
   box-shadow: none !important;
@@ -24,6 +25,7 @@
 .btn-icon,
 .btn-sign-out,
 .btn-outline {
+  align-self: stretch;
   justify-content: flex-start;
   gap: 1.5rem;
   padding-left: 1.5rem;
@@ -51,6 +53,22 @@
   background-color: #6fc55a;
   border-color: #084913a0;
   color: #002e08;
+}
+
+.btn-delete {
+  color: #650000;
+  max-width: fit-content;
+  padding: 0 1rem;
+}
+
+.btn-delete:hover,
+.btn-delete:focus {
+  border-color: transparent;
+  color: #650000;
+}
+
+.btn-delete:active {
+  color: #300000;
 }
 
 .btn-sign-out {
@@ -145,6 +163,24 @@
 .courses-bottom-row {
   background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
   position: fixed;
+  color: #00060d;
+  line-height: 5rem;
+  max-height: 5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 1.2rem;
+}
+
+.edit-button {
+  position: absolute;
+  color: hsla(212, 100%, 3%, 0.75);
+  padding: 0.5rem;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  z-index: 5;
 }
 
 .sign-in-wrapper {

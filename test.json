@@ -1,0 +1,14 @@
+{
+  "Fall 2022": {
+    "Intermediate Programming": {}
+  },
+  "Spring 2023": {
+    "CSF": {
+      "1": {
+        "Session 1": {
+          "Poll 1": "Poll Content"
+        }
+      }
+    }
+  }
+}

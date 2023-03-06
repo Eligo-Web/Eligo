@@ -116,7 +116,7 @@
 .poll-card-container {
   display: flex;
   gap: 0.6rem;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   flex-wrap: wrap;
 }
 

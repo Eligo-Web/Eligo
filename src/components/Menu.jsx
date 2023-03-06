@@ -7,11 +7,12 @@ import {
   IoMdAddCircleOutline,
   IoMdPerson,
 } from "react-icons/io";
-import IconButton from "../components/Buttons/IconButton";
+import { IconButton } from "./Buttons.jsx";
 import { Button, Container } from "react-bootstrap";
 import { openPopup } from "./Overlay";
 
 import { useLocation, useNavigate } from "react-router-dom";
+import { IconTrash } from "@tabler/icons-react";
 
 function Menu(props) {
   const location = useLocation();
@@ -20,12 +21,16 @@ function Menu(props) {
   if (location.state.permission === "instructor") {
     getLabel = "Create Class";
   }
+  if (props.leaveAction) {
+    getLabel = "Leave Class";
+  }
+
   function closeMenu(overlay) {
     const menu = document.getElementById("side-menu");
     menu.querySelector(".overlay-bg").style.pointerEvents = "none";
     menu.querySelector(".overlay-bg").style.opacity = 0;
     menu.querySelector(".menu").style.left = "-18rem";
-    document.body.style.overflow = "auto";
+    document.body.style.overflow = "overlay";
     console.log("closed menu");
     openPopup(overlay);
   }
@@ -50,10 +55,13 @@ function Menu(props) {
             {location.state.permission}
           </Container>
         </Container>
-        <Container className="d-flex flex-column p-3 gap-2">
+        <Container className="d-flex flex-column p-3 gap-2 align-items-center">
           <IconButton
             label={getLabel}
-            icon={<IoMdAddCircleOutline size="2rem" />}
+            variant={props.leaveAction ? "delete" : ""}
+            icon={
+              props.leaveAction ? null : <IoMdAddCircleOutline size="2rem" />
+            }
             onClick={() => closeMenu(getLabel)}
           />
           <IconButton

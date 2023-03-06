@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import PrimaryButton from "../components/Buttons/PrimaryButton";
-import VoteButton from "./Buttons/VoteButton";
-import InputField from "./InputField";
+import { IconButton, PrimaryButton, VoteButton } from "./Buttons.jsx";
 import { closePopup } from "./Overlay";
+import InputField from "./InputField";
+import NewWindow from "react-new-window";
+import { IconTrash } from "@tabler/icons-react";
 
 export function Default() {
   return (
@@ -81,6 +82,38 @@ export function CreateClass() {
   );
 }
 
+export function EditClass(props) {
+  return (
+    <div className="pop-up-content">
+      <div className="input-group">
+        <InputField
+          label="Class Name"
+          input="ex: Intermediate Programming"
+          value="Current name"
+        />
+        <InputField class="section-input" label="Section" input="#" value="1" />
+      </div>
+      <div className="button-row">
+        <PrimaryButton
+          variant="delete"
+          label="Delete"
+          onClick={() => closePopup("Edit Class")}
+        />
+        <PrimaryButton
+          variant="secondary"
+          label="Cancel"
+          onClick={() => closePopup("Edit Class")}
+        />
+        <PrimaryButton
+          variant="primary"
+          label="Save"
+          onClick={() => closePopup("Edit Class")}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function CreateSession() {
   return (
     <JoinOrCreate
@@ -135,4 +168,8 @@ export function Poll(id) {
       />
     </div>
   );
+}
+
+export function InstructorPoll(props) {
+  return;
 }

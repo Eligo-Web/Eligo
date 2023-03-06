@@ -1,10 +1,12 @@
 import PollCard from "../components/PollCard";
-import { Poll } from "../components/Popups";
+import { CreateClass, InstructorPoll, Poll } from "../components/Popups";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
-import Overlay from "../components/Overlay";
+import Overlay, { openPopup } from "../components/Overlay";
 import Container from "react-bootstrap/Container";
+import { IconButton } from "../components/Buttons";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 function SessionView(props) {
   const location = useLocation();
@@ -18,7 +20,9 @@ function SessionView(props) {
         <Menu />
         <MenuBar
           title={location.state.sessionId}
-          description={location.state.classId}
+          description={location.state.sectionId}
+          clickable={true}
+          showDescription={true}
         />
         {renderOverlays(10)}
         <Container className="poll-card-container" style={{ paddingBottom: 0 }}>
@@ -33,6 +37,14 @@ function SessionView(props) {
         <Container className="poll-card-container">
           {renderPollCards(39)}
         </Container>
+        <div className="courses-bottom-row bottom-0 gap-3">
+          <IconButton
+            label="Create Poll"
+            icon={<IoMdAddCircleOutline size="2rem" />}
+            onClick={() => {}}
+            style={{ maxWidth: "max-content" }}
+          />
+        </div>
       </div>
     );
   }

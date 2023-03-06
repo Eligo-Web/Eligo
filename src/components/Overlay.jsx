@@ -18,7 +18,7 @@ export function openPopup(id) {
 export function closePopup(id) {
   const overlay = document.getElementById(id);
   if (overlay) {
-    document.body.style.overflow = "auto";
+    document.body.style.overflow = "overlay";
     const thisOverlay = document.getElementById(id);
     thisOverlay.querySelector(".overlay-bg").style.pointerEvents = "none";
     thisOverlay.querySelector(".overlay-bg").style.opacity = 0;
