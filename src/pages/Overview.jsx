@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { JoinClass, CreateClass, EditClass } from "../components/Popups";
 import "../styles/overlay.css";
 import "../styles/cards.css";
+import AccessDenied from "../components/AccessDenied";
 
 function OverView(props) {
   const location = useLocation();
@@ -58,28 +59,28 @@ function OverView(props) {
               onClick={() => {
                 handleViewClass("Computer System Fundamentals", "EN.601.229");
               }}
-              editable={true}
+              editable
             />
-            <Card editable={true} />
-            <Card editable={true} />
-            <Card editable={true} />
-            <Card editable={true} />
+            <Card editable />
+            <Card editable />
+            <Card editable />
+            <Card editable />
           </Container>
           <Container className="card-container">
             <h3 className="card-title divisor">Fall 2022</h3>
-            <Card editable={true} />
-            <Card editable={true} />
-            <Card editable={true} />
-            <Card editable={true} />
-            <Card editable={true} />
+            <Card editable />
+            <Card editable />
+            <Card editable />
+            <Card editable />
+            <Card editable />
           </Container>
           <Container className="card-container">
             <h3 className="card-title divisor">Spring 2022</h3>
-            <Card editable={true} />
-            <Card editable={true} />
-            <Card editable={true} />
-            <Card editable={true} />
-            <Card editable={true} />
+            <Card editable />
+            <Card editable />
+            <Card editable />
+            <Card editable />
+            <Card editable />
           </Container>
         </div>
       </div>
@@ -92,7 +93,9 @@ function OverView(props) {
       </center>
     );
   }
-  return (
+  return !location.state ? (
+    <AccessDenied />
+  ) : (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Menu />
       <MenuBar
@@ -100,7 +103,7 @@ function OverView(props) {
         description={location.state.email}
         onClick={props.onClick}
         clickable={false}
-        showDescription={true}
+        showDescription
       />
       {location.state.permission === "student"
         ? studentContent()

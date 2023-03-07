@@ -1,22 +1,18 @@
 import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import "../styles/cards.css";
-
 import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
 import SessionCard from "../components/SessionCard";
 import { IconButton } from "../components/Buttons.jsx";
 import Overlay from "../components/Overlay";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  CreateSession,
-  CreateClass,
-  JoinClass,
-  JoinSession,
-} from "../components/Popups";
+import { CreateSession, CreateClass, JoinSession } from "../components/Popups";
 import { openPopup } from "../components/Overlay";
 import { IconDownload, IconList } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import "../styles/cards.css";
+import AccessDenied from "../components/AccessDenied";
 
 function CourseView(props) {
   const location = useLocation();
@@ -43,7 +39,30 @@ function CourseView(props) {
   }
 
   function studentContent() {
-    return <Overlay title="Join Class" content={JoinClass()} />;
+    const [sessionOpen, setSessionOpen] = useState(false);
+    return (
+      <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
+        <Overlay title="Join Session" content={JoinSession()} />
+        {sessionOpen ? (
+          "Open"
+        ) : (
+          <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
+            <div className="blank-state-msg">
+              Hmm... It seems your instructor has not started a session yet.
+            </div>
+            <Button
+              variant="blank-state"
+              className="large-title"
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              Refresh
+            </Button>
+          </div>
+        )}
+      </div>
+    );
   }
 
   function instructorContent() {
@@ -119,14 +138,16 @@ function CourseView(props) {
       </div>
     );
   }
-  return (
+  return !location.state ? (
+    <AccessDenied />
+  ) : (
     <div>
       <Menu leaveAction={location.state.permission === "student"} />
       <MenuBar
         title={location.state.courseName}
         description={location.state.sectionId}
         onClick={props.onClick}
-        clickable={true}
+        clickable
         showDescription={location.state.permission !== "student"}
       />
       {location.state.permission === "student"

@@ -62,7 +62,17 @@ function Menu(props) {
             icon={
               props.leaveAction ? null : <IoMdAddCircleOutline size="2rem" />
             }
-            onClick={() => closeMenu(getLabel)}
+            onClick={() => {
+              closeMenu(getLabel);
+              if (props.leaveAction) {
+                navigate("/overview", {
+                  state: {
+                    permission: location.state.permission,
+                    email: location.state.email,
+                  },
+                });
+              }
+            }}
           />
           <IconButton
             label="Sign Out"

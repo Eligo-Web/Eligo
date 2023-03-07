@@ -3,7 +3,7 @@ import Overview from "../pages/Overview";
 import SessionView from "../pages/SessionView";
 import CourseView from "../pages/CourseView";
 import SignIn from "../pages/SignIn";
-import InstructorPoll from "../components/Popups";
+import InstructorPoll from "../components/InstructorPoll";
 
 function InAppContainer() {
   return (

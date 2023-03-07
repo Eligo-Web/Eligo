@@ -1,19 +1,24 @@
 import PollCard from "../components/PollCard";
-import { CreateClass, Poll } from "../components/Popups";
+import { Poll } from "../components/Popups";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
-import Overlay, { openPopup } from "../components/Overlay";
+import Overlay from "../components/Overlay";
 import Container from "react-bootstrap/Container";
 import { IconButton } from "../components/Buttons";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { useState } from "react";
+import AccessDenied from "../components/AccessDenied";
 
 function SessionView(props) {
   const location = useLocation();
   const navigate = useNavigate();
+
   function studentContent() {
-    return <p></p>;
+    let sessionOpen = Date.now() % 2;
+    return <div>{sessionOpen ? "Open" : "Not Open"}</div>;
   }
+
   function instructorContent() {
     return (
       <div className="card-wrapper">
@@ -21,8 +26,8 @@ function SessionView(props) {
         <MenuBar
           title={location.state.sessionId}
           description={location.state.sectionId}
-          clickable={true}
-          showDescription={true}
+          clickable
+          showDescription
         />
         {renderOverlays(10)}
         <Container className="poll-card-container" style={{ paddingBottom: 0 }}>
@@ -44,6 +49,13 @@ function SessionView(props) {
             onClick={() => createPoll()}
             style={{ maxWidth: "max-content" }}
           />
+          <div className="row gap-3 p-3">
+            <IconButton
+              label="Close Session"
+              variant="outline"
+              style={{ maxWidth: "max-content" }}
+            />
+          </div>
         </div>
       </div>
     );
@@ -52,7 +64,7 @@ function SessionView(props) {
     let cards = [];
     for (let i = 2; i <= num; i++) {
       let title = `Poll ${i}`;
-      cards.push(<PollCard title={title} key={title} disabled={true} />);
+      cards.push(<PollCard title={title} key={title} disabled />);
     }
     return cards;
   }
@@ -66,15 +78,19 @@ function SessionView(props) {
     }
     return overlays;
   }
-  
+
   function createPoll() {
     const popup = window.open(
       "/newpoll",
-      "New Poll",
-      "toolbar=no, popup=true, location=no, statusbar=no, menubar=no, scrollbars=0, width=100, height=100, top=150, left=700"
+      "test",
+      "toolbar=no, location=no, statusbar=no, \
+       menubar=no, scrollbars=0, width=250, \
+       height=100, top=110, left=1040"
     );
   }
-  return (
+  return !location.state ? (
+    <AccessDenied />
+  ) : (
     <div>
       {location.state.permission === "student"
         ? studentContent()

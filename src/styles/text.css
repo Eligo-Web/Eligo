@@ -4,8 +4,10 @@ body {
   color: rgb(0, 6, 13);
   background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
   margin-top: 5rem;
-  min-height: 60vh;
+  /* min-height: 60vh; */
   overflow: overlay;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .sign-in-title {
@@ -14,7 +16,9 @@ body {
       #aed6fb 0%,
       #6a86ce 100%
     )
-    /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+    /* warning: gradient uses a rotation that
+     is not supported by CSS and may not 
+     behave as expected */;
   font-weight: 500;
   font-size: 5rem;
   line-height: 116px;
@@ -103,6 +107,15 @@ body {
   font-size: 1.5rem;
   max-width: fit-content;
   min-width: fit-content;
+}
+
+.blank-state-msg {
+  font-weight: 600;
+  font-size: 1.3rem;
+  white-space: normal;
+  text-align: center;
+  opacity: 50%;
+  width: 75%;
 }
 
 /* =============== Scroll Bar =============== */
