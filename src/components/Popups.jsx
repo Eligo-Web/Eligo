@@ -223,7 +223,7 @@ export function Poll(id) {
 
 // ================== New Poll Window Popup ================== //
 
-export function InstructorPoll() {
+export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
   const [showChart, setShowChart] = useState(false);
   const winWidth = window.outerWidth - window.innerWidth;

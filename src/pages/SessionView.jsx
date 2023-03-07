@@ -1,5 +1,5 @@
 import PollCard from "../components/PollCard";
-import { CreateClass, InstructorPoll, Poll } from "../components/Popups";
+import { CreateClass, Poll } from "../components/Popups";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
@@ -41,7 +41,7 @@ function SessionView(props) {
           <IconButton
             label="Create Poll"
             icon={<IoMdAddCircleOutline size="2rem" />}
-            onClick={() => createPoll(document)}
+            onClick={() => createPoll()}
             style={{ maxWidth: "max-content" }}
           />
         </div>
@@ -66,22 +66,12 @@ function SessionView(props) {
     }
     return overlays;
   }
+  
   function createPoll() {
-    if (!window.screenTop && !window.screenY) {
-      if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        } else if (document.exitFullscreen) {
-          document.exitFullscreen();
-      }
-    }
     const popup = window.open(
       "/newpoll",
       "New Poll",
-      "toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=0, resizable=0, width=100, height=100, top=150, left=700"
+      "toolbar=no, popup=true, location=no, statusbar=no, menubar=no, scrollbars=0, width=100, height=100, top=150, left=700"
     );
   }
   return (

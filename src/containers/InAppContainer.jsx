@@ -3,7 +3,7 @@ import Overview from "../pages/Overview";
 import SessionView from "../pages/SessionView";
 import CourseView from "../pages/CourseView";
 import SignIn from "../pages/SignIn";
-import { InstructorPoll } from "../components/Popups";
+import InstructorPoll from "../components/Popups";
 
 function InAppContainer() {
   return (
@@ -13,7 +13,7 @@ function InAppContainer() {
       <Route path="/overview" element={<Overview />} />
       <Route path="/session" element={<SessionView />} />
       <Route path="/class" element={<CourseView />} />
-      <Route path="/newpoll" element={InstructorPoll()} />
+      <Route path="/newpoll" element={<InstructorPoll />} />
     </Routes>
   );
 }
