@@ -41,7 +41,7 @@ function SessionView(props) {
           <IconButton
             label="Create Poll"
             icon={<IoMdAddCircleOutline size="2rem" />}
-            onClick={() => createPoll()}
+            onClick={() => createPoll(document)}
             style={{ maxWidth: "max-content" }}
           />
         </div>
@@ -67,10 +67,21 @@ function SessionView(props) {
     return overlays;
   }
   function createPoll() {
+    if (!window.screenTop && !window.screenY) {
+      if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        } else if (document.exitFullscreen) {
+          document.exitFullscreen();
+      }
+    }
     const popup = window.open(
       "/newpoll",
       "New Poll",
-      "toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=0, width=100, height=100, top=150, left=700"
+      "toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=0, resizable=0, width=100, height=100, top=150, left=700"
     );
   }
   return (

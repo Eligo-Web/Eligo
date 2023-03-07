@@ -280,7 +280,6 @@ export function InstructorPoll() {
                 onClick={() => setShowChart(!showChart)}
               />
             )}
-            {/* {ChartToggle({toggle: showChart, onClick: () => setShowChart(!showChart)})} */}
             {minimized ? (
               <IconMaximize
                 className="minimize"
@@ -374,13 +373,5 @@ function Stopwatch() {
         />
       </div>
     </div>
-  );
-}
-
-function ChartToggle(props) {
-  const components = { 0: IconChartBar, 1: IconChartBarOff };
-  let ChartButton = components[props.toggle];
-  return (
-    <ChartButton className="data-chart" size="2.8rem" onClick={props.onClick} />
   );
 }
