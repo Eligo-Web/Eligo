@@ -46,7 +46,7 @@ function OverView(props) {
   }
   function instructorContent() {
     return (
-      <div>
+      <div style={{marginBottom: "5rem"}}>
         <Overlay title="Create Class" content={CreateClass()} />
         <Overlay title="Edit Class" content={EditClass()} />
         <div>
@@ -96,7 +96,7 @@ function OverView(props) {
   return !location.state ? (
     <AccessDenied />
   ) : (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div className="overview-wrapper">
       <Menu />
       <MenuBar
         title="Your Courses"

@@ -22,6 +22,24 @@ export default function InstructorPoll() {
   let fullWidth = winWidth;
   document.title = "New Poll" + (minimized ? " (mini)" : "");
 
+  const data = {
+    labels: ["A", "B", "C", "D", "E"],
+    datasets: [
+      {
+        data: [20, 17, 41, 10, 6],
+        backgroundColor: [
+          "#09507f",
+          "#2b8a35",
+          "#8c7300",
+          "#271e60",
+          "#8a0e03",
+        ],
+        borderWidth: 0,
+        borderRadius: 7,
+      },
+    ],
+  };
+
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
     fullWidth = winWidth + content.offsetWidth;
@@ -40,7 +58,6 @@ export default function InstructorPoll() {
   };
 
   useEffect(() => {
-    // Toggle minimize popup
     if (document.querySelector(".newpoll-pop-up")) {
       resizeToContent();
     }
@@ -89,6 +106,17 @@ export default function InstructorPoll() {
             <InputField label="Poll Name" input="ex: Question 1" />
           </div>
           <div
+            style={{
+              position: "relative",
+              height: showChart ? "fit-content" : 0,
+              marginTop: showChart ? 0 : "-1rem",
+              width: "100%",
+              overflow: "hidden",
+            }}
+          >
+            {PollChart(data)}
+          </div>
+          <div
             className="button-row"
             style={{ display: minimized ? "none" : "flex" }}
           >
@@ -108,17 +136,6 @@ export default function InstructorPoll() {
                 window.close();
               }}
             />
-          </div>
-          <div
-            style={{
-              position: "relative",
-              height: showChart ? "fit-content" : 0,
-              display: showChart ? "block" : "none",
-              width: "100%",
-              overflow: "hidden",
-            }}
-          >
-            {PollChart()}
           </div>
         </div>
       </div>
@@ -177,29 +194,12 @@ function Stopwatch() {
   );
 }
 
-function PollChart(props) {
+function PollChart(data) {
   defaults.font.family = "Inter";
   defaults.font.size = 15;
   defaults.font.weight = 700;
-  defaults.color = "#00060dbb";
+  defaults.color = "#000f2abb";
 
-  const data = {
-    labels: ["A", "B", "C", "D", "E"],
-    datasets: [
-      {
-        data: [2, 0, 40, 10, 6],
-        backgroundColor: [
-          "#135670",
-          "#0b9a47",
-          "#9c8305",
-          "#221b6e",
-          "#9a1e0b",
-        ],
-        borderWidth: 0,
-        borderRadius: 5,
-      },
-    ],
-  };
   return (
     <Bar
       data={data}
@@ -231,7 +231,7 @@ function PollChart(props) {
         },
         layout: {
           padding: 10,
-        }
+        },
       }}
     />
   );

@@ -177,7 +177,6 @@
 }
 
 .courses-bottom-row {
-  background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
   position: fixed;
   color: #00060d;
   line-height: 5rem;
@@ -186,6 +185,7 @@
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+  mix-blend-mode: hard-light;
   align-items: center;
   padding: 0.7rem 1.2rem;
 }

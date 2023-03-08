@@ -4,6 +4,7 @@ import SessionView from "../pages/SessionView";
 import CourseView from "../pages/CourseView";
 import SignIn from "../pages/SignIn";
 import InstructorPoll from "../components/InstructorPoll";
+import PageNotFound from "../components/PageNotFound";
 
 function InAppContainer() {
   return (
@@ -14,6 +15,7 @@ function InAppContainer() {
       <Route path="/session" element={<SessionView />} />
       <Route path="/class" element={<CourseView />} />
       <Route path="/newpoll" element={<InstructorPoll />} />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 }

@@ -3,11 +3,18 @@ body {
   font-style: normal;
   color: rgb(0, 6, 13);
   background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
-  margin-top: 5rem;
-  /* min-height: 60vh; */
-  overflow: overlay;
+  /* overflow: overlay; */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+.overview-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 5rem);
+  position: relative;
+  overflow: overlay;
+  top: 5rem;
 }
 
 .sign-in-title {
@@ -127,22 +134,22 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  margin-top: 5.1rem;
   background: transparent;
+  margin: 0.15rem 0;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  border: 0.25rem solid transparent;
+  border: 0.28rem solid transparent;
   background-clip: padding-box;
   border-radius: 9999px;
-  background-color: #0e215285;
+  background-color: #0e215270;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  border: 0.15rem solid transparent;
+  border: 0.18rem solid transparent;
   background-clip: padding-box;
   border-radius: 9999px;
-  background-color: #041233c7;
+  background-color: #041233a8;
 }

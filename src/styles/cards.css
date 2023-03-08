@@ -109,7 +109,11 @@
 .card-wrapper {
   display: flex;
   flex-direction: column;
-  margin-bottom: 10rem;
+  height: calc(100vh - 10rem);
+  overflow-y: overlay;
+  position: relative;
+  padding-bottom: 5rem;
+  top: 5rem;
 }
 
 .card-container,

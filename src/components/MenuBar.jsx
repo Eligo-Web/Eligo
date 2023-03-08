@@ -5,13 +5,16 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { IconButton } from "./Buttons.jsx";
 import { useLocation } from "react-router-dom";
-import { IoIosMenu, IoMdCopy } from "react-icons/io";
+import { IoIosMenu } from "react-icons/io";
 
 import "../styles/text.css";
 import "../styles/menu.css";
+import { IconCheck, IconCopy, IconMenu2 } from "@tabler/icons-react";
 
 function MenuBar(props) {
   const location = useLocation();
+  const [copied, setCopied] = useState(false);
+
   function openMenu() {
     document.body.style.overflow = "hidden";
     const menu = document.getElementById("side-menu");
@@ -20,10 +23,20 @@ function MenuBar(props) {
     menu.querySelector(".menu").style.left = 0;
     console.log("opened menu");
   }
-  let cursor = "default";
-  if (props.clickable) {
-    cursor = "pointer";
+
+  function copyDescription() {
+    if (props.clickable) {
+      try {
+        navigator.clipboard.writeText(props.description);
+        console.log("Copied to clipboard!");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 5000);        
+      } catch (err) {
+        console.error("Failed to copy!", err);
+      }
+    }
   }
+
   return (
     <Container fluid className="menu-bar">
       <Button variant="transparent" onClick={openMenu}>
@@ -33,22 +46,21 @@ function MenuBar(props) {
         <Col className="large-title">{props.title}</Col>
         {props.showDescription ? (
           <Col
-            className="large-title"
-            onClick={() => {
-              if (props.clickable) {
-                try {
-                  console.log(props.description);
-                  navigator.clipboard.writeText(props.description);
-                  console.log("Copied to clipboard!");
-                } catch (err) {
-                  console.error("Failed to copy!", err);
-                }
-              }
-            }}
+            className="large-title d-flex flex-row align-items-center"
+            onClick={() => copyDescription()}
           >
+            <IconCheck size="2rem" stroke="0.18rem" id="check" style={{
+              opacity: copied ? 1 : 0,
+              color: "#2a3c52",
+              mixBlendMode: "hard-light",
+              transition: "0.1s ease-in-out"
+            }}/>
             <IconButton
-              style={{ padding: "1rem", cursor: cursor }}
-              icon={props.clickable ? <IoMdCopy size="2rem" /> : null}
+              style={{
+                padding: "1rem",
+                cursor: props.clickable ? "pointer" : "default",
+              }}
+              icon={props.clickable ? <IconCopy size="2rem" /> : null}
               label={props.description || "No description"}
               variant="transparent"
             />
