@@ -4,9 +4,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function SignIn(props) {
-  // if (navigator.userAgent.toLowerCase().indexOf('safari')) {
-  //   document.querySelectorAll(".card").style.background = "#f00"
-  // }
 
   const server = "http://localhost:3000";
   const navigate = useNavigate();

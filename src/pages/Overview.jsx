@@ -8,8 +8,18 @@ import { JoinClass, CreateClass, EditClass } from "../components/Popups";
 import "../styles/overlay.css";
 import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
+import { useEffect } from "react";
 
 function OverView(props) {
+  useEffect(() => {
+    if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+      if (document.querySelectorAll(".card")) {
+        document.querySelectorAll(".card").forEach((card) => {
+          card.style.backgroundColor = "#c8e2fb";
+        });
+      }
+    }
+  }, []);
   const location = useLocation();
   const navigate = useNavigate();
   function handleViewClass(courseName, sectionId) {

@@ -19,6 +19,16 @@ function CourseView(props) {
   const navigate = useNavigate();
   const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
 
+  useEffect(() => {
+    if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+      if (document.querySelectorAll(".session-card")) {
+        document.querySelectorAll(".session-card").forEach((card) => {
+          card.style.backgroundColor = "#c8e2fb";
+        });
+      }
+    }
+  }, []);
+
   window.onresize = function () {
     if (window.innerWidth < 900) {
       setLabels(false);

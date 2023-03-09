@@ -9,8 +9,18 @@ import { IconButton } from "../components/Buttons";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import AccessDenied from "../components/AccessDenied";
+import { useEffect } from "react";
 
 function SessionView(props) {
+  useEffect(() => {
+    if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+      if (document.querySelectorAll(".poll-card")) {
+        document.querySelectorAll(".poll-card").forEach((card) => {
+          card.style.backgroundColor = "#c8e2fb";
+        });
+      }
+    }
+  }, []);
   const location = useLocation();
   const navigate = useNavigate();
 
