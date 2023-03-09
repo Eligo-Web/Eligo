@@ -17,6 +17,11 @@ const StudentSchema = new mongoose.Schema({
     required: true,
     default: UserRole.Student,
   },
+  courses: {
+    type: [],
+    required: true,
+    default: [],
+  }
 });
 
 const Student = mongoose.model("Student", StudentSchema);
