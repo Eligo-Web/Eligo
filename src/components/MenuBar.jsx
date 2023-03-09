@@ -30,7 +30,7 @@ function MenuBar(props) {
         navigator.clipboard.writeText(props.description);
         console.log("Copied to clipboard!");
         setCopied(true);
-        setTimeout(() => setCopied(false), 5000);        
+        setTimeout(() => setCopied(false), 5000);
       } catch (err) {
         console.error("Failed to copy!", err);
       }
@@ -49,12 +49,17 @@ function MenuBar(props) {
             className="large-title d-flex flex-row align-items-center"
             onClick={() => copyDescription()}
           >
-            <IconCheck size="1.4em" stroke="0.18rem" id="check" style={{
-              opacity: copied ? 1 : 0,
-              color: "#2a3c52",
-              mixBlendMode: "hard-light",
-              transition: "0.1s ease-in-out"
-            }}/>
+            <IconCheck
+              size="1.4em"
+              stroke="0.18rem"
+              id="check"
+              style={{
+                opacity: copied ? 1 : 0,
+                color: "#2a3c52",
+                mixBlendMode: "hard-light",
+                transition: "0.1s ease-in-out",
+              }}
+            />
             <IconButton
               style={{
                 padding: "1rem",

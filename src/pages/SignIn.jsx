@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function SignIn(props) {
-
   const server = "http://localhost:3000";
   const navigate = useNavigate();
 

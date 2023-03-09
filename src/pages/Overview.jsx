@@ -11,8 +11,15 @@ import AccessDenied from "../components/AccessDenied";
 import { useEffect } from "react";
 
 function OverView(props) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const authorized = location.state && location.state.permission;
+
   useEffect(() => {
-    if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+    if (
+      navigator.userAgent.indexOf("Safari") != -1 &&
+      navigator.userAgent.indexOf("Chrome") == -1
+    ) {
       if (document.querySelectorAll(".card")) {
         document.querySelectorAll(".card").forEach((card) => {
           card.style.backgroundColor = "#c8e2fb";
@@ -20,8 +27,7 @@ function OverView(props) {
       }
     }
   }, []);
-  const location = useLocation();
-  const navigate = useNavigate();
+
   function handleViewClass(courseName, sectionId) {
     navigate("/class", {
       state: {
@@ -35,7 +41,7 @@ function OverView(props) {
 
   function studentContent() {
     return (
-      <div style={{marginBottom: "5rem"}}>
+      <div style={{ marginBottom: "5rem" }}>
         <Overlay title="Join Class" content={JoinClass()} />
         <Container className="card-container">
           <Card
@@ -56,7 +62,7 @@ function OverView(props) {
   }
   function instructorContent() {
     return (
-      <div style={{marginBottom: "5rem"}}>
+      <div style={{ marginBottom: "5rem" }}>
         <Overlay title="Create Class" content={CreateClass()} />
         <Overlay title="Edit Class" content={EditClass()} />
         <div>
@@ -99,18 +105,18 @@ function OverView(props) {
   if (window.innerWidth < 600 && location.state.permission === "instructor") {
     return (
       <div className="d-flex justify-content-center align-items-center">
-      <div 
-        className="d-flex flex-column align-items-center"
-        style={{width: "95%", paddingTop: "5rem"}}
-      >
-        <div className="blank-state-msg">        
-          Please sign in on a desktop device to use Edupoll as an instructor.
+        <div
+          className="d-flex flex-column align-items-center"
+          style={{ width: "95%", paddingTop: "5rem" }}
+        >
+          <div className="blank-state-msg">
+            Please sign in on a desktop device to use Edupoll as an instructor.
+          </div>
         </div>
       </div>
-    </div>
     );
   }
-  return !location.state ? (
+  return !authorized ? (
     <AccessDenied />
   ) : (
     <div className="overview-wrapper">

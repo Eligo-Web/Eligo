@@ -56,24 +56,26 @@ function Menu(props) {
           </Container>
         </Container>
         <Container className="d-flex flex-column p-3 gap-2 align-items-center">
-          <IconButton
-            label={getLabel}
-            variant={props.leaveAction ? "delete" : ""}
-            icon={
-              props.leaveAction ? null : <IoMdAddCircleOutline size="1.7em" />
-            }
-            onClick={() => {
-              closeMenu(getLabel);
-              if (props.leaveAction) {
-                navigate("/overview", {
-                  state: {
-                    permission: location.state.permission,
-                    email: location.state.email,
-                  },
-                });
+          {props.hideCreate ? null : (
+            <IconButton
+              label={getLabel}
+              variant={props.leaveAction ? "delete" : ""}
+              icon={
+                props.leaveAction ? null : <IoMdAddCircleOutline size="1.7em" />
               }
-            }}
-          />
+              onClick={() => {
+                closeMenu(getLabel);
+                if (props.leaveAction) {
+                  navigate("/overview", {
+                    state: {
+                      permission: location.state.permission,
+                      email: location.state.email,
+                    },
+                  });
+                }
+              }}
+            />
+          )}
           <IconButton
             label="Sign Out"
             variant="sign-out"

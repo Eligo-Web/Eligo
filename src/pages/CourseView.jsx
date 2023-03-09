@@ -8,19 +8,23 @@ import Overlay from "../components/Overlay";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CreateSession, CreateClass, JoinSession } from "../components/Popups";
 import { openPopup } from "../components/Overlay";
-import { IconDownload, IconList } from "@tabler/icons-react";
+import { IconArrowLeft, IconDownload, IconList } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Col } from "react-bootstrap";
 import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
 
 function CourseView(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const authorized = location.state && location.state.permission;
   const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
 
   useEffect(() => {
-    if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+    if (
+      navigator.userAgent.indexOf("Safari") != -1 &&
+      navigator.userAgent.indexOf("Chrome") == -1
+    ) {
       if (document.querySelectorAll(".session-card")) {
         document.querySelectorAll(".session-card").forEach((card) => {
           card.style.backgroundColor = "#c8e2fb";
@@ -43,6 +47,7 @@ function CourseView(props) {
         permission: location.state.permission,
         email: location.state.email,
         sessionId: sessionId,
+        courseName: location.state.courseName,
         sectionId: location.state.sectionId,
       },
     });
@@ -79,9 +84,27 @@ function CourseView(props) {
     return (
       <div className="d-flex flex-column ">
         <div className="card-wrapper">
-          <Overlay title="Create Class" content={CreateClass()} />
           <Overlay title="Create Session" content={CreateSession()} />
           <div>
+            <IconButton
+              style={{
+                padding: "1rem",
+                paddingLeft: "1.5rem",
+                color: "#000d1db3",
+                fontWeight: "500",
+              }}
+              icon={<IconArrowLeft size="1.5em" />}
+              label={"Overview"}
+              variant="transparent"
+              onClick={() =>
+                navigate("/overview", {
+                  state: {
+                    permission: location.state.permission,
+                    email: location.state.email,
+                  },
+                })
+              }
+            />
             <Container className="card-container">
               <h3 className="card-title divisor">Today</h3>
               <SessionCard
@@ -148,11 +171,15 @@ function CourseView(props) {
       </div>
     );
   }
-  return !location.state ? (
+
+  return !authorized ? (
     <AccessDenied />
   ) : (
     <div>
-      <Menu leaveAction={location.state.permission === "student"} />
+      <Menu
+        leaveAction={location.state.permission === "student"}
+        hideCreate={location.state.permission === "instructor"}
+      />
       <MenuBar
         title={location.state.courseName}
         description={location.state.sectionId}

@@ -5,9 +5,9 @@ export default function AccessDenied() {
   const navigate = useNavigate();
   return (
     <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
-      <div 
+      <div
         className="m-5 p-5 gap-4 d-flex flex-column align-items-center"
-        style={{width: "60%"}}
+        style={{ width: "60%" }}
       >
         <div className="blank-state-msg">Access Denied</div>
         <Button

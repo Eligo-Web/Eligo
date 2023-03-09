@@ -4,7 +4,7 @@ import { Default } from "./Popups";
 import "../styles/overlay.css";
 
 export function openPopup(id) {
-  const overlay = document.getElementById(id);
+  const overlay = document.getElementById(id + "-popup");
   if (overlay) {
     document.body.style.overflow = "hidden";
     overlay.querySelector(".overlay-bg").style.pointerEvents = "all";
@@ -16,14 +16,13 @@ export function openPopup(id) {
 }
 
 export function closePopup(id) {
-  const overlay = document.getElementById(id);
+  const overlay = document.getElementById(id + "-popup");
   if (overlay) {
-    document.body.style.overflow = "overlay";
-    const thisOverlay = document.getElementById(id);
-    thisOverlay.querySelector(".overlay-bg").style.pointerEvents = "none";
-    thisOverlay.querySelector(".overlay-bg").style.opacity = 0;
-    thisOverlay.querySelector(".pop-up").style.opacity = 0;
-    thisOverlay.style.height = 0;
+    document.body.style.overflow = "auto";
+    overlay.querySelector(".overlay-bg").style.pointerEvents = "none";
+    overlay.querySelector(".overlay-bg").style.opacity = 0;
+    overlay.querySelector(".pop-up").style.opacity = 0;
+    overlay.style.height = 0;
     console.log("closed", id);
   }
 }
@@ -34,14 +33,17 @@ export function closePopup(id) {
  */
 export default function Overlay(props) {
   return (
-    <div className="overlay-wrapper" id={props.title}>
+    <div className="overlay-wrapper" id={props.title + "-popup"}>
       <div className="overlay pop-up">
         <div className="pop-up-header">
           <Row className="pop-up-title large-title">
             {props.title || "Overlay Title"}
           </Row>
           <Button variant="transparent">
-            <IoIosClose size={"2.5em"} onClick={() => closePopup(props.title)} />
+            <IoIosClose
+              size={"2.5em"}
+              onClick={() => closePopup(props.title)}
+            />
           </Button>
         </div>
         {props.content || <Default />}
