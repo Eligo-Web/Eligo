@@ -3,9 +3,12 @@ body {
   font-style: normal;
   color: rgb(0, 6, 13);
   background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
-  /* overflow: overlay; */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+}
+
+@-moz-document url-prefix() {
+  body {
+    height: 100vh;
+  }
 }
 
 .overview-wrapper {
@@ -13,7 +16,7 @@ body {
   flex-direction: column;
   height: calc(100vh - 5rem);
   position: relative;
-  overflow: overlay;
+  overflow: auto;
   top: 5rem;
 }
 
@@ -32,7 +35,7 @@ body {
   text-align: center;
   position: absolute;
   width: 100%;
-  height: -webkit-fill-available;
+  height: 100%;
   padding: 8rem 0;
   padding-bottom: auto;
   top: 0;
@@ -61,6 +64,7 @@ body {
   font-size: 1.2rem;
   opacity: 75%;
   margin: 0 0.2rem;
+  align-items: center;
 }
 
 .card-id {

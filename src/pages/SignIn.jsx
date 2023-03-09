@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function SignIn(props) {
+  // if (navigator.userAgent.toLowerCase().indexOf('safari')) {
+  //   document.querySelectorAll(".card").style.background = "#f00"
+  // }
+
   const server = "http://localhost:3000";
   const navigate = useNavigate();
 
@@ -84,7 +88,7 @@ function SignIn(props) {
           className="large-title"
           onClick={handleStudent}
         >
-          <IconSchool size="12rem" stroke={1} className="sign-in-icon" />
+          <IconSchool size="8em" stroke={1} className="sign-in-icon" />
           Student
         </Button>
         <Button
@@ -92,7 +96,7 @@ function SignIn(props) {
           className="large-title"
           onClick={handleInstructor}
         >
-          <IconBook size="12rem" stroke={1} className="sign-in-icon" />
+          <IconBook size="8em" stroke={1} className="sign-in-icon" />
           Instructor
         </Button>
       </div>

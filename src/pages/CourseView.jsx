@@ -116,20 +116,20 @@ function CourseView(props) {
         <div className="courses-bottom-row bottom-0 gap-3">
           <IconButton
             label="Create Session"
-            icon={<IoMdAddCircleOutline size="2rem" />}
+            icon={<IoMdAddCircleOutline size="1.7em" />}
             onClick={() => openPopup("Create Session")}
             style={{ maxWidth: "max-content" }}
           />
           <div className="row gap-3 p-3">
             <IconButton
               label={buttonLabels ? "Download Class Data" : null}
-              icon={<IconDownload size="2rem" />}
+              icon={<IconDownload size="1.6em" />}
               variant="outline"
               style={{ maxWidth: "max-content" }}
             />
             <IconButton
               label={buttonLabels ? "View Roster" : null}
-              icon={<IconList size="2rem" />}
+              icon={<IconList size="1.6em" />}
               variant="outline"
               style={{ maxWidth: "max-content" }}
             />

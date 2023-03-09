@@ -45,7 +45,7 @@ function SessionView(props) {
         <div className="courses-bottom-row bottom-0 gap-3">
           <IconButton
             label="Create Poll"
-            icon={<IoMdAddCircleOutline size="2rem" />}
+            icon={<IoMdAddCircleOutline size="1.7em" />}
             onClick={() => createPoll()}
             style={{ maxWidth: "max-content" }}
           />

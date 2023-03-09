@@ -12,7 +12,7 @@ import { Button, Container } from "react-bootstrap";
 import { openPopup } from "./Overlay";
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { IconTrash } from "@tabler/icons-react";
+import { IconLogout, IconTrash, IconUserCircle } from "@tabler/icons-react";
 
 function Menu(props) {
   const location = useLocation();
@@ -46,12 +46,12 @@ function Menu(props) {
         <Container className="p-0">
           <Container className="menu-overlay-header">
             <Button variant="transparent" className="menu-overlay-back">
-              <IoIosArrowBack size="2.3rem" onClick={closeMenu} />
+              <IoIosArrowBack size="1.8em" onClick={closeMenu} />
             </Button>
             <div className="menu-overlay-title">EduPoll</div>
           </Container>
           <Container className="d-flex flex-row p-3 gap-3 card-subtitle">
-            <IoMdPerson size="2rem" />
+            <IconUserCircle size="1.8em" />
             {location.state.permission}
           </Container>
         </Container>
@@ -60,7 +60,7 @@ function Menu(props) {
             label={getLabel}
             variant={props.leaveAction ? "delete" : ""}
             icon={
-              props.leaveAction ? null : <IoMdAddCircleOutline size="2rem" />
+              props.leaveAction ? null : <IoMdAddCircleOutline size="1.7em" />
             }
             onClick={() => {
               closeMenu(getLabel);
@@ -77,7 +77,7 @@ function Menu(props) {
           <IconButton
             label="Sign Out"
             variant="sign-out"
-            icon={<IoMdExit size="2rem" />}
+            icon={<IconLogout size="1.65em" />}
             onClick={handleSignOut}
           />
         </Container>

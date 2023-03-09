@@ -40,7 +40,7 @@ function MenuBar(props) {
   return (
     <Container fluid className="menu-bar">
       <Button variant="transparent" onClick={openMenu}>
-        <IoIosMenu size="3rem" />
+        <IoIosMenu size="2.3em" />
       </Button>
       <Row className="menu-bar-items">
         <Col className="large-title">{props.title}</Col>
@@ -49,7 +49,7 @@ function MenuBar(props) {
             className="large-title d-flex flex-row align-items-center"
             onClick={() => copyDescription()}
           >
-            <IconCheck size="2rem" stroke="0.18rem" id="check" style={{
+            <IconCheck size="1.4em" stroke="0.18rem" id="check" style={{
               opacity: copied ? 1 : 0,
               color: "#2a3c52",
               mixBlendMode: "hard-light",
@@ -60,7 +60,7 @@ function MenuBar(props) {
                 padding: "1rem",
                 cursor: props.clickable ? "pointer" : "default",
               }}
-              icon={props.clickable ? <IconCopy size="2rem" /> : null}
+              icon={props.clickable ? <IconCopy size="1.5em" /> : null}
               label={props.description || "No description"}
               variant="transparent"
             />

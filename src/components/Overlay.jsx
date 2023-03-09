@@ -41,7 +41,7 @@ export default function Overlay(props) {
             {props.title || "Overlay Title"}
           </Row>
           <Button variant="transparent">
-            <IoIosClose size={"3rem"} onClick={() => closePopup(props.title)} />
+            <IoIosClose size={"2.5em"} onClick={() => closePopup(props.title)} />
           </Button>
         </div>
         {props.content || <Default />}

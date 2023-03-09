@@ -20,7 +20,7 @@ function Card(props) {
           <IconPencil
             id="edit-button"
             className="edit-button"
-            size={"2.7rem"}
+            size={"2.7em"}
             onClick={handleEdit}
           />
         ) : null}

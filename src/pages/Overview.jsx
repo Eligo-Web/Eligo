@@ -25,7 +25,7 @@ function OverView(props) {
 
   function studentContent() {
     return (
-      <div>
+      <div style={{marginBottom: "5rem"}}>
         <Overlay title="Join Class" content={JoinClass()} />
         <Container className="card-container">
           <Card
@@ -88,9 +88,16 @@ function OverView(props) {
   }
   if (window.innerWidth < 600 && location.state.permission === "instructor") {
     return (
-      <center className="card-subtitle p-4">
-        Please sign in on a desktop device to use Edupoll as an instructor.
-      </center>
+      <div className="d-flex justify-content-center align-items-center">
+      <div 
+        className="d-flex flex-column align-items-center"
+        style={{width: "95%", paddingTop: "5rem"}}
+      >
+        <div className="blank-state-msg">        
+          Please sign in on a desktop device to use Edupoll as an instructor.
+        </div>
+      </div>
+    </div>
     );
   }
   return !location.state ? (
