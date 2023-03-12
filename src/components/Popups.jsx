@@ -102,10 +102,6 @@ export function CreateClass() {
     const overlay = document.getElementById("create-class-popup");
     const nameField = overlay.querySelector(".name-input");
     const sectionField = overlay.querySelector(".section-input");
-    let strToHash = "testClass 2 Spring 2023";
-    strToHash = strToHash.replace(/\s/g, "");
-    // console.log(axios.get(`${server}/course/${name}${section}${semester}`));
-    console.log(axios.get(`${server}/course/${strToHash}`));
 
     if (!name) {
       nameField.className += " field-error";
@@ -117,7 +113,6 @@ export function CreateClass() {
       nameField.placeholder = "* Contains invalid characters";
       valid = false;
     } else {
-      // console.log(axios.get(`${server}/course`))
       nameField.placeholder = "ex: Intermediate Programming";
       nameField.className = "name-input form-control";
     }
@@ -143,18 +138,23 @@ export function CreateClass() {
       console.log("some fields invalid!");
       return;
     }
+    let sectionId = name + section + semester;
+    sectionId = sectionId.replace(/\s/g, "").toLowerCase();
     console.log("valid");
-    // axios
-    //   .post(`${server}/course`, {
-    //     name: name,
-    //     section: section,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    axios
+      .post(`${server}/course`, {
+        name: name,
+        section: section,
+        semester: semester,
+        sectionId: sectionId,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      closePopup("Create Class");
   }
 
   return (

@@ -15,12 +15,11 @@ Course.get("/", async (req, res) => {
   });
 });
 
-Course.get("/:id", async (req, res) => {
-  console.log(req.params.id);
-  const { id } = hashSync(req.params.id, "$2a$10$yYsKdzoWSjjPh4mm33hrLe");
+Course.get("/:sectionId", async (req, res) => {
+  const sectionId = req.params.sectionId;
   let course;
   try {
-    course = await courseDao.read(id);
+    course = await courseDao.readBySectionId(sectionId);
     res.json({
       status: 200,
       message: `Course found`,
@@ -35,6 +34,8 @@ Course.get("/:id", async (req, res) => {
     });
   }
 });
+
+
 
 Course.post("/", async (req, res) => {
   courseDao.create(req.body);

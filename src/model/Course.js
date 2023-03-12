@@ -16,6 +16,10 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sectionId: {
+    type: String,
+    required: true,
+  },
   students: [
     {
       type: mongoose.Schema.Types.ObjectId,

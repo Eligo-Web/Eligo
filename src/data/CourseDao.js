@@ -29,6 +29,14 @@ class CourseDao {
     return course;
   }
 
+  async readBySectionId(sectionId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    return course;
+  }
+
   async create(course) {
     const newCourse = new Course(course);
     await newCourse.save();
