@@ -17,9 +17,8 @@ Course.get("/", async (req, res) => {
 
 Course.get("/:sectionId", async (req, res) => {
   const sectionId = req.params.sectionId;
-  let course;
   try {
-    course = await courseDao.readBySectionId(sectionId);
+    let course = await courseDao.readBySectionId(sectionId);
     res.json({
       status: 200,
       message: `Course found`,
@@ -35,15 +34,26 @@ Course.get("/:sectionId", async (req, res) => {
   }
 });
 
-
-
 Course.post("/", async (req, res) => {
-  courseDao.create(req.body);
-  res.json({
-    status: 201,
-    message: "Course created",
-    data: req.body,
-  });
+  let sectionId = req.body.name + req.body.section + req.body.semester;
+  sectionId = sectionId.replace(/\s/g, "").toLowerCase();
+  req.body.sectionId = sectionId;
+  try {
+    let course = await courseDao.create(req.body);
+    res.json({
+      status: 201,
+      message: "Course created",
+      data: req.body,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 409,
+      message: "Course already exists",
+      data: null,
+    });
+  }
+      
 });
 
 export default Course;

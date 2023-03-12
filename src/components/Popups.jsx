@@ -102,6 +102,7 @@ export function CreateClass() {
     const overlay = document.getElementById("create-class-popup");
     const nameField = overlay.querySelector(".name-input");
     const sectionField = overlay.querySelector(".section-input");
+    valid = true;
 
     if (!name) {
       nameField.className += " field-error";
@@ -138,23 +139,21 @@ export function CreateClass() {
       console.log("some fields invalid!");
       return;
     }
-    let sectionId = name + section + semester;
-    sectionId = sectionId.replace(/\s/g, "").toLowerCase();
     console.log("valid");
     axios
       .post(`${server}/course`, {
         name: name,
         section: section,
         semester: semester,
-        sectionId: sectionId,
       })
       .then((res) => {
         console.log(res);
+        return;
       })
       .catch((err) => {
         console.log(err);
       });
-      closePopup("Create Class");
+    closePopup("Create Class");
   }
 
   return (

@@ -19,6 +19,7 @@ const CourseSchema = new mongoose.Schema({
   sectionId: {
     type: String,
     required: true,
+    unique: true,
   },
   students: [
     {
