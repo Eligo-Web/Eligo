@@ -134,13 +134,14 @@ export function CreateClass() {
     return valid;
   }
 
-  function postCourse() {
+  async function postCourse () {
     if (!paramsValid()) {
       console.log("some fields invalid!");
       return;
     }
+    let close = true;
     console.log("valid");
-    axios
+    await axios
       .post(`${server}/course`, {
         name: name,
         section: section,
@@ -148,12 +149,17 @@ export function CreateClass() {
       })
       .then((res) => {
         console.log(res);
-        return;
+        if (res.data.status === 409) {
+          close = false;
+        }
       })
       .catch((err) => {
         console.log(err);
+        close = false;
       });
-    closePopup("Create Class");
+    if (close) {
+      closePopup("Create Class");
+    }
   }
 
   return (
