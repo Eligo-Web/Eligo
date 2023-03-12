@@ -21,7 +21,7 @@ const StudentSchema = new mongoose.Schema({
     type: [],
     required: true,
     default: [],
-  }
+  },
 });
 
 const Student = mongoose.model("Student", StudentSchema);

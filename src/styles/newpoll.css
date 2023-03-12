@@ -6,12 +6,10 @@
 }
 
 .newpoll-wrapper {
-  bottom: 0;
   width: fit-content;
   height: fit-content;
   display: flex;
   position: fixed;
-  z-index: 3;
   justify-content: center;
   align-items: center;
   overflow: hidden;

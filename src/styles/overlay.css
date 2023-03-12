@@ -114,19 +114,19 @@
 }
 
 .input-field,
-.section-input {
-  flex: 5;
+.input-field-small {
+  flex: 2.5;
   display: flex;
   flex-direction: column;
   margin: 0 0.5rem;
   gap: 0.1rem;
   font-weight: 500;
-  color: hsl(212, 86%, 11%, 75%);
+  color: #041a34bf;
   font-size: 1.1rem;
   mix-blend-mode: hard-light;
 }
 
-.section-input {
+.input-field-small {
   flex: 1;
 }
 
@@ -138,20 +138,35 @@
 }
 
 .form-control,
-.form-control:focus {
+.form-control:focus,
+.form-select,
+.form-select:focus {
   flex: none;
   display: flex;
-  padding: 0.5rem 1.2rem;
+  padding: 0.3rem 1rem;
   mix-blend-mode: hard-light;
   background-color: #c2d3f3;
   border-radius: 10rem;
-  border-width: 0;
+  border-width: 0.2rem;
+  border-color: #c2d3f3;
   box-shadow: none !important;
   text-overflow: ellipsis;
+  font-weight: 500;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
   background-color: #d6e3fb;
+}
+
+.field-error {
+  background-color: #fbd6d6;
+  border-color: #db1c0698;
+}
+
+.field-error::placeholder {
+  opacity: 100%;
+  color: #3a0000 !important;
 }
 
 @media screen and (max-width: 35rem) {

@@ -54,7 +54,7 @@ export default function InstructorPoll() {
   };
 
   window.onresize = function () {
-    window.resizeTo(fullWidth, fullHeight);
+    // window.resizeTo(fullWidth, fullHeight);
   };
 
   useEffect(() => {

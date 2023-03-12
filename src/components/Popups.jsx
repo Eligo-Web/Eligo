@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import { closePopup } from "./Overlay";
-import InputField from "./InputField";
+import InputField, { SelectField } from "./InputField";
+import { genSaltSync, hashSync } from "bcryptjs-react";
 import axios from "axios";
 import "../styles/newpoll.css";
+import Course from "../model/Course.js";
 
 export function Default() {
   return (
-    <div className="pop-up-content">
+    <div className="pop-up-content" id="default-popup">
       <InputField />
       <div className="button-row">
         <PrimaryButton variant="secondary" label="Cancel" />
@@ -20,7 +22,7 @@ export function Default() {
 function JoinOrCreate(props) {
   console.log(props);
   return (
-    <div className="pop-up-content">
+    <div className="pop-up-content" id={props.id}>
       <InputField
         label={props.inputLabel}
         input={props.placeholder}
@@ -30,14 +32,14 @@ function JoinOrCreate(props) {
         <PrimaryButton
           variant="secondary"
           label="Cancel"
-          onClick={() => closePopup(props.id)}
+          onClick={() => closePopup(props.popupId)}
         />
         <PrimaryButton
           variant="primary"
           label={props.primary}
           onClick={() => {
             /**TODO */
-            closePopup(props.id);
+            closePopup(props.popupId);
           }}
         />
       </div>
@@ -48,7 +50,8 @@ function JoinOrCreate(props) {
 export function JoinClass() {
   return (
     <JoinOrCreate
-      id="Join Class"
+      id="join-class-popup"
+      popupId="Join Class"
       primary="Join"
       inputLabel="Course Code"
       placeholder="ex: A1B2C3"
@@ -56,10 +59,11 @@ export function JoinClass() {
   );
 }
 
-export function JoinSession(props) {
+export function JoinSession() {
   return (
     <JoinOrCreate
-      id="Join Session"
+      id="join-session-popup"
+      popupId="Join Session"
       primary="Join"
       inputLabel="Passcode"
       placeholder="Ex: abc123"
@@ -70,58 +74,125 @@ export function JoinSession(props) {
 
 export function CreateClass() {
   const server = "http://localhost:3000";
+  const today = new Date();
+  const defaultSemester =
+    (today.getMonth() < 7 ? "Spring " : "Fall ") + today.getFullYear();
   let name = "";
   let section = "";
+  let semester = defaultSemester;
+  const validCharset = /^[ -~]+$/;
+  let valid = true;
 
-  function storeName(n) {
-    name = n;
-    console.log(name);
+  function clearContents() {
+    const overlay = document.getElementById("create-class-popup");
+    const nameField = overlay.querySelector(".name-input");
+    const sectionField = overlay.querySelector(".section-input");
+    name = "";
+    section = "";
+    nameField.value = "";
+    nameField.placeholder = "ex: Intermediate Programming";
+    nameField.className = "name-input form-control";
+    sectionField.value = "";
+    sectionField.placeholder = "1, 2, ...";
+    sectionField.className = "section-input form-control";
+    closePopup("Create Class");
   }
 
-  function storeSection(s) {
-    section = s;
-    console.log(section);
+  function paramsValid() {
+    const overlay = document.getElementById("create-class-popup");
+    const nameField = overlay.querySelector(".name-input");
+    const sectionField = overlay.querySelector(".section-input");
+    let strToHash = "testClass 2 Spring 2023";
+    strToHash = strToHash.replace(/\s/g, "");
+    // console.log(axios.get(`${server}/course/${name}${section}${semester}`));
+    console.log(axios.get(`${server}/course/${strToHash}`));
+
+    if (!name) {
+      nameField.className += " field-error";
+      nameField.placeholder = "* Required";
+      valid = false;
+    } else if (!validCharset.test(name + section + semester)) {
+      nameField.className += " field-error";
+      nameField.value = "";
+      nameField.placeholder = "* Contains invalid characters";
+      valid = false;
+    } else {
+      // console.log(axios.get(`${server}/course`))
+      nameField.placeholder = "ex: Intermediate Programming";
+      nameField.className = "name-input form-control";
+    }
+
+    if (!section) {
+      sectionField.className += " field-error";
+      sectionField.placeholder = "* Required";
+      valid = false;
+    } else if (isNaN(section)) {
+      sectionField.placeholder = "* Invalid";
+      sectionField.value = "";
+      sectionField.className += " field-error";
+      valid = false;
+    } else {
+      sectionField.placeholder = "1, 2, ...";
+      sectionField.className = "section-input form-control";
+    }
+    return valid;
   }
 
   function postCourse() {
-    axios
-      .post(`${server}/course`, {
-        name: name,
-        section: section,
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (!paramsValid()) {
+      console.log("some fields invalid!");
+      return;
+    }
+    console.log("valid");
+    // axios
+    //   .post(`${server}/course`, {
+    //     name: name,
+    //     section: section,
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }
 
   return (
-    <div className="pop-up-content">
+    <div className="pop-up-content" id="create-class-popup">
       <div className="input-group">
         <InputField
+          class="name-input"
           label="Class Name"
           input="ex: Intermediate Programming"
-          onChange={(e) => storeName(e.target.value)}
+          onChange={(e) => (name = e.target.value)}
         />
+      </div>
+      <div className="input-group">
         <InputField
+          section
           class="section-input"
-          label="Section"
-          input="#"
-          onChange={(e) => storeSection(e.target.value)}
+          label="Section No."
+          input="1, 2, ..."
+          onChange={(e) => (section = e.target.value)}
+        />
+        <SelectField
+          class="semester-input"
+          label="Semester"
+          input="ex: Spring 2023"
+          default={defaultSemester}
+          onChange={(e) => (semester = e.target.value)}
         />
       </div>
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
           label="Cancel"
-          onClick={() => closePopup("Create Class")}
+          onClick={() => clearContents()}
         />
         <PrimaryButton
           variant="primary"
           label="Create"
-          onClick={() => postCourse(name, section)}
+          onClick={() => postCourse()}
         />
       </div>
     </div>
@@ -135,9 +206,14 @@ export function EditClass(props) {
         <InputField
           label="Class Name"
           input="ex: Intermediate Programming"
-          value="Current name"
+          default="Current name"
         />
-        <InputField class="section-input" label="Section" input="#" value="1" />
+        <InputField
+          class="section-input"
+          label="Section"
+          input="#"
+          default="1"
+        />
       </div>
       <div className="button-row">
         <PrimaryButton
@@ -163,7 +239,8 @@ export function EditClass(props) {
 export function CreateSession() {
   return (
     <JoinOrCreate
-      id="Create Session"
+      id="create-session-popup"
+      popupId="Create Session"
       primary="Create"
       inputLabel="Session Name"
       placeholder="ex: March 14 11AM class"
@@ -215,5 +292,3 @@ export function Poll(id) {
     </div>
   );
 }
-
-// ================== New Poll Window Popup ================== //
