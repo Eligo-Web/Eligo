@@ -6,6 +6,10 @@ const Course = express.Router();
 export const courseDao = new CourseDao();
 const { hashSync } = hash;
 
+export function toSectionId(str) {
+  return str.replace(/\s/g, "").toLowerCase();
+}
+
 Course.get("/", async (req, res) => {
   const courses = await courseDao.readAll(req.query);
   res.json({
@@ -35,8 +39,9 @@ Course.get("/:sectionId", async (req, res) => {
 });
 
 Course.post("/", async (req, res) => {
-  let sectionId = req.body.name + req.body.section + req.body.semester;
-  sectionId = sectionId.replace(/\s/g, "").toLowerCase();
+  let sectionId = toSectionId(
+    req.body.name + req.body.section + req.body.semester
+  );
   req.body.sectionId = sectionId;
   try {
     let course = await courseDao.create(req.body);
@@ -53,7 +58,6 @@ Course.post("/", async (req, res) => {
       data: null,
     });
   }
-      
 });
 
 export default Course;

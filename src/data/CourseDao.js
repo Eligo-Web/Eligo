@@ -40,7 +40,10 @@ class CourseDao {
   async create(course) {
     const oldCourse = await Course.findOne({ sectionId: course.sectionId });
     if (oldCourse) {
-      throw new ApiError(409, `Course with section id ${course.sectionId} already exists`);
+      throw new ApiError(
+        409,
+        `Course with section id ${course.sectionId} already exists`
+      );
     }
     const newCourse = new Course(course);
     await newCourse.save();

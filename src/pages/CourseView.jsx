@@ -6,11 +6,11 @@ import SessionCard from "../components/SessionCard";
 import { IconButton } from "../components/Buttons.jsx";
 import Overlay from "../components/Overlay";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CreateSession, CreateClass, JoinSession } from "../components/Popups";
+import { CreateSession, JoinSession } from "../components/Popups";
 import { openPopup } from "../components/Overlay";
 import { IconArrowLeft, IconDownload, IconList } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { Button, Col } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
 
