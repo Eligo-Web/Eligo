@@ -6,10 +6,11 @@ import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
 import { JoinClass } from "../components/Popups";
 import { CreateClass, EditClass } from "../components/CreateOrEditClass";
-import "../styles/overlay.css";
-import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
 import { useEffect } from "react";
+import axios from "axios";
+import "../styles/overlay.css";
+import "../styles/cards.css";
 
 function OverView(props) {
   const location = useLocation();

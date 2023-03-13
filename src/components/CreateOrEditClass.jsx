@@ -6,6 +6,10 @@ import InputField, { SelectField } from "./InputField";
 import axios from "axios";
 import "../styles/newpoll.css";
 
+function toSectionId(str) {
+  return str.replace(/\s/g, "").toLowerCase();
+}
+
 export function CreateClass() {
   return <CreateOrEditClass popupType="Create Class" />;
 }
@@ -129,8 +133,6 @@ function CreateOrEditClass(props) {
       return;
     }
     console.log("valid");
-    // needs to change based on editMode
-    if (props.editMode) return;
     await axios
       .post(`${server}/course`, {
         name: name,
@@ -150,6 +152,36 @@ function CreateOrEditClass(props) {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  async function putCourse() {
+    if (!paramsValid()) {
+      console.log("some fields invalid!");
+      setShowError(false);
+      return;
+    }
+    console.log("valid");
+    // needs to change based on editMode
+    // await axios.get(`${server}/course/${sectionId}`);
+    // await axios
+    //   .post(`${server}/course`, {
+    //     name: name,
+    //     section: section,
+    //     semester: semester,
+    //     SISId: sisId,
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     if (res.data.status === 409) {
+    //       setShowError(true);
+    //     } else {
+    //       setShowError(false);
+    //       clearContents();
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }
 
   return (
@@ -172,7 +204,7 @@ function CreateOrEditClass(props) {
           label="Course ID (opt.)"
           input="ex: EN.601.220"
           default={props.sisId || ""}
-          onChange={(e) => setSISId(e.target.value)}
+          onChange={(e) => setSISId(e.target.value.toUpperCase())}
           errors={{ "invalid-sis-id": "Invalid format" }}
         />
       </div>
@@ -220,7 +252,7 @@ function CreateOrEditClass(props) {
         <PrimaryButton
           variant="primary"
           label="Create"
-          onClick={() => postCourse()}
+          onClick={() => (props.editMode) ? putCourse() : postCourse()}
         />
       </div>
     </div>

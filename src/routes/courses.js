@@ -6,7 +6,7 @@ const Course = express.Router();
 export const courseDao = new CourseDao();
 const { hashSync } = hash;
 
-export function toSectionId(str) {
+function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
 }
 

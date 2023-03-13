@@ -18,12 +18,21 @@ Instructor.get("/", async (req, res) => {
 
 Instructor.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const instructor = await instructorDao.read(id);
-  res.json({
-    status: 200,
-    message: `Insrtuctor found`,
-    data: instructor,
-  });
+  try {
+    const instructor = await instructorDao.read(id);
+    res.json({
+      status: 200,
+      message: `Instructor found`,
+      data: instructor,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 200,
+      message: `No instructor found`,
+      data: instructor,
+    });
+  }
 });
 
 Instructor.post("/", async (req, res) => {
