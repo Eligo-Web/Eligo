@@ -4,7 +4,7 @@ import SessionView from "../pages/SessionView";
 import CourseView from "../pages/CourseView";
 import SignIn from "../pages/SignIn";
 import InstructorPoll from "../components/InstructorPoll";
-import PageNotFound from "../components/PageNotFound";
+import PageNotFound from "../components/BlankStates";
 
 function InAppContainer() {
   return (

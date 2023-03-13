@@ -1,5 +1,6 @@
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Card from "./Card";
 
 export default function PageNotFound() {
   const navigate = useNavigate();
@@ -19,5 +20,21 @@ export default function PageNotFound() {
         </Button>
       </div>
     </div>
+  );
+}
+
+export function BlankOverview() {
+  return (
+      <Container className="card-container" style={{opacity: "75%"}}>
+      <div className="card-title divisor-blank"></div>
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+    </Container>
   );
 }

@@ -11,17 +11,25 @@ export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
 }
 
-export function CreateClass() {
-  return <CreateOrEditClass popupType="Create Class" />;
+export function CreateClass([refresh, setRefresh]) {
+  return (
+    <CreateOrEditClass
+      popupType="Create Class"
+      callback={[refresh, setRefresh]}
+    />
+  );
 }
 
-export function EditClass(sectionId) {
+export function EditClass(sectionId, [refresh, setRefresh]) {
   const server = "http://localhost:3000";
   let content;
   async function populateFields() {
-    await axios.get(`${server}/course/${sectionId}`).then((res) => {
-      const course = res.data.data;
-    }).catch((err) => console.log(err));
+    await axios
+      .get(`${server}/course/${sectionId}`)
+      .then((res) => {
+        const course = res.data.data;
+      })
+      .catch((err) => console.log(err));
   }
   populateFields();
   return (
@@ -32,6 +40,7 @@ export function EditClass(sectionId) {
       sisId="EN.601.229" //    from axios get
       semester="Spring 2023" // from axios get
       editMode
+      callback={[refresh, setRefresh]}
     />
   );
 }
@@ -46,8 +55,9 @@ function CreateOrEditClass(props) {
   const validCharset = /^[ -~]+$/;
   const popupType = props.editMode ? "Edit Class" : "Create Class";
   const popupId = props.editMode ? "edit-class-popup" : "create-class-popup";
-  let valid = true;
   const location = useLocation();
+  const setRefresh = props.callback[1];
+  let valid = true;
 
   useEffect(() => {
     if (props.editMode) return;
@@ -167,12 +177,11 @@ function CreateOrEditClass(props) {
         newSection: section,
         newSemester: semester,
       })
-      .then((res) => {
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log(err);
       });
-    window.location.reload();
+    setRefresh(!props.callback[0]);
   }
 
   async function putCourse() {
