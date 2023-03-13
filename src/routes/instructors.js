@@ -96,7 +96,11 @@ Instructor.delete("/:email/:semester/:sectionId", async (req, res) => {
   const semester = req.params.semester;
   const sectionId = req.params.sectionId;
   try {
-    const instructor = await instructorDao.deleteFromHistory(email, semester, sectionId);
+    const instructor = await instructorDao.deleteFromHistory(
+      email,
+      semester,
+      sectionId
+    );
     res.json({
       status: 200,
       message: `Instructor updated`,

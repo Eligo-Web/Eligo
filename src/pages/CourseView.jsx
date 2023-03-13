@@ -44,6 +44,7 @@ function CourseView(props) {
   function handleViewSession(sessionId) {
     navigate("/session", {
       state: {
+        name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
         sessionId: sessionId,
@@ -99,9 +100,9 @@ function CourseView(props) {
               onClick={() =>
                 navigate("/overview", {
                   state: {
+                    name: location.state.name,
                     permission: location.state.permission,
                     email: location.state.email,
-                    name: location.state.name,
                   },
                 })
               }

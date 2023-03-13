@@ -79,6 +79,7 @@ function SessionView(props) {
           onClick={() =>
             navigate("/class", {
               state: {
+                name: location.state.name,
                 permission: location.state.permission,
                 email: location.state.email,
                 courseName: location.state.courseName,
@@ -114,6 +115,7 @@ function SessionView(props) {
               onClick={() =>
                 navigate("/class", {
                   state: {
+                    name: location.state.name,
                     permission: location.state.permission,
                     email: location.state.email,
                     sectionId: location.state.sectionId,

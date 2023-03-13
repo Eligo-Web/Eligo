@@ -20,25 +20,14 @@ export function CreateClass([refresh, setRefresh]) {
   );
 }
 
-export function EditClass(sectionId, [refresh, setRefresh]) {
-  const server = "http://localhost:3000";
-  let content;
-  async function populateFields() {
-    await axios
-      .get(`${server}/course/${sectionId}`)
-      .then((res) => {
-        const course = res.data.data;
-      })
-      .catch((err) => console.log(err));
-  }
-  populateFields();
+export function EditClass(content, [refresh, setRefresh]) {
   return (
     <CreateOrEditClass
       popupType="Edit Class"
-      name="TestClass" //     from axios get
-      section="1" //  from axios get
-      sisId="EN.601.229" //    from axios get
-      semester="Spring 2023" // from axios get
+      name={content.name} //     from axios get
+      section={content.section} //  from axios get
+      sisId={content.SISId} //    from axios get
+      semester={content.semester} // from axios get
       editMode
       callback={[refresh, setRefresh]}
     />
@@ -53,10 +42,12 @@ function CreateOrEditClass(props) {
   const [semester, setSemester] = useState(props.semester || "");
   const [showError, setShowError] = useState(false);
   const validCharset = /^[ -~]+$/;
-  const popupType = props.editMode ? "Edit Class" : "Create Class";
   const popupId = props.editMode ? "edit-class-popup" : "create-class-popup";
   const location = useLocation();
   const setRefresh = props.callback[1];
+  const popupName = props.editMode
+      ? toSectionId(props.name + props.section + props.semester)
+      : "Create Class";
   let valid = true;
 
   useEffect(() => {
@@ -64,24 +55,25 @@ function CreateOrEditClass(props) {
     setSemester(document.querySelector(".semester-input").value);
   });
 
-  function clearContents(reset) {
+  function clearContents(editMode) {
     const overlay = document.getElementById(popupId);
     const nameField = overlay.querySelector(".name-input");
     const sectionField = overlay.querySelector(".section-input");
     const sisIdField = overlay.querySelector(".sis-id-input");
     const semesterField = overlay.querySelector(".semester-input");
 
-    nameField.value = reset ? props.name : "";
-    sectionField.value = reset ? props.section : "";
-    sisIdField.value = reset ? props.sisId : "";
+    nameField.value = editMode ? props.name : "";
+    sectionField.value = editMode ? props.section : "";
+    sisIdField.value = editMode ? props.sisId : "";
     setName(nameField.value);
     setSection(sectionField.value);
     setSISId(sisIdField.value);
-    if (reset) {
+    if (editMode) {
       semesterField.value = props.semester;
       setSemester(semesterField.value);
     }
 
+    setShowError(false);
     nameField.className = "name-input form-control";
     sectionField.className = "section-input form-control";
     sisIdField.className = "sis-id-input form-control";
@@ -90,8 +82,7 @@ function CreateOrEditClass(props) {
     overlay.querySelector(".empty-section").style.display = "none";
     overlay.querySelector(".invalid-section").style.display = "none";
     overlay.querySelector(".invalid-sis-id").style.display = "none";
-    setShowError(false);
-    closePopup(popupType);
+    closePopup(popupName);
   }
 
   function paramsValid() {
@@ -129,9 +120,9 @@ function CreateOrEditClass(props) {
       sectionField.className += " field-error";
       valid = false;
     } else {
+      sectionField.className = "section-input form-control";
       overlay.querySelector(".empty-section").style.display = "none";
       overlay.querySelector(".invalid-section").style.display = "none";
-      sectionField.className = "section-input form-control";
     }
 
     if (sisId && !/^[a-zA-Z]{2}\.\d{3}\.\d{3}$/.test(sisId)) {
@@ -139,8 +130,8 @@ function CreateOrEditClass(props) {
       overlay.querySelector(".invalid-sis-id").style.display = "block";
       valid = false;
     } else {
-      overlay.querySelector(".invalid-sis-id").style.display = "none";
       sisIdField.className = "sis-id-input form-control";
+      overlay.querySelector(".invalid-sis-id").style.display = "none";
     }
     return valid;
   }
@@ -177,11 +168,12 @@ function CreateOrEditClass(props) {
         newSection: section,
         newSemester: semester,
       })
-      .then((res) => {})
+      .then(() => {})
       .catch((err) => {
         console.log(err);
       });
     setRefresh(!props.callback[0]);
+    closePopup(toSectionId(name + section + semester));
   }
 
   async function putCourse() {
@@ -210,6 +202,8 @@ function CreateOrEditClass(props) {
       .catch((err) => {
         console.log(err);
       });
+    setRefresh(!props.callback[0]);
+    closePopup(toSectionId(name + section + semester));
   }
 
   async function deleteCourse() {
@@ -223,7 +217,9 @@ function CreateOrEditClass(props) {
         console.log(err);
       });
     await axios
-      .delete(`${server}/instructor/${location.state.email}/${semester}/${sectionId}`)
+      .delete(
+        `${server}/instructor/${location.state.email}/${semester}/${sectionId}`
+      )
       .then((res) => {
         console.log(res);
       })
@@ -231,7 +227,9 @@ function CreateOrEditClass(props) {
         console.log(err);
       });
     setRefresh(!props.callback[0]);
+    closePopup(toSectionId(name + section + semester));
   }
+
   return (
     <div className="pop-up-content" id={popupId}>
       <div className="input-group">

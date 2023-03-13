@@ -86,7 +86,7 @@ function OverView(props) {
                 key={course.sectionId}
                 id={course.sectionId}
                 title="Edit Class"
-                content={EditClass(course.sectionId, [refresh, setRefresh])}
+                content={EditClass(course, [refresh, setRefresh])}
               />
             );
           })
