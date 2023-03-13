@@ -39,6 +39,7 @@ function OverView(props) {
       state: {
         permission: location.state.permission,
         email: location.state.email,
+        name: location.state.name,
         courseName: courseName,
         sectionId: sectionId,
       },
@@ -147,7 +148,9 @@ function OverView(props) {
           content={CreateClass([refresh, setRefresh])}
         />
         {overlays}
-        <div id="semester-container" style={{transition: "0.1s ease-in-out", mixBlendMode: "hard-light"}}>{cards}</div>
+        <div id="semester-container" className="semester-container">
+          {cards}
+        </div>
       </div>
     );
   }

@@ -101,6 +101,7 @@ function CourseView(props) {
                   state: {
                     permission: location.state.permission,
                     email: location.state.email,
+                    name: location.state.name,
                   },
                 })
               }

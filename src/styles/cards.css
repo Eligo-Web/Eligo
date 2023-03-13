@@ -134,6 +134,12 @@
   flex: 0 calc(50% - 0.3rem);
 }
 
+.semester-container {
+  transition: all 0.1s ease-in-out 0s;
+  mix-blend-mode: hard-light;
+  opacity: 100;
+}
+
 .poll-card-container {
   max-width: 50rem;
 }
