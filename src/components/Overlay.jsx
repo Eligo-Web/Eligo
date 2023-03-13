@@ -33,7 +33,7 @@ export function closePopup(id) {
  */
 export default function Overlay(props) {
   return (
-    <div className="overlay-wrapper" id={props.title + "-popup"}>
+    <div className="overlay-wrapper" id={props.id + "-popup"}>
       <div className="overlay pop-up">
         <div className="pop-up-header">
           <Row className="pop-up-title large-title">
@@ -42,13 +42,13 @@ export default function Overlay(props) {
           <Button variant="transparent">
             <IoIosClose
               size={"2.5em"}
-              onClick={() => closePopup(props.title)}
+              onClick={() => closePopup(props.id)}
             />
           </Button>
         </div>
         {props.content || <Default />}
       </div>
-      <div className="overlay-bg" onClick={() => closePopup(props.title)} />
+      <div className="overlay-bg" onClick={() => closePopup(props.id)} />
     </div>
   );
 }

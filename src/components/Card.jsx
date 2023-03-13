@@ -6,7 +6,7 @@ import { openPopup } from "./Overlay";
 function Card(props) {
   const handleEdit = (event) => {
     event.stopPropagation();
-    openPopup("Edit Class");
+    openPopup(props.id);
   };
   return (
     <div className="card clickable" href="/session" onClick={props.onClick}>

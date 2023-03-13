@@ -16,7 +16,14 @@ export function CreateClass() {
 }
 
 export function EditClass(sectionId) {
-  // axios get with sectionId
+  const server = "http://localhost:3000";
+  let content;
+  async function populateFields() {
+    await axios.get(`${server}/course/${sectionId}`).then((res) => {
+      const course = res.data.data;
+    }).catch((err) => console.log(err));
+  }
+  populateFields();
   return (
     <CreateOrEditClass
       popupType="Edit Class"
@@ -161,11 +168,11 @@ function CreateOrEditClass(props) {
         newSemester: semester,
       })
       .then((res) => {
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
       });
+    window.location.reload();
   }
 
   async function putCourse() {

@@ -18,24 +18,23 @@ function OverView(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
-  const semesterList = [];
-
+  
   useEffect(() => {
     if (
       navigator.userAgent.indexOf("Safari") != -1 &&
       navigator.userAgent.indexOf("Chrome") == -1
-    ) {
-      if (document.querySelectorAll(".card")) {
-        document.querySelectorAll(".card").forEach((card) => {
-          card.style.backgroundColor = "#c8e2fb";
-        });
+      ) {
+        if (document.querySelectorAll(".card")) {
+          document.querySelectorAll(".card").forEach((card) => {
+            card.style.backgroundColor = "#c8e2fb";
+          });
+        }
       }
-    }
-  }, []);
-
-  function handleViewClass(courseName, sectionId) {
-    navigate("/class", {
-      state: {
+    }, []);
+    
+    function handleViewClass(courseName, sectionId) {
+      navigate("/class", {
+        state: {
         permission: location.state.permission,
         email: location.state.email,
         courseName: courseName,
@@ -43,16 +42,21 @@ function OverView(props) {
       },
     });
   }
-
+  
   async function populateCards() {
-    const history = location.state.history;
+    let history;
+    await axios.get(`${server}/instructor/${location.state.email}`).then((res) => {
+      history = res.data.data.history;
+    }).catch((err) => console.log(err));
+    const semesterList = [];
+    const editOverlays = [];
 
     for (let semester in history) {
-      const courseList = [];
       if (history[semester].length === 0) {
         continue;
       }
-
+      
+      const courseList = [];
       for (let i in history[semester]) {
         await axios
           .get(`${server}/course/${history[semester][i]}`)
@@ -61,6 +65,7 @@ function OverView(props) {
             courseList.push(
               <Card
                 key={course.sectionId}
+                id={course.sectionId}
                 title={course.name}
                 instructor={location.state.name}
                 sisId={course.SISId}
@@ -68,6 +73,14 @@ function OverView(props) {
                   handleViewClass(course.name, course.SISId);
                 }}
                 editable
+              />
+            );
+            editOverlays.push(
+              <Overlay
+                key={course.sectionId}
+                id={course.sectionId}
+                title="Edit Class"
+                content={EditClass(course.sectionId)}
               />
             );
           })
@@ -80,6 +93,7 @@ function OverView(props) {
         </Container>
       );
     }
+    return [semesterList, editOverlays];
   }
 
   function studentContent() {
@@ -106,18 +120,20 @@ function OverView(props) {
 
   function instructorContent() {
     const [cards, setCards] = useState(null);
+    const [overlays, setOverlays] = useState(null);
     useEffect(() => {
       async function func() {
-        await populateCards();
+        const [semesterList, editOverlays] = await populateCards();
         setCards(semesterList);
+        setOverlays(editOverlays);
       }
       func();
     }, []);
 
     return (
       <div style={{ marginBottom: "5rem" }}>
-        <Overlay title="Create Class" content={CreateClass()} />
-        <Overlay title="Edit Class" content={EditClass()} />
+        <Overlay title="Create Class" id="Create Class" content={CreateClass()} />
+        {overlays}
         <div id="semester-container">{cards}</div>
       </div>
     );
