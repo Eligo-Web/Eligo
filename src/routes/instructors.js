@@ -72,6 +72,28 @@ Instructor.put("/:email", async (req, res) => {
   }
 });
 
+Instructor.put("/:email/:semester/:sectionId", async (req, res) => {
+  const email = req.params.email;
+  const semester = req.params.semester;
+  const oldSectionId = req.params.sectionId;
+  const newSectionId = req.body.newSectionId;
+  try {
+    const instructor = await instructorDao.updateHistory(email, semester, oldSectionId, newSectionId);
+    res.json({
+      status: 200,
+      message: `Instructor updated`,
+      data: instructor,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Instructor not found`,
+      data: null,
+    });
+  }
+});
+
 Instructor.delete("/:email", async (req, res) => {
   const email = req.params.email;
   try {

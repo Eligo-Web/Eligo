@@ -183,12 +183,15 @@ function CreateOrEditClass(props) {
       return;
     }
     console.log("valid");
+    const oldSectionId = toSectionId(props.name + props.section + props.semester);
+    const sectionId = toSectionId(name + section + semester);
     await axios
-      .put(`${server}/course`, {
+      .put(`${server}/course/${oldSectionId}`, {
         name: name,
         section: section,
         semester: semester,
         SISId: sisId,
+        sectionId: sectionId,
       })
       .then((res) => {
         console.log(res);
@@ -199,6 +202,14 @@ function CreateOrEditClass(props) {
           clearContents(true);
         }
       })
+      .catch((err) => {
+        console.log(err);
+      });
+    await axios
+      .put(`${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`, {
+        newSectionId: sectionId,
+      })
+      .then(() => {})
       .catch((err) => {
         console.log(err);
       });
