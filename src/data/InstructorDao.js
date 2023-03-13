@@ -46,7 +46,7 @@ class InstructorDao {
     if (!instructor) {
       throw new ApiError(404, `User with email ${email} not found`);
     }
-    instructor.history.set(newSemester, sectionId);
+    instructor.history.get(newSemester).push(sectionId);
     await instructor.save();
     return instructor;
   }
