@@ -60,4 +60,47 @@ Course.post("/", async (req, res) => {
   }
 });
 
+Course.put("/:sectionId", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const name = req.body.name;
+  const section = req.body.section;
+  const semester = req.body.semester;
+  const newSisId = req.body.SISId;
+  const newSectionId = toSectionId(name + section + semester);
+  try {
+    const course = await courseDao.update(sectionId, newSectionId, name, section, semester, newSisId);
+    res.json({
+      status: 200,
+      message: "Course updated",
+      data: req.body,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: "Course not found",
+      data: null,
+    });
+  }
+});
+
+Course.delete("/:sectionId", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  try {
+    const course = await courseDao.delete(sectionId);
+    res.json({
+      status: 200,
+      message: "Course deleted",
+      data: course,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: "Course not found",
+      data: null,
+    });
+  }
+});
+
 export default Course;

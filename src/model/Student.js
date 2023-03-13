@@ -17,10 +17,10 @@ const StudentSchema = new mongoose.Schema({
     required: true,
     default: UserRole.Student,
   },
-  courses: {
-    type: [],
+  history: {
+    type: {},
     required: true,
-    default: [],
+    default: {},
   },
 });
 

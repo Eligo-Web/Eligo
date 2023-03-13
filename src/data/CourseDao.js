@@ -62,14 +62,32 @@ class CourseDao {
     await Course.deleteMany({});
   }
 
-  async update(id, course) {
-    const updatedCourse = await Course.findByIdAndUpdate(id, course, {
-      new: true,
-    });
-    if (!updatedCourse) {
-      throw new ApiError(404, `Course with id ${id} not found`);
+  async update(
+    oldSectionId,
+    newSectionId,
+    courseName,
+    courseSection,
+    courseSemester,
+    newSisId
+  ) {
+    const oldCourse = await Course.findOneAndUpdate(
+      { sectionId: oldSectionId },
+      {
+        sectionId: newSectionId,
+        name: courseName,
+        section: courseSection,
+        semester: courseSemester,
+        SISId: newSisId,
+      },
+      { new: true }
+    );
+    if (!oldCourse) {
+      throw new ApiError(
+        404,
+        `Course with section id ${oldSectionId} not found`
+      );
     }
-    return updatedCourse;
+    return oldCourse;
   }
 
   async addStudent(id, studentId) {

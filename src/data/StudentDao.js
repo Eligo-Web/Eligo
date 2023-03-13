@@ -27,10 +27,25 @@ class StudentDao {
     return student;
   }
 
+  async readByEmail(email) {
+    const student = await Student.findOne({ email: email });
+    if (!student) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    return student;
+  }
+
   async create(student) {
     const newStudent = new Student(student);
     await newStudent.save();
     return newStudent;
+  }
+
+  async addToHistory(email, newSemester, newCourse) {
+    const student = readByEmail(email);
+    student.history[newSemester].push(newCourse);
+    await student.save();
+    return student;
   }
 
   async delete(id) {
@@ -41,6 +56,15 @@ class StudentDao {
     return student;
   }
 
+  async deleteByEmail(email) {
+    const student = await Student.findOne({ email: email });
+    if (!student) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    await student.delete();
+    return student;
+  }
+  
   async deleteAll() {
     await Student.deleteMany({});
   }

@@ -161,27 +161,24 @@ function CreateOrEditClass(props) {
       return;
     }
     console.log("valid");
-    // needs to change based on editMode
-    // await axios.get(`${server}/course/${sectionId}`);
-    // await axios
-    //   .post(`${server}/course`, {
-    //     name: name,
-    //     section: section,
-    //     semester: semester,
-    //     SISId: sisId,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     if (res.data.status === 409) {
-    //       setShowError(true);
-    //     } else {
-    //       setShowError(false);
-    //       clearContents();
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    await axios.put(`${server}/course`, {
+      name: name,
+      section: section,
+      semester: semester,
+      SISId: sisId,
+    })
+    .then((res) => {
+      console.log(res);
+      if (res.data.status === 409) {
+        setShowError(true);
+      } else {
+        setShowError(false);
+        clearContents(true);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   return (
@@ -251,7 +248,7 @@ function CreateOrEditClass(props) {
         />
         <PrimaryButton
           variant="primary"
-          label="Create"
+          label={props.editMode ? "Save" : "Create"}
           onClick={() => (props.editMode) ? putCourse() : postCourse()}
         />
       </div>
