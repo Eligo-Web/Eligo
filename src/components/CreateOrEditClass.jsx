@@ -212,6 +212,26 @@ function CreateOrEditClass(props) {
       });
   }
 
+  async function deleteCourse() {
+    const sectionId = toSectionId(name + section + semester);
+    await axios
+      .delete(`${server}/course/${sectionId}`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    await axios
+      .delete(`${server}/instructor/${location.state.email}/${semester}/${sectionId}`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setRefresh(!props.callback[0]);
+  }
   return (
     <div className="pop-up-content" id={popupId}>
       <div className="input-group">
@@ -269,7 +289,7 @@ function CreateOrEditClass(props) {
           <PrimaryButton
             variant="delete"
             label="Delete"
-            onClick={() => closePopup("Edit Class")}
+            onClick={() => deleteCourse()}
           />
         ) : null}
         <PrimaryButton

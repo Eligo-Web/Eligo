@@ -51,6 +51,20 @@ class InstructorDao {
     return instructor;
   }
 
+  async deleteFromHistory(email, semester, sectionId) {
+    const instructor = await Instructor.findOne({ email: email.toLowerCase() });
+    if (!instructor) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    const sectionIds = instructor.history.get(semester);
+    const index = sectionIds.indexOf(sectionId);
+    if (index > -1) {
+      sectionIds.splice(index, 1);
+    }
+    await instructor.save();
+    return instructor;
+  }
+
   async delete(id) {
     const instructor = await Instructor.findByIdAndDelete(id);
     if (!instructor) {

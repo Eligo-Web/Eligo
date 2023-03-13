@@ -75,8 +75,7 @@ Instructor.put("/:email", async (req, res) => {
 Instructor.delete("/:email", async (req, res) => {
   const email = req.params.email;
   try {
-    const instructor = await instructorDao.readByEmail(email);
-    instructorDao.delete(instructor._id);
+    const instructor = await instructorDao.deleteByEmail(email);
     res.json({
       status: 200,
       message: `Instructor deleted`,
@@ -87,6 +86,27 @@ Instructor.delete("/:email", async (req, res) => {
     res.json({
       status: 404,
       message: `Instructor not found`,
+      data: null,
+    });
+  }
+});
+
+Instructor.delete("/:email/:semester/:sectionId", async (req, res) => {
+  const email = req.params.email;
+  const semester = req.params.semester;
+  const sectionId = req.params.sectionId;
+  try {
+    const instructor = await instructorDao.deleteFromHistory(email, semester, sectionId);
+    res.json({
+      status: 200,
+      message: `Instructor updated`,
+      data: instructor,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Instructor with email ${email} not found`,
       data: null,
     });
   }

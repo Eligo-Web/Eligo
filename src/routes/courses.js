@@ -94,7 +94,7 @@ Course.put("/:sectionId", async (req, res) => {
 Course.delete("/:sectionId", async (req, res) => {
   const sectionId = req.params.sectionId;
   try {
-    const course = await courseDao.delete(sectionId);
+    const course = await courseDao.deleteBySectionId(sectionId);
     res.json({
       status: 200,
       message: "Course deleted",

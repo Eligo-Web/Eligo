@@ -58,6 +58,14 @@ class CourseDao {
     return course;
   }
 
+  async deleteBySectionId(sectionId) {
+    const course = await Course.findOneAndDelete({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    return course;
+  }
+
   async deleteAll() {
     await Course.deleteMany({});
   }
