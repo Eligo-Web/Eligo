@@ -22,23 +22,28 @@ export function CreateClass([refresh, setRefresh]) {
 
 export function EditClass(sectionId, [refresh, setRefresh]) {
   const server = "http://localhost:3000";
-  let content;
+  let name = "";
+  let section = "";
+  let sisId = "";
+  let semester = "";
   async function populateFields() {
-    await axios
-      .get(`${server}/course/${sectionId}`)
-      .then((res) => {
-        const course = res.data.data;
-      })
-      .catch((err) => console.log(err));
+    await axios.get(`${server}/course/${sectionId}`).then((res) => {
+      const course = res.data.data;
+      name = course.name;
+      section = course.section;
+      sisId = course.SISId;
+      semester = course.semester;
+    }) 
+    .catch((err) => console.log(err));
   }
-  populateFields();
+  populateFields(); // does not work properly because values are not updated before the return statement
   return (
     <CreateOrEditClass
       popupType="Edit Class"
-      name="TestClass" //     from axios get
-      section="1" //  from axios get
-      sisId="EN.601.229" //    from axios get
-      semester="Spring 2023" // from axios get
+      name={name} //     from axios get
+      section={section} //  from axios get
+      sisId={sisId} //    from axios get
+      semester={semester} // from axios get
       editMode
       callback={[refresh, setRefresh]}
     />
