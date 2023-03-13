@@ -18,7 +18,7 @@ function Menu(props) {
   const location = useLocation();
   const navigate = useNavigate();
   let getLabel = "Join Class";
-  if (location.state.permission === "instructor") {
+  if (location.state.permission === "INSTRUCTOR") {
     getLabel = "Create Class";
   }
   if (props.leaveAction) {
@@ -52,7 +52,7 @@ function Menu(props) {
           </Container>
           <Container className="d-flex flex-row p-3 gap-3 card-subtitle">
             <IconUserCircle size="1.8em" />
-            {location.state.permission}
+            {location.state.name}
           </Container>
         </Container>
         <Container className="d-flex flex-column p-3 gap-2 align-items-center">

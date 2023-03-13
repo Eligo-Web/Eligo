@@ -8,11 +8,10 @@ import { JoinClass } from "../components/Popups";
 import { CreateClass, EditClass } from "../components/CreateOrEditClass";
 import AccessDenied from "../components/AccessDenied";
 import { createRoot } from 'react-dom/client';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/overlay.css";
 import "../styles/cards.css";
-import { render } from "react-dom";
 
 function OverView(props) {
   const server = "http://localhost:3000";
@@ -50,12 +49,15 @@ function OverView(props) {
 
     for (let semester in history) {
       const courseList = [];
+      if (history[semester].length === 0) {
+        continue;
+      }
 
       for (let i in history[semester]) {
         await axios
           .get(`${server}/course/${history[semester][i]}`)
           .then((res) => {
-            const course = res.data;
+            const course = res.data.data;
             courseList.push(
               <Card
                 key={course.sectionId}
@@ -77,12 +79,12 @@ function OverView(props) {
       semesterList.push(
         <Container className="card-container" key={semester}>
           <h3 className="card-title divisor">{semester}</h3>
-          {courseList.map((item) => {item})}
+          {courseList}
         </Container>
       )
     }
   }
-
+  
   function studentContent() {
     return (
       <div style={{ marginBottom: "5rem" }}>
@@ -95,7 +97,7 @@ function OverView(props) {
             onClick={() =>
               handleViewClass("Computer System Fundamentals", "EN.601.229")
             }
-          />
+            />
           <Card />
           <Card />
           <Card />
@@ -104,31 +106,23 @@ function OverView(props) {
       </div>
     );
   }
+  
   function instructorContent() {
-    populateCards();
+    const [cards, setCards] = useState(null);
     useEffect(() => {
-      const root = createRoot(document.getElementById("semester-container"));
-      root.render(semesterList.map((item) => {item}));
-    })
+      async function func() {
+        await populateCards();
+        setCards(semesterList);
+      }    
+      func();  
+    }, [])
 
     return (
       <div style={{ marginBottom: "5rem" }}>
         <Overlay title="Create Class" content={CreateClass()} />
         <Overlay title="Edit Class" content={EditClass()} />
         <div id="semester-container">
-          <Container className="card-container">
-            <h3 className="card-title divisor">Spring 2023</h3>
-            <Card
-              title="Computer System Fundamentals"
-              instructor="Dave Hovemeyer"
-              sisId="EN.601.229"
-              onClick={() => {
-                handleViewClass("Computer System Fundamentals", "EN.601.229");
-              }}
-              editable
-            />
-            <Card editable />
-          </Container>
+          {cards}
         </div>
       </div>
     );
