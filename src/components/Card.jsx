@@ -15,7 +15,7 @@ function Card(props) {
           <p className="card-title">{props.title}</p>
           <p className="card-subtitle">{props.instructor}</p>
         </div>
-        <p className="card-id">{props.id}</p>
+        <p className="card-id">{props.sisId}</p>
         {props.editable ? (
           <IconPencil
             id="edit-button"

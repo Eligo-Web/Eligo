@@ -7,10 +7,10 @@ class StudentDao {
   async readAll({ name, email, role }) {
     const filter = {};
     if (name) {
-      filter.name = name;
+      filter.name = name.toLowerCase();
     }
     if (email) {
-      filter.email = email;
+      filter.email = email.toLowerCase();
     }
     if (role) {
       filter.role = role;
@@ -28,7 +28,7 @@ class StudentDao {
   }
 
   async readByEmail(email) {
-    const student = await Student.findOne({ email: email });
+    const student = await Student.findOne({ email: email.toLowerCase() });
     if (!student) {
       throw new ApiError(404, `User with email ${email} not found`);
     }
@@ -42,7 +42,7 @@ class StudentDao {
   }
 
   async addToHistory(email, newSemester, newCourse) {
-    const student = readByEmail(email);
+    const student = readByEmail(email.toLowerCase());
     student.history[newSemester].push(newCourse);
     await student.save();
     return student;
@@ -57,14 +57,14 @@ class StudentDao {
   }
 
   async deleteByEmail(email) {
-    const student = await Student.findOne({ email: email });
+    const student = await Student.findOne({ email: email.toLowerCase() });
     if (!student) {
       throw new ApiError(404, `User with email ${email} not found`);
     }
     await student.delete();
     return student;
   }
-  
+
   async deleteAll() {
     await Student.deleteMany({});
   }

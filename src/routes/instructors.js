@@ -28,9 +28,9 @@ Instructor.get("/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 200,
+      status: 404,
       message: `No instructor found`,
-      data: instructor,
+      data: null,
     });
   }
 });
@@ -49,7 +49,11 @@ Instructor.put("/:email", async (req, res) => {
   const newCourse = req.body.newCourse;
   const newSemester = req.body.newSemester;
   try {
-    const instructor = await instructorDao.addToHistory(email, newCourse, newSemester);
+    const instructor = await instructorDao.addToHistory(
+      email,
+      newCourse,
+      newSemester
+    );
     res.json({
       status: 200,
       message: `Instructor updated`,
@@ -84,6 +88,5 @@ Instructor.delete("/:email", async (req, res) => {
     });
   }
 });
-
 
 export default Instructor;

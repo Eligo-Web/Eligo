@@ -19,7 +19,7 @@ Student.get("/", async (req, res) => {
     res.json({
       status: 404,
       message: `No students found`,
-      data: students,
+      data: null,
     });
   }
 });
@@ -38,7 +38,7 @@ Student.get("/:email", async (req, res) => {
     res.json({
       status: 404,
       message: `No student found`,
-      data: student,
+      data: null,
     });
   }
 });
@@ -75,7 +75,7 @@ Student.delete("/:email", async (req, res) => {
     res.json({
       status: 404,
       message: `No student found`,
-      data: student,
+      data: null,
     });
   }
 });
@@ -85,7 +85,11 @@ Student.put("/:email", async (req, res) => {
   const newCourse = req.body.newCourse;
   const newSemester = req.body.newSemester;
   try {
-    const student = await studentDao.addToHistory(email, newCourse, newSemester);
+    const student = await studentDao.addToHistory(
+      email,
+      newCourse,
+      newSemester
+    );
     res.json({
       status: 200,
       message: `Student updated`,
@@ -96,7 +100,7 @@ Student.put("/:email", async (req, res) => {
     res.json({
       status: 404,
       message: `No student found`,
-      data: student,
+      data: null,
     });
   }
 });

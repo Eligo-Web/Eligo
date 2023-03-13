@@ -6,7 +6,7 @@ import InputField, { SelectField } from "./InputField";
 import axios from "axios";
 import "../styles/newpoll.css";
 
-function toSectionId(str) {
+export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
 }
 
@@ -161,24 +161,25 @@ function CreateOrEditClass(props) {
       return;
     }
     console.log("valid");
-    await axios.put(`${server}/course`, {
-      name: name,
-      section: section,
-      semester: semester,
-      SISId: sisId,
-    })
-    .then((res) => {
-      console.log(res);
-      if (res.data.status === 409) {
-        setShowError(true);
-      } else {
-        setShowError(false);
-        clearContents(true);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    await axios
+      .put(`${server}/course`, {
+        name: name,
+        section: section,
+        semester: semester,
+        SISId: sisId,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.status === 409) {
+          setShowError(true);
+        } else {
+          setShowError(false);
+          clearContents(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
@@ -249,7 +250,7 @@ function CreateOrEditClass(props) {
         <PrimaryButton
           variant="primary"
           label={props.editMode ? "Save" : "Create"}
-          onClick={() => (props.editMode) ? putCourse() : postCourse()}
+          onClick={() => (props.editMode ? putCourse() : postCourse())}
         />
       </div>
     </div>

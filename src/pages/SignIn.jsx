@@ -41,24 +41,30 @@ function SignIn(props) {
       state: { permission: "student", email: email },
     });
   }
-  function handleInstructor() {
-    const email = "instructor@jhu.edu";
-    const name = "instructor";
-    const role = "INSTRUCTOR";
-    axios
-      .get(`${server}/instructor/?email=${email}`)
+
+  async function handleInstructor() {
+    let email = "instructor@jhu.edu";
+    let name = "instructor";
+    let role = "INSTRUCTOR";
+    let history = { "Intersession 2023": [], "Spring 2023": [] };
+    await axios
+      .get(`${server}/instructor/${email}`)
       .then((res) => {
-        console.log(res);
+        email = res.data.data.email;
+        name = res.data.data.name;
+        role = res.data.data.role;
+        history = res.data.data.history;
         if (
           res.data.data.length === 0 ||
-          res.data.data[0].email !== email ||
-          res.data.data[0].role !== role
+          res.data.data.email !== email ||
+          res.data.data.role !== role
         ) {
           axios
             .post(`${server}/instructor`, {
               name: name,
               email: email,
               role: role,
+              history: history,
             })
             .then((res) => {
               console.log(res);
@@ -71,8 +77,9 @@ function SignIn(props) {
       .catch((err) => {
         console.log(err);
       });
+
     navigate("/overview", {
-      state: { permission: "instructor", email: email },
+      state: { permission: role, email: email, name: name, history: history },
     });
   }
   return (

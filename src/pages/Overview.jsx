@@ -7,15 +7,19 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { JoinClass } from "../components/Popups";
 import { CreateClass, EditClass } from "../components/CreateOrEditClass";
 import AccessDenied from "../components/AccessDenied";
+import { createRoot } from 'react-dom/client';
 import { useEffect } from "react";
 import axios from "axios";
 import "../styles/overlay.css";
 import "../styles/cards.css";
+import { render } from "react-dom";
 
 function OverView(props) {
+  const server = "http://localhost:3000";
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
+  const semesterList = [];
 
   useEffect(() => {
     if (
@@ -41,6 +45,44 @@ function OverView(props) {
     });
   }
 
+  async function populateCards() {
+    const history = location.state.history;  
+
+    for (let semester in history) {
+      const courseList = [];
+
+      for (let i in history[semester]) {
+        await axios
+          .get(`${server}/course/${history[semester][i]}`)
+          .then((res) => {
+            const course = res.data;
+            courseList.push(
+              <Card
+                key={course.sectionId}
+                title={course.name}
+                instructor={location.state.name}
+                sisId={course.SISId}
+                onClick={() => {
+                  handleViewClass(
+                    course.name,
+                    course.SISId
+                  );
+                }}
+                editable
+              />
+            );
+          })
+          .catch((err) => console.log(err));
+      }
+      semesterList.push(
+        <Container className="card-container" key={semester}>
+          <h3 className="card-title divisor">{semester}</h3>
+          {courseList.map((item) => {item})}
+        </Container>
+      )
+    }
+  }
+
   function studentContent() {
     return (
       <div style={{ marginBottom: "5rem" }}>
@@ -63,41 +105,28 @@ function OverView(props) {
     );
   }
   function instructorContent() {
+    populateCards();
+    useEffect(() => {
+      const root = createRoot(document.getElementById("semester-container"));
+      root.render(semesterList.map((item) => {item}));
+    })
+
     return (
       <div style={{ marginBottom: "5rem" }}>
         <Overlay title="Create Class" content={CreateClass()} />
         <Overlay title="Edit Class" content={EditClass()} />
-        <div>
+        <div id="semester-container">
           <Container className="card-container">
             <h3 className="card-title divisor">Spring 2023</h3>
             <Card
               title="Computer System Fundamentals"
               instructor="Dave Hovemeyer"
-              id="EN.601.229"
+              sisId="EN.601.229"
               onClick={() => {
                 handleViewClass("Computer System Fundamentals", "EN.601.229");
               }}
               editable
             />
-            <Card editable />
-            <Card editable />
-            <Card editable />
-            <Card editable />
-          </Container>
-          <Container className="card-container">
-            <h3 className="card-title divisor">Fall 2022</h3>
-            <Card editable />
-            <Card editable />
-            <Card editable />
-            <Card editable />
-            <Card editable />
-          </Container>
-          <Container className="card-container">
-            <h3 className="card-title divisor">Spring 2022</h3>
-            <Card editable />
-            <Card editable />
-            <Card editable />
-            <Card editable />
             <Card editable />
           </Container>
         </div>

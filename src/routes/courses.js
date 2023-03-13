@@ -68,7 +68,14 @@ Course.put("/:sectionId", async (req, res) => {
   const newSisId = req.body.SISId;
   const newSectionId = toSectionId(name + section + semester);
   try {
-    const course = await courseDao.update(sectionId, newSectionId, name, section, semester, newSisId);
+    const course = await courseDao.update(
+      sectionId,
+      newSectionId,
+      name,
+      section,
+      semester,
+      newSisId
+    );
     res.json({
       status: 200,
       message: "Course updated",
