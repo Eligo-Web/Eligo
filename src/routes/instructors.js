@@ -2,6 +2,7 @@ import express from "express";
 import InstructorDao from "../data/InstructorDao.js";
 import { UserRole } from "../model/UserRole.js";
 import * as db from "../data/db.js";
+import { toSectionId } from "./courses.js";
 
 const Instructor = express.Router();
 export const instructorDao = new InstructorDao();
@@ -47,12 +48,14 @@ Instructor.post("/", async (req, res) => {
 Instructor.put("/:email", async (req, res) => {
   const email = req.params.email;
   const newCourse = req.body.newCourse;
+  const newSection = req.body.newSection;
   const newSemester = req.body.newSemester;
+  const sectionId = toSectionId(newCourse + newSection + newSemester);
   try {
     const instructor = await instructorDao.addToHistory(
       email,
-      newCourse,
-      newSemester
+      newSemester,
+      sectionId
     );
     res.json({
       status: 200,

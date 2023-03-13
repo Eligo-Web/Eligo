@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { PrimaryButton } from "./Buttons.jsx";
 import { closePopup } from "./Overlay";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
@@ -39,6 +40,7 @@ function CreateOrEditClass(props) {
   const popupType = props.editMode ? "Edit Class" : "Create Class";
   const popupId = props.editMode ? "edit-class-popup" : "create-class-popup";
   let valid = true;
+  const location = useLocation();
 
   useEffect(() => {
     if (props.editMode) return;
@@ -148,6 +150,18 @@ function CreateOrEditClass(props) {
           setShowError(false);
           clearContents();
         }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    await axios
+      .put(`${server}/instructor/${location.state.email}`, {
+        newCourse: name,
+        newSection: section,
+        newSemester: semester,
+      })
+      .then((res) => {
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);

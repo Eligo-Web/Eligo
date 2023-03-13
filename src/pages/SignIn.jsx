@@ -50,15 +50,12 @@ function SignIn(props) {
     await axios
       .get(`${server}/instructor/${email}`)
       .then((res) => {
-        email = res.data.data.email;
-        name = res.data.data.name;
-        role = res.data.data.role;
-        history = res.data.data.history;
-        if (
-          res.data.data.length === 0 ||
-          res.data.data.email !== email ||
-          res.data.data.role !== role
-        ) {
+        if (res.data.status === 200) {
+          email = res.data.data.email;
+          name = res.data.data.name;
+          role = res.data.data.role;
+          history = res.data.data.history;
+        } else {
           axios
             .post(`${server}/instructor`, {
               name: name,

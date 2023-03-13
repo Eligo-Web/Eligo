@@ -42,7 +42,10 @@ class StudentDao {
   }
 
   async addToHistory(email, newSemester, newCourse) {
-    const student = readByEmail(email.toLowerCase());
+    const student = await Student.findOne({ email: email.toLowerCase() });
+    if (!student) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
     student.history[newSemester].push(newCourse);
     await student.save();
     return student;

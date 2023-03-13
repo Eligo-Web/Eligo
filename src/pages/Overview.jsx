@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { JoinClass } from "../components/Popups";
 import { CreateClass, EditClass } from "../components/CreateOrEditClass";
 import AccessDenied from "../components/AccessDenied";
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/overlay.css";
@@ -45,7 +45,7 @@ function OverView(props) {
   }
 
   async function populateCards() {
-    const history = location.state.history;  
+    const history = location.state.history;
 
     for (let semester in history) {
       const courseList = [];
@@ -65,10 +65,7 @@ function OverView(props) {
                 instructor={location.state.name}
                 sisId={course.SISId}
                 onClick={() => {
-                  handleViewClass(
-                    course.name,
-                    course.SISId
-                  );
+                  handleViewClass(course.name, course.SISId);
                 }}
                 editable
               />
@@ -81,10 +78,10 @@ function OverView(props) {
           <h3 className="card-title divisor">{semester}</h3>
           {courseList}
         </Container>
-      )
+      );
     }
   }
-  
+
   function studentContent() {
     return (
       <div style={{ marginBottom: "5rem" }}>
@@ -97,7 +94,7 @@ function OverView(props) {
             onClick={() =>
               handleViewClass("Computer System Fundamentals", "EN.601.229")
             }
-            />
+          />
           <Card />
           <Card />
           <Card />
@@ -106,24 +103,22 @@ function OverView(props) {
       </div>
     );
   }
-  
+
   function instructorContent() {
     const [cards, setCards] = useState(null);
     useEffect(() => {
       async function func() {
         await populateCards();
         setCards(semesterList);
-      }    
-      func();  
-    }, [])
+      }
+      func();
+    }, []);
 
     return (
       <div style={{ marginBottom: "5rem" }}>
         <Overlay title="Create Class" content={CreateClass()} />
         <Overlay title="Edit Class" content={EditClass()} />
-        <div id="semester-container">
-          {cards}
-        </div>
+        <div id="semester-container">{cards}</div>
       </div>
     );
   }

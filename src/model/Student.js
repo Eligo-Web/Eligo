@@ -18,7 +18,8 @@ const StudentSchema = new mongoose.Schema({
     default: UserRole.Student,
   },
   history: {
-    type: {},
+    type: Map,
+    of: [String],
     required: true,
     default: {},
   },

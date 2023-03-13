@@ -41,9 +41,12 @@ class InstructorDao {
     return newInstructor;
   }
 
-  async addToHistory(email, newSemester, newCourse) {
-    const instructor = readByEmail(email.toLowerCase());
-    instructor.history[newSemester].push(newCourse);
+  async addToHistory(email, newSemester, sectionId) {
+    const instructor = await Instructor.findOne({ email: email.toLowerCase() });
+    if (!instructor) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    instructor.history.set(newSemester, sectionId);
     await instructor.save();
     return instructor;
   }

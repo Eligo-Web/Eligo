@@ -18,7 +18,8 @@ const InstructorSchema = new mongoose.Schema({
     default: UserRole.Instructor,
   },
   history: {
-    type: {},
+    type: Map,
+    of: [String],
     required: true,
     default: {},
   },
