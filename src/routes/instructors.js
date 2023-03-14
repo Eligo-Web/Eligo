@@ -79,7 +79,13 @@ Instructor.put("/:email/:semester/:sectionId", async (req, res) => {
   const oldSectionId = req.params.sectionId;
   const newSectionId = req.body.newSectionId;
   try {
-    const instructor = await instructorDao.updateHistory(email, oldSemester, newSemester, oldSectionId, newSectionId);
+    const instructor = await instructorDao.updateHistory(
+      email,
+      oldSemester,
+      newSemester,
+      oldSectionId,
+      newSectionId
+    );
     res.json({
       status: 200,
       message: `Instructor updated`,

@@ -18,11 +18,11 @@ export function openPopup(id) {
 export function closePopup(id) {
   const overlay = document.getElementById(id + "-popup");
   if (overlay) {
+    overlay.style.height = 0;
     document.body.style.overflow = "auto";
-    overlay.querySelector(".overlay-bg").style.pointerEvents = "none";
     overlay.querySelector(".overlay-bg").style.opacity = 0;
     overlay.querySelector(".pop-up").style.opacity = 0;
-    overlay.style.height = 0;
+    overlay.querySelector(".overlay-bg").style.pointerEvents = "none";
     console.log("closed", id);
   }
 }

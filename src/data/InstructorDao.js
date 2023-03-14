@@ -51,7 +51,13 @@ class InstructorDao {
     return instructor;
   }
 
-  async updateHistory(email, oldSemester, newSemester, oldSectionId, newSectionId) {
+  async updateHistory(
+    email,
+    oldSemester,
+    newSemester,
+    oldSectionId,
+    newSectionId
+  ) {
     const instructor = await Instructor.findOne({ email: email.toLowerCase() });
     if (!instructor) {
       throw new ApiError(404, `User with email ${email} not found`);

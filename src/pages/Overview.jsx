@@ -132,11 +132,10 @@ function OverView(props) {
       async function loadContent() {
         container.style.opacity = 0;
         const [semesterList, editOverlays] = await populateCards();
-        setCards(semesterList);
+        setCards(semesterList.reverse());
         container.style.opacity = 100;
         setOverlays(editOverlays);
       }
-      console.log(refresh);
       loadContent();
     }, [refresh]);
 
@@ -177,7 +176,6 @@ function OverView(props) {
         title="Your Courses"
         description={location.state.email}
         onClick={props.onClick}
-        clickable={false}
         showDescription
       />
       {location.state.permission === "student"

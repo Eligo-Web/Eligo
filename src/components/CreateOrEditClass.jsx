@@ -34,6 +34,10 @@ export function EditClass(content, [refresh, setRefresh]) {
   );
 }
 
+function pause() {
+  return new Promise((res) => setTimeout(res, 250));
+}
+
 function CreateOrEditClass(props) {
   const server = "http://localhost:3000";
   const [name, setName] = useState(props.name || "");
@@ -42,12 +46,11 @@ function CreateOrEditClass(props) {
   const [semester, setSemester] = useState(props.semester || "");
   const [showError, setShowError] = useState(false);
   const validCharset = /^[ -~]+$/;
-  const popupId = props.editMode ? "edit-class-popup" : "create-class-popup";
   const location = useLocation();
   const setRefresh = props.callback[1];
   const popupName = props.editMode
-      ? toSectionId(props.name + props.section + props.semester)
-      : "Create Class";
+    ? toSectionId(props.name + props.section + props.semester)
+    : "Create Class";
   let valid = true;
 
   useEffect(() => {
@@ -56,7 +59,7 @@ function CreateOrEditClass(props) {
   });
 
   function clearContents(editMode) {
-    const overlay = document.getElementById(popupId);
+    const overlay = document.getElementById(popupName);
     const nameField = overlay.querySelector(".name-input");
     const sectionField = overlay.querySelector(".section-input");
     const sisIdField = overlay.querySelector(".sis-id-input");
@@ -87,7 +90,7 @@ function CreateOrEditClass(props) {
 
   function paramsValid() {
     console.log("checking:", name, section, semester, sisId);
-    const overlay = document.getElementById(popupId);
+    const overlay = document.getElementById(popupName);
     const nameField = overlay.querySelector(".name-input");
     const sectionField = overlay.querySelector(".section-input");
     const sisIdField = overlay.querySelector(".sis-id-input");
@@ -172,8 +175,9 @@ function CreateOrEditClass(props) {
       .catch((err) => {
         console.log(err);
       });
+    closePopup(popupName);
+    await pause();
     setRefresh(!props.callback[0]);
-    closePopup(toSectionId(name + section + semester));
   }
 
   async function putCourse() {
@@ -183,8 +187,20 @@ function CreateOrEditClass(props) {
       return;
     }
     console.log("valid");
-    const oldSectionId = toSectionId(props.name + props.section + props.semester);
+    const oldSectionId = toSectionId(
+      props.name + props.section + props.semester
+    );
     const sectionId = toSectionId(name + section + semester);
+    let checkDupe;
+    await axios.get(`${server}/course/${sectionId}`).then((res) => {
+      checkDupe = res.data;
+    }).catch((err) => console.log(err));
+
+    if (checkDupe.status === 200) {
+      setShowError(true);
+      return;
+    }
+
     await axios
       .put(`${server}/course/${oldSectionId}`, {
         name: name,
@@ -199,23 +215,26 @@ function CreateOrEditClass(props) {
           setShowError(true);
         } else {
           setShowError(false);
-          clearContents(true);
         }
       })
       .catch((err) => {
         console.log(err);
       });
     await axios
-      .put(`${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`, {
-        newSectionId: sectionId,
-        newSemester: semester,
-      })
+      .put(
+        `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`,
+        {
+          newSectionId: sectionId,
+          newSemester: semester,
+        }
+      )
       .then(() => {})
       .catch((err) => {
         console.log(err);
       });
+    closePopup(popupName);
+    await pause();
     setRefresh(!props.callback[0]);
-    closePopup(toSectionId(name + section + semester));
   }
 
   async function deleteCourse() {
@@ -238,12 +257,13 @@ function CreateOrEditClass(props) {
       .catch((err) => {
         console.log(err);
       });
+    closePopup(popupName);
+    await pause();
     setRefresh(!props.callback[0]);
-    closePopup(toSectionId(name + section + semester));
   }
 
   return (
-    <div className="pop-up-content" id={popupId}>
+    <div className="pop-up-content" id={popupName}>
       <div className="input-group">
         <InputField
           class="name-input"
