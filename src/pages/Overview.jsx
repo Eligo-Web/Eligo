@@ -46,14 +46,15 @@ function OverView(props) {
     });
   }
 
-  async function populateCards() {
+  async function populateCards(role) {
     let history;
     await axios
-      .get(`${server}/instructor/${location.state.email}`)
+      .get(`${server}/${role}/${location.state.email}`)
       .then((res) => {
         history = res.data.data.history;
       })
       .catch((err) => console.log(err));
+
     const semesterList = [];
     const editOverlays = [];
 
@@ -106,23 +107,26 @@ function OverView(props) {
   }
 
   function studentContent() {
+    const [cards, setCards] = useState(null);
+    const [overlays, setOverlays] = useState(null);
+    useEffect(() => {
+      const container = document.getElementById("semester-container");
+      async function loadContent() {
+        container.style.opacity = 0;
+        const [semesterList, editOverlays] = await populateCards("student");
+        setCards(semesterList.reverse());
+        container.style.opacity = 100;
+        setOverlays(editOverlays);
+      }
+      loadContent();
+    }, [refresh]);
     return (
       <div style={{ marginBottom: "5rem" }}>
-        <Overlay title="Join Class" id="Join Class" content={JoinClass()} />
-        <Container className="card-container">
-          <Card
-            title="Computer System Fundamentals"
-            instructor="Dave Hovemeyer"
-            id="EN.601.229"
-            onClick={() =>
-              handleViewClass("Computer System Fundamentals", "EN.601.229")
-            }
-          />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-        </Container>
+      <Overlay title="Join Class" id="Join Class" content={JoinClass()} />
+        {overlays}
+        <div id="semester-container" className="semester-container">
+          {cards}
+        </div>
       </div>
     );
   }
@@ -134,7 +138,7 @@ function OverView(props) {
       const container = document.getElementById("semester-container");
       async function loadContent() {
         container.style.opacity = 0;
-        const [semesterList, editOverlays] = await populateCards();
+        const [semesterList, editOverlays] = await populateCards("instructor");
         setCards(semesterList.reverse());
         container.style.opacity = 100;
         setOverlays(editOverlays);

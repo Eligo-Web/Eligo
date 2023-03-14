@@ -38,6 +38,25 @@ Course.get("/:sectionId", async (req, res) => {
   }
 });
 
+Course.get("/student/:passcode", async (req, res) => {
+  const passcode = req.params.passcode;
+  try {
+    let course = await courseDao.readByPasscode(passcode);
+    res.json({
+      status: 200,
+      message: `Course found`,
+      data: course,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Course not found`,
+      data: null,
+    });
+  }
+});
+
 Course.post("/", async (req, res) => {
   let sectionId = toSectionId(
     req.body.name + req.body.section + req.body.semester
@@ -66,6 +85,7 @@ Course.put("/:sectionId", async (req, res) => {
   const section = req.body.section;
   const semester = req.body.semester;
   const newSisId = req.body.SISId;
+  const passcode = req.body.passcode;
   const newSectionId = toSectionId(name + section + semester);
   try {
     const course = await courseDao.update(
@@ -74,7 +94,8 @@ Course.put("/:sectionId", async (req, res) => {
       name,
       section,
       semester,
-      newSisId
+      newSisId, 
+      passcode
     );
     res.json({
       status: 200,

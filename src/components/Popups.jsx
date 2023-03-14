@@ -36,7 +36,7 @@ function JoinOrCreate(props) {
           variant="primary"
           label={props.primary}
           onClick={() => {
-            /**TODO */
+            //todo: add axios call to join 
             closePopup(props.popupId);
           }}
         />

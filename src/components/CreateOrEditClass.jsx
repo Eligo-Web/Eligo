@@ -173,6 +173,7 @@ function CreateOrEditClass(props) {
         section: section,
         semester: semester,
         SISId: sisId,
+        passcode: Math.random().toString(36).slice(-8).toUpperCase(),
       })
       .then((res) => {
         console.log(res);

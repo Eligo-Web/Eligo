@@ -29,20 +29,21 @@ const CourseSchema = new mongoose.Schema({
   ],
   passcode: {
     type: String,
-    //required: true,
+    required: true,
+    unique: true,
   },
   semester: {
     type: String,
-    //required: true,
+    required: true,
   },
   sessions: {
     type: Map,
-    //required: true,
+    of: String,
+    required: true,
     default: {},
   },
   SISId: {
     type: String,
-    //required: true,
   },
 });
 
