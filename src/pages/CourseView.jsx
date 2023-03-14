@@ -85,7 +85,7 @@ function CourseView(props) {
     return (
       <div className="d-flex flex-column ">
         <div className="card-wrapper">
-          <Overlay title="Create Session" content={CreateSession()} />
+          <Overlay title="Create Session" id="Create Session" content={CreateSession()} />
           <div>
             <IconButton
               style={{
@@ -179,17 +179,17 @@ function CourseView(props) {
   ) : (
     <div>
       <Menu
-        leaveAction={location.state.permission === "student"}
-        hideCreate={location.state.permission === "instructor"}
+        leaveAction={location.state.permission === "STUDENT"}
+        hideCreate={location.state.permission === "INSTRUCTOR"}
       />
       <MenuBar
         title={location.state.courseName}
         description={location.state.sectionId}
         onClick={props.onClick}
         clickable
-        showDescription={location.state.permission !== "student"}
+        showDescription={location.state.permission !== "STUDENT"}
       />
-      {location.state.permission === "student"
+      {location.state.permission === "STUDENT"
         ? studentContent()
         : instructorContent()}
     </div>

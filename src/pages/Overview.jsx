@@ -5,14 +5,11 @@ import Overlay from "../components/Overlay";
 import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
 import { JoinClass } from "../components/Popups";
-import { CreateClass, EditClass } from "../components/CreateOrEditClass";
 import AccessDenied from "../components/AccessDenied";
-import { createRoot } from "react-dom/client";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/overlay.css";
 import "../styles/cards.css";
-import { BlankOverview } from "../components/BlankStates";
 
 function OverView(props) {
   const server = "http://localhost:3000";
@@ -33,6 +30,10 @@ function OverView(props) {
       }
     }
   }, []);
+
+  function pause() {
+    return new Promise((res) => setTimeout(res, 250));
+  }
 
   function handleViewClass(courseName, sectionId) {
     navigate("/class", {
@@ -139,6 +140,7 @@ function OverView(props) {
       async function loadContent() {
         container.style.opacity = 0;
         const [semesterList, editOverlays] = await populateCards("instructor");
+        await pause();
         setCards(semesterList.reverse());
         container.style.opacity = 100;
         setOverlays(editOverlays);
@@ -161,7 +163,7 @@ function OverView(props) {
       </div>
     );
   }
-  if (window.innerWidth < 600 && location.state.permission === "instructor") {
+  if (window.innerWidth < 600 && location.state.permission === "INSTRUCTOR") {
     return (
       <div className="d-flex justify-content-center align-items-center">
         <div
@@ -186,7 +188,7 @@ function OverView(props) {
         onClick={props.onClick}
         showDescription
       />
-      {location.state.permission === "student"
+      {location.state.permission === "STUDENT"
         ? studentContent()
         : instructorContent()}
     </div>

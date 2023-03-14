@@ -38,7 +38,7 @@ function SignIn(props) {
         console.log(err);
       });
     navigate("/overview", {
-      state: { permission: "student", email: email },
+      state: { permission: "student", email: email, name: name, history: history },
     });
   }
 

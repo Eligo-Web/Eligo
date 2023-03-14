@@ -17,27 +17,25 @@ export function Default() {
   );
 }
 
-function JoinOrCreate(props) {
-  console.log(props);
+export function CreateSession(props) {
   return (
-    <div className="pop-up-content" id={props.id}>
+    <div className="pop-up-content" id="create-session-popup">
       <InputField
-        label={props.inputLabel}
-        input={props.placeholder}
-        type={props.type}
+        label="Session Name"
+        input="ex: March 14 11AM class"
       />
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
           label="Cancel"
-          onClick={() => closePopup(props.popupId)}
+          onClick={() => closePopup("Create Session")}
         />
         <PrimaryButton
           variant="primary"
-          label={props.primary}
+          label="Create"
           onClick={() => {
             //todo: add axios call to join 
-            closePopup(props.popupId);
+            closePopup("Create Session");
           }}
         />
       </div>
@@ -45,40 +43,56 @@ function JoinOrCreate(props) {
   );
 }
 
-export function JoinClass() {
+export function JoinSession(props) {
   return (
-    <JoinOrCreate
-      id="join-class-popup"
-      popupId="Join Class"
-      primary="Join"
-      inputLabel="Course Code"
-      placeholder="ex: A1B2C3"
-    />
+    <div className="pop-up-content" id="join-session-popup">
+      <InputField
+        label="Passcode"
+        input="Ex: abc123"
+        type="password"
+      />
+      <div className="button-row">
+        <PrimaryButton
+          variant="secondary"
+          label="Cancel"
+          onClick={() => closePopup("Join Session")}
+        />
+        <PrimaryButton
+          variant="primary"
+          label="Join"
+          onClick={() => {
+            //todo: add axios call to join
+            closePopup("Join Session");
+          }}
+        />
+      </div>
+    </div>
   );
 }
 
-export function JoinSession() {
+export function JoinClass(props) {
   return (
-    <JoinOrCreate
-      id="join-session-popup"
-      popupId="Join Session"
-      primary="Join"
-      inputLabel="Passcode"
-      placeholder="Ex: abc123"
-      type="password"
-    />
-  );
-}
-
-export function CreateSession() {
-  return (
-    <JoinOrCreate
-      id="create-session-popup"
-      popupId="Create Session"
-      primary="Create"
-      inputLabel="Session Name"
-      placeholder="ex: March 14 11AM class"
-    />
+    <div className="pop-up-content" id="join-class-popup">
+      <InputField
+        label="Course Code"
+        input="ex: A1B2C3"
+      />
+      <div className="button-row">
+        <PrimaryButton
+          variant="secondary"
+          label="Cancel"
+          onClick={() => closePopup("Join Class")}
+        />
+        <PrimaryButton
+          variant="primary"
+          label="Join"
+          onClick={() => {
+            //todo: add axios call to join
+            closePopup("Join Class");
+          }}
+        />
+      </div>
+    </div>
   );
 }
 

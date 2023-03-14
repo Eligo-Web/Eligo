@@ -39,10 +39,6 @@ export function EditClass(props) {
   );
 }
 
-function pause() {
-  return new Promise((res) => setTimeout(res, 250));
-}
-
 function CreateOrEditClass(props) {
   const server = "http://localhost:3000";
   const [name, setName] = useState(props.name || "");
@@ -198,7 +194,6 @@ function CreateOrEditClass(props) {
         console.log(err);
       });
     closePopup(popupName);
-    await pause();
     setRefresh(!refresh);
   }
 
@@ -211,9 +206,9 @@ function CreateOrEditClass(props) {
     console.log("valid");
 
     if (
-      (name === props.name,
-      section === props.section,
-      sisId === props.sisId,
+      (name === props.name &&
+      section === props.section &&
+      sisId === props.sisId &&
       semester === props.semester)
     ) {
       clearContents(props.editMode);
@@ -270,7 +265,6 @@ function CreateOrEditClass(props) {
         console.log(err);
       });
     closePopup(popupName);
-    await pause();
     setRefresh(!refresh);
   }
 
@@ -295,7 +289,6 @@ function CreateOrEditClass(props) {
         console.log(err);
       });
     closePopup(popupName);
-    await pause();
     setRefresh(!refresh);
   }
 

@@ -164,7 +164,7 @@ function SessionView(props) {
     <AccessDenied />
   ) : (
     <div>
-      {location.state.permission === "student"
+      {location.state.permission === "STUDENT"
         ? studentContent()
         : instructorContent()}
     </div>
