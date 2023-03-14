@@ -49,6 +49,7 @@ function CreateOrEditClass(props) {
   const validCharset = /^[ -~]+$/;
   const location = useLocation();
   const [refresh, setRefresh] = [props.refresh, props.setRefresh];
+  const [markDelete, setMarkedDelete] = useState(false);
   const popupName = props.editMode
     ? toSectionId(props.name + props.section + props.semester)
     : "Create Class";
@@ -63,8 +64,15 @@ function CreateOrEditClass(props) {
     const overlay = document.getElementById(popupName);
     if (overlay.offsetParent.style.height) {
       clearContents(props.editMode);
+      console.log("clear contents");
     }
   }, [props.control]);
+
+  useEffect(() => {
+    if (props.confirmDelete === popupName) {
+      console.log("DELETED");
+    }
+  }, [props.confirmDelete]);
 
   const handleKeyPresses = (event) => {
     switch (event.key) {
@@ -76,6 +84,13 @@ function CreateOrEditClass(props) {
         break;
     }
   };
+
+  function handleDelete() {
+    if (window.confirm("Confirm delete? This action cannot be undone.")) {
+      closePopup(popupName);
+      deleteCourse();
+    }
+  }
 
   function clearContents(editMode) {
     const overlay = document.getElementById(popupName);
@@ -206,10 +221,10 @@ function CreateOrEditClass(props) {
     console.log("valid");
 
     if (
-      (name === props.name &&
+      name === props.name &&
       section === props.section &&
       sisId === props.sisId &&
-      semester === props.semester)
+      semester === props.semester
     ) {
       clearContents(props.editMode);
       return;
@@ -353,12 +368,12 @@ function CreateOrEditClass(props) {
           <PrimaryButton
             variant="delete"
             label="Delete"
-            onClick={() => deleteCourse()}
+            onClick={() => handleDelete()}
           />
         ) : null}
         <PrimaryButton
           variant="secondary"
-          label="Cancel"
+          label="Discard"
           onClick={() => clearContents(props.editMode)}
         />
         <PrimaryButton

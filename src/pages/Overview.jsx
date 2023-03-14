@@ -151,7 +151,7 @@ function OverView(props) {
     return (
       <div style={{ marginBottom: "5rem" }}>
         <Overlay
-          title="Create Class"
+          title="New Class"
           id="Create Class"
           refresh={refresh}
           setRefresh={setRefresh}

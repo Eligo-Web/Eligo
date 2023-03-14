@@ -20,10 +20,7 @@ export function Default() {
 export function CreateSession(props) {
   return (
     <div className="pop-up-content" id="create-session-popup">
-      <InputField
-        label="Session Name"
-        input="ex: March 14 11AM class"
-      />
+      <InputField label="Session Name" input="ex: March 14 11AM class" />
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
@@ -46,11 +43,7 @@ export function CreateSession(props) {
 export function JoinSession(props) {
   return (
     <div className="pop-up-content" id="join-session-popup">
-      <InputField
-        label="Passcode"
-        input="Ex: abc123"
-        type="password"
-      />
+      <InputField label="Passcode" input="Ex: abc123" type="password" />
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
@@ -73,10 +66,7 @@ export function JoinSession(props) {
 export function JoinClass(props) {
   return (
     <div className="pop-up-content" id="join-class-popup">
-      <InputField
-        label="Course Code"
-        input="ex: A1B2C3"
-      />
+      <InputField label="Course Code" input="ex: A1B2C3" />
       <div className="button-row">
         <PrimaryButton
           variant="secondary"

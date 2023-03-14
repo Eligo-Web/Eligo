@@ -85,7 +85,11 @@ function CourseView(props) {
     return (
       <div className="d-flex flex-column ">
         <div className="card-wrapper">
-          <Overlay title="Create Session" id="Create Session" content={CreateSession()} />
+          <Overlay
+            title="Create Session"
+            id="Create Session"
+            content={CreateSession()}
+          />
           <div>
             <IconButton
               style={{

@@ -3,7 +3,7 @@ import { IoIosClose } from "react-icons/io";
 import { Default } from "./Popups";
 import "../styles/overlay.css";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function openPopup(id) {
   const overlay = document.getElementById(id + "-popup");
@@ -34,9 +34,10 @@ export function closePopup(id) {
 export default function Overlay(props) {
   const [childState, setChildState] = useState(false);
   function close() {
-    setChildState(!childState);
+    if (!props.warning) setChildState(!childState);
     closePopup(props.id);
   }
+
   return (
     <div className="overlay-wrapper" id={props.id + "-popup"}>
       <div className="overlay pop-up">
