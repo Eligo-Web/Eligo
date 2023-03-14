@@ -51,16 +51,17 @@ class InstructorDao {
     return instructor;
   }
 
-  async updateHistory(email, semester, oldSectionId, newSectionId) {
+  async updateHistory(email, oldSemester, newSemester, oldSectionId, newSectionId) {
     const instructor = await Instructor.findOne({ email: email.toLowerCase() });
     if (!instructor) {
       throw new ApiError(404, `User with email ${email} not found`);
     }
-    const sectionIds = instructor.history.get(semester);
-    const index = sectionIds.indexOf(oldSectionId);
+    const oldSectionIds = instructor.history.get(oldSemester);
+    const index = oldSectionIds.indexOf(oldSectionId);
     if (index > -1) {
-      sectionIds[index] = newSectionId;
+      oldSectionIds.splice(index, 1);
     }
+    instructor.history.get(newSemester).push(newSectionId);
     await instructor.save();
     return instructor;
   }

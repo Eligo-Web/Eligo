@@ -208,6 +208,7 @@ function CreateOrEditClass(props) {
     await axios
       .put(`${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`, {
         newSectionId: sectionId,
+        newSemester: semester,
       })
       .then(() => {})
       .catch((err) => {
