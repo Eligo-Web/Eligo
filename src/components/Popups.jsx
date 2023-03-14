@@ -34,7 +34,7 @@ export function CreateSession(props) {
           variant="primary"
           label="Create"
           onClick={() => {
-            //todo: add axios call to join 
+            //todo: add axios call to join
             closePopup("Create Session");
           }}
         />

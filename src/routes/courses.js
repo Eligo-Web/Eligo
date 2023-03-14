@@ -94,7 +94,7 @@ Course.put("/:sectionId", async (req, res) => {
       name,
       section,
       semester,
-      newSisId, 
+      newSisId,
       passcode
     );
     res.json({

@@ -44,7 +44,7 @@ class CourseDao {
     }
     return course;
   }
-  
+
   async create(course) {
     const oldCourse = await Course.findOne({ sectionId: course.sectionId });
     if (oldCourse) {

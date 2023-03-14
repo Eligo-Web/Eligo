@@ -123,7 +123,7 @@ function OverView(props) {
     }, [refresh]);
     return (
       <div style={{ marginBottom: "5rem" }}>
-      <Overlay title="Join Class" id="Join Class" content={JoinClass()} />
+        <Overlay title="Join Class" id="Join Class" content={JoinClass()} />
         {overlays}
         <div id="semester-container" className="semester-container">
           {cards}

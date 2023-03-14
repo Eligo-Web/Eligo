@@ -228,7 +228,7 @@ function CreateOrEditClass(props) {
       })
       .catch((err) => console.log(err));
 
-    if (checkDupe.status === 200) {
+    if (checkDupe.status === 200 && sisId === props.sisId) {
       setShowError(true);
       return;
     }
