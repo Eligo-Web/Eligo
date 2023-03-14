@@ -86,7 +86,10 @@ function OverView(props) {
                 key={course.sectionId}
                 id={course.sectionId}
                 title="Edit Class"
-                content={EditClass(course, [refresh, setRefresh])}
+                childContent={course}
+                refresh={refresh}
+                setRefresh={setRefresh}
+                editMode
               />
             );
           })
@@ -105,7 +108,7 @@ function OverView(props) {
   function studentContent() {
     return (
       <div style={{ marginBottom: "5rem" }}>
-        <Overlay title="Join Class" content={JoinClass()} />
+        <Overlay title="Join Class" id="Join Class" content={JoinClass()} />
         <Container className="card-container">
           <Card
             title="Computer System Fundamentals"
@@ -144,7 +147,8 @@ function OverView(props) {
         <Overlay
           title="Create Class"
           id="Create Class"
-          content={CreateClass([refresh, setRefresh])}
+          refresh={refresh}
+          setRefresh={setRefresh}
         />
         {overlays}
         <div id="semester-container" className="semester-container">

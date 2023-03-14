@@ -11,16 +11,19 @@ export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
 }
 
-export function CreateClass([refresh, setRefresh]) {
+export function CreateClass(props) {
   return (
     <CreateOrEditClass
       popupType="Create Class"
-      callback={[refresh, setRefresh]}
+      refresh={props.refresh}
+      setRefresh={props.setRefresh}
+      control={props.control}
     />
   );
 }
 
-export function EditClass(content, [refresh, setRefresh]) {
+export function EditClass(props) {
+  const content = props.childContent;
   return (
     <CreateOrEditClass
       popupType="Edit Class"
@@ -29,7 +32,9 @@ export function EditClass(content, [refresh, setRefresh]) {
       sisId={content.SISId} //    from axios get
       semester={content.semester} // from axios get
       editMode
-      callback={[refresh, setRefresh]}
+      refresh={props.refresh}
+      setRefresh={props.setRefresh}
+      control={props.control}
     />
   );
 }
@@ -47,7 +52,7 @@ function CreateOrEditClass(props) {
   const [showError, setShowError] = useState(false);
   const validCharset = /^[ -~]+$/;
   const location = useLocation();
-  const setRefresh = props.callback[1];
+  const [refresh, setRefresh] = [props.refresh, props.setRefresh];
   const popupName = props.editMode
     ? toSectionId(props.name + props.section + props.semester)
     : "Create Class";
@@ -56,7 +61,25 @@ function CreateOrEditClass(props) {
   useEffect(() => {
     if (props.editMode) return;
     setSemester(document.querySelector(".semester-input").value);
-  });
+  }, []);
+
+  useEffect(() => {
+    const overlay = document.getElementById(popupName);
+    if (overlay.offsetParent.style.height) {
+      clearContents(props.editMode);
+    }
+  }, [props.control]);
+
+  const handleKeyPresses = (event) => {
+    switch (event.key) {
+      case "Escape":
+        clearContents(props.editMode);
+        break;
+      case "Enter":
+        props.editMode ? putCourse() : postCourse();
+        break;
+    }
+  };
 
   function clearContents(editMode) {
     const overlay = document.getElementById(popupName);
@@ -89,7 +112,6 @@ function CreateOrEditClass(props) {
   }
 
   function paramsValid() {
-    console.log("checking:", name, section, semester, sisId);
     const overlay = document.getElementById(popupName);
     const nameField = overlay.querySelector(".name-input");
     const sectionField = overlay.querySelector(".section-input");
@@ -145,7 +167,6 @@ function CreateOrEditClass(props) {
       setShowError(false);
       return;
     }
-    console.log("valid");
     await axios
       .post(`${server}/course`, {
         name: name,
@@ -177,7 +198,7 @@ function CreateOrEditClass(props) {
       });
     closePopup(popupName);
     await pause();
-    setRefresh(!props.callback[0]);
+    setRefresh(!refresh);
   }
 
   async function putCourse() {
@@ -187,14 +208,29 @@ function CreateOrEditClass(props) {
       return;
     }
     console.log("valid");
+
+    if (
+      (name === props.name,
+      section === props.section,
+      sisId === props.sisId,
+      semester === props.semester)
+    ) {
+      clearContents(props.editMode);
+      return;
+    }
+
     const oldSectionId = toSectionId(
       props.name + props.section + props.semester
     );
     const sectionId = toSectionId(name + section + semester);
     let checkDupe;
-    await axios.get(`${server}/course/${sectionId}`).then((res) => {
-      checkDupe = res.data;
-    }).catch((err) => console.log(err));
+
+    await axios
+      .get(`${server}/course/${sectionId}`)
+      .then((res) => {
+        checkDupe = res.data;
+      })
+      .catch((err) => console.log(err));
 
     if (checkDupe.status === 200) {
       setShowError(true);
@@ -234,7 +270,7 @@ function CreateOrEditClass(props) {
       });
     closePopup(popupName);
     await pause();
-    setRefresh(!props.callback[0]);
+    setRefresh(!refresh);
   }
 
   async function deleteCourse() {
@@ -259,7 +295,7 @@ function CreateOrEditClass(props) {
       });
     closePopup(popupName);
     await pause();
-    setRefresh(!props.callback[0]);
+    setRefresh(!refresh);
   }
 
   return (
@@ -271,6 +307,7 @@ function CreateOrEditClass(props) {
           input="ex: Intermediate Programming"
           default={props.name || ""}
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={handleKeyPresses}
           errors={{
             "empty-name": "Required",
             "invalid-name": "Name contains invalid characters",
@@ -283,6 +320,7 @@ function CreateOrEditClass(props) {
           input="ex: EN.601.220"
           default={props.sisId || ""}
           onChange={(e) => setSISId(e.target.value.toUpperCase())}
+          onKeyDown={handleKeyPresses}
           errors={{ "invalid-sis-id": "Invalid format" }}
         />
       </div>
@@ -294,6 +332,7 @@ function CreateOrEditClass(props) {
           input="1, 2, ..."
           default={props.section || ""}
           onChange={(e) => setSection(e.target.value)}
+          onKeyDown={handleKeyPresses}
           errors={{
             "empty-section": "Required",
             "invalid-section": "Invalid number",
@@ -305,6 +344,7 @@ function CreateOrEditClass(props) {
           input="ex: Spring 2023"
           default={props.semester}
           onChange={(e) => setSemester(e.target.value)}
+          onKeyDown={handleKeyPresses}
         />
       </div>
       <div
@@ -328,6 +368,7 @@ function CreateOrEditClass(props) {
           onClick={() => clearContents(props.editMode)}
         />
         <PrimaryButton
+          id={popupName}
           variant="primary"
           label={props.editMode ? "Save" : "Create"}
           onClick={() => (props.editMode ? putCourse() : postCourse())}

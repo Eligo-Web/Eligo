@@ -28,6 +28,7 @@ export default function InputField(props) {
         placeholder={props.input || "Placeholder Text"}
         defaultValue={props.default}
         onChange={props.onChange}
+        onKeyDown={props.onKeyDown}
         type={props.type}
       />
       {renderErrors()}
@@ -60,8 +61,9 @@ export function SelectField(props) {
       <Form.Select
         className={props.class}
         placeholder="Select Semester"
-        onChange={props.onChange}
         defaultValue={props.default || options[0]}
+        onChange={props.onChange}
+        onKeyDown={props.onKeyDown}
       >
         \ {options}
       </Form.Select>

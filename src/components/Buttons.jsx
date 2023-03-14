@@ -5,7 +5,11 @@ import Button from "react-bootstrap/Button";
  */
 export function PrimaryButton(props) {
   return (
-    <Button variant={props.variant || "primary"} onClick={props.onClick}>
+    <Button
+      variant={props.variant || "primary"}
+      onClick={props.onClick}
+      id={props.id ? props.id + "-save-button" : null}
+    >
       {props.label || "Label"}
     </Button>
   );
