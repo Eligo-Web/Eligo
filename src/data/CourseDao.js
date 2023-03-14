@@ -37,6 +37,14 @@ class CourseDao {
     return course;
   }
 
+  async readByPasscode(passcode) {
+    const course = await Course.findOne({ passcode: passcode });
+    if (!course) {
+      throw new ApiError(404, `Course with passcode ${passcode} not found`);
+    }
+    return course;
+  }
+  
   async create(course) {
     const oldCourse = await Course.findOne({ sectionId: course.sectionId });
     if (oldCourse) {
@@ -76,7 +84,8 @@ class CourseDao {
     courseName,
     courseSection,
     courseSemester,
-    newSisId
+    newSisId,
+    passcode
   ) {
     const oldCourse = await Course.findOneAndUpdate(
       { sectionId: oldSectionId },
@@ -86,6 +95,7 @@ class CourseDao {
         section: courseSection,
         semester: courseSemester,
         SISId: newSisId,
+        passcode: passcode,
       },
       { new: true }
     );

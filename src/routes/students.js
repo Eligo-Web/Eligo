@@ -61,6 +61,31 @@ Student.post("/", async (req, res) => {
   }
 });
 
+Student.put("/:email", async (req, res) => {
+  const email = req.params.email;
+  const newCourse = req.body.newCourse;
+  const newSemester = req.body.newSemester;
+  try {
+    const student = await studentDao.addToHistory(
+      email,
+      newCourse,
+      newSemester
+    );
+    res.json({
+      status: 200,
+      message: `Student updated`,
+      data: student,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `No student found`,
+      data: null,
+    });
+  }
+});
+
 Student.delete("/:email", async (req, res) => {
   const email = req.params.email;
   try {
