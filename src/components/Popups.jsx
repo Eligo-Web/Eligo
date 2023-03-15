@@ -63,10 +63,40 @@ export function JoinSession(props) {
   );
 }
 
+async function joinClass(email, passcode) {
+  const server = "http://localhost:3000";
+  await axios
+    .get(`${server}/course/student/${passcode}`)
+    .then(async (res) => {
+      if (res.data.status === 200) {
+        await axios
+          .put(`${server}/student/${email}`, {
+            sectionId: res.data.data.sectionId,
+            semester: res.data.data.semester,
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  closePopup("Join Class");
+}
+
 export function JoinClass(props) {
+  const [passcode, setPasscode] = useState("");
   return (
     <div className="pop-up-content" id="join-class-popup">
-      <InputField label="Course Code" input="ex: A1B2C3" />
+      <InputField
+        label="Course Code"
+        input="ex: A1B2C3"
+        onChange={(e) => setPasscode(e.target.value)}
+      />
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
@@ -77,8 +107,8 @@ export function JoinClass(props) {
           variant="primary"
           label="Join"
           onClick={() => {
-            //todo: add axios call to join
-            closePopup("Join Class");
+            console.log(passcode)
+            joinClass(props.email, passcode);
           }}
         />
       </div>

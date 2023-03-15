@@ -50,7 +50,9 @@ function SignIn() {
         <Button
           variant="sign-in"
           className="large-title"
-          onClick={() => handleSignin("Student Name", "student@jhu.edu", "STUDENT")}
+          onClick={() =>
+            handleSignin("Student Name", "student@jhu.edu", "STUDENT")
+          }
         >
           <IconSchool size="8em" stroke={1} className="sign-in-icon" />
           Student
@@ -58,7 +60,9 @@ function SignIn() {
         <Button
           variant="sign-in"
           className="large-title"
-          onClick={() => handleSignin("Instructor Name", "instructor@jhu.edu", "INSTRUCTOR")}
+          onClick={() =>
+            handleSignin("Instructor Name", "instructor@jhu.edu", "INSTRUCTOR")
+          }
         >
           <IconBook size="8em" stroke={1} className="sign-in-icon" />
           Instructor

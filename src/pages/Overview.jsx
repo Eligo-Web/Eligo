@@ -110,6 +110,9 @@ function OverView(props) {
   function studentContent() {
     const [cards, setCards] = useState(null);
     const [overlays, setOverlays] = useState(null);
+    const props = {
+      email: location.state.email,
+    };
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
@@ -123,7 +126,7 @@ function OverView(props) {
     }, [refresh]);
     return (
       <div style={{ marginBottom: "5rem" }}>
-        <Overlay title="Join Class" id="Join Class" content={JoinClass()} />
+        <Overlay title="Join Class" id="Join Class" content={JoinClass(props)} />
         {overlays}
         <div id="semester-container" className="semester-container">
           {cards}

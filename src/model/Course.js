@@ -21,12 +21,12 @@ const CourseSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  students: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
-    },
-  ],
+  students: {
+    type: Array,
+    of: String,
+    required: true,
+    default: [],
+  },
   passcode: {
     type: String,
     required: true,

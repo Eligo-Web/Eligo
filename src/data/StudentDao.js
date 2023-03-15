@@ -41,12 +41,16 @@ class StudentDao {
     return newStudent;
   }
 
-  async addToHistory(email, newSemester, newCourse) {
+  async addToHistory(email, newCourse, newSemester) {
     const student = await Student.findOne({ email: email.toLowerCase() });
     if (!student) {
       throw new ApiError(404, `User with email ${email} not found`);
     }
-    student.history[newSemester].push(newCourse);
+    console.log(newSemester, newCourse)
+    if (!student.history.has(newSemester)) {
+      student.history.set(newSemester, []);
+    }
+    student.history.get(newSemester).push(newCourse);
     await student.save();
     return student;
   }
