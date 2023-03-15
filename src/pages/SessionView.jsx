@@ -5,7 +5,7 @@ import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
 import Overlay from "../components/Overlay";
 import Container from "react-bootstrap/Container";
-import { IconButton } from "../components/Buttons";
+import { BackButton, IconButton } from "../components/Buttons";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import AccessDenied from "../components/AccessDenied";
@@ -29,6 +29,19 @@ function SessionView(props) {
       }
     }
   }, []);
+
+  function navigateBack() {
+    navigate("/class", {
+      state: {
+        permission: location.state.permission,
+        email: location.state.email,
+        name: location.state.name,
+        courseName: location.state.courseName,
+        sectionId: location.state.sectionId,
+        passcode: location.state.passcode,
+      },
+    });
+  }
 
   function studentContent() {
     const [pollOpen, setPollOpen] = useState(false);
@@ -66,27 +79,9 @@ function SessionView(props) {
           clickable
           showDescription
         />
-        <IconButton
-          style={{
-            padding: "1rem",
-            paddingLeft: "1.5rem",
-            color: "#000d1db3",
-            fontWeight: "500",
-          }}
-          icon={<IconArrowLeft size="1.5em" />}
+        <BackButton
           label={location.state.courseName}
-          variant="transparent"
-          onClick={() =>
-            navigate("/class", {
-              state: {
-                name: location.state.name,
-                permission: location.state.permission,
-                email: location.state.email,
-                courseName: location.state.courseName,
-                sectionId: location.state.sectionId,
-              },
-            })
-          }
+          onClick={() => navigateBack()}
         />
         <Container className="poll-card-container" style={{ paddingBottom: 0 }}>
           <h3 className="card-title divisor">Active Poll</h3>
@@ -112,17 +107,7 @@ function SessionView(props) {
               label="Close Session"
               variant="outline"
               style={{ maxWidth: "max-content" }}
-              onClick={() =>
-                navigate("/class", {
-                  state: {
-                    name: location.state.name,
-                    permission: location.state.permission,
-                    email: location.state.email,
-                    sectionId: location.state.sectionId,
-                    courseName: location.state.courseName,
-                  },
-                })
-              }
+              onClick={() => navigateBack()}
             />
           </div>
         </div>
@@ -158,6 +143,7 @@ function SessionView(props) {
        menubar=no, scrollbars=0, width=250, \
        height=100, top=110, left=1040"
     );
+    // communicate with window
   }
 
   return !authorized ? (

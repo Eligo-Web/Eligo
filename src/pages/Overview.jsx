@@ -10,6 +10,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/overlay.css";
 import "../styles/cards.css";
+import { BlankOverview } from "../components/BlankStates";
+
+export function pause() {
+  return new Promise((res) => setTimeout(res, 250));
+}
 
 function OverView(props) {
   const server = "http://localhost:3000";
@@ -17,8 +22,6 @@ function OverView(props) {
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(false);
-
-  console.log(new Date().toUTCString());
 
   useEffect(() => {
     if (
@@ -33,10 +36,6 @@ function OverView(props) {
     }
   }, []);
 
-  function pause() {
-    return new Promise((res) => setTimeout(res, 250));
-  }
-
   function handleViewClass(courseName, sectionId, passcode) {
     navigate("/class", {
       state: {
@@ -50,7 +49,7 @@ function OverView(props) {
     });
   }
 
-  async function populateCards(role) {
+  async function populateCourseCards(role) {
     let history;
     await axios
       .get(`${server}/${role}/${location.state.email}`)
@@ -111,7 +110,7 @@ function OverView(props) {
         </Container>
       );
     }
-    return [semesterList, editOverlays];
+    return [semesterList.reverse(), editOverlays];
   }
 
   function studentContent() {
@@ -124,8 +123,8 @@ function OverView(props) {
       const container = document.getElementById("semester-container");
       async function loadContent() {
         container.style.opacity = 0;
-        const [semesterList, editOverlays] = await populateCards("student");
-        setCards(semesterList.reverse());
+        const [semesterList, editOverlays] = await populateCourseCards("student");
+        setCards(semesterList);
         container.style.opacity = 100;
         setOverlays(editOverlays);
       }
@@ -147,13 +146,13 @@ function OverView(props) {
   }
 
   function instructorContent() {
-    const [cards, setCards] = useState(null);
+    const [cards, setCards] = useState(<BlankOverview />);
     const [overlays, setOverlays] = useState(null);
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
+        const [semesterList, editOverlays] = await populateCourseCards("instructor");
         container.style.opacity = 0;
-        const [semesterList, editOverlays] = await populateCards("instructor");
         await pause();
         setCards(semesterList.reverse());
         container.style.opacity = 100;

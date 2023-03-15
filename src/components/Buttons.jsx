@@ -1,3 +1,4 @@
+import { IconArrowLeft } from "@tabler/icons-react";
 import Button from "react-bootstrap/Button";
 
 /**
@@ -42,5 +43,22 @@ export function VoteButton(props) {
     >
       {props.label || "?"}
     </Button>
+  );
+}
+
+export function BackButton(props) {
+  return (
+    <IconButton
+      style={{
+        padding: "1rem",
+        paddingLeft: "1.5rem",
+        color: "#000d1db3",
+        fontWeight: "500",
+      }}
+      icon={<IconArrowLeft size="1.5em" />}
+      label={props.label}
+      variant="transparent"
+      onClick={props.onClick}
+    />
   );
 }

@@ -110,10 +110,9 @@
   display: flex;
   flex-direction: column;
   height: calc(100vh - 10rem);
-  overflow-y: auto;
+  overflow-y: overlay;
   position: relative;
   padding-bottom: 5rem;
-  transition: 0.1s ease-in-out;
   top: 5rem;
 }
 
@@ -122,7 +121,6 @@
   display: flex;
   gap: 0.6rem;
   padding: 1rem 1.5rem;
-  transition: 0.1s ease-in-out;
   flex-wrap: wrap;
 }
 
@@ -135,8 +133,9 @@
 }
 
 .semester-container {
-  transition: all 0.1s ease-in-out 0s;
+  transition: all 0.1s ease-in-out;
   mix-blend-mode: hard-light;
+  max-height: fit-content;
   opacity: 100;
 }
 

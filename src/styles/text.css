@@ -16,7 +16,7 @@ body {
   flex-direction: column;
   height: calc(100vh - 5rem);
   position: relative;
-  overflow: auto;
+  overflow: overlay;
   top: 5rem;
 }
 
@@ -95,6 +95,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.loading {
+  -webkit-mask-image: linear-gradient(to top, transparent, #ffffffbb, #ffffffbb);
+  pointer-events: none;
+  max-height: 65vh;
   overflow: hidden;
 }
 

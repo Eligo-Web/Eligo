@@ -3,7 +3,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
 import SessionCard from "../components/SessionCard";
-import { IconButton } from "../components/Buttons.jsx";
+import { BackButton, IconButton } from "../components/Buttons.jsx";
 import Overlay from "../components/Overlay";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CreateSession, JoinSession } from "../components/Popups";
@@ -13,12 +13,14 @@ import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
+import { BlankOverview } from "../components/BlankStates";
 
 function CourseView(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
   const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     if (
@@ -41,6 +43,25 @@ function CourseView(props) {
     }
   };
 
+  function getWeekNumber() {
+    const currentDate = new Date();
+    const startDate = new Date(currentDate.getFullYear(), 0, 1);
+    const yrProgress = (currentDate - startDate) / (24 * 60 * 60 * 1000);
+    const currWeekInYr = Math.ceil(yrProgress / 7);
+    return `${currentDate.getFullYear()}-${currWeekInYr}`;
+  }
+
+  function getWeekLabel(weekNum) {
+    const format = { month: 'short', day: 'numeric' };
+    const weekInfo = weekNum.split("-");
+    console.log(weekInfo[0], weekInfo[1])
+    let date1 = new Date(weekInfo[0], 0, (weekInfo[1]-1)*7+2);
+    date1 = date1.toLocaleDateString('default', format)
+    let date2 = new Date(weekInfo[0], 0, weekInfo[1]*7-1);
+    date2 = date2.toLocaleDateString('default', format)
+    return `Week of ${date1} - ${date2}`;
+  }
+
   function handleViewSession(sessionId) {
     navigate("/session", {
       state: {
@@ -48,10 +69,51 @@ function CourseView(props) {
         permission: location.state.permission,
         email: location.state.email,
         sessionId: sessionId,
-        courseName: location.state.courseName,
         sectionId: location.state.sectionId,
+        courseName: location.state.courseName,
+        passcode: location.state.passcode,
       },
     });
+  }
+
+  async function populateSessionCards(role) {
+    let courseSessions;
+    await axios
+      .get(`${server}/course/${location.state.sectionId}`)
+      .then((res) => {
+        courseSessions = res.data.sessions;
+      })
+      .catch((err) => console.log(err));
+
+    const sessionList = [];
+
+    for (let weekNum in courseSessions) {
+      if (courseSessions[weekNum].length === 0) {
+        continue;
+      }
+      let weeklabel = getWeekLabel(weekNum);
+      if (weekNum === getWeekNumber()) weeklabel = "This week";
+      else if (weekNum === getWeekNumber()-1) weeklabel = "Last Week";
+
+      const weekSessions = [];
+      for (let i in courseSessions[weekNum]) {
+        let session = courseSessions[weekNum][i];
+        weekSessions.push(
+          <SessionCard
+            title={session.name}
+            activity={session.active ? "Active" : "Inactive"}
+            onClick={() => handleViewSession(/* session.sessionId */)}
+          />
+        );
+      }
+      sessionList.push(
+        <Container className="card-container">
+          <h3 className="card-title divisor">{weeklabel}</h3>
+          {weekSessions}
+        </Container>
+      );
+    }
+    return sessionList;
   }
 
   function studentContent() {
@@ -82,6 +144,7 @@ function CourseView(props) {
   }
 
   function instructorContent() {
+    const [cards, setCards] = useState(<BlankOverview/>);
     return (
       <div className="d-flex flex-column ">
         <div className="card-wrapper">
@@ -90,17 +153,9 @@ function CourseView(props) {
             id="Create Session"
             content={CreateSession()}
           />
-          <div>
-            <IconButton
-              style={{
-                padding: "1rem",
-                paddingLeft: "1.5rem",
-                color: "#000d1db3",
-                fontWeight: "500",
-              }}
-              icon={<IconArrowLeft size="1.5em" />}
-              label={"Overview"}
-              variant="transparent"
+          <div id="semester-container" className="semester-container">
+            <BackButton
+              label="Overview"
               onClick={() =>
                 navigate("/overview", {
                   state: {
@@ -111,45 +166,7 @@ function CourseView(props) {
                 })
               }
             />
-            <Container className="card-container">
-              <h3 className="card-title divisor">Today</h3>
-              <SessionCard
-                title="Session 1"
-                activity="Active"
-                onClick={() => handleViewSession("Session 1")}
-              />
-              <SessionCard title="Session 2" activity="Inactive" />
-              <SessionCard title="Session 3" activity="Inactive" />
-              <SessionCard title="Session 4" activity="Inactive" />
-              <SessionCard title="Session 5" activity="Inactive" />
-              <SessionCard title="Session 6" activity="Inactive" />
-              <SessionCard title="Session 7" activity="Inactive" />
-            </Container>
-            <Container className="card-container">
-              <h3 className="card-title divisor">Yesterday</h3>
-              <SessionCard title="Session 1" activity="Inactive" />
-              <SessionCard title="Session 2" activity="Inactive" />
-              <SessionCard title="Session 3" activity="Inactive" />
-              <SessionCard title="Session 4" activity="Inactive" />
-              <SessionCard title="Session 5" activity="Inactive" />
-              <SessionCard title="Session 6" activity="Inactive" />
-            </Container>
-            <Container className="card-container">
-              <h3 className="card-title divisor">Older</h3>
-              <SessionCard title="Session 1" activity="Inactive" />
-              <SessionCard title="Session 2" activity="Inactive" />
-              <SessionCard title="Session 2" activity="Inactive" />
-            </Container>
-            <Container className="card-container">
-              <h3 className="card-title divisor">Older</h3>
-              <SessionCard title="Session 1" activity="Inactive" />
-              <SessionCard title="Session 2" activity="Inactive" />
-            </Container>
-            <Container className="card-container">
-              <h3 className="card-title divisor">Older</h3>
-              <SessionCard title="Session 1" activity="Inactive" />
-              <SessionCard title="Session 2" activity="Inactive" />
-            </Container>
+            {cards}
           </div>
         </div>
         <div className="courses-bottom-row bottom-0 gap-3">

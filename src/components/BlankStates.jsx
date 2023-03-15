@@ -25,7 +25,7 @@ export default function PageNotFound() {
 
 export function BlankOverview() {
   return (
-    <Container className="card-container" style={{ opacity: "75%" }}>
+    <Container className="card-container loading">
       <div className="card-title divisor-blank"></div>
       <Card />
       <Card />
