@@ -63,7 +63,7 @@ export function JoinSession(props) {
   );
 }
 
-async function joinClass(email, passcode) {
+async function joinClass(email, passcode, refresh, setRefresh) {
   const server = "http://localhost:3000";
   await axios
     .get(`${server}/course/student/${passcode}`)
@@ -93,7 +93,7 @@ async function joinClass(email, passcode) {
     .catch((err) => {
       console.log(err);
     });
-    
+  setRefresh(!refresh);
   closePopup("Join Class");
 }
 
@@ -116,7 +116,7 @@ export function JoinClass(props) {
           variant="primary"
           label="Join"
           onClick={() => {
-            joinClass(props.email, passcode);
+            joinClass(props.email, passcode, props.refresh, props.setRefresh);
           }}
         />
       </div>

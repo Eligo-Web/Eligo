@@ -173,6 +173,7 @@ function CreateOrEditClass(props) {
   }
 
   async function postCourse() {
+    console.log(location.state);
     if (!paramsValid()) {
       console.log("some fields invalid!");
       setShowError(false);
@@ -181,6 +182,7 @@ function CreateOrEditClass(props) {
     await axios
       .post(`${server}/course`, {
         name: name,
+        instructor: {email: location.state.email, name: location.state.name},
         section: section,
         semester: semester,
         SISId: sisId,

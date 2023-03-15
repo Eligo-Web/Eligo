@@ -113,10 +113,10 @@ class CourseDao {
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
-    if (course.students.includes(email)) {
+    if (course.students.has(email)) {
       throw new ApiError(409, `Student with email ${email} already exists`);
     }
-    course.students.push(email);
+    course.students.set(email, "");
     await course.save();
     return course;
   }

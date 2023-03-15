@@ -77,8 +77,12 @@ function OverView(props) {
                 key={course.sectionId}
                 id={course.sectionId}
                 title={course.name}
-                instructor={location.state.name}
-                sisId={course.SISId}
+                instructor={course.instructor.name || "No Instructor"}
+                sisId={
+                  course.SISId
+                    ? `${course.SISId} (${course.section})`
+                    : `Section ${course.section}`
+                }
                 onClick={() => {
                   handleViewClass(
                     course.name,
@@ -119,6 +123,8 @@ function OverView(props) {
     const [overlays, setOverlays] = useState(null);
     const props = {
       email: location.state.email,
+      refresh: refresh,
+      setRefresh: setRefresh,
     };
     useEffect(() => {
       const container = document.getElementById("semester-container");

@@ -5,13 +5,12 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  instructor: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Instructor",
-      //required: true,
-    },
-  ],
+  instructor: {
+    type: Map,
+    of: String,
+    required: true,
+    default: {},
+  },
   section: {
     type: String,
     required: true,
@@ -22,10 +21,10 @@ const CourseSchema = new mongoose.Schema({
     unique: true,
   },
   students: {
-    type: Array,
-    of: String,
+    type: Map,
+    of: Map,
     required: true,
-    default: [],
+    default: {},
   },
   passcode: {
     type: String,
