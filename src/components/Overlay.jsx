@@ -49,7 +49,7 @@ export default function Overlay(props) {
             <IoIosClose size={"2.5em"} onClick={() => close()} />
           </Button>
         </div>
-        {props.setRefresh ? (
+        {props.instructor ? (
           props.editMode ? (
             <EditClass
               childContent={props.childContent}

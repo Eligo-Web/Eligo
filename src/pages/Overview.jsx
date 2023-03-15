@@ -97,6 +97,7 @@ function OverView(props) {
                 childContent={course}
                 refresh={refresh}
                 setRefresh={setRefresh}
+                instructor
                 editMode
               />
             );
@@ -126,7 +127,6 @@ function OverView(props) {
         const [semesterList, editOverlays] = await populateCourseCards("student");
         setCards(semesterList);
         container.style.opacity = 100;
-        setOverlays(editOverlays);
       }
       loadContent();
     }, [refresh]);
@@ -135,6 +135,8 @@ function OverView(props) {
         <Overlay
           title="Join Class"
           id="Join Class"
+          refresh={refresh}
+          setRefresh={setRefresh}
           content={JoinClass(props)}
         />
         {overlays}
