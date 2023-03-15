@@ -188,7 +188,7 @@ function CourseView(props) {
       />
       <MenuBar
         title={location.state.courseName}
-        description={location.state.sectionId}
+        description={location.state.passcode}
         onClick={props.onClick}
         clickable
         showDescription={location.state.permission !== "STUDENT"}

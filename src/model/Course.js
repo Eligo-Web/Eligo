@@ -38,7 +38,7 @@ const CourseSchema = new mongoose.Schema({
   },
   sessions: {
     type: Map,
-    of: String,
+    of: Map,
     required: true,
     default: {},
   },

@@ -18,6 +18,8 @@ function OverView(props) {
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(false);
 
+  console.log(new Date().toUTCString());
+
   useEffect(() => {
     if (
       navigator.userAgent.indexOf("Safari") != -1 &&
@@ -35,7 +37,7 @@ function OverView(props) {
     return new Promise((res) => setTimeout(res, 250));
   }
 
-  function handleViewClass(courseName, sectionId) {
+  function handleViewClass(courseName, sectionId, passcode) {
     navigate("/class", {
       state: {
         permission: location.state.permission,
@@ -43,6 +45,7 @@ function OverView(props) {
         name: location.state.name,
         courseName: courseName,
         sectionId: sectionId,
+        passcode: passcode,
       },
     });
   }
@@ -78,7 +81,11 @@ function OverView(props) {
                 instructor={location.state.name}
                 sisId={course.SISId}
                 onClick={() => {
-                  handleViewClass(course.name, course.SISId);
+                  handleViewClass(
+                    course.name,
+                    course.sectionId,
+                    course.passcode
+                  );
                 }}
                 editable
               />
@@ -126,7 +133,11 @@ function OverView(props) {
     }, [refresh]);
     return (
       <div style={{ marginBottom: "5rem" }}>
-        <Overlay title="Join Class" id="Join Class" content={JoinClass(props)} />
+        <Overlay
+          title="Join Class"
+          id="Join Class"
+          content={JoinClass(props)}
+        />
         {overlays}
         <div id="semester-container" className="semester-container">
           {cards}

@@ -46,7 +46,7 @@ class StudentDao {
     if (!student) {
       throw new ApiError(404, `User with email ${email} not found`);
     }
-    console.log(newSemester, newCourse)
+    console.log(newSemester, newCourse);
     if (!student.history.has(newSemester)) {
       student.history.set(newSemester, []);
     }

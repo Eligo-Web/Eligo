@@ -107,7 +107,7 @@ export function JoinClass(props) {
           variant="primary"
           label="Join"
           onClick={() => {
-            console.log(passcode)
+            console.log(passcode);
             joinClass(props.email, passcode);
           }}
         />

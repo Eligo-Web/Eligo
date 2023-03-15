@@ -66,11 +66,7 @@ Student.put("/:email", async (req, res) => {
   const sectionId = req.body.sectionId;
   const semester = req.body.semester;
   try {
-    const student = await studentDao.addToHistory(
-      email,
-      sectionId,
-      semester
-    );
+    const student = await studentDao.addToHistory(email, sectionId, semester);
     res.json({
       status: 200,
       message: `Student updated`,
