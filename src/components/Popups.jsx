@@ -80,11 +80,20 @@ async function joinClass(email, passcode) {
           .catch((err) => {
             console.log(err);
           });
+        await axios
+          .put(`${server}/course/${res.data.data.sectionId}/${email}`)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     })
     .catch((err) => {
       console.log(err);
     });
+    
   closePopup("Join Class");
 }
 
@@ -107,7 +116,6 @@ export function JoinClass(props) {
           variant="primary"
           label="Join"
           onClick={() => {
-            console.log(passcode);
             joinClass(props.email, passcode);
           }}
         />

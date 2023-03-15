@@ -86,7 +86,7 @@ function OverView(props) {
                     course.passcode
                   );
                 }}
-                editable
+                editable={role === "INSTRUCTOR"}
               />
             );
             editOverlays.push(
@@ -124,9 +124,12 @@ function OverView(props) {
       const container = document.getElementById("semester-container");
       async function loadContent() {
         container.style.opacity = 0;
-        const [semesterList, editOverlays] = await populateCourseCards("student");
+        const [semesterList, editOverlays] = await populateCourseCards(
+          "STUDENT"
+        );
         setCards(semesterList);
         container.style.opacity = 100;
+        setOverlays(editOverlays);
       }
       loadContent();
     }, [refresh]);
@@ -135,8 +138,6 @@ function OverView(props) {
         <Overlay
           title="Join Class"
           id="Join Class"
-          refresh={refresh}
-          setRefresh={setRefresh}
           content={JoinClass(props)}
         />
         {overlays}
@@ -153,7 +154,9 @@ function OverView(props) {
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
-        const [semesterList, editOverlays] = await populateCourseCards("instructor");
+        const [semesterList, editOverlays] = await populateCourseCards(
+          "INSTRUCTOR"
+        );
         container.style.opacity = 0;
         await pause();
         setCards(semesterList.reverse());
@@ -170,6 +173,7 @@ function OverView(props) {
           id="Create Class"
           refresh={refresh}
           setRefresh={setRefresh}
+          instructor
         />
         {overlays}
         <div id="semester-container" className="semester-container">

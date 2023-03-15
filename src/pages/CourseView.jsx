@@ -52,13 +52,13 @@ function CourseView(props) {
   }
 
   function getWeekLabel(weekNum) {
-    const format = { month: 'short', day: 'numeric' };
+    const format = { month: "short", day: "numeric" };
     const weekInfo = weekNum.split("-");
-    console.log(weekInfo[0], weekInfo[1])
-    let date1 = new Date(weekInfo[0], 0, (weekInfo[1]-1)*7+2);
-    date1 = date1.toLocaleDateString('default', format)
-    let date2 = new Date(weekInfo[0], 0, weekInfo[1]*7-1);
-    date2 = date2.toLocaleDateString('default', format)
+    console.log(weekInfo[0], weekInfo[1]);
+    let date1 = new Date(weekInfo[0], 0, (weekInfo[1] - 1) * 7 + 2);
+    date1 = date1.toLocaleDateString("default", format);
+    let date2 = new Date(weekInfo[0], 0, weekInfo[1] * 7 - 1);
+    date2 = date2.toLocaleDateString("default", format);
     return `Week of ${date1} - ${date2}`;
   }
 
@@ -93,7 +93,7 @@ function CourseView(props) {
       }
       let weeklabel = getWeekLabel(weekNum);
       if (weekNum === getWeekNumber()) weeklabel = "This week";
-      else if (weekNum === getWeekNumber()-1) weeklabel = "Last Week";
+      else if (weekNum === getWeekNumber() - 1) weeklabel = "Last Week";
 
       const weekSessions = [];
       for (let i in courseSessions[weekNum]) {
@@ -144,7 +144,7 @@ function CourseView(props) {
   }
 
   function instructorContent() {
-    const [cards, setCards] = useState(<BlankOverview/>);
+    const [cards, setCards] = useState(<BlankOverview />);
     return (
       <div className="d-flex flex-column ">
         <div className="card-wrapper">

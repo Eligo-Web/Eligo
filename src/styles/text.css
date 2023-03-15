@@ -99,7 +99,12 @@ body {
 }
 
 .loading {
-  -webkit-mask-image: linear-gradient(to top, transparent, #ffffffbb, #ffffffbb);
+  -webkit-mask-image: linear-gradient(
+    to top,
+    transparent,
+    #ffffffbb,
+    #ffffffbb
+  );
   pointer-events: none;
   max-height: 65vh;
   overflow: hidden;

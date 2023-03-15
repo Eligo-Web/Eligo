@@ -108,12 +108,17 @@ class CourseDao {
     return oldCourse;
   }
 
-  async addStudent(id, studentId) {
-    Course.findByIdAndUpdate(
-      id,
-      { $push: { students: studentId } },
-      { new: true }
-    );
+  async addStudentByEmail(sectionId, email) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    if (course.students.includes(email)) {
+      throw new ApiError(409, `Student with email ${email} already exists`);
+    }
+    course.students.push(email);
+    await course.save();
+    return course;
   }
 
   async removeStudent(id, studentId) {

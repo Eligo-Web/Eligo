@@ -33,7 +33,6 @@ function SignIn() {
       .catch((err) => {
         console.log(err);
       });
-    console.log(user);
     navigate("/overview", {
       state: {
         permission: user.role,

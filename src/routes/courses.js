@@ -112,6 +112,26 @@ Course.put("/:sectionId", async (req, res) => {
   }
 });
 
+Course.put("/:sectionId/:email", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const email = req.params.email;
+  try {
+    const course = await courseDao.addStudentByEmail(sectionId, email);
+    res.json({
+      status: 200,
+      message: "Student added to course",
+      data: course,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: "Course not found",
+      data: null,
+    });
+  }
+});
+
 Course.delete("/:sectionId", async (req, res) => {
   const sectionId = req.params.sectionId;
   try {
