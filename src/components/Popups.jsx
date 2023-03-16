@@ -63,7 +63,7 @@ export function JoinSession(props) {
   );
 }
 
-async function joinClass(email, passcode, refresh, setRefresh) {
+async function joinClass(name, email, passcode, refresh, setRefresh) {
   const server = "http://localhost:3000";
   await axios
     .get(`${server}/course/student/${passcode}`)
@@ -79,9 +79,12 @@ async function joinClass(email, passcode, refresh, setRefresh) {
           })
           .catch((err) => {
             console.log(err);
+
           });
         await axios
-          .put(`${server}/course/${res.data.data.sectionId}/${email}`)
+          .put(`${server}/course/${res.data.data.sectionId}/${email}`, {
+            name: name,
+          })
           .then((res) => {
             console.log(res);
           })
@@ -116,7 +119,7 @@ export function JoinClass(props) {
           variant="primary"
           label="Join"
           onClick={() => {
-            joinClass(props.email, passcode, props.refresh, props.setRefresh);
+            joinClass(props.name, props.email, passcode, props.refresh, props.setRefresh);
           }}
         />
       </div>

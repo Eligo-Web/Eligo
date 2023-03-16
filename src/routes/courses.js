@@ -115,9 +115,9 @@ Course.put("/:sectionId", async (req, res) => {
 Course.put("/:sectionId/:email", async (req, res) => {
   const sectionId = req.params.sectionId;
   const email = req.params.email;
-  console.log(req.params);
+  const name = req.body.name;
   try {
-    const course = await courseDao.addStudentByEmail(sectionId, email);
+    const course = await courseDao.addStudentByEmail(sectionId, email, name);
     res.json({
       status: 200,
       message: "Student added to course",

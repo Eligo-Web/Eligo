@@ -46,9 +46,11 @@ class StudentDao {
     if (!student) {
       throw new ApiError(404, `User with email ${email} not found`);
     }
-    console.log(newSemester, newCourse);
     if (!student.history.has(newSemester)) {
       student.history.set(newSemester, []);
+    }
+    if (student.history.get(newSemester).includes(newCourse)) {
+      throw new ApiError(409, `Course ${newCourse} already exists in history`);
     }
     student.history.get(newSemester).push(newCourse);
     await student.save();

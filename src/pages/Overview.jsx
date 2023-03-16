@@ -122,6 +122,7 @@ function OverView(props) {
     const [cards, setCards] = useState(null);
     const [overlays, setOverlays] = useState(null);
     const props = {
+      name: location.state.name,
       email: location.state.email,
       refresh: refresh,
       setRefresh: setRefresh,

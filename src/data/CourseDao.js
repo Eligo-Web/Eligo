@@ -108,15 +108,16 @@ class CourseDao {
     return oldCourse;
   }
 
-  async addStudentByEmail(sectionId, email) {
+  async addStudentByEmail(sectionId, email, name) {
+    email = email.replace(".", "$");
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
-    if (course.students.has(email)) {
+    if (course.students[email]) {
       throw new ApiError(409, `Student with email ${email} already exists`);
     }
-    course.students.set(email, "");
+    course.students.set(email, name);
     await course.save();
     return course;
   }
