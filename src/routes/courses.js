@@ -159,4 +159,24 @@ Course.delete("/:sectionId", async (req, res) => {
   }
 });
 
+Course.delete("/:sectionId/:email", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const email = req.params.email;
+  try {
+    const course = await courseDao.removeStudentByEmail(sectionId, email);
+    res.json({
+      status: 200,
+      message: "Student deleted from course",
+      data: course,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: "Course not found",
+      data: null,
+    });
+  }
+});
+
 export default Course;

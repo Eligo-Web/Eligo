@@ -131,6 +131,17 @@ class CourseDao {
     );
   }
 
+  async removeStudentByEmail(sectionId, email) {
+    email = encodeEmail(email);
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    course.students.delete(email);
+    await course.save();
+    return course;
+  }
+
   async addInstructor(id, instructorId) {
     Course.findByIdAndUpdate(
       id,

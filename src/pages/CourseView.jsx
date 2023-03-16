@@ -72,6 +72,7 @@ function CourseView(props) {
         sectionId: location.state.sectionId,
         courseName: location.state.courseName,
         passcode: location.state.passcode,
+        semester: location.state.semester,
       },
     });
   }

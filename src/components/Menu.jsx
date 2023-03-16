@@ -13,6 +13,7 @@ import { openPopup } from "./Overlay";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { IconLogout, IconTrash, IconUserCircle } from "@tabler/icons-react";
+import axios from "axios";
 
 function Menu(props) {
   const location = useLocation();
@@ -38,6 +39,33 @@ function Menu(props) {
   function handleSignOut() {
     closeMenu();
     navigate("/");
+  }
+
+  async function leaveClass() {
+    const server = "http://localhost:3000";
+    await axios
+      .delete(
+        `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+    await axios
+      .delete(
+        `${server}/course/${location.state.sectionId}/${location.state.email}`
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+    navigate("/overview", {
+      state: {
+        name: location.state.name,
+        permission: location.state.permission,
+        email: location.state.email,
+      },
+    });
   }
 
   return (
@@ -66,12 +94,7 @@ function Menu(props) {
               onClick={() => {
                 closeMenu(getLabel);
                 if (props.leaveAction) {
-                  navigate("/overview", {
-                    state: {
-                      permission: location.state.permission,
-                      email: location.state.email,
-                    },
-                  });
+                  leaveClass();
                 }
               }}
             />

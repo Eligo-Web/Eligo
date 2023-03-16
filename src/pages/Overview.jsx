@@ -36,7 +36,7 @@ function OverView(props) {
     }
   }, []);
 
-  function handleViewClass(courseName, sectionId, passcode) {
+  function handleViewClass(courseName, sectionId, semester, passcode) {
     navigate("/class", {
       state: {
         permission: location.state.permission,
@@ -45,6 +45,7 @@ function OverView(props) {
         courseName: courseName,
         sectionId: sectionId,
         passcode: passcode,
+        semester: semester,
       },
     });
   }
@@ -87,6 +88,7 @@ function OverView(props) {
                   handleViewClass(
                     course.name,
                     course.sectionId,
+                    course.semester,
                     course.passcode
                   );
                 }}
