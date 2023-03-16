@@ -30,6 +30,7 @@ export default function InputField(props) {
         onChange={props.onChange}
         onKeyDown={props.onKeyDown}
         type={props.type}
+        style={props.style}
       />
       {renderErrors()}
     </div>

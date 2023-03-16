@@ -236,6 +236,7 @@ function CreateOrEditClass(props) {
     );
     const sectionId = toSectionId(name + section + semester);
     let checkDupe;
+    let course;
 
     await axios
       .get(`${server}/course/${sectionId}`)
@@ -258,6 +259,7 @@ function CreateOrEditClass(props) {
         sectionId: sectionId,
       })
       .then((res) => {
+        course = res.data.data;
         console.log(res);
         if (res.data.status === 409) {
           setShowError(true);
@@ -280,6 +282,17 @@ function CreateOrEditClass(props) {
       .catch((err) => {
         console.log(err);
       });
+    for (let student in course.students) {
+      await axios
+        .put(`${server}/student/${student}/${props.semester}/${oldSectionId}`, {
+          newSectionId: sectionId,
+          newSemester: semester,
+        })
+        .then(() => {})
+        .catch((err) => {
+          console.log(err);
+        });
+    }
     closePopup(popupName);
     setRefresh(!refresh);
   }

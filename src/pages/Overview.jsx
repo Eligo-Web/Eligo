@@ -52,7 +52,7 @@ function OverView(props) {
   async function populateCourseCards(role) {
     let history;
     await axios
-      .get(`${server}/${role}/${location.state.email}`)
+      .get(`${server}/${role.toLowerCase()}/${location.state.email}`)
       .then((res) => {
         history = res.data.data.history;
       })

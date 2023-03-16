@@ -57,6 +57,30 @@ class StudentDao {
     return student;
   }
 
+  async updateHistory(
+    email,
+    oldSemester,
+    newSemester,
+    oldSectionId,
+    newSectionId
+  ) {
+    const student = await Student.findOne({ email: email.toLowerCase() });
+    if (!student) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    const oldSectionIds = student.history.get(oldSemester);
+    const index = oldSectionIds.indexOf(oldSectionId);
+    if (index > -1) {
+      oldSectionIds.splice(index, 1);
+    }
+    if (!student.history.has(newSemester)) {
+      student.history.set(newSemester, []);
+    }
+    student.history.get(newSemester).push(newSectionId);
+    await student.save();
+    return student;
+  }
+
   async delete(id) {
     const student = await Student.findByIdAndDelete(id);
     if (!student) {

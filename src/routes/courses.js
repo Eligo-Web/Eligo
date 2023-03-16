@@ -13,7 +13,7 @@ export function encodeEmail(str) {
   return str.replace(/[.]/g, "$");
 }
 
-export function decodeEmail() {
+export function decodeEmail(str) {
   return str.replace(/[$]/g, ".");
 }
 
@@ -107,7 +107,7 @@ Course.put("/:sectionId", async (req, res) => {
     res.json({
       status: 200,
       message: "Course updated",
-      data: req.body,
+      data: course,
     });
   } catch (err) {
     console.log(err);

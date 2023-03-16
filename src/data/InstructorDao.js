@@ -72,6 +72,9 @@ class InstructorDao {
     if (index > -1) {
       oldSectionIds.splice(index, 1);
     }
+    if (!instructor.history.has(newSemester)) {
+      instructor.history.set(newSemester, []);
+    }
     instructor.history.get(newSemester).push(newSectionId);
     await instructor.save();
     return instructor;

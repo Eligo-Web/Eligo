@@ -1,6 +1,7 @@
 import express from "express";
 import StudentDao from "../data/StudentDao.js";
 import { UserRole } from "../model/UserRole.js";
+import { encodeEmail, decodeEmail } from "./courses.js";
 import * as db from "../data/db.js";
 
 const Student = express.Router();
@@ -77,6 +78,35 @@ Student.put("/:email", async (req, res) => {
     res.json({
       status: 404,
       message: `No student found`,
+      data: null,
+    });
+  }
+});
+
+Student.put("/:email/:semester/:sectionId", async (req, res) => {
+  const email = decodeEmail(req.params.email);
+  const oldSemester = req.params.semester;
+  const newSemester = req.body.newSemester;
+  const oldSectionId = req.params.sectionId;
+  const newSectionId = req.body.newSectionId;
+  try {
+    const student = await studentDao.updateHistory(
+      email,
+      oldSemester,
+      newSemester,
+      oldSectionId,
+      newSectionId
+    );
+    res.json({
+      status: 200,
+      message: `Student updated`,
+      data: student,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Student not found`,
       data: null,
     });
   }

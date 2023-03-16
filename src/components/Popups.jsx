@@ -71,7 +71,7 @@ export function JoinClass(props) {
   async function joinClass() {
     const server = "http://localhost:3000";
     await axios
-      .get(`${server}/course/student/${passcode}`)
+      .get(`${server}/course/student/${passcode.toUpperCase()}`)
       .then(async (res) => {
         if (res.data.status === 200) {
           const sectionId = res.data.data.sectionId;
@@ -114,6 +114,7 @@ export function JoinClass(props) {
         label="Course Code"
         input="ex: A1B2C3"
         onChange={(e) => setPasscode(e.target.value)}
+        style={{ textTransform: "uppercase" }}
       />
       <div
         className="error-banner"
