@@ -119,24 +119,22 @@ function OverView(props) {
   }
 
   function studentContent() {
-    const [cards, setCards] = useState(null);
-    const [overlays, setOverlays] = useState(null);
+    const [cards, setCards] = useState(<BlankOverview />);
     const props = {
       name: location.state.name,
       email: location.state.email,
       refresh: refresh,
       setRefresh: setRefresh,
+      history: location.state.history,
     };
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
         container.style.opacity = 0;
-        const [semesterList, editOverlays] = await populateCourseCards(
-          "STUDENT"
-        );
-        setCards(semesterList);
+        const semesterList = (await populateCourseCards("STUDENT"))[0];
+        await pause();
+        setCards(semesterList.reverse());
         container.style.opacity = 100;
-        setOverlays(editOverlays);
       }
       loadContent();
     }, [refresh]);
@@ -147,7 +145,6 @@ function OverView(props) {
           id="Join Class"
           content={JoinClass(props)}
         />
-        {overlays}
         <div id="semester-container" className="semester-container">
           {cards}
         </div>

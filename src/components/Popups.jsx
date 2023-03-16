@@ -4,6 +4,7 @@ import { closePopup } from "./Overlay";
 import InputField from "./InputField";
 import axios from "axios";
 import "../styles/newpoll.css";
+import { IconAlertTriangleFilled } from "@tabler/icons-react";
 
 export function Default() {
   return (
@@ -63,45 +64,50 @@ export function JoinSession(props) {
   );
 }
 
-async function joinClass(name, email, passcode, refresh, setRefresh) {
-  const server = "http://localhost:3000";
-  await axios
-    .get(`${server}/course/student/${passcode}`)
-    .then(async (res) => {
-      if (res.data.status === 200) {
-        await axios
-          .put(`${server}/student/${email}`, {
-            sectionId: res.data.data.sectionId,
-            semester: res.data.data.semester,
-          })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-
-          });
-        await axios
-          .put(`${server}/course/${res.data.data.sectionId}/${email}`, {
-            name: name,
-          })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  setRefresh(!refresh);
-  closePopup("Join Class");
-}
-
 export function JoinClass(props) {
   const [passcode, setPasscode] = useState("");
+  const [showError, setShowError] = useState(false);
+
+  async function joinClass() {
+    const server = "http://localhost:3000";
+    await axios
+      .get(`${server}/course/student/${passcode}`)
+      .then(async (res) => {
+        if (res.data.status === 200) {
+          const sectionId = res.data.data.sectionId;
+          const semester = res.data.data.semester;
+          await axios
+            .put(`${server}/student/${props.email}`, {
+              sectionId: sectionId,
+              semester: semester,
+            })
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          await axios
+            .put(`${server}/course/${res.data.data.sectionId}/${props.email}`, {
+              name: props.name,
+            })
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    if (!showError) {
+      props.setRefresh(!props.refresh);
+      closePopup("Join Class");
+    }
+  }
+
   return (
     <div className="pop-up-content" id="join-class-popup">
       <InputField
@@ -109,6 +115,13 @@ export function JoinClass(props) {
         input="ex: A1B2C3"
         onChange={(e) => setPasscode(e.target.value)}
       />
+      <div
+        className="error-banner"
+        style={{ height: showError ? "fit-content" : 0 }}
+      >
+        <IconAlertTriangleFilled />
+        Warning: This course already exists!
+      </div>
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
@@ -118,9 +131,7 @@ export function JoinClass(props) {
         <PrimaryButton
           variant="primary"
           label="Join"
-          onClick={() => {
-            joinClass(props.name, props.email, passcode, props.refresh, props.setRefresh);
-          }}
+          onClick={() => joinClass()}
         />
       </div>
     </div>

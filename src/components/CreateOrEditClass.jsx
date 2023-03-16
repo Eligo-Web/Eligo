@@ -49,7 +49,6 @@ function CreateOrEditClass(props) {
   const validCharset = /^[ -~]+$/;
   const location = useLocation();
   const [refresh, setRefresh] = [props.refresh, props.setRefresh];
-  const [markDelete, setMarkedDelete] = useState(false);
   const popupName = props.editMode
     ? toSectionId(props.name + props.section + props.semester)
     : "Create Class";
@@ -182,7 +181,7 @@ function CreateOrEditClass(props) {
     await axios
       .post(`${server}/course`, {
         name: name,
-        instructor: {email: location.state.email, name: location.state.name},
+        instructor: { email: location.state.email, name: location.state.name },
         section: section,
         semester: semester,
         SISId: sisId,

@@ -1,6 +1,7 @@
 import Course from "../model/Course.js";
 import ApiError from "../model/ApiError.js";
 import mongoose from "mongoose";
+import { encodeEmail } from "../routes/courses.js";
 
 class CourseDao {
   async readAll({ name, instructor, section, semester }) {
@@ -109,7 +110,7 @@ class CourseDao {
   }
 
   async addStudentByEmail(sectionId, email, name) {
-    email = email.replace(".", "$");
+    email = encodeEmail(email);
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);

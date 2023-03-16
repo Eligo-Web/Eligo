@@ -4,10 +4,17 @@ import CourseDao from "../data/CourseDao.js";
 
 const Course = express.Router();
 export const courseDao = new CourseDao();
-const { hashSync } = hash;
 
 export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
+}
+
+export function encodeEmail(str) {
+  return str.replace(/[.]/g, "$");
+}
+
+export function decodeEmail() {
+  return str.replace(/[$]/g, ".");
 }
 
 Course.get("/", async (req, res) => {
