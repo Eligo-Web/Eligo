@@ -125,8 +125,8 @@ function OverView(props) {
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
-        container.style.opacity = 0;
         const semesterList = (await populateCourseCards("STUDENT"))[0];
+        container.style.opacity = 0;
         await pause();
         setCards(semesterList.reverse());
         container.style.opacity = 100;
