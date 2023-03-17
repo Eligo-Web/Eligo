@@ -6,6 +6,7 @@ import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import InputField, { SelectField } from "./InputField";
 import axios from "axios";
 import "../styles/newpoll.css";
+import { encodeEmail, decodeEmail } from "../pages/Roster.jsx";
 
 export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
@@ -298,18 +299,22 @@ function CreateOrEditClass(props) {
   }
 
   async function deleteCourse() {
-    const sectionId = toSectionId(name + section + semester);
+    const oldSectionId = toSectionId(
+      props.name + props.section + props.semester
+    );
+    let students = [];
     await axios
-      .delete(`${server}/course/${sectionId}`)
+      .delete(`${server}/course/${oldSectionId}`)
       .then((res) => {
         console.log(res);
+        students = res.data.data.students;
       })
       .catch((err) => {
         console.log(err);
       });
     await axios
       .delete(
-        `${server}/instructor/${location.state.email}/${semester}/${sectionId}`
+        `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`
       )
       .then((res) => {
         console.log(res);
@@ -317,6 +322,19 @@ function CreateOrEditClass(props) {
       .catch((err) => {
         console.log(err);
       });
+    console.log(students);
+    for (let student in students) {
+      await axios
+        .delete(
+          `${server}/student/${student}/${props.semester}/${oldSectionId}`
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
     closePopup(popupName);
     setRefresh(!refresh);
   }
