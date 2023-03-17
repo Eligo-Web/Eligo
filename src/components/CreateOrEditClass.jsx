@@ -47,9 +47,9 @@ function CreateOrEditClass(props) {
   const [sisId, setSISId] = useState(props.sisId || "");
   const [semester, setSemester] = useState(props.semester || "");
   const [showError, setShowError] = useState(false);
+  const [refresh, setRefresh] = [props.refresh, props.setRefresh];
   const validCharset = /^[ -~]+$/;
   const location = useLocation();
-  const [refresh, setRefresh] = [props.refresh, props.setRefresh];
   const popupName = props.editMode
     ? toSectionId(props.name + props.section + props.semester)
     : "Create Class";

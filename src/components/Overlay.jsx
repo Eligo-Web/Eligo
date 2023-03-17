@@ -12,6 +12,7 @@ export function openPopup(id) {
     overlay.querySelector(".overlay-bg").style.pointerEvents = "all";
     overlay.querySelector(".overlay-bg").style.opacity = 100;
     overlay.querySelector(".pop-up").style.opacity = 100;
+    overlay.querySelector(".form-control").focus();
     overlay.style.height = "100vh";
   }
 }

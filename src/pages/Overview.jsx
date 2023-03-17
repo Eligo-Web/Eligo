@@ -4,7 +4,6 @@ import Menu from "../components/Menu";
 import Overlay from "../components/Overlay";
 import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
-import { JoinClass } from "../components/Popups";
 import AccessDenied from "../components/AccessDenied";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -66,7 +65,7 @@ function OverView(props) {
       if (history[semester].length === 0) {
         continue;
       }
-
+      history[semester].sort();
       const courseList = [];
       for (let i in history[semester]) {
         await axios
