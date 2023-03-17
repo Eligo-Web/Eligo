@@ -66,13 +66,63 @@ export function JoinSession(props) {
 
 export function JoinClass(props) {
   const [passcode, setPasscode] = useState("");
-  const [showError, setShowError] = useState(false);
+  const [dupeError, setDupeError] = useState(false);
+  const [invalidError, setInvalidError] = useState(false);
+  let valid = true;
+
+  useEffect(() => {
+    const overlay = document.getElementById("join-class-popup");
+    console.log(overlay)
+    if (overlay.offsetParent.style.height) {
+      clearContents();
+      console.log("clear contents");
+    }
+  }, [props.control]);
+
+  function checkPasscode() {
+    const overlay = document.getElementById("join-class-popup");
+    const passcodeField = overlay.querySelector(".passcode-input");
+    valid = true;
+
+    if (!passcode) {
+      passcodeField.className += " field-error";
+      overlay.querySelector(".empty-code").style.display = "block";
+      valid = false;
+    } else {
+      passcodeField.className = "passcode-input form-control";
+      overlay.querySelector(".empty-code").style.display = "none";
+    }
+    return valid;
+  }
+
+  function clearContents() {
+    const overlay = document.getElementById("join-class-popup");
+    const passcodeField = overlay.querySelector(".passcode-input");
+    passcodeField.className = "passcode-input form-control";
+    overlay.querySelector(".empty-code").style.display = "none";
+    passcodeField.value = "";
+    setInvalidError(false);
+    setDupeError(false);
+    setPasscode("");
+    closePopup("Join Class");
+  }
 
   async function joinClass() {
+    if (!checkPasscode()) {
+      console.log("passcode invalid!");
+      setDupeError(false);
+      return;
+    }
     const server = "http://localhost:3000";
     await axios
       .get(`${server}/course/student/${passcode.toUpperCase()}`)
       .then(async (res) => {
+        console.log(res);
+        if (res.data.status === 404) {
+          setDupeError(false);
+          setInvalidError(true);
+          return;
+        }
         if (res.data.status === 200) {
           const sectionId = res.data.data.sectionId;
           const semester = res.data.data.semester;
@@ -82,7 +132,13 @@ export function JoinClass(props) {
               semester: semester,
             })
             .then((res) => {
-              console.log(res);
+              if (res.data.status === 404) {
+                setInvalidError(false);
+                setDupeError(true);
+                return;
+              }
+              props.setRefresh(!props.refresh);
+              clearContents();
             })
             .catch((err) => {
               console.log(err);
@@ -102,32 +158,37 @@ export function JoinClass(props) {
       .catch((err) => {
         console.log(err);
       });
-    if (!showError) {
-      props.setRefresh(!props.refresh);
-      closePopup("Join Class");
-    }
   }
 
   return (
     <div className="pop-up-content" id="join-class-popup">
       <InputField
+        class="passcode-input"
         label="Course Code"
         input="ex: A1B2C3"
         onChange={(e) => setPasscode(e.target.value)}
+        errors={{ "empty-code": "Required" }}
         style={{ textTransform: "uppercase" }}
       />
       <div
         className="error-banner"
-        style={{ height: showError ? "fit-content" : 0 }}
+        style={{ display: dupeError ? "flex" : "none" }}
       >
         <IconAlertTriangleFilled />
-        Warning: This course already exists!
+        You have already joined this course!
+      </div>
+      <div
+        className="error-banner"
+        style={{ display: invalidError ? "flex" : "none" }}
+      >
+        <IconAlertTriangleFilled />
+        Course with given passcode not found!
       </div>
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
           label="Cancel"
-          onClick={() => closePopup("Join Class")}
+          onClick={() => clearContents()}
         />
         <PrimaryButton
           variant="primary"

@@ -1,18 +1,12 @@
 import "../styles/text.css";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
-import {
-  IoIosArrowBack,
-  IoMdExit,
-  IoMdAddCircleOutline,
-  IoMdPerson,
-} from "react-icons/io";
+import { openPopup } from "./Overlay";
 import { IconButton } from "./Buttons.jsx";
 import { Button, Container } from "react-bootstrap";
-import { openPopup } from "./Overlay";
-
 import { useLocation, useNavigate } from "react-router-dom";
-import { IconLogout, IconTrash, IconUserCircle } from "@tabler/icons-react";
+import { IconLogout, IconUserCircle } from "@tabler/icons-react";
+import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import axios from "axios";
 
 function Menu(props) {

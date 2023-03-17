@@ -117,11 +117,31 @@ function CourseView(props) {
     return sessionList;
   }
 
+  const backButton = (
+    <BackButton
+      label="Overview"
+      onClick={() =>
+        navigate("/overview", {
+          state: {
+            name: location.state.name,
+            permission: location.state.permission,
+            email: location.state.email,
+          },
+        })
+      }
+    />
+  );
+
   function studentContent() {
     const [sessionOpen, setSessionOpen] = useState(false);
     return (
       <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
-        <Overlay title="Join Session" content={JoinSession()} />
+        <Overlay
+          title="Join Session"
+          id="join-session"
+          content={JoinSession()}
+        />
+        {backButton}
         {sessionOpen ? (
           "Open"
         ) : (
@@ -155,18 +175,7 @@ function CourseView(props) {
             content={CreateSession()}
           />
           <div id="semester-container" className="semester-container">
-            <BackButton
-              label="Overview"
-              onClick={() =>
-                navigate("/overview", {
-                  state: {
-                    name: location.state.name,
-                    permission: location.state.permission,
-                    email: location.state.email,
-                  },
-                })
-              }
-            />
+            {backButton}
             {cards}
           </div>
         </div>

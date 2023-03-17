@@ -122,13 +122,6 @@ function OverView(props) {
 
   function studentContent() {
     const [cards, setCards] = useState(<BlankOverview />);
-    const props = {
-      name: location.state.name,
-      email: location.state.email,
-      refresh: refresh,
-      setRefresh: setRefresh,
-      history: location.state.history,
-    };
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
@@ -145,7 +138,10 @@ function OverView(props) {
         <Overlay
           title="Join Class"
           id="Join Class"
-          content={JoinClass(props)}
+          refresh={refresh}
+          setRefresh={setRefresh}
+          state={location.state}
+          joinClass
         />
         <div id="semester-container" className="semester-container">
           {cards}
