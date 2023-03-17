@@ -14,6 +14,7 @@ import { Button } from "react-bootstrap";
 import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
 import { BlankOverview } from "../components/BlankStates";
+import axios from "axios";
 
 function CourseView(props) {
   const location = useLocation();
@@ -73,6 +74,30 @@ function CourseView(props) {
         courseName: location.state.courseName,
         passcode: location.state.passcode,
         semester: location.state.semester,
+      },
+    });
+  }
+
+  async function handleViewRoster() {
+    const server = "http://localhost:3000";
+    let students = [];
+    await axios
+      .get(`${server}/course/${location.state.sectionId}`)
+      .then((res) => {
+        students = res.data.data.students;
+      })
+      .catch((err) => console.log(err));
+
+    navigate("/roster", {
+      state: {
+        name: location.state.name,
+        permission: location.state.permission,
+        email: location.state.email,
+        sectionId: location.state.sectionId,
+        courseName: location.state.courseName,
+        passcode: location.state.passcode,
+        semester: location.state.semester,
+        students: students,
       },
     });
   }
@@ -188,6 +213,7 @@ function CourseView(props) {
               label={buttonLabels ? "View Roster" : null}
               icon={<IconList size="1.6em" />}
               variant="outline"
+              onClick={() => handleViewRoster()}
               style={{ maxWidth: "max-content" }}
             />
           </div>
