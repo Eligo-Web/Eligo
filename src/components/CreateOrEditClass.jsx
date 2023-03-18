@@ -68,12 +68,6 @@ function CreateOrEditClass(props) {
     }
   }, [props.control]);
 
-  useEffect(() => {
-    if (props.confirmDelete === popupName) {
-      console.log("DELETED");
-    }
-  }, [props.confirmDelete]);
-
   const handleKeyPresses = (event) => {
     switch (event.key) {
       case "Escape":
@@ -173,12 +167,12 @@ function CreateOrEditClass(props) {
   }
 
   async function postCourse() {
-    console.log(location.state);
     if (!paramsValid()) {
       console.log("some fields invalid!");
       setShowError(false);
       return;
     }
+    let response;
     await axios
       .post(`${server}/course`, {
         name: name,
@@ -190,16 +184,17 @@ function CreateOrEditClass(props) {
       })
       .then((res) => {
         console.log(res);
-        if (res.data.status === 409) {
-          setShowError(true);
-        } else {
-          setShowError(false);
-          clearContents();
-        }
+        response = res.data;
       })
       .catch((err) => {
         console.log(err);
       });
+    if (response.status === 409) {
+      setShowError(true);
+      return;
+    } else {
+      setShowError(false);
+    }
     await axios
       .put(`${server}/instructor/${location.state.email}`, {
         newCourse: name,
@@ -210,7 +205,7 @@ function CreateOrEditClass(props) {
       .catch((err) => {
         console.log(err);
       });
-    closePopup(popupName);
+    clearContents(props.editMode);
     setRefresh(!refresh);
   }
 
