@@ -40,7 +40,7 @@ export function BlankOverview() {
   );
 }
 
-export function BlankCcurseView() {
+export function BlankCourseView() {
   return (
     <Container className="card-container loading">
       <div className="card-title divisor-blank"></div>

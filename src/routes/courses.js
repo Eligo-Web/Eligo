@@ -159,7 +159,12 @@ Course.put("/:sectionId/:weekNum/:sessionId/add", async (req, res) => {
   const sessionId = req.params.sessionId;
   const email = req.body.email;
   try {
-    let session = await courseDao.addStudent(sectionId, weekNum, sessionId, email);
+    let session = await courseDao.addStudent(
+      sectionId,
+      weekNum,
+      sessionId,
+      email
+    );
     res.json({
       status: 200,
       message: `Student added`,
@@ -331,6 +336,5 @@ Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res) => {
     });
   }
 });
-
 
 export default Course;

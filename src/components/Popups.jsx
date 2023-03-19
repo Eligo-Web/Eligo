@@ -21,11 +21,11 @@ export function Default() {
 export function CreateSession(props) {
   const [sessionName, setSessionName] = useState("");
 
-  function getWeekNumber() {
+  function getWeekNumber(offset) {
     const currentDate = new Date();
     const startDate = new Date(currentDate.getFullYear(), 0, 1);
     const yrProgress = (currentDate - startDate) / (24 * 60 * 60 * 1000);
-    const currWeekNum = Math.ceil(yrProgress / 7);
+    const currWeekNum = Math.ceil(yrProgress / 7) + (offset || 0);
     return `${currentDate.getFullYear()}-${currWeekNum}`;
   }
 
@@ -42,7 +42,7 @@ export function CreateSession(props) {
         console.log(res.data.data);
       })
       .catch((err) => console.log(err));
-    
+
     clearContents();
     props.setRefresh(!props.refresh);
     closePopup("Create Session");

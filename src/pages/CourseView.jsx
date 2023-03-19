@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
-import { BlankCcurseView } from "../components/BlankStates";
+import { BlankCourseView } from "../components/BlankStates";
 import axios from "axios";
 
 function CourseView(props) {
@@ -113,8 +113,7 @@ function CourseView(props) {
         courseSessions = res.data.data.sessions;
       })
       .catch((err) => console.log(err));
-
-    let sessionList = [];
+    const sessionList = [];
 
     for (let weekNum in courseSessions) {
       if (courseSessions[weekNum].length === 0) {
@@ -164,37 +163,44 @@ function CourseView(props) {
   function studentContent() {
     const [sessionOpen, setSessionOpen] = useState(false);
     return (
-      <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
-        <Overlay
-          title="Join Session"
-          id="join-session"
-          content={JoinSession()}
-        />
-        {backButton}
-        {sessionOpen ? (
-          "Open"
-        ) : (
-          <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
-            <div className="blank-state-msg">
-              Hmm... It seems your instructor has not started a session yet.
+      <div className="d-flex flex-column ">
+        <div className="card-wrapper">
+          {backButton}
+          <div id="semester-container" className="semester-container">
+            <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
+              <Overlay
+                title="Join Session"
+                id="join-session"
+                content={JoinSession()}
+              />
+              {sessionOpen ? (
+                "Open"
+              ) : (
+                <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
+                  <div className="blank-state-msg">
+                    Hmm... It seems your instructor has not started a session
+                    yet.
+                  </div>
+                  <Button
+                    variant="blank-state"
+                    className="large-title"
+                    onClick={() => {
+                      window.location.reload();
+                    }}
+                  >
+                    Refresh
+                  </Button>
+                </div>
+              )}
             </div>
-            <Button
-              variant="blank-state"
-              className="large-title"
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              Refresh
-            </Button>
           </div>
-        )}
+        </div>
       </div>
     );
   }
 
   function instructorContent() {
-    const [cards, setCards] = useState(<BlankCcurseView />);
+    const [cards, setCards] = useState(<BlankCourseView />);
 
     useEffect(() => {
       const container = document.getElementById("semester-container");
