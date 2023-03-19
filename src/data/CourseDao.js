@@ -46,6 +46,59 @@ class CourseDao {
     return course;
   }
 
+  async readSession(sectionId, sessionId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const session = course.sessions.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    return session;
+  }
+
+  async readAllSessions(sectionId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    return course.sessions;
+  }
+
+  async createSession(sectionId, sessionId, name, passcode) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const session = course.sessions.get(sessionId);
+    if (session) {
+      throw new ApiError(409, `Session with id ${sessionId} already exists`);
+    }
+    course.sessions.set(sessionId, {
+      name: name,
+      passcode: passcode,
+      active: true,
+      polls: {},
+    });
+    await course.save();
+    return course;
+  }
+
+  async deleteSession(sectionId, sessionId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const session = course.sessions.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    course.sessions.delete(sessionId);
+    await course.save();
+    return course;
+  }
+
   async create(course) {
     const oldCourse = await Course.findOne({ sectionId: course.sectionId });
     if (oldCourse) {

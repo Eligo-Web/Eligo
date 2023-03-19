@@ -64,6 +64,67 @@ Course.get("/student/:passcode", async (req, res) => {
   }
 });
 
+Course.get("/:sectionId/:sessionId", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const sessionId = req.params.sessionId;
+  try {
+    let session = await courseDao.readSession(sectionId, sessionId);
+    res.json({
+      status: 200,
+      message: `Session found`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Session not found`,
+      data: null,
+    });
+  }
+});
+
+Course.get("/:sectionId/sessions", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  try {
+    let course = await courseDao.readAllSessions(sectionId);
+    res.json({
+      status: 200,
+      message: `Sessions found`,
+      data: course.sessions,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Sessions not found`,
+      data: null,
+    });
+  }
+});
+
+Course.post("/:sectionId/:sessionId", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const sessionId = req.params.sessionId;
+  const name = req.body.name;
+  const passcode = req.body.passcode;
+  try {
+    let session = await courseDao.createSession(sectionId, sessionId, name, passcode);
+    res.json({
+      status: 201,
+      message: `Session created`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 409,
+      message: `Session already exists`,
+      data: null,
+    });
+  }
+});
+
 Course.post("/", async (req, res) => {
   let sectionId = toSectionId(
     req.body.name + req.body.section + req.body.semester
