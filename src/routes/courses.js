@@ -131,7 +131,13 @@ Course.post("/:sectionId/:sessionId", async (req, res) => {
   const passcode = req.body.passcode;
   const weekNum = req.body.weekNum;
   try {
-    let session = await courseDao.createSession(sectionId, sessionId, name, passcode, weekNum);
+    let session = await courseDao.createSession(
+      sectionId,
+      sessionId,
+      name,
+      passcode,
+      weekNum
+    );
     res.json({
       status: 201,
       message: `Session created`,

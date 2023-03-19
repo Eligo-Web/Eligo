@@ -19,6 +19,8 @@ export function Default() {
 }
 
 export function CreateSession(props) {
+  const [sessionName, setSessionName] = useState("");
+
   function getWeekNumber() {
     const currentDate = new Date();
     const startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -29,25 +31,39 @@ export function CreateSession(props) {
 
   async function createSession() {
     const sessionId = `session-${Date.now()}`;
-    const weekNum = getWeekNumber();
-
     const server = "http://localhost:3000";
     await axios
-      .get(`${server}/course/${props.sectionId}`)
+      .post(`${server}/${props.sectionId}/${sessionId}`, {
+        sectionId: props.sectionId,
+        sessionId: sessionId,
+        name: sessionName,
+        passcode: "1234",
+        weekNum: getWeekNumber(),
+      })
       .then((res) => {
-        checkDupe = res.data;
+        console.log(res.data.data);
       })
       .catch((err) => console.log(err));
+    
+    clearContents();
+    props.setRefresh(!props.refresh);
+    closePopup("Create Session");
+  }
 
-    if (checkDupe.status === 200 && sisId === props.sisId) {
-      setShowError(true);
-      return;
-    }
+  function clearContents() {
+    const overlay = document.getElementById("create-session-popup");
+    const sessionNameField = overlay.querySelector(".session-name-input");
+    sessionNameField.value = "";
   }
 
   return (
     <div className="pop-up-content" id="create-session-popup">
-      <InputField label="Session Name" input="ex: March 14 11AM class" />
+      <InputField
+        class="session-name-input"
+        label="Session Name"
+        input="ex: March 14 11AM class"
+        onChange={(e) => setSessionName(e.target.value)}
+      />
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
@@ -57,10 +73,7 @@ export function CreateSession(props) {
         <PrimaryButton
           variant="primary"
           label="Create"
-          onClick={() => {
-            //todo: add axios call to join
-            closePopup("Create Session");
-          }}
+          onClick={() => createSession()}
         />
       </div>
     </div>

@@ -115,10 +115,6 @@ function CourseView(props) {
       .catch((err) => console.log(err));
 
     const sessionList = [];
-    courseSessions = {
-      "2023-12": { Session1: { active: true }, Session2: {} },
-      "2023-11": { Session3: {} },
-    };
 
     for (let weekNum in courseSessions) {
       if (courseSessions[weekNum].length === 0) {
@@ -218,7 +214,13 @@ function CourseView(props) {
           <Overlay
             title="Create Session"
             id="Create Session"
-            content={CreateSession()}
+            content={
+              <CreateSession
+                sectionId={location.state.sectionId}
+                refresh={refresh}
+                setRefresh={setRefresh}
+              />
+            }
           />
           {backButton}
           <div id="semester-container" className="semester-container">
