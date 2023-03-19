@@ -75,30 +75,94 @@ class CourseDao {
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
-    const week = course.sessions.get(weekNum);
+    let week = course.sessions.get(weekNum);
     if (!week) {
       course.sessions.set(weekNum, {});
+      week = course.sessions.get(weekNum);
     }
-    course.sessions.get(weekNum).set(sessionId, {
+    week.set(sessionId, {
       name: name,
       active: true,
       passcode: passcode,
+      students: [],
       polls: {},
     });
     await course.save();
     return course;
   }
 
-  async deleteSession(sectionId, sessionId) {
+  async addStudentToSession(sectionId, weekNum, sessionId, email) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
-    const session = course.sessions.get(sessionId);
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
-    course.sessions.delete(sessionId);
+    session.students.push(email);
+    await course.save();
+    return course;
+  }
+
+  async readActiveSession(sectionId, weekNum) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    let activeSession = null;
+    for (const [sessionId, session] of Object.entries(week)) {
+      if (session.active) {
+        activeSession = session;
+        break;
+      }
+    }
+    if (!activeSession) {
+      throw new ApiError(404, `No active session found`);
+    }
+    return activeSession;
+  }
+
+  async closeActiveSession(sectionId, weekNum, sessionId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    session.active = false;
+    await course.save();
+    return course;
+  }
+
+  async deleteSession(sectionId, weekNum, sessionId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    week.delete(sessionId);
     await course.save();
     return course;
   }

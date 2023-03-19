@@ -85,6 +85,26 @@ Course.get("/:sectionId/:weekNum/:sessionId", async (req, res) => {
   }
 });
 
+Course.get("/:sectionId/:weekNum/active", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  try {
+    let session = await courseDao.readActiveSession(sectionId, weekNum);
+    res.json({
+      status: 200,
+      message: `Session found`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Session not found`,
+      data: null,
+    });
+  }
+});
+
 Course.get("/:sectionId/sessions", async (req, res) => {
   const sectionId = req.params.sectionId;
   try {
@@ -122,6 +142,49 @@ Course.post("/:sectionId/:sessionId", async (req, res) => {
     res.json({
       status: 409,
       message: `Session already exists`,
+      data: null,
+    });
+  }
+});
+
+Course.put("/:sectionId/:weekNum/:sessionId/add", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  const email = req.body.email;
+  try {
+    let session = await courseDao.addStudent(sectionId, weekNum, sessionId, email);
+    res.json({
+      status: 200,
+      message: `Student added`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Session not found`,
+      data: null,
+    });
+  }
+});
+
+Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  try {
+    let session = await courseDao.closeSession(sectionId, weekNum, sessionId);
+    res.json({
+      status: 200,
+      message: `Session closed`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: `Session not found`,
       data: null,
     });
   }
@@ -241,5 +304,27 @@ Course.delete("/:sectionId/:email", async (req, res) => {
     });
   }
 });
+
+Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  try {
+    const course = await courseDao.deleteSession(sectionId, weekNum, sessionId);
+    res.json({
+      status: 200,
+      message: "Session deleted",
+      data: course,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 404,
+      message: "Session not found",
+      data: null,
+    });
+  }
+});
+
 
 export default Course;
