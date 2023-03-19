@@ -46,12 +46,16 @@ class CourseDao {
     return course;
   }
 
-  async readSession(sectionId, sessionId) {
+  async readSession(sectionId, weekNum, sessionId) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
-    const session = course.sessions.get(sessionId);
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }

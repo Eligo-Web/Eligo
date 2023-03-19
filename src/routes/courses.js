@@ -64,11 +64,12 @@ Course.get("/student/:passcode", async (req, res) => {
   }
 });
 
-Course.get("/:sectionId/:sessionId", async (req, res) => {
+Course.get("/:sectionId/:weekNum/:sessionId", async (req, res) => {
   const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
   try {
-    let session = await courseDao.readSession(sectionId, sessionId);
+    let session = await courseDao.readSession(sectionId, weekNum, sessionId);
     res.json({
       status: 200,
       message: `Session found`,
@@ -87,11 +88,11 @@ Course.get("/:sectionId/:sessionId", async (req, res) => {
 Course.get("/:sectionId/sessions", async (req, res) => {
   const sectionId = req.params.sectionId;
   try {
-    let course = await courseDao.readAllSessions(sectionId);
+    let sessions = await courseDao.readAllSessions(sectionId);
     res.json({
       status: 200,
       message: `Sessions found`,
-      data: course.sessions,
+      data: sessions,
     });
   } catch (err) {
     console.log(err);
