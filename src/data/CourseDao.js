@@ -70,19 +70,19 @@ class CourseDao {
     return course.sessions;
   }
 
-  async createSession(sectionId, sessionId, name, passcode) {
+  async createSession(sectionId, sessionId, name, passcode, weekNum) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
-    const session = course.sessions.get(sessionId);
-    if (session) {
-      throw new ApiError(409, `Session with id ${sessionId} already exists`);
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      course.sessions.set(weekNum, {});
     }
-    course.sessions.set(sessionId, {
+    course.sessions.get(weekNum).set(sessionId, {
       name: name,
-      passcode: passcode,
       active: true,
+      passcode: passcode,
       polls: {},
     });
     await course.save();
