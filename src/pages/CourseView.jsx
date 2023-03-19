@@ -110,7 +110,7 @@ function CourseView(props) {
     await axios
       .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
-        courseSessions = res.data.sessions;
+        courseSessions = res.data.data.sessions;
       })
       .catch((err) => console.log(err));
 
@@ -130,7 +130,7 @@ function CourseView(props) {
         weekSessions.push(
           <SessionCard
             key={i}
-            title={i}
+            title={session.name}
             active={session.active}
             onClick={() => handleViewSession(i)}
           />

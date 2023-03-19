@@ -76,11 +76,14 @@ class CourseDao {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
     let week = course.sessions.get(weekNum);
+    console.log(week);
     if (!week) {
-      course.sessions.set(weekNum, {});
-      week = course.sessions.get(weekNum);
+      course.sessions.set(weekNum, new Map());
     }
-    week.set(sessionId, {
+    if (course.sessions.get(weekNum).get(sessionId)) {
+      throw new ApiError(409, `Session with id ${sessionId} already exists`);
+    }
+    course.sessions.get(weekNum).set(sessionId, {
       name: name,
       active: true,
       passcode: passcode,

@@ -33,9 +33,7 @@ export function CreateSession(props) {
     const sessionId = `session-${Date.now()}`;
     const server = "http://localhost:3000";
     await axios
-      .post(`${server}/${props.sectionId}/${sessionId}`, {
-        sectionId: props.sectionId,
-        sessionId: sessionId,
+      .post(`${server}/course/${props.sectionId}/${sessionId}`, {
         name: sessionName,
         passcode: "1234",
         weekNum: getWeekNumber(),
