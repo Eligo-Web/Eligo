@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
-import { BlankOverview } from "../components/BlankStates";
+import { BlankCcurseView } from "../components/BlankStates";
 import axios from "axios";
 
 function CourseView(props) {
@@ -22,6 +22,11 @@ function CourseView(props) {
   const authorized = location.state && location.state.permission;
   const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
   const [refresh, setRefresh] = useState(false);
+  const server = "http://localhost:3000";
+
+  function pause() {
+    return new Promise((res) => setTimeout(res, 250));
+  }
 
   useEffect(() => {
     if (
@@ -44,18 +49,17 @@ function CourseView(props) {
     }
   };
 
-  function getWeekNumber() {
+  function getWeekNumber(offset) {
     const currentDate = new Date();
     const startDate = new Date(currentDate.getFullYear(), 0, 1);
     const yrProgress = (currentDate - startDate) / (24 * 60 * 60 * 1000);
-    const currWeekInYr = Math.ceil(yrProgress / 7);
-    return `${currentDate.getFullYear()}-${currWeekInYr}`;
+    const currWeekNum = Math.ceil(yrProgress / 7) + (offset || 0);
+    return `${currentDate.getFullYear()}-${currWeekNum}`;
   }
 
   function getWeekLabel(weekNum) {
     const format = { month: "short", day: "numeric" };
     const weekInfo = weekNum.split("-");
-    console.log(weekInfo[0], weekInfo[1]);
     let date1 = new Date(weekInfo[0], 0, (weekInfo[1] - 1) * 7 + 2);
     date1 = date1.toLocaleDateString("default", format);
     let date2 = new Date(weekInfo[0], 0, weekInfo[1] * 7 - 1);
@@ -79,7 +83,6 @@ function CourseView(props) {
   }
 
   async function handleViewRoster() {
-    const server = "http://localhost:3000";
     let students = [];
     await axios
       .get(`${server}/course/${location.state.sectionId}`)
@@ -112,6 +115,10 @@ function CourseView(props) {
       .catch((err) => console.log(err));
 
     const sessionList = [];
+    courseSessions = {
+      "2023-12": { Session1: { active: true }, Session2: {} },
+      "2023-11": { Session3: {} },
+    };
 
     for (let weekNum in courseSessions) {
       if (courseSessions[weekNum].length === 0) {
@@ -119,27 +126,28 @@ function CourseView(props) {
       }
       let weeklabel = getWeekLabel(weekNum);
       if (weekNum === getWeekNumber()) weeklabel = "This week";
-      else if (weekNum === getWeekNumber() - 1) weeklabel = "Last Week";
+      else if (weekNum === getWeekNumber(-1)) weeklabel = "Last Week";
 
       const weekSessions = [];
       for (let i in courseSessions[weekNum]) {
         let session = courseSessions[weekNum][i];
         weekSessions.push(
           <SessionCard
-            title={session.name}
-            activity={session.active ? "Active" : "Inactive"}
-            onClick={() => handleViewSession(/* session.sessionId */)}
+            key={i}
+            title={i}
+            active={session.active}
+            onClick={() => handleViewSession(i)}
           />
         );
       }
       sessionList.push(
-        <Container className="card-container">
+        <Container className="card-container" key={weekNum}>
           <h3 className="card-title divisor">{weeklabel}</h3>
           {weekSessions}
         </Container>
       );
     }
-    return sessionList;
+    return sessionList.reverse();
   }
 
   const backButton = (
@@ -190,7 +198,20 @@ function CourseView(props) {
   }
 
   function instructorContent() {
-    const [cards, setCards] = useState(<BlankOverview />);
+    const [cards, setCards] = useState(<BlankCcurseView />);
+
+    useEffect(() => {
+      const container = document.getElementById("semester-container");
+      async function loadContent() {
+        const sessionList = await populateSessionCards("INSTRUCTOR");
+        container.style.opacity = 0;
+        await pause();
+        setCards(sessionList);
+        container.style.opacity = 100;
+      }
+      loadContent();
+    }, [refresh]);
+
     return (
       <div className="d-flex flex-column ">
         <div className="card-wrapper">
@@ -199,8 +220,8 @@ function CourseView(props) {
             id="Create Session"
             content={CreateSession()}
           />
+          {backButton}
           <div id="semester-container" className="semester-container">
-            {backButton}
             {cards}
           </div>
         </div>

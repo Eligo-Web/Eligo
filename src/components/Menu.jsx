@@ -70,16 +70,20 @@ function Menu(props) {
             <Button variant="transparent" className="menu-overlay-back">
               <IoIosArrowBack size="1.8em" onClick={closeMenu} />
             </Button>
-            <div className="menu-overlay-title" onClick={() =>
+            <div
+              className="menu-overlay-title"
+              onClick={() =>
                 navigate("/overview", {
                   state: {
                     name: location.state.name,
                     permission: location.state.permission,
                     email: location.state.email,
                   },
-                })}
-                style={{cursor: "pointer"}}>
-                EduPoll
+                })
+              }
+              style={{ cursor: "pointer" }}
+            >
+              EduPoll
             </div>
           </Container>
           <Container className="d-flex flex-row p-3 gap-3 card-subtitle">

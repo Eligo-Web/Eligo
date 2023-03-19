@@ -5,19 +5,23 @@ import Col from "react-bootstrap/Col";
 import "../styles/text.css";
 import "../styles/buttons.css";
 
-function PollCard(props) {
+function SessionCard(props) {
   let activity = "card session-card clickable";
-  if (props.activity === "Inactive") {
-    activity = "card session-card clickable inactive";
+  let label = "Active";
+  if (!props.active) {
+    activity += " inactive";
+    label = "Inactive";
   }
   return (
     <Container className={activity} onClick={props.onClick}>
       <Row>
         <Col className="card-title session-card-title">{props.title}</Col>
-        <Col className="card-title session-card-subtitle">{props.activity}</Col>
+        <Col className="card-title session-card-subtitle">
+          {props.title ? label : null}
+        </Col>
       </Row>
     </Container>
   );
 }
 
-export default PollCard;
+export default SessionCard;

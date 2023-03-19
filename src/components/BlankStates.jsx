@@ -1,6 +1,7 @@
 import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Card from "./Card";
+import SessionCard from "./SessionCard";
 
 export default function PageNotFound() {
   const navigate = useNavigate();
@@ -35,6 +36,22 @@ export function BlankOverview() {
       <Card />
       <Card />
       <Card />
+    </Container>
+  );
+}
+
+export function BlankCcurseView() {
+  return (
+    <Container className="card-container loading">
+      <div className="card-title divisor-blank"></div>
+      <SessionCard />
+      <SessionCard />
+      <SessionCard />
+      <SessionCard />
+      <SessionCard />
+      <SessionCard />
+      <SessionCard />
+      <SessionCard />
     </Container>
   );
 }

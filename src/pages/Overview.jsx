@@ -11,16 +11,14 @@ import "../styles/overlay.css";
 import "../styles/cards.css";
 import { BlankOverview } from "../components/BlankStates";
 
-export function pause() {
-  return new Promise((res) => setTimeout(res, 250));
-}
-
 function OverView(props) {
   const server = "http://localhost:3000";
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(false);
+  const [cards, setCards] = useState(<BlankOverview />);
+  const [overlays, setOverlays] = useState(null);
 
   useEffect(() => {
     if (
@@ -34,6 +32,10 @@ function OverView(props) {
       }
     }
   }, []);
+
+  function pause() {
+    return new Promise((res) => setTimeout(res, 250));
+  }
 
   function handleViewClass(courseName, sectionId, semester, passcode) {
     navigate("/class", {
@@ -120,14 +122,13 @@ function OverView(props) {
   }
 
   function studentContent() {
-    const [cards, setCards] = useState(<BlankOverview />);
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
         const semesterList = (await populateCourseCards("STUDENT"))[0];
         container.style.opacity = 0;
         await pause();
-        setCards(semesterList.reverse());
+        setCards(semesterList);
         container.style.opacity = 100;
       }
       loadContent();
@@ -150,8 +151,6 @@ function OverView(props) {
   }
 
   function instructorContent() {
-    const [cards, setCards] = useState(<BlankOverview />);
-    const [overlays, setOverlays] = useState(null);
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {

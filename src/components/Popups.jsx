@@ -19,6 +19,32 @@ export function Default() {
 }
 
 export function CreateSession(props) {
+  function getWeekNumber() {
+    const currentDate = new Date();
+    const startDate = new Date(currentDate.getFullYear(), 0, 1);
+    const yrProgress = (currentDate - startDate) / (24 * 60 * 60 * 1000);
+    const currWeekNum = Math.ceil(yrProgress / 7);
+    return `${currentDate.getFullYear()}-${currWeekNum}`;
+  }
+
+  async function createSession() {
+    const sessionId = `session-${Date.now()}`;
+    const weekNum = getWeekNumber();
+
+    const server = "http://localhost:3000";
+    await axios
+      .get(`${server}/course/${props.sectionId}`)
+      .then((res) => {
+        checkDupe = res.data;
+      })
+      .catch((err) => console.log(err));
+
+    if (checkDupe.status === 200 && sisId === props.sisId) {
+      setShowError(true);
+      return;
+    }
+  }
+
   return (
     <div className="pop-up-content" id="create-session-popup">
       <InputField label="Session Name" input="ex: March 14 11AM class" />
@@ -72,7 +98,7 @@ export function JoinClass(props) {
 
   useEffect(() => {
     const overlay = document.getElementById("join-class-popup");
-    console.log(overlay)
+    console.log(overlay);
     if (overlay.offsetParent.style.height) {
       clearContents();
       console.log("clear contents");
