@@ -57,10 +57,27 @@ function SessionView(props) {
     });
   }
 
+  function navigateOverview() {
+    navigate("/overview", {
+      state: {
+        permission: location.state.permission,
+        email: location.state.email,
+        name: location.state.name,
+      },
+    });
+  }
+
   function studentContent() {
     const [pollOpen, setPollOpen] = useState(false);
     return (
-      <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
+      <div className="card-wrapper">
+        <Menu />
+        <MenuBar
+          title={location.state.sessionName}
+          description={location.state.passcode}
+          clickable
+        />
+        <BackButton label="Overview" onClick={() => navigateOverview()} />
         {pollOpen ? (
           "Open"
         ) : (

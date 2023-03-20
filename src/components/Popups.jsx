@@ -96,11 +96,11 @@ export function CreateSession(props) {
 }
 
 export function JoinSession(props) {
-  const [passcode, setPasscode] = useState("");
+  const [passcode, setPasscode] = useState("xxxx");
   const navigate = useNavigate();
   function joinSession() {
     const server = "http://localhost:3000";
-    console.log(props)
+    console.log(props);
     axios
       .post(
         `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.email}/${passcode}`
@@ -108,23 +108,26 @@ export function JoinSession(props) {
       .then((res) => {
         console.log(res.data.data);
         if (res.data.status === 200) {
-        navigate("/session", {
-          state: {
-            sectionId: props.sectionId,
-            sessionId: props.sessionId,
-            permission: "STUDENT",
-            email: props.email,
-          },
-        });
-      }
+          navigate("/session", {
+            state: {
+              sectionId: props.sectionId,
+              sessionId: props.sessionId,
+              permission: "STUDENT",
+              email: props.email,
+            },
+          });
+        } else if (res.data.status === 401) {
+          alert("Invalid passcode");
+        }
       })
       .catch((err) => console.log(err));
+    closePopup("Join Session");
   }
   return (
     <div className="pop-up-content" id="join-session-popup">
       <InputField
         label="Passcode"
-        input="Ex: abc123"
+        input="Ex: 1234"
         onChange={(e) => {
           setPasscode(e.target.value);
         }}
@@ -132,16 +135,10 @@ export function JoinSession(props) {
       />
       <div className="button-row">
         <PrimaryButton
-          variant="secondary"
-          label="Cancel"
-          onClick={() => closePopup("Join Session")}
-        />
-        <PrimaryButton
           variant="primary"
           label="Join"
           onClick={() => {
             joinSession();
-            closePopup("Join Session");
           }}
         />
       </div>

@@ -177,43 +177,41 @@ function CourseView(props) {
       weekNum: "",
       email: "",
     });
-    useEffect(() => {
-      function checkSession() {
-        axios
-          .get(
-            `${server}/course/${location.state.sectionId}/${getWeekNumber()}/`
-          )
-          .then((res) => {
-            console.log(res);
-            if (res.data.data) {
-              setSessionOpen(true);
-              openPopup("join-session");
-              setProps({
-                sectionId: location.state.sectionId,
-                sessionId: res.data.data.activeSessionId,
-                session: res.data.data.activeSession,
-                weekNum: getWeekNumber(),
-                email: location.state.email,
+    function checkSession() {
+      axios
+        .get(`${server}/course/${location.state.sectionId}/${getWeekNumber()}/`)
+        .then((res) => {
+          console.log(res);
+          if (res.data.data) {
+            setSessionOpen(true);
+            openPopup("join-session");
+            setProps({
+              sectionId: location.state.sectionId,
+              sessionId: res.data.data.activeSessionId,
+              session: res.data.data.activeSession,
+              weekNum: getWeekNumber(),
+              email: location.state.email,
+            });
+            if (
+              res.data.data.activeSession.students.includes(
+                location.state.email
+              )
+            ) {
+              navigate("/session", {
+                state: {
+                  name: location.state.name,
+                  permission: location.state.permission,
+                  email: location.state.email,
+                  sessionId: res.data.data.activeSessionId,
+                  sectionId: location.state.sectionId,
+                },
               });
-              if (
-                res.data.data.activeSession.students.includes(
-                  location.state.email
-                )
-              ) {
-                navigate("/session", {
-                  state: {
-                    name: location.state.name,
-                    permission: location.state.permission,
-                    email: location.state.email,
-                    sessionId: res.data.data.activeSessionId,
-                    sectionId: location.state.sectionId,
-                  },
-                });
-              }
             }
-          })
-          .catch((err) => console.log(err));
-      }
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+    useEffect(() => {
       checkSession();
       const interval = setInterval(() => {
         checkSession();
