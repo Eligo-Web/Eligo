@@ -1,6 +1,6 @@
 import { Button, Row } from "react-bootstrap";
 import { IoIosClose } from "react-icons/io";
-import { Default, JoinClass } from "./Popups";
+import { CreateSession, Default, JoinClass } from "./Popups";
 import "../styles/overlay.css";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { useEffect, useState } from "react";
@@ -70,6 +70,13 @@ export default function Overlay(props) {
             name={props.state.name}
             email={props.state.email}
             history={props.state.history}
+            refresh={props.refresh}
+            setRefresh={props.setRefresh}
+            control={childState}
+          />
+        ) : props.createSession ? (
+          <CreateSession
+            sectionId={props.sectionId}
             refresh={props.refresh}
             setRefresh={props.setRefresh}
             control={childState}

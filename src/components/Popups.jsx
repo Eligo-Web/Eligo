@@ -22,6 +22,13 @@ export function Default() {
 export function CreateSession(props) {
   const [sessionName, setSessionName] = useState("");
 
+  useEffect(() => {
+    const overlay = document.getElementById("create-session-popup");
+    if (overlay.offsetParent.style.height) {
+      clearContents();
+    }
+  }, [props.control]);
+
   function getWeekNumber(offset) {
     const currentDate = new Date();
     const startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -30,7 +37,28 @@ export function CreateSession(props) {
     return `${currentDate.getFullYear()}-${currWeekNum}`;
   }
 
+  function checkValid() {
+    const overlay = document.getElementById("create-session-popup");
+    const nameField = overlay.querySelector(".session-name-input");
+    let valid = true;
+
+    if (!sessionName) {
+      nameField.className += " field-error";
+      overlay.querySelector(".empty-name").style.display = "block";
+      valid = false;
+    } else {
+      nameField.className = "session-name-input form-control";
+      overlay.querySelector(".empty-name").style.display = "none";
+    }
+    return valid;
+  }
+
   async function createSession() {
+    if (!checkValid()) {
+      console.log("name invalid!");
+      return;
+    }
+
     const sessionId = `session-${Date.now()}`;
     const server = "http://localhost:3000";
     await axios
@@ -43,16 +71,18 @@ export function CreateSession(props) {
         console.log(res.data.data);
       })
       .catch((err) => console.log(err));
-
-    clearContents();
     props.setRefresh(!props.refresh);
-    closePopup("Create Session");
+    clearContents();
   }
 
   function clearContents() {
     const overlay = document.getElementById("create-session-popup");
-    const sessionNameField = overlay.querySelector(".session-name-input");
-    sessionNameField.value = "";
+    const nameField = overlay.querySelector(".session-name-input");
+    nameField.className = "session-name-input form-control";
+    overlay.querySelector(".empty-name").style.display = "none";
+    nameField.value = "";
+    setSessionName("");
+    closePopup("Create Session");
   }
 
   return (
@@ -61,6 +91,7 @@ export function CreateSession(props) {
         class="session-name-input"
         label="Session Name"
         input="ex: March 14 11AM class"
+        errors={{ "empty-name": "Required" }}
         onChange={(e) => setSessionName(e.target.value)}
       />
       <div className="button-row">
@@ -134,7 +165,6 @@ export function JoinClass(props) {
   const [passcode, setPasscode] = useState("");
   const [dupeError, setDupeError] = useState(false);
   const [invalidError, setInvalidError] = useState(false);
-  let valid = true;
 
   useEffect(() => {
     const overlay = document.getElementById("join-class-popup");
@@ -148,7 +178,7 @@ export function JoinClass(props) {
   function checkPasscode() {
     const overlay = document.getElementById("join-class-popup");
     const passcodeField = overlay.querySelector(".passcode-input");
-    valid = true;
+    let valid = true;
 
     if (!passcode) {
       passcodeField.className += " field-error";

@@ -49,6 +49,10 @@ function CourseView(props) {
     }
   };
 
+  function toMap(object) {
+    return Object.entries(object);
+  }
+
   function getWeekNumber(offset) {
     const currentDate = new Date();
     const startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -67,16 +71,17 @@ function CourseView(props) {
     return `Week of ${date1} - ${date2}`;
   }
 
-  function handleViewSession(sessionId) {
+  function handleViewSession(sessionId, session) {
     navigate("/session", {
       state: {
         name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
         sessionId: sessionId,
+        sessionName: session.name,
         sectionId: location.state.sectionId,
         courseName: location.state.courseName,
-        passcode: location.state.passcode,
+        passcode: session.passcode,
         semester: location.state.semester,
       },
     });
@@ -105,18 +110,20 @@ function CourseView(props) {
     });
   }
 
-  async function populateSessionCards(role) {
+  async function populateSessionCards() {
     let courseSessions;
     await axios
       .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
         courseSessions = res.data.data.sessions;
+        courseSessions = toMap(courseSessions).sort();
       })
       .catch((err) => console.log(err));
     const sessionList = [];
 
-    for (let weekNum in courseSessions) {
-      if (courseSessions[weekNum].length === 0) {
+    for (let [weekNum, week] of courseSessions) {
+      week = toMap(week).sort();
+      if (week.length === 0) {
         continue;
       }
       let weeklabel = getWeekLabel(weekNum);
@@ -124,14 +131,13 @@ function CourseView(props) {
       else if (weekNum === getWeekNumber(-1)) weeklabel = "Last Week";
 
       let weekSessions = [];
-      for (let i in courseSessions[weekNum]) {
-        let session = courseSessions[weekNum][i];
+      for (let [id, session] of week) {
         weekSessions.push(
           <SessionCard
-            key={i}
+            key={id}
             title={session.name}
             active={session.active}
-            onClick={() => handleViewSession(i)}
+            onClick={() => handleViewSession(id, session)}
           />
         );
       }
@@ -263,13 +269,10 @@ function CourseView(props) {
           <Overlay
             title="Create Session"
             id="Create Session"
-            content={
-              <CreateSession
-                sectionId={location.state.sectionId}
-                refresh={refresh}
-                setRefresh={setRefresh}
-              />
-            }
+            sectionId={location.state.sectionId}
+            refresh={refresh}
+            setRefresh={setRefresh}
+            createSession
           />
           {backButton}
           <div id="semester-container" className="semester-container">

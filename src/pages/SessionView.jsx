@@ -75,8 +75,8 @@ function SessionView(props) {
       <div className="card-wrapper">
         <Menu hideCreate />
         <MenuBar
-          title={location.state.sessionId}
-          description={location.state.sectionId}
+          title={location.state.sessionName}
+          description={location.state.passcode}
           clickable
           showDescription
         />
