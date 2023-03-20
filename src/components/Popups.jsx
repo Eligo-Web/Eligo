@@ -37,28 +37,7 @@ export function CreateSession(props) {
     return `${currentDate.getFullYear()}-${currWeekNum}`;
   }
 
-  function checkValid() {
-    const overlay = document.getElementById("create-session-popup");
-    const nameField = overlay.querySelector(".session-name-input");
-    let valid = true;
-
-    if (!sessionName) {
-      nameField.className += " field-error";
-      overlay.querySelector(".empty-name").style.display = "block";
-      valid = false;
-    } else {
-      nameField.className = "session-name-input form-control";
-      overlay.querySelector(".empty-name").style.display = "none";
-    }
-    return valid;
-  }
-
   async function createSession() {
-    if (!checkValid()) {
-      console.log("name invalid!");
-      return;
-    }
-
     const sessionId = `session-${Date.now()}`;
     const server = "http://localhost:3000";
     await axios
@@ -69,7 +48,7 @@ export function CreateSession(props) {
       .catch((err) => console.log(err));
     await axios
       .post(`${server}/course/${props.sectionId}/${sessionId}`, {
-        name: sessionName,
+        name: sessionName ? sessionName : new Date().toDateString(),
         passcode: Math.random().toString(10).slice(-4),
         weekNum: getWeekNumber(),
       })
@@ -96,7 +75,7 @@ export function CreateSession(props) {
       <InputField
         class="session-name-input"
         label="Session Name"
-        input="ex: March 14 11AM class"
+        input="Default: Today's Date"
         errors={{ "empty-name": "Required" }}
         onChange={(e) => setSessionName(e.target.value)}
       />

@@ -146,7 +146,7 @@ function CourseView(props) {
       sessionList.push(
         <Container className="card-container" key={weekNum}>
           <h3 className="card-title divisor">{weeklabel}</h3>
-          {weekSessions}
+          {weekSessions.reverse()}
         </Container>
       );
     }
