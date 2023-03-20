@@ -93,7 +93,7 @@ class CourseDao {
     return course;
   }
 
-  async addStudentToSession(sectionId, weekNum, sessionId, email) {
+  async addStudentToSession(sectionId, weekNum, sessionId, email, passcode) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
@@ -106,7 +106,12 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
+    if (session.passcode !== passcode) {
+      console.log(passcode);
+      throw new ApiError(401, `Incorrect passcode`);
+    }
     session.students.push(email);
+    course.markModified("sessions");
     await course.save();
     return course;
   }
@@ -121,16 +126,18 @@ class CourseDao {
       throw new ApiError(404, `Week ${weekNum} not found`);
     }
     let activeSession = null;
-    for (const [sessionId, session] of Object.entries(week)) {
-      if (session.active) {
-        activeSession = session;
+    let activeSessionId = null;
+    for (const sessionId of week.keys()) {
+      if (week.get(sessionId).active) {
+        activeSession = week.get(sessionId);
+        activeSessionId = sessionId;
         break;
       }
     }
     if (!activeSession) {
       throw new ApiError(404, `No active session found`);
     }
-    return activeSession;
+    return { activeSession, activeSessionId };
   }
 
   async closeActiveSession(sectionId, weekNum, sessionId) {

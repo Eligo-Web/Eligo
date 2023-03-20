@@ -85,7 +85,7 @@ Course.get("/:sectionId/:weekNum/:sessionId", async (req, res) => {
   }
 });
 
-Course.get("/:sectionId/:weekNum/active", async (req, res) => {
+Course.get("/:sectionId/:weekNum", async (req, res) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   try {
@@ -153,32 +153,37 @@ Course.post("/:sectionId/:sessionId", async (req, res) => {
   }
 });
 
-Course.put("/:sectionId/:weekNum/:sessionId/add", async (req, res) => {
-  const sectionId = req.params.sectionId;
-  const weekNum = req.params.weekNum;
-  const sessionId = req.params.sessionId;
-  const email = req.body.email;
-  try {
-    let session = await courseDao.addStudent(
-      sectionId,
-      weekNum,
-      sessionId,
-      email
-    );
-    res.json({
-      status: 200,
-      message: `Student added`,
-      data: session,
-    });
-  } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+Course.post(
+  "/:sectionId/:weekNum/:sessionId/:email/:passcode",
+  async (req, res) => {
+    const sectionId = req.params.sectionId;
+    const weekNum = req.params.weekNum;
+    const sessionId = req.params.sessionId;
+    const email = req.params.email;
+    const passcode = req.params.passcode;
+    try {
+      let session = await courseDao.addStudentToSession(
+        sectionId,
+        weekNum,
+        sessionId,
+        email,
+        passcode
+      );
+      res.json({
+        status: 200,
+        message: `Student added`,
+        data: session,
+      });
+    } catch (err) {
+      console.log(err);
+      res.json({
+        status: err.status,
+        message: err.message,
+        data: null,
+      });
+    }
   }
-});
+);
 
 Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
   const sectionId = req.params.sectionId;

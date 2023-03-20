@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import { closePopup } from "./Overlay";
+import { useNavigate } from "react-router-dom";
 import InputField from "./InputField";
 import axios from "axios";
 import "../styles/newpoll.css";
@@ -35,7 +36,7 @@ export function CreateSession(props) {
     await axios
       .post(`${server}/course/${props.sectionId}/${sessionId}`, {
         name: sessionName,
-        passcode: "1234",
+        passcode: Math.random().toString(10).slice(-4),
         weekNum: getWeekNumber(),
       })
       .then((res) => {
@@ -79,9 +80,37 @@ export function CreateSession(props) {
 }
 
 export function JoinSession(props) {
+  const [passcode, setPasscode] = useState("");
+  const navigate = useNavigate();
+  function joinSession() {
+    const server = "http://localhost:3000";
+    axios
+      .post(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.email}/${passcode}`
+      )
+      .then((res) => {
+        console.log(res.data.data);
+      })
+      .catch((err) => console.log(err));
+    navigate("/session", {
+      state: {
+        sectionId: props.sectionId,
+        sessionId: props.sessionId,
+        permission: "STUDENT",
+        email: props.email,
+      },
+    });
+  }
   return (
     <div className="pop-up-content" id="join-session-popup">
-      <InputField label="Passcode" input="Ex: abc123" type="password" />
+      <InputField
+        label="Passcode"
+        input="Ex: abc123"
+        onChange={(e) => {
+          setPasscode(e.target.value);
+        }}
+        type="password"
+      />
       <div className="button-row">
         <PrimaryButton
           variant="secondary"
@@ -92,7 +121,7 @@ export function JoinSession(props) {
           variant="primary"
           label="Join"
           onClick={() => {
-            //todo: add axios call to join
+            joinSession();
             closePopup("Join Session");
           }}
         />

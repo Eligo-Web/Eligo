@@ -5,6 +5,7 @@ import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
 import Overlay from "../components/Overlay";
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
 import { BackButton, IconButton } from "../components/Buttons";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useState } from "react";

@@ -162,19 +162,62 @@ function CourseView(props) {
 
   function studentContent() {
     const [sessionOpen, setSessionOpen] = useState(false);
+    const props = {};
+    useEffect(() => {
+      function checkSession() {
+        axios
+          .get(
+            `${server}/course/${location.state.sectionId}/${getWeekNumber()}/`
+          )
+          .then((res) => {
+            console.log(res);
+            if (res.data.data) {
+              setSessionOpen(true);
+              openPopup("join-session");
+              props.sectionId = location.state.sectionId;
+              props.sessionId = res.data.data.activeSessionId;
+              props.session = res.data.data.activeSession;
+              props.weekNum = getWeekNumber();
+              props.email = location.state.email;
+              if (
+                res.data.data.activeSession.students.includes(
+                  location.state.email
+                )
+              ) {
+                navigate("/session", {
+                  state: {
+                    name: location.state.name,
+                    permission: location.state.permission,
+                    email: location.state.email,
+                    sessionId: res.data.data.activeSessionId,
+                    sectionId: location.state.sectionId,
+                  },
+                });
+              }
+            }
+          })
+          .catch((err) => console.log(err));
+      }
+      checkSession();
+      const interval = setInterval(() => {
+        checkSession();
+      }, 5000);
+      return () => clearInterval(interval);
+    }, []);
+
     return (
       <div className="d-flex flex-column ">
+        <Overlay
+          title="Join Session"
+          id="join-session"
+          content={JoinSession(props)}
+        />
         <div className="card-wrapper">
           {backButton}
           <div id="semester-container" className="semester-container">
             <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
-              <Overlay
-                title="Join Session"
-                id="join-session"
-                content={JoinSession()}
-              />
               {sessionOpen ? (
-                "Open"
+                "Your instructor has started a session!"
               ) : (
                 <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
                   <div className="blank-state-msg">
