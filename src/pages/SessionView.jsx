@@ -12,6 +12,7 @@ import { useState } from "react";
 import AccessDenied from "../components/AccessDenied";
 import { useEffect } from "react";
 import { IconArrowLeft } from "@tabler/icons-react";
+import axios from "axios";
 
 function SessionView(props) {
   const location = useLocation();
@@ -31,6 +32,18 @@ function SessionView(props) {
     }
   }, []);
 
+  async function closeSession() {
+    const server = "http://localhost:3000";
+    console.log(location.state);
+    await axios
+      .put(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
+      )
+      .then((res) => {})
+      .catch((err) => console.log(err));
+    navigateBack();
+  }
+
   function navigateBack() {
     navigate("/class", {
       state: {
@@ -39,7 +52,7 @@ function SessionView(props) {
         name: location.state.name,
         courseName: location.state.courseName,
         sectionId: location.state.sectionId,
-        passcode: location.state.passcode,
+        passcode: location.state.classPasscode,
       },
     });
   }
@@ -108,7 +121,7 @@ function SessionView(props) {
               label="Close Session"
               variant="outline"
               style={{ maxWidth: "max-content" }}
-              onClick={() => navigateBack()}
+              onClick={() => closeSession()}
             />
           </div>
         </div>

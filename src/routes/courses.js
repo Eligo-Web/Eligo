@@ -190,10 +190,34 @@ Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
   try {
-    let session = await courseDao.closeSession(sectionId, weekNum, sessionId);
+    let session = await courseDao.closeActiveSession(
+      sectionId,
+      weekNum,
+      sessionId
+    );
     res.json({
       status: 200,
       message: `Session closed`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
+Course.put("/:sectionId/:weekNum/closeAll", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  try {
+    let session = await courseDao.closeAllSessions(sectionId, weekNum);
+    res.json({
+      status: 200,
+      message: `Sessions closed`,
       data: session,
     });
   } catch (err) {

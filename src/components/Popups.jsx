@@ -62,6 +62,12 @@ export function CreateSession(props) {
     const sessionId = `session-${Date.now()}`;
     const server = "http://localhost:3000";
     await axios
+      .put(`${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`)
+      .then((res) => {
+        console.log(res.data.data);
+      })
+      .catch((err) => console.log(err));
+    await axios
       .post(`${server}/course/${props.sectionId}/${sessionId}`, {
         name: sessionName,
         passcode: Math.random().toString(10).slice(-4),

@@ -82,7 +82,9 @@ function CourseView(props) {
         sectionId: location.state.sectionId,
         courseName: location.state.courseName,
         passcode: session.passcode,
+        classPasscode: location.state.passcode,
         semester: location.state.semester,
+        weekNum: getWeekNumber(),
       },
     });
   }

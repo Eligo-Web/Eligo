@@ -154,6 +154,26 @@ class CourseDao {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
     session.active = false;
+    course.markModified("sessions");
+    await course.save();
+    return course;
+  }
+
+  async closeAllSessions(sectionId, weekNum) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    for (const sessionId of week.keys()) {
+      if (week.get(sessionId).active) {
+        week.get(sessionId).active = false;
+      }
+    }
+    course.markModified("sessions");
     await course.save();
     return course;
   }
@@ -172,6 +192,7 @@ class CourseDao {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
     week.delete(sessionId);
+    course.markModified("sessions");
     await course.save();
     return course;
   }
