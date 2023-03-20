@@ -38,8 +38,8 @@ Course.get("/:sectionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Course not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -57,8 +57,8 @@ Course.get("/student/:passcode", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Course not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -78,8 +78,8 @@ Course.get("/:sectionId/:weekNum/:sessionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Session not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -98,8 +98,8 @@ Course.get("/:sectionId/:weekNum/active", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Session not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -117,8 +117,8 @@ Course.get("/:sectionId/sessions", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Sessions not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -146,8 +146,8 @@ Course.post("/:sectionId/:sessionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 409,
-      message: `Session already exists`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -168,8 +168,8 @@ Course.put("/:sectionId/:weekNum/:sessionId/add", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Session not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -189,8 +189,8 @@ Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Session not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -211,8 +211,8 @@ Course.post("/", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 409,
-      message: "Course already exists",
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -244,8 +244,8 @@ Course.put("/:sectionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: "Course not found",
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -265,8 +265,8 @@ Course.put("/:sectionId/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: "Course not found",
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -284,8 +284,8 @@ Course.delete("/:sectionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: "Course not found",
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -304,8 +304,8 @@ Course.delete("/:sectionId/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: "Course not found",
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -325,8 +325,8 @@ Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: "Session not found",
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }

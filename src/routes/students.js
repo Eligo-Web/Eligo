@@ -18,8 +18,8 @@ Student.get("/", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `No students found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -37,8 +37,8 @@ Student.get("/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `No student found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -55,9 +55,9 @@ Student.post("/", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 409,
-      message: "Student already exists",
-      data: req.body,
+      status: err.status,
+      message: err.message,
+      data: null,
     });
   }
 });
@@ -76,8 +76,8 @@ Student.put("/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `No student found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -105,8 +105,8 @@ Student.put("/:email/:semester/:sectionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Student not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -124,8 +124,8 @@ Student.delete("/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `No student found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -149,8 +149,8 @@ Student.delete("/:email/:semester/:sectionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `No student found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }

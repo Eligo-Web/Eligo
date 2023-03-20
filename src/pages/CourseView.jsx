@@ -114,7 +114,7 @@ function CourseView(props) {
       })
       .catch((err) => console.log(err));
 
-    const sessionList = [];
+    let sessionList = [];
 
     for (let weekNum in courseSessions) {
       if (courseSessions[weekNum].length === 0) {
@@ -124,7 +124,7 @@ function CourseView(props) {
       if (weekNum === getWeekNumber()) weeklabel = "This week";
       else if (weekNum === getWeekNumber(-1)) weeklabel = "Last Week";
 
-      const weekSessions = [];
+      let weekSessions = [];
       for (let i in courseSessions[weekNum]) {
         let session = courseSessions[weekNum][i];
         weekSessions.push(

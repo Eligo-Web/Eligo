@@ -75,9 +75,7 @@ class CourseDao {
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
-    let week = course.sessions.get(weekNum);
-    console.log(week);
-    if (!week) {
+    if (!course.sessions.get(weekNum)) {
       course.sessions.set(weekNum, new Map());
     }
     if (course.sessions.get(weekNum).get(sessionId)) {
@@ -90,6 +88,7 @@ class CourseDao {
       students: [],
       polls: {},
     });
+    course.markModified("sessions");
     await course.save();
     return course;
   }

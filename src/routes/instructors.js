@@ -29,8 +29,8 @@ Instructor.get("/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `No instructor found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -65,8 +65,8 @@ Instructor.put("/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Instructor not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -94,8 +94,8 @@ Instructor.put("/:email/:semester/:sectionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Instructor not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -113,8 +113,8 @@ Instructor.delete("/:email", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Instructor not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
@@ -138,8 +138,8 @@ Instructor.delete("/:email/:semester/:sectionId", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({
-      status: 404,
-      message: `Instructor with email ${email} not found`,
+      status: err.status,
+      message: err.message,
       data: null,
     });
   }
