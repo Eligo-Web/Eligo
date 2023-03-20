@@ -107,7 +107,6 @@ class CourseDao {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
     if (session.passcode !== passcode) {
-      console.log(passcode);
       throw new ApiError(401, `Incorrect passcode`);
     }
     session.students.push(email);

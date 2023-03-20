@@ -170,7 +170,13 @@ function CourseView(props) {
 
   function studentContent() {
     const [sessionOpen, setSessionOpen] = useState(false);
-    const props = {};
+    const [props, setProps] = useState({
+      sectionId: "",
+      sessionId: "",
+      session: "",
+      weekNum: "",
+      email: "",
+    });
     useEffect(() => {
       function checkSession() {
         axios
@@ -182,11 +188,13 @@ function CourseView(props) {
             if (res.data.data) {
               setSessionOpen(true);
               openPopup("join-session");
-              props.sectionId = location.state.sectionId;
-              props.sessionId = res.data.data.activeSessionId;
-              props.session = res.data.data.activeSession;
-              props.weekNum = getWeekNumber();
-              props.email = location.state.email;
+              setProps({
+                sectionId: location.state.sectionId,
+                sessionId: res.data.data.activeSessionId,
+                session: res.data.data.activeSession,
+                weekNum: getWeekNumber(),
+                email: location.state.email,
+              });
               if (
                 res.data.data.activeSession.students.includes(
                   location.state.email

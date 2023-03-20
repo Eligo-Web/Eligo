@@ -100,22 +100,25 @@ export function JoinSession(props) {
   const navigate = useNavigate();
   function joinSession() {
     const server = "http://localhost:3000";
+    console.log(props)
     axios
       .post(
         `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.email}/${passcode}`
       )
       .then((res) => {
         console.log(res.data.data);
+        if (res.data.status === 200) {
+        navigate("/session", {
+          state: {
+            sectionId: props.sectionId,
+            sessionId: props.sessionId,
+            permission: "STUDENT",
+            email: props.email,
+          },
+        });
+      }
       })
       .catch((err) => console.log(err));
-    navigate("/session", {
-      state: {
-        sectionId: props.sectionId,
-        sessionId: props.sessionId,
-        permission: "STUDENT",
-        email: props.email,
-      },
-    });
   }
   return (
     <div className="pop-up-content" id="join-session-popup">
