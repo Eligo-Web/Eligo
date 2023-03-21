@@ -121,7 +121,7 @@
   margin: 0 0.5rem;
   gap: 0.1rem;
   font-weight: 500;
-  color: #041a34bf;
+  color: #1e2c3c;
   font-size: 1.1rem;
   mix-blend-mode: hard-light;
 }
@@ -140,7 +140,8 @@
 .form-control,
 .form-control:focus,
 .form-select,
-.form-select:focus {
+.form-select:focus,
+.form-control:disabled {
   flex: none;
   display: flex;
   padding: 0.3rem 1rem;
@@ -152,6 +153,11 @@
   box-shadow: none !important;
   text-overflow: ellipsis;
   font-weight: 500;
+}
+
+.form-control:disabled {
+  color: #182d44 !important;
+  opacity: 0.8;
 }
 
 .form-control:focus,

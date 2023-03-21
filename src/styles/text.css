@@ -146,6 +146,7 @@ body {
   align-items: center;
   text-align: right;
   font-weight: 500;
+  opacity: 0.8;
   gap: 0.5rem;
 }
 

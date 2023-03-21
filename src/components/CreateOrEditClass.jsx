@@ -349,7 +349,7 @@ function CreateOrEditClass(props) {
           }}
         />
         <InputField
-          section
+          small
           class="sis-id-input"
           label="Course ID (opt.)"
           input="ex: EN.601.220"
@@ -361,7 +361,7 @@ function CreateOrEditClass(props) {
       </div>
       <div className="input-group">
         <InputField
-          section
+          small
           class="section-input"
           label="Section No."
           input="1, 2, ..."

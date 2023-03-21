@@ -1,9 +1,10 @@
 import { Button, Row } from "react-bootstrap";
 import { IoIosClose } from "react-icons/io";
-import { CreateSession, Default, JoinClass, JoinSession } from "./Popups";
-import "../styles/overlay.css";
+import { Default, JoinClass, JoinSession } from "./Popups";
+import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { useEffect, useState } from "react";
+import "../styles/overlay.css"; 
 
 export function openPopup(id) {
   const overlay = document.getElementById(id + "-popup");
@@ -76,6 +77,15 @@ export default function Overlay(props) {
           />
         ) : props.createSession ? (
           <CreateSession
+            sectionId={props.sectionId}
+            refresh={props.refresh}
+            setRefresh={props.setRefresh}
+            control={childState}
+          />
+        ) : props.editSession ? (
+          <EditSession
+            id={props.id}
+            session={props.session}
             sectionId={props.sectionId}
             refresh={props.refresh}
             setRefresh={props.setRefresh}

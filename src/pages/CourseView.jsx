@@ -6,9 +6,8 @@ import SessionCard from "../components/SessionCard";
 import { BackButton, IconButton } from "../components/Buttons.jsx";
 import Overlay from "../components/Overlay";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CreateSession, JoinSession } from "../components/Popups";
 import { openPopup } from "../components/Overlay";
-import { IconArrowLeft, IconDownload, IconList } from "@tabler/icons-react";
+import { IconDownload, IconList } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import "../styles/cards.css";
@@ -150,6 +149,11 @@ function CourseView(props) {
             key={id}
             id={id}
             title="Edit Session"
+            session={session}
+            sectionId={location.state.sectionId}
+            refresh={refresh}
+            setRefresh={setRefresh}
+            editSession
           />
         )
       }
