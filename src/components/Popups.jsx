@@ -187,7 +187,7 @@ export function JoinSession(props) {
         style={{ display: invalidErr ? "flex" : "none" }}
       >
         <IconAlertTriangleFilled />
-        Class not found. Passcode is invalid or empty!
+        Failed to join session. Passcode is invalid!
       </div>
       <div className="button-row">
         <PrimaryButton

@@ -230,6 +230,33 @@ Course.put("/:sectionId/:weekNum/closeAll", async (req, res) => {
   }
 });
 
+Course.patch("/:sectionId/:weekNum/:sessionId", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  const name = req.body.name;
+  try {
+    let session = await courseDao.updateSession(
+      sectionId,
+      weekNum,
+      sessionId,
+      name
+    );
+    res.json({
+      status: 200,
+      message: `Session updated`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
 Course.post("/", async (req, res) => {
   let sectionId = toSectionId(
     req.body.name + req.body.section + req.body.semester
