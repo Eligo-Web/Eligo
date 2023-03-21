@@ -167,7 +167,7 @@ export function JoinSession(props) {
         }
       })
       .catch((err) => console.log(err));
-      if (valid) closePopup("Join Session");
+    if (valid) closePopup("Join Session");
   }
 
   return (

@@ -140,8 +140,13 @@ body {
 }
 
 .session-card-subtitle {
-  font-weight: 500;
+  display: flex;
+  padding-right: 0.1rem;
+  justify-content: end;
+  align-items: center;
   text-align: right;
+  font-weight: 500;
+  gap: 0.5rem;
 }
 
 .large-title {

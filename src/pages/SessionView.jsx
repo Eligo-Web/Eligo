@@ -134,12 +134,14 @@ function SessionView(props) {
             onClick={() => createPoll()}
           />
           <div className="row gap-3 p-3">
-            <IconButton
-              label="Close Session"
-              variant="outline"
-              style={{ maxWidth: "max-content" }}
-              onClick={() => closeSession()}
-            />
+            {location.state.sessionActive ? (
+              <IconButton
+                label="Close Session"
+                variant="outline"
+                style={{ maxWidth: "max-content" }}
+                onClick={() => closeSession()}
+              />
+            ) : null}
           </div>
         </div>
       </div>

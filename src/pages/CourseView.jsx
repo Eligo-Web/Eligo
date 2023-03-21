@@ -80,6 +80,7 @@ function CourseView(props) {
         sessionId: sessionId,
         sessionName: session.name,
         sectionId: location.state.sectionId,
+        sessionActive: session.active,
         courseName: location.state.courseName,
         passcode: session.passcode,
         classPasscode: location.state.passcode,
@@ -122,6 +123,7 @@ function CourseView(props) {
       })
       .catch((err) => console.log(err));
     const sessionList = [];
+    const overlays = [];
 
     for (let [weekNum, week] of courseSessions) {
       week = toMap(week).sort();
@@ -137,11 +139,19 @@ function CourseView(props) {
         weekSessions.push(
           <SessionCard
             key={id}
+            id={id}
             title={session.name}
             active={session.active}
             onClick={() => handleViewSession(id, session)}
           />
         );
+        overlays.push(
+          <Overlay
+            key={id}
+            id={id}
+            title="Edit Session"
+          />
+        )
       }
       sessionList.push(
         <Container className="card-container" key={weekNum}>
@@ -150,7 +160,7 @@ function CourseView(props) {
         </Container>
       );
     }
-    return sessionList.reverse();
+    return [sessionList.reverse(), overlays];
   }
 
   const backButton = (
@@ -265,14 +275,16 @@ function CourseView(props) {
 
   function instructorContent() {
     const [cards, setCards] = useState(<BlankCourseView />);
+    const [editOverlays, setEditOverlays] = useState(null);
 
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
-        const sessionList = await populateSessionCards("INSTRUCTOR");
+        const [sessionList, overlays] = await populateSessionCards("INSTRUCTOR");
         container.style.opacity = 0;
         await pause();
         setCards(sessionList);
+        setEditOverlays(overlays);
         container.style.opacity = 100;
       }
       loadContent();
@@ -289,6 +301,7 @@ function CourseView(props) {
             setRefresh={setRefresh}
             createSession
           />
+          {editOverlays}
           {backButton}
           <div id="semester-container" className="semester-container">
             {cards}

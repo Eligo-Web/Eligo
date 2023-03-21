@@ -208,13 +208,22 @@
   padding: 0.7rem 1.2rem;
 }
 
-.edit-button {
+.edit-button,
+.session-edit-button {
   position: absolute;
-  color: hsla(212, 100%, 3%, 0.75);
+  color: #2a3547;
   padding: 0.5rem;
   bottom: 0.5rem;
   right: 0.5rem;
   z-index: 5;
+}
+
+.session-edit-button {
+  display: flex;
+  bottom: 0;
+  right: 0;
+  position: relative;
+  padding: 0.7rem;
 }
 
 .sign-in-wrapper {
