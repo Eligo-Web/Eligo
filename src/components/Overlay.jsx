@@ -82,9 +82,7 @@ export default function Overlay(props) {
             control={childState}
           />
         ) : props.joinSession ? (
-          <JoinSession
-            
-          />
+          <JoinSession />
         ) : (
           props.content || <Default />
         )}

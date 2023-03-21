@@ -76,6 +76,12 @@ class CourseDao {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
     if (!course.sessions.get(weekNum)) {
+      if (course.sessions.size > 0) {
+        const latestWeek = Array.from(course.sessions.keys()).pop();
+        for (const sessionId of course.sessions.get(latestWeek).keys()) {
+          course.sessions.get(latestWeek).get(sessionId).active = false;
+        }
+      }
       course.sessions.set(weekNum, new Map());
     }
     if (course.sessions.get(weekNum).get(sessionId)) {

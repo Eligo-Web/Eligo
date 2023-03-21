@@ -213,7 +213,7 @@ function CourseView(props) {
           }
         })
         .catch((err) => console.log(err));
-        container.style.opacity = 100;
+      container.style.opacity = 100;
     }
 
     useEffect(() => {
