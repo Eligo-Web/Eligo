@@ -105,11 +105,45 @@ export function CreateSession(props) {
 }
 
 export function JoinSession(props) {
-  const [passcode, setPasscode] = useState("xxxx");
+  const [passcode, setPasscode] = useState("");
+  const [invalidErr, setInvalidErr] = useState(false);
   const navigate = useNavigate();
+  const control = props.control;
+  props = props.childProps;
+
+  const handleKeyPresses = (event) => {
+    switch (event.key) {
+      case "Escape":
+        clearContents();
+        break;
+      case "Enter":
+        joinSession();
+        break;
+    }
+  };
+
+  useEffect(() => {
+    const overlay = document.getElementById("join-session-popup");
+    if (overlay.offsetParent.style.height) {
+      clearContents();
+    }
+  }, [control]);
+
+  function clearContents() {
+    const overlay = document.getElementById("join-session-popup");
+    const passcodeField = overlay.querySelector(".passcode-input");
+    passcodeField.value = "";
+    setPasscode("");
+    setInvalidErr(false);
+  }
 
   async function joinSession() {
     const server = "http://localhost:3000";
+    if (!passcode) {
+      setInvalidErr(true);
+      return;
+    }
+    let valid = true;
     await axios
       .post(
         `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.email}/${passcode}`
@@ -117,6 +151,8 @@ export function JoinSession(props) {
       .then((res) => {
         console.log(res.data);
         if (res.data.status === 200) {
+          setInvalidErr(false);
+          clearContents();
           navigate("/session", {
             state: {
               sectionId: props.sectionId,
@@ -126,29 +162,38 @@ export function JoinSession(props) {
             },
           });
         } else if (res.data.status === 401) {
-          alert("Invalid passcode");
+          setInvalidErr(true);
+          valid = false;
         }
       })
       .catch((err) => console.log(err));
-    closePopup("Join Session");
+      if (valid) closePopup("Join Session");
   }
+
   return (
     <div className="pop-up-content" id="join-session-popup">
       <InputField
+        class="passcode-input"
         label="Passcode"
         input="Ex: 1234"
         onChange={(e) => {
           setPasscode(e.target.value);
         }}
+        onKeyDown={handleKeyPresses}
         type="password"
       />
+      <div
+        className="error-banner"
+        style={{ display: invalidErr ? "flex" : "none" }}
+      >
+        <IconAlertTriangleFilled />
+        Class not found. Passcode is invalid or empty!
+      </div>
       <div className="button-row">
         <PrimaryButton
           variant="primary"
           label="Join"
-          onClick={() => {
-            joinSession();
-          }}
+          onClick={() => joinSession()}
         />
       </div>
     </div>

@@ -6,7 +6,6 @@ import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import InputField, { SelectField } from "./InputField";
 import axios from "axios";
 import "../styles/newpoll.css";
-import { encodeEmail, decodeEmail } from "../pages/Roster.jsx";
 
 export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();

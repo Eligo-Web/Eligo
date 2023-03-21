@@ -203,6 +203,7 @@ function CourseView(props) {
               });
             }
             setSessionOpen(true);
+            openPopup("Join Session");
             setProps({
               sectionId: location.state.sectionId,
               sessionId: res.data.data.activeSessionId,
@@ -229,8 +230,9 @@ function CourseView(props) {
       <div className="d-flex flex-column ">
         <Overlay
           title="Join Session"
-          id="join-session"
-          content={JoinSession(props)}
+          id="Join Session"
+          joinSessionProps={props}
+          joinSession
         />
         <div className="card-wrapper">
           {backButton}
@@ -247,7 +249,7 @@ function CourseView(props) {
                   className="large-title"
                   onClick={() => {
                     sessionOpen
-                      ? openPopup("join-session")
+                      ? openPopup("Join Session")
                       : window.location.reload();
                   }}
                 >
