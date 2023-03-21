@@ -29,6 +29,17 @@ export function CreateSession(props) {
     }
   }, [props.control]);
 
+  const handleKeyPresses = (event) => {
+    switch (event.key) {
+      case "Escape":
+        clearContents();
+        break;
+      case "Enter":
+        createSession();
+        break;
+    }
+  };
+
   function getWeekNumber(offset) {
     const currentDate = new Date();
     const startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -63,8 +74,6 @@ export function CreateSession(props) {
   function clearContents() {
     const overlay = document.getElementById("create-session-popup");
     const nameField = overlay.querySelector(".session-name-input");
-    nameField.className = "session-name-input form-control";
-    overlay.querySelector(".empty-name").style.display = "none";
     nameField.value = "";
     setSessionName("");
     closePopup("Create Session");
@@ -75,9 +84,9 @@ export function CreateSession(props) {
       <InputField
         class="session-name-input"
         label="Session Name"
-        input="Default: Today's Date"
-        errors={{ "empty-name": "Required" }}
+        input={`Default: ${new Date().toDateString()}`}
         onChange={(e) => setSessionName(e.target.value)}
+        onKeyDown={handleKeyPresses}
       />
       <div className="button-row">
         <PrimaryButton
@@ -98,15 +107,15 @@ export function CreateSession(props) {
 export function JoinSession(props) {
   const [passcode, setPasscode] = useState("xxxx");
   const navigate = useNavigate();
-  function joinSession() {
+
+  async function joinSession() {
     const server = "http://localhost:3000";
-    console.log(props);
-    axios
+    await axios
       .post(
         `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.email}/${passcode}`
       )
       .then((res) => {
-        console.log(res.data.data);
+        console.log(res.data);
         if (res.data.status === 200) {
           navigate("/session", {
             state: {

@@ -132,11 +132,16 @@
   flex: 0 calc(50% - 0.3rem);
 }
 
-.semester-container {
+.semester-container,
+.session-container {
   transition: all 0.1s ease-in-out;
   mix-blend-mode: hard-light;
   max-height: fit-content;
   opacity: 100;
+}
+
+.session-container {
+  opacity: 0;
 }
 
 .poll-card-container {

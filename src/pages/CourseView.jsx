@@ -177,21 +177,15 @@ function CourseView(props) {
       weekNum: "",
       email: "",
     });
-    function checkSession() {
-      axios
+    let container;
+
+    async function checkSession() {
+      await axios
         .get(`${server}/course/${location.state.sectionId}/${getWeekNumber()}/`)
         .then((res) => {
           console.log(res);
+          const session = res.data.data;
           if (res.data.data) {
-            setSessionOpen(true);
-            openPopup("join-session");
-            setProps({
-              sectionId: location.state.sectionId,
-              sessionId: res.data.data.activeSessionId,
-              session: res.data.data.activeSession,
-              weekNum: getWeekNumber(),
-              email: location.state.email,
-            });
             if (
               res.data.data.activeSession.students.includes(
                 location.state.email
@@ -202,16 +196,28 @@ function CourseView(props) {
                   name: location.state.name,
                   permission: location.state.permission,
                   email: location.state.email,
-                  sessionId: res.data.data.activeSessionId,
+                  sessionId: session.activeSessionId,
                   sectionId: location.state.sectionId,
+                  sessionName: session.activeSession.name,
                 },
               });
             }
+            setSessionOpen(true);
+            setProps({
+              sectionId: location.state.sectionId,
+              sessionId: res.data.data.activeSessionId,
+              session: res.data.data.activeSession,
+              weekNum: getWeekNumber(),
+              email: location.state.email,
+            });
           }
         })
         .catch((err) => console.log(err));
+        container.style.opacity = 100;
     }
+
     useEffect(() => {
+      container = document.getElementById("session-container");
       checkSession();
       const interval = setInterval(() => {
         checkSession();
@@ -228,27 +234,26 @@ function CourseView(props) {
         />
         <div className="card-wrapper">
           {backButton}
-          <div id="semester-container" className="semester-container">
+          <div id="session-container" className="session-container">
             <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
-              {sessionOpen ? (
-                "Your instructor has started a session!"
-              ) : (
-                <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
-                  <div className="blank-state-msg">
-                    Hmm... It seems your instructor has not started a session
-                    yet.
-                  </div>
-                  <Button
-                    variant="blank-state"
-                    className="large-title"
-                    onClick={() => {
-                      window.location.reload();
-                    }}
-                  >
-                    Refresh
-                  </Button>
+              <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
+                <div className="blank-state-msg">
+                  {sessionOpen
+                    ? "Your instructor has started a session!"
+                    : "Hmm... It seems your instructor has not started a session yet."}
                 </div>
-              )}
+                <Button
+                  variant="blank-state"
+                  className="large-title"
+                  onClick={() => {
+                    sessionOpen
+                      ? openPopup("join-session")
+                      : window.location.reload();
+                  }}
+                >
+                  {sessionOpen ? "Join Session" : "Refresh"}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
