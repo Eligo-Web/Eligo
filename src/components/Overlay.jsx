@@ -37,6 +37,7 @@ export default function Overlay(props) {
   const [childState, setChildState] = useState(false);
   const [markDelete, setMarkDelete] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+
   function close() {
     if (!props.warning) setChildState(!childState);
     closePopup(props.id);
@@ -125,7 +126,10 @@ export default function Overlay(props) {
           ) : (
             props.content || <Default />
           )}
-        <ConfirmDelete cancelClick={() => setMarkDelete(false)} deleteClick={() => setConfirmDelete(true)}/>
+          <ConfirmDelete
+            cancelClick={() => setMarkDelete(false)}
+            deleteClick={() => setConfirmDelete(true)}
+          />
         </div>
       </div>
       <div className="overlay-bg" onClick={() => close()} />

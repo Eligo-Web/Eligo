@@ -27,8 +27,16 @@ export function ConfirmDelete(props) {
         Confirm Delete? This action cannot be undone.
       </div>
       <div className="button-row-delete">
-        <PrimaryButton variant="secondary" label="Cancel" onClick={props.cancelClick} />
-        <PrimaryButton variant="primary-red" label="Delete" onClick={props.deleteClick} />
+        <PrimaryButton
+          variant="secondary"
+          label="Cancel"
+          onClick={props.cancelClick}
+        />
+        <PrimaryButton
+          variant="primary-red"
+          label="Delete"
+          onClick={props.deleteClick}
+        />
       </div>
     </div>
   );
