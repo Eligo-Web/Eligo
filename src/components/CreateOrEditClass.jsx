@@ -34,6 +34,8 @@ export function EditClass(props) {
       editMode
       refresh={props.refresh}
       setRefresh={props.setRefresh}
+      setMarkDelete={props.setMarkDelete}
+      confirmDelete={props.confirmDelete}
       control={props.control}
     />
   );
@@ -67,6 +69,12 @@ function CreateOrEditClass(props) {
     }
   }, [props.control]);
 
+  useEffect(() => {
+    if (props.confirmDelete) {
+      handleDelete();
+    }
+  }, [props.confirmDelete]);
+
   const handleKeyPresses = (event) => {
     switch (event.key) {
       case "Escape":
@@ -79,10 +87,8 @@ function CreateOrEditClass(props) {
   };
 
   function handleDelete() {
-    if (window.confirm("Confirm delete? This action cannot be undone.")) {
-      closePopup(popupName);
-      deleteCourse();
-    }
+    closePopup(popupName);
+    deleteCourse();
   }
 
   function clearContents(editMode) {
@@ -394,7 +400,7 @@ function CreateOrEditClass(props) {
           <PrimaryButton
             variant="delete"
             label="Delete"
-            onClick={() => handleDelete()}
+            onClick={() => props.setMarkDelete(true)}
           />
         ) : null}
         <PrimaryButton

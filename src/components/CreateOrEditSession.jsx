@@ -25,6 +25,8 @@ export function EditSession(props) {
       sectionId={props.sectionId}
       refresh={props.refresh}
       setRefresh={props.setRefresh}
+      setMarkDelete={props.setMarkDelete}
+      confirmDelete={props.confirmDelete}
       control={props.control}
       editMode
     />
@@ -46,6 +48,12 @@ function CreateOrEditSession(props) {
       clearContents();
     }
   }, [props.control]);
+
+  useEffect(() => {
+    if (props.confirmDelete) {
+      handleDelete();
+    }
+  }, [props.confirmDelete]);
 
   const handleKeyPresses = (event) => {
     switch (event.key) {
@@ -164,7 +172,7 @@ function CreateOrEditSession(props) {
           <PrimaryButton
             variant="delete"
             label="Delete"
-            onClick={() => handleDelete()}
+            onClick={() => props.setMarkDelete(true)}
           />
         ) : null}
         <PrimaryButton

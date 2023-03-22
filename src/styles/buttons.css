@@ -59,12 +59,22 @@
   color: #650000;
   max-width: fit-content;
   padding: 0 1rem;
+  display: grid;
 }
 
 .btn-delete:hover,
 .btn-delete:focus {
   border-color: transparent;
   color: #650000;
+}
+
+.btn-delete:hover:after,
+.btn-delete:focus:after {
+  content: "";
+  height: 0;
+  border: 0.1rem solid;
+  border-radius: 1rem;
+  margin: -0.3rem 0;
 }
 
 .btn-delete:active {

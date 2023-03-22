@@ -1,6 +1,6 @@
 import { Button, Row } from "react-bootstrap";
 import { IoIosClose } from "react-icons/io";
-import { Default, JoinClass, JoinSession } from "./Popups";
+import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
 import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { useEffect, useState } from "react";
@@ -35,71 +35,98 @@ export function closePopup(id) {
  */
 export default function Overlay(props) {
   const [childState, setChildState] = useState(false);
+  const [markDelete, setMarkDelete] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   function close() {
     if (!props.warning) setChildState(!childState);
     closePopup(props.id);
+    setMarkDelete(false);
   }
+
+  useEffect(() => {
+    const overlay = document.getElementById(props.id + "-popup");
+    const buttonRow = overlay.querySelector(".button-row");
+    const deleteBtns = overlay.querySelector(".delete-popup");
+    if (markDelete) {
+      // buttonRow.style.maxHeight = 0;
+      deleteBtns.style.maxHeight = "10rem";
+      // buttonRow.style.margin = "-0.5rem"
+      deleteBtns.style.margin = 0;
+    } else {
+      // buttonRow.style.maxHeight = "10rem";
+      deleteBtns.style.maxHeight = 0;
+      // buttonRow.style.margin = 0;
+      deleteBtns.style.margin = "-0.5rem";
+    }
+  }, [markDelete]);
 
   return (
     <div className="overlay-wrapper" id={props.id + "-popup"}>
-      <div className="overlay pop-up">
-        <div className="pop-up-header">
-          <Row className="pop-up-title large-title">
-            {props.title || "Overlay Title"}
-          </Row>
-          <Button variant="transparent">
-            <IoIosClose size={"2.5em"} onClick={() => close()} />
-          </Button>
-        </div>
-        {props.instructor ? (
-          props.editMode ? (
-            <EditClass
-              childContent={props.childContent}
+      <div style={{ zIndex: 3 }}>
+        <div className="overlay pop-up">
+          <div className="pop-up-header">
+            <Row className="pop-up-title large-title">
+              {props.title || "Overlay Title"}
+            </Row>
+            <Button variant="transparent">
+              <IoIosClose size={"2.5em"} onClick={() => close()} />
+            </Button>
+          </div>
+          {props.instructor ? (
+            props.editMode ? (
+              <EditClass
+                childContent={props.childContent}
+                refresh={props.refresh}
+                setRefresh={props.setRefresh}
+                setMarkDelete={setMarkDelete}
+                confirmDelete={confirmDelete}
+                control={childState}
+              />
+            ) : (
+              <CreateClass
+                refresh={props.refresh}
+                setRefresh={props.setRefresh}
+                control={childState}
+              />
+            )
+          ) : props.joinClass ? (
+            <JoinClass
+              name={props.state.name}
+              email={props.state.email}
+              history={props.state.history}
               refresh={props.refresh}
               setRefresh={props.setRefresh}
+              control={childState}
+            />
+          ) : props.createSession ? (
+            <CreateSession
+              sectionId={props.sectionId}
+              refresh={props.refresh}
+              setRefresh={props.setRefresh}
+              control={childState}
+            />
+          ) : props.editSession ? (
+            <EditSession
+              id={props.id}
+              session={props.session}
+              weekNum={props.weekNum}
+              sectionId={props.sectionId}
+              refresh={props.refresh}
+              setRefresh={props.setRefresh}
+              setMarkDelete={setMarkDelete}
+              confirmDelete={confirmDelete}
+              control={childState}
+            />
+          ) : props.joinSession ? (
+            <JoinSession
+              childProps={props.joinSessionProps}
               control={childState}
             />
           ) : (
-            <CreateClass
-              refresh={props.refresh}
-              setRefresh={props.setRefresh}
-              control={childState}
-            />
-          )
-        ) : props.joinClass ? (
-          <JoinClass
-            name={props.state.name}
-            email={props.state.email}
-            history={props.state.history}
-            refresh={props.refresh}
-            setRefresh={props.setRefresh}
-            control={childState}
-          />
-        ) : props.createSession ? (
-          <CreateSession
-            sectionId={props.sectionId}
-            refresh={props.refresh}
-            setRefresh={props.setRefresh}
-            control={childState}
-          />
-        ) : props.editSession ? (
-          <EditSession
-            id={props.id}
-            session={props.session}
-            weekNum={props.weekNum}
-            sectionId={props.sectionId}
-            refresh={props.refresh}
-            setRefresh={props.setRefresh}
-            control={childState}
-          />
-        ) : props.joinSession ? (
-          <JoinSession
-            childProps={props.joinSessionProps}
-            control={childState}
-          />
-        ) : (
-          props.content || <Default />
-        )}
+            props.content || <Default />
+          )}
+        <ConfirmDelete cancelClick={() => setMarkDelete(false)} deleteClick={() => setConfirmDelete(true)}/>
+        </div>
       </div>
       <div className="overlay-bg" onClick={() => close()} />
     </div>

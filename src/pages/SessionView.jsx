@@ -59,7 +59,7 @@ function SessionView(props) {
   }
 
   function navigateBack() {
-    console.log(location.state)
+    console.log(location.state);
     navigate("/class", {
       state: {
         name: location.state.name,

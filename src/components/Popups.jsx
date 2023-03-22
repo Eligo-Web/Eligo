@@ -19,6 +19,21 @@ export function Default() {
   );
 }
 
+export function ConfirmDelete(props) {
+  return (
+    <div className="delete-popup">
+      <div className="error-banner">
+        <IconAlertTriangleFilled />
+        Confirm Delete? This action cannot be undone.
+      </div>
+      <div className="button-row-delete">
+        <PrimaryButton variant="secondary" label="Cancel" onClick={props.cancelClick} />
+        <PrimaryButton variant="primary-red" label="Delete" onClick={props.deleteClick} />
+      </div>
+    </div>
+  );
+}
+
 export function JoinSession(props) {
   const [passcode, setPasscode] = useState("");
   const [invalidErr, setInvalidErr] = useState(false);
