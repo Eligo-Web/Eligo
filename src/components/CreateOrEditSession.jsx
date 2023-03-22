@@ -133,7 +133,7 @@ function CreateOrEditSession(props) {
     const overlay = document.getElementById(
       props.editMode ? editId : props.id + "-popup"
     );
-    props.setMarkDelete(false);
+    if(props.editMode) props.setMarkDelete(false);
     const nameField = overlay.querySelector(".session-name-input");
     nameField.value = props.editMode ? props.session.name : "";
     setSessionName(props.editMode ? props.session.name : "");
