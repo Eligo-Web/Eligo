@@ -70,10 +70,15 @@ export function JoinSession(props) {
           clearContents();
           navigate("/session", {
             state: {
+              name: props.name,
+              permission: props.permission,
+              email: props.email,
               sectionId: props.sectionId,
               sessionId: props.sessionId,
-              permission: "STUDENT",
-              email: props.email,
+              session: props.session,
+              sessionName: props.sessionName,
+              weekNum: props.weekNum,
+              courseName: props.courseName,
             },
           });
         } else if (res.data.status === 401) {

@@ -50,7 +50,6 @@ function SessionView(props) {
 
   async function closeSession() {
     const server = "http://localhost:3000";
-    console.log(location.state);
     await axios
       .put(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
@@ -61,6 +60,7 @@ function SessionView(props) {
   }
 
   function navigateBack() {
+    console.log(location.state)
     navigate("/class", {
       state: {
         permission: location.state.permission,

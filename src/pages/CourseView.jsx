@@ -186,11 +186,14 @@ function CourseView(props) {
   function studentContent() {
     const [sessionOpen, setSessionOpen] = useState(false);
     const [props, setProps] = useState({
+      name: "",
+      permission: "",
+      email: "",
       sectionId: "",
       sessionId: "",
       session: "",
+      sessionName: "",
       weekNum: "",
-      email: "",
     });
     let container;
 
@@ -211,8 +214,10 @@ function CourseView(props) {
                   name: location.state.name,
                   permission: location.state.permission,
                   email: location.state.email,
-                  sessionId: session.activeSessionId,
+                  courseName: location.state.courseName,
                   sectionId: location.state.sectionId,
+                  sessionId: session.activeSessionId,
+                  session: session.activeSession,
                   sessionName: session.activeSession.name,
                   weekNum: getWeekNumber(),
                 },
@@ -224,9 +229,11 @@ function CourseView(props) {
               name: location.state.name,
               permission: location.state.permission,
               email: location.state.email,
+              courseName: location.state.courseName,
               sectionId: location.state.sectionId,
               sessionId: res.data.data.activeSessionId,
               session: res.data.data.activeSession,
+              sessionName: res.data.data.activeSession.name,
               weekNum: getWeekNumber(),
             });
           }

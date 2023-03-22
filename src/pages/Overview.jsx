@@ -38,11 +38,12 @@ function OverView(props) {
   }
 
   function handleViewClass(courseName, sectionId, semester, passcode) {
+    console.log(location.state)
     navigate("/class", {
       state: {
+        name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
-        name: location.state.name,
         courseName: courseName,
         sectionId: sectionId,
         passcode: passcode,
