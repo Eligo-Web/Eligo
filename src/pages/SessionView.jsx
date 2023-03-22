@@ -20,6 +20,7 @@ function SessionView(props) {
   const authorized = location.state && location.state.permission;
 
   useEffect(() => {
+    checkActiveSession();
     if (
       navigator.userAgent.indexOf("Safari") != -1 &&
       navigator.userAgent.indexOf("Chrome") == -1
@@ -31,6 +32,21 @@ function SessionView(props) {
       }
     }
   }, []);
+
+  async function checkActiveSession() {
+    const server = "http://localhost:3000";
+    console.log(location.state);
+    await axios
+      .get(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
+      )
+      .then((res) => {
+        if (!res.data.data.active) {
+          navigateBack();
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
   async function closeSession() {
     const server = "http://localhost:3000";

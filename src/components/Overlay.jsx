@@ -4,7 +4,7 @@ import { Default, JoinClass, JoinSession } from "./Popups";
 import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { useEffect, useState } from "react";
-import "../styles/overlay.css"; 
+import "../styles/overlay.css";
 
 export function openPopup(id) {
   const overlay = document.getElementById(id + "-popup");
@@ -86,6 +86,7 @@ export default function Overlay(props) {
           <EditSession
             id={props.id}
             session={props.session}
+            weekNum={props.weekNum}
             sectionId={props.sectionId}
             refresh={props.refresh}
             setRefresh={props.setRefresh}

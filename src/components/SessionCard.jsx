@@ -21,20 +21,20 @@ function SessionCard(props) {
 
   return (
     <Container className={activity} onClick={props.onClick}>
-        {props.title ? (
-      <Row className="align-items-center">
-        <Col className="card-title session-card-title">{props.title}</Col>
-        <Col className="card-title session-card-subtitle">        
+      {props.title ? (
+        <Row className="align-items-center">
+          <Col className="card-title session-card-title">{props.title}</Col>
+          <Col className="card-title session-card-subtitle">
             {label}
-          <IconPencil
-            id="edit-button"
-            className="session-edit-button"
-            size={"2.7em"}
-            onClick={handleEdit}
-          />
-        </Col>
-      </Row>
-        ) : null}
+            <IconPencil
+              id="edit-button"
+              className="session-edit-button"
+              size={"2.7em"}
+              onClick={handleEdit}
+            />
+          </Col>
+        </Row>
+      ) : null}
     </Container>
   );
 }

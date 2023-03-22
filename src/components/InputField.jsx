@@ -24,7 +24,7 @@ export default function InputField(props) {
     <div className={props.small ? "input-field-small" : "input-field"}>
       <div className="d-flex align-items-center gap-2">
         {props.label || "Title Text"}
-        {props.disabled ? <IconLock size="1em" stroke="0.15rem"/> :null}
+        {props.disabled ? <IconLock size="1em" stroke="0.15rem" /> : null}
       </div>
       <Form.Control
         className={props.class}

@@ -5,34 +5,43 @@ import InputField from "./InputField";
 import axios from "axios";
 
 export function CreateSession(props) {
-  return <CreateOrEditSession
-    id="create-session-popup"
-    sectionId={props.sectionId}
-    refresh={props.refresh}
-    setRefresh={props.setRefresh}
-    control={props.control}
+  return (
+    <CreateOrEditSession
+      id="create-session-popup"
+      sectionId={props.sectionId}
+      refresh={props.refresh}
+      setRefresh={props.setRefresh}
+      control={props.control}
     />
-  }
+  );
+}
 
 export function EditSession(props) {
-  return <CreateOrEditSession
-    id={props.id}
-    session={props.session}
-    sectionId={props.sectionId}
-    refresh={props.refresh}
-    setRefresh={props.setRefresh}
-    control={props.control}
-    editMode
-  />
+  return (
+    <CreateOrEditSession
+      id={props.id}
+      session={props.session}
+      weekNum={props.weekNum}
+      sectionId={props.sectionId}
+      refresh={props.refresh}
+      setRefresh={props.setRefresh}
+      control={props.control}
+      editMode
+    />
+  );
 }
 
 function CreateOrEditSession(props) {
-  const [sessionName, setSessionName] = useState(props.editMode? props.session.name : "");
+  const [sessionName, setSessionName] = useState(
+    props.editMode ? props.session.name : ""
+  );
   const editId = `edit-${props.id}-popup`;
   const timeStamp = props.id.replace("session-", "");
 
   useEffect(() => {
-    const overlay = document.getElementById(props.editMode ? editId : props.id+"-popup");
+    const overlay = document.getElementById(
+      props.editMode ? editId : props.id + "-popup"
+    );
     if (overlay.offsetParent.style.height) {
       clearContents();
     }
@@ -80,24 +89,57 @@ function CreateOrEditSession(props) {
     clearContents();
   }
 
-  async function handleDelete() {
+  async function handleEdit() {
+    const server = "http://localhost:3000";
+    await axios
+      .patch(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
+        {
+          name: sessionName ? sessionName : new Date().toDateString(),
+        }
+      )
+      .then((res) => {
+        console.log(res.data.data);
+      })
+      .catch((err) => console.log(err));
+    props.setRefresh(!props.refresh);
+    clearContents();
+  }
 
+  async function handleDelete() {
+    const server = "http://localhost:3000";
+    console.log(props);
+    await axios
+      .delete(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`
+      )
+      .then((res) => {
+        console.log(res.data.data);
+      })
+      .catch((err) => console.log(err));
+    props.setRefresh(!props.refresh);
+    clearContents();
   }
 
   function clearContents() {
-    const overlay = document.getElementById(props.editMode ? editId : props.id+"-popup");
+    const overlay = document.getElementById(
+      props.editMode ? editId : props.id + "-popup"
+    );
     const nameField = overlay.querySelector(".session-name-input");
-    nameField.value = props.editMode? props.session.name : "";
-    setSessionName(props.editMode? props.session.name : "");
+    nameField.value = props.editMode ? props.session.name : "";
+    setSessionName(props.editMode ? props.session.name : "");
     closePopup(props.editMode ? props.id : "Create Session");
   }
 
   return (
-    <div className="pop-up-content" id={props.editMode ? editId : props.id+"-popup"}>
+    <div
+      className="pop-up-content"
+      id={props.editMode ? editId : props.id + "-popup"}
+    >
       <InputField
         class="session-name-input"
         label="Session Name"
-        default={props.editMode? props.session.name : ""}
+        default={props.editMode ? props.session.name : ""}
         input={`Default: ${new Date().toDateString()}`}
         onChange={(e) => setSessionName(e.target.value)}
         onKeyDown={handleKeyPresses}
@@ -105,20 +147,20 @@ function CreateOrEditSession(props) {
       {props.editMode ? (
         <div className="input-group">
           <InputField
-        label="Date Created"
-        value={new Date(parseInt(timeStamp)).toLocaleString()}
-        disabled
-      />
-      <InputField
-        small
-        label="Passcode"
-        value={props.session.passcode}
-        disabled
-      />
+            label="Date Created"
+            value={new Date(parseInt(timeStamp)).toLocaleString()}
+            disabled
+          />
+          <InputField
+            small
+            label="Passcode"
+            value={props.session.passcode}
+            disabled
+          />
         </div>
       ) : null}
       <div className="button-row">
-      {props.editMode ? (
+        {props.editMode ? (
           <PrimaryButton
             variant="delete"
             label="Delete"
@@ -133,7 +175,7 @@ function CreateOrEditSession(props) {
         <PrimaryButton
           variant="primary"
           label={props.editMode ? "Save" : "Create"}
-          onClick={() => props.editMode ? {} : createSession()}
+          onClick={() => (props.editMode ? handleEdit() : createSession())}
         />
       </div>
     </div>

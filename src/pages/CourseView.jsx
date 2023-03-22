@@ -150,12 +150,13 @@ function CourseView(props) {
             id={id}
             title="Edit Session"
             session={session}
+            weekNum={weekNum}
             sectionId={location.state.sectionId}
             refresh={refresh}
             setRefresh={setRefresh}
             editSession
           />
-        )
+        );
       }
       sessionList.push(
         <Container className="card-container" key={weekNum}>
@@ -213,17 +214,20 @@ function CourseView(props) {
                   sessionId: session.activeSessionId,
                   sectionId: location.state.sectionId,
                   sessionName: session.activeSession.name,
+                  weekNum: getWeekNumber(),
                 },
               });
             }
             setSessionOpen(true);
             openPopup("Join Session");
             setProps({
+              name: location.state.name,
+              permission: location.state.permission,
+              email: location.state.email,
               sectionId: location.state.sectionId,
               sessionId: res.data.data.activeSessionId,
               session: res.data.data.activeSession,
               weekNum: getWeekNumber(),
-              email: location.state.email,
             });
           }
         })
@@ -234,10 +238,6 @@ function CourseView(props) {
     useEffect(() => {
       container = document.getElementById("session-container");
       checkSession();
-      const interval = setInterval(() => {
-        checkSession();
-      }, 5000);
-      return () => clearInterval(interval);
     }, []);
 
     return (
@@ -284,7 +284,9 @@ function CourseView(props) {
     useEffect(() => {
       const container = document.getElementById("semester-container");
       async function loadContent() {
-        const [sessionList, overlays] = await populateSessionCards("INSTRUCTOR");
+        const [sessionList, overlays] = await populateSessionCards(
+          "INSTRUCTOR"
+        );
         container.style.opacity = 0;
         await pause();
         setCards(sessionList);
