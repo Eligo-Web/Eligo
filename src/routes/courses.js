@@ -185,6 +185,33 @@ Course.post(
   }
 );
 
+Course.post("/:sectionId/:weekNum/:sessionId/:pollId/", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  const pollId = req.params.pollId;
+  try {
+    let session = await courseDao.addPollToSession(
+      sectionId,
+      weekNum,
+      sessionId,
+      pollId
+    );
+    res.json({
+      status: 200,
+      message: `Poll added`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
 Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
@@ -245,6 +272,39 @@ Course.patch("/:sectionId/:weekNum/:sessionId", async (req, res) => {
     res.json({
       status: 200,
       message: `Session updated`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
+Course.patch("/:sectionId/:weekNum/:sessionId/:pollId/:email", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  const pollId = req.params.pollId;
+  const email = req.params.email;
+  const timestamp = req.body.timestamp;
+  const response = req.body.response;
+  try {
+    let session = await courseDao.addResponseToPoll(
+      sectionId,
+      weekNum,
+      sessionId,
+      pollId,
+      email,
+      timestamp,
+      response
+    );
+    res.json({
+      status: 200,
+      message: `Response added`,
       data: session,
     });
   } catch (err) {

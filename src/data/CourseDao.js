@@ -121,6 +121,59 @@ class CourseDao {
     return course;
   }
 
+  async addPollToSession(sectionId, weekNum, sessionId, pollId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    session.polls[pollId] = {};
+    session.polls[pollId].responses = {};
+    session.polls[pollId].active = true;
+    session.polls[pollId].liveResults = {};
+    course.markModified("sessions");
+    await course.save();
+    return course;
+  }
+
+  async addResponseToPoll(sectionId, weekNum, sessionId, pollId, email, timestamp, response) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    if (!session.polls[pollId]) { 
+      throw new ApiError(404, `Poll with id ${pollId} not found`);
+    }
+    let poll = session.polls[pollId];
+    if (!poll.responses.get(email)) {
+      poll.responses.set(email, {});
+      poll.reponses.get(email).finalAnswer = response;
+    } else {
+      poll.liveResults[poll.get(email).finalAnswer] -= 1;
+    }
+    poll.get(email).set(timestamp, response);
+    poll.get(email).finalAnswer = response;
+    poll.liveResults[response] += 1;
+    course.markModified("sessions");
+    await course.save();
+    return course;
+  }
+
   async readActiveSession(sectionId, weekNum) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
@@ -143,6 +196,34 @@ class CourseDao {
       throw new ApiError(404, `No active session found`);
     }
     return { activeSession, activeSessionId };
+  }
+
+  async readActivePoll(sectionId, weekNum, sessionId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    let activePoll = null;
+    let activePollId = null;
+    for (const pollId of Object.keys(session.polls)) {
+      if (session.polls[pollId].active) {
+        activePoll = session.polls[pollId];
+        activePollId = pollId;
+        break;
+      }
+    }
+    if (!activePoll) {
+      throw new ApiError(404, `No active poll found`);
+    }
+    return { activePoll, activePollId };
   }
 
   async updateSession(sectionId, weekNum, sessionId, name) {
@@ -202,6 +283,28 @@ class CourseDao {
     return course;
   }
 
+  async closeActivePoll(sectionId, weekNum, sessionId, pollId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    if (!session.polls[pollId]) {
+      throw new ApiError(404, `Poll with id ${pollId} not found`);
+    }
+    session.polls[pollId].active = false;
+    course.markModified("sessions");
+    await course.save();
+    return course;
+  }
+
   async deleteSession(sectionId, weekNum, sessionId) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
@@ -216,6 +319,28 @@ class CourseDao {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
     week.delete(sessionId);
+    course.markModified("sessions");
+    await course.save();
+    return course;
+  }
+
+  async deletePoll(sectionId, weekNum, sessionId, pollId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    if (!session.polls[pollId]) {
+      throw new ApiError(404, `Poll with id ${pollId} not found`);
+    }
+    delete session.polls[pollId];
     course.markModified("sessions");
     await course.save();
     return course;
