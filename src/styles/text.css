@@ -141,6 +141,7 @@ body {
 
 .session-card-subtitle {
   display: flex;
+  max-width: fit-content;
   padding-right: 0.1rem;
   justify-content: end;
   align-items: center;

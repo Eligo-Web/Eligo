@@ -53,7 +53,7 @@ function CreateOrEditSession(props) {
         clearContents();
         break;
       case "Enter":
-        createSession();
+        props.editMode ? handleEdit() : createSession();
         break;
     }
   };

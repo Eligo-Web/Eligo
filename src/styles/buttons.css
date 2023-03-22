@@ -179,7 +179,8 @@
 
 .btn-blank-state,
 .btn-blank-state:hover,
-.btn-blank-state:focus {
+.btn-blank-state:focus,
+.btn-blank-state:disabled {
   background: #bfdffe;
   box-shadow: 0 0.6rem 1.2rem rgba(5, 32, 65, 0.15);
   border-radius: 3rem;
@@ -192,6 +193,11 @@
 .btn-blank-state:hover {
   box-shadow: 0 1rem 2rem rgba(5, 32, 65, 0.15);
   background: rgb(202, 232, 255);
+}
+
+.btn-blank-state:disabled {
+  background: rgb(202, 232, 255);
+  box-shadow: none;
 }
 
 .courses-bottom-row {

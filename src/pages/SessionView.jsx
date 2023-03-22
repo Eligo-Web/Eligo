@@ -11,7 +11,6 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import AccessDenied from "../components/AccessDenied";
 import { useEffect } from "react";
-import { IconArrowLeft } from "@tabler/icons-react";
 import axios from "axios";
 
 function SessionView(props) {
@@ -63,9 +62,9 @@ function SessionView(props) {
     console.log(location.state)
     navigate("/class", {
       state: {
+        name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
-        name: location.state.name,
         courseName: location.state.courseName,
         sectionId: location.state.sectionId,
         passcode: location.state.classPasscode,
@@ -76,9 +75,9 @@ function SessionView(props) {
   function navigateOverview() {
     navigate("/overview", {
       state: {
+        name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
-        name: location.state.name,
       },
     });
   }
