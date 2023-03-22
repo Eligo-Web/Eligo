@@ -89,7 +89,7 @@ function CreateOrEditSession(props) {
     const nameField = overlay.querySelector(".session-name-input");
     nameField.value = props.editMode? props.session.name : "";
     setSessionName(props.editMode? props.session.name : "");
-    closePopup("Create Session");
+    closePopup(props.editMode ? props.id : "Create Session");
   }
 
   return (
@@ -128,7 +128,7 @@ function CreateOrEditSession(props) {
         <PrimaryButton
           variant="secondary"
           label="Cancel"
-          onClick={() => closePopup(props.editMode ? props.id : "Create Session")}
+          onClick={() => clearContents()}
         />
         <PrimaryButton
           variant="primary"
