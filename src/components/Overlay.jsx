@@ -49,17 +49,17 @@ export default function Overlay(props) {
     const buttonRow = overlay.querySelector(".button-row");
     const deleteBtns = overlay.querySelector(".delete-popup");
     if (markDelete) {
-      buttonRow.style.maxHeight = 0;
+      deleteBtns.style.transition = "0.1s ease-in";
+      buttonRow.style.transition = "0.1s ease-out";
       deleteBtns.style.maxHeight = "10rem";
-      buttonRow.style.margin = "-0.5rem";
       deleteBtns.style.margin = 0;
       buttonRow.style.maxHeight = 0;
-      buttonRow.style.margin = "-0.5rem"
+      buttonRow.style.margin = "-0.5rem 0"
     } else {
-      buttonRow.style.maxHeight = "10rem";
+      deleteBtns.style.transition = "0.1s ease-out";
+      buttonRow.style.transition = "0.1s ease-in";
       deleteBtns.style.maxHeight = 0;
-      buttonRow.style.margin = 0;
-      deleteBtns.style.margin = "-0.5rem";
+      deleteBtns.style.margin = "-0.5rem 0";
       buttonRow.style.maxHeight = "10rem";
       buttonRow.style.margin = 0;
     }

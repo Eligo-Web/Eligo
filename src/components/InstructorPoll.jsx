@@ -16,17 +16,28 @@ import "../styles/newpoll.css";
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
   const [showChart, setShowChart] = useState(false);
+  const [pollData, setPollData] = useState([0,0,0,0,0]);
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
   let fullHeight = winHeight;
   let fullWidth = winWidth;
   document.title = "New Poll" + (minimized ? " (mini)" : "");
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      let pollUpdate = pollData;
+      pollUpdate[Math.floor(Math.random()*5)] += 1;
+      setPollData(pollUpdate);
+      console.log(chart)
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [])
+
   const data = {
     labels: ["A", "B", "C", "D", "E"],
     datasets: [
       {
-        data: [20, 17, 41, 10, 6],
+        data: pollData,
         backgroundColor: [
           "#09507f",
           "#2b8a35",
@@ -39,6 +50,8 @@ export default function InstructorPoll() {
       },
     ],
   };
+  const chart = PollChart(data);
+
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
@@ -114,7 +127,7 @@ export default function InstructorPoll() {
               overflow: "hidden",
             }}
           >
-            {PollChart(data)}
+            {chart}
           </div>
           <div
             className="button-row"
@@ -203,6 +216,7 @@ function PollChart(data) {
   return (
     <Bar
       data={data}
+      updateMode="active"
       options={{
         plugins: {
           legend: {
