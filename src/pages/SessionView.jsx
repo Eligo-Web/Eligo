@@ -86,6 +86,10 @@ function SessionView(props) {
     });
   }
 
+  function checkActivePoll() {
+
+  }
+
   function studentContent() {
     const [pollOpen, setPollOpen] = useState(false);
     return (
@@ -98,7 +102,7 @@ function SessionView(props) {
         />
         <BackButton label="Overview" onClick={() => navigateOverview()} />
         {pollOpen ? (
-          "Open"
+          <Poll />
         ) : (
           <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
             <div className="blank-state-msg">
