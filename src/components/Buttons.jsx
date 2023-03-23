@@ -54,6 +54,9 @@ export function BackButton(props) {
         paddingLeft: "1.5rem",
         color: "#000d1db3",
         fontWeight: "500",
+        position: "absolute",
+        top: "5rem",
+        zIndex: 1,
       }}
       icon={<IconArrowLeft size="1.5em" />}
       label={props.label}

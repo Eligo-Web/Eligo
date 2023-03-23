@@ -77,22 +77,22 @@ export default function InstructorPoll() {
     window.resizeTo(fullWidth, fullHeight);
   }
 
-  async function deactivatePoll(action="save") {
-    console.log(action)
+  async function deactivatePoll(action = "save") {
+    console.log(action);
     if (action === "save") {
-    await axios
-      .put(
-        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/close`,
-        {
-          name: pollName,
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await axios
+        .put(
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/close`,
+          {
+            name: pollName,
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else if (action === "discard") {
       await axios
         .delete(
@@ -166,11 +166,11 @@ export default function InstructorPoll() {
           >
             <InputField
               label="Poll Name"
-              input="ex: Question 1" 
+              input="ex: Question 1"
               onChange={(e) => {
                 setPollName(e.target.value);
               }}
-              />
+            />
           </div>
           <div
             style={{

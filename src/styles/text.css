@@ -11,24 +11,42 @@ body {
   }
 }
 
-.overview-wrapper {
+.overview-wrapper,
+.roster-wrapper {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 5rem);
   position: relative;
   overflow: overlay;
+  padding-bottom: 5rem;
   top: 5rem;
+}
+
+.roster-wrapper {
+  height: calc(100vh - 12.6rem);
+  top: 8rem;
+}
+
+.roster-header {
+  display: flex;
+  position: relative;
+  top: 8rem;
+  gap: 1rem;
+  padding: 0.7rem 5rem;
+  margin: 0 3rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #032256ba;
+  justify-content: space-between;
+  border-bottom: 0.2rem solid #0d28538a;
 }
 
 .sign-in-title {
   background: radial-gradient(
-      118.53% 212.31% at 11.28% -9.85%,
-      #aed6fb 0%,
-      #6a86ce 100%
-    )
-    /* warning: gradient uses a rotation that
-     is not supported by CSS and may not 
-     behave as expected */;
+    118.53% 212.31% at 11.28% -9.85%,
+    #aed6fb 0%,
+    #6a86ce 100%
+  );
   font-weight: 500;
   font-size: 5rem;
   line-height: 116px;
@@ -100,12 +118,9 @@ body {
 }
 
 .loading {
-  -webkit-mask-image: linear-gradient(
-    to top,
-    transparent,
-    #ffffffbb,
-    #ffffffbb
-  );
+  --mask: linear-gradient(to top, transparent, #ffffffbb, #ffffffbb);
+  mask-image: var(--mask);
+  -webkit-mask-image: var(--mask);
   pointer-events: none;
   max-height: 65vh;
   overflow: hidden;

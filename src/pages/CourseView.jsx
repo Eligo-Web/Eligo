@@ -255,8 +255,8 @@ function CourseView(props) {
           joinSessionProps={props}
           joinSession
         />
+        {backButton}
         <div className="card-wrapper">
-          {backButton}
           <div id="session-container" className="session-container">
             <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
               <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
@@ -305,6 +305,7 @@ function CourseView(props) {
 
     return (
       <div className="d-flex flex-column ">
+        {backButton}
         <div className="card-wrapper">
           <Overlay
             title="Create Session"
@@ -315,7 +316,6 @@ function CourseView(props) {
             createSession
           />
           {editOverlays}
-          {backButton}
           <div id="semester-container" className="semester-container">
             {cards}
           </div>

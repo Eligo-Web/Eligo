@@ -109,11 +109,11 @@
 .card-wrapper {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 10rem);
+  height: calc(100vh - 14rem);
   overflow-y: overlay;
   position: relative;
   padding-bottom: 5rem;
-  top: 5rem;
+  top: 9rem;
 }
 
 .card-container,
@@ -151,6 +151,15 @@
 
 .poll-card-container > * {
   flex: 0 calc(25% - 0.45rem);
+}
+
+.roster-item {
+  display: flex;
+  gap: 1rem;
+  margin: 0 5rem;
+  padding: 0.7rem 1.5rem;
+  justify-content: space-between;
+  border-bottom: 0.18rem solid #3d5d8457;
 }
 
 .vote-btn-container {

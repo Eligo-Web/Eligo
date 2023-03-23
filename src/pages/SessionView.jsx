@@ -71,14 +71,7 @@ function SessionView(props) {
   function navigateBack() {
     console.log(location.state);
     navigate("/class", {
-      state: {
-        name: location.state.name,
-        permission: location.state.permission,
-        email: location.state.email,
-        courseName: location.state.courseName,
-        sectionId: location.state.sectionId,
-        passcode: location.state.classPasscode,
-      },
+      state: location.state,
     });
   }
 
@@ -109,43 +102,44 @@ function SessionView(props) {
   function studentContent() {
     const [pollOpen, setPollOpen] = useState(false);
     return (
-      <div className="card-wrapper">
-        <Menu />
-        <MenuBar
-          title={location.state.sessionName}
-          description={location.state.passcode}
-          clickable
-        />
+      <div>
         <BackButton label="Overview" onClick={() => navigateOverview()} />
-        {pollOpen ? (
-          <Poll
-            sectionId={location.state.sectionId}
-            weekNum={location.state.weekNum}
-            sessionId={location.state.sessionId}
-            pollId={pollId}
-            email={location.state.email}
+        <div className="card-wrapper">
+          <Menu />
+          <MenuBar
+            title={location.state.sessionName}
+            description={location.state.passcode}
+            clickable
           />
-        ) : (
-          <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
-            <div className="blank-state-msg">
-              Your instructor has no open polls right now.
+          {pollOpen ? (
+            <Poll
+              sectionId={location.state.sectionId}
+              weekNum={location.state.weekNum}
+              sessionId={location.state.sessionId}
+              pollId={pollId}
+              email={location.state.email}
+            />
+          ) : (
+            <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
+              <div className="blank-state-msg">
+                Your instructor has no open polls right now.
+              </div>
+              <Button
+                variant="blank-state"
+                className="large-title"
+                onClick={() => {
+                  window.location.reload();
+                }}
+              >
+                Refresh
+              </Button>
             </div>
-            <Button
-              variant="blank-state"
-              className="large-title"
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              Refresh
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }
 
-  
   function instructorContent() {
     const [polls, setPolls] = useState(null);
     useEffect(() => {
@@ -155,40 +149,46 @@ function SessionView(props) {
       }
       loadContent();
     }, [refresh]);
-    
+
     return (
-      <div className="card-wrapper">
-        <Menu hideCreate />
-        <MenuBar
-          title={location.state.sessionName}
-          description={location.state.passcode}
-          clickable
-          showDescription
-        />
+      <div>
         <BackButton
           label={location.state.courseName}
           onClick={() => navigateBack()}
         />
-        {polls}
-        {location.state.sessionActive ? (
-        <div className="courses-bottom-row bottom-0 gap-3">
-          <IconButton
-            label="Create Poll"
-            icon={<IoMdAddCircleOutline size="1.7em" />}
-            style={{ maxWidth: "max-content" }}
-            onClick={() => createPoll()}
+        <div
+          className="card-wrapper"
+          style={{
+            height: location.state.sessionActive ? "" : "calc(100vh - 9rem)",
+          }}
+        >
+          <Menu hideCreate />
+          <MenuBar
+            title={location.state.sessionName}
+            description={location.state.passcode}
+            clickable
+            showDescription
           />
-          <div className="row gap-3 p-3">
+          {polls}
+          {location.state.sessionActive ? (
+            <div className="courses-bottom-row bottom-0 gap-3">
               <IconButton
-                label="Close Session"
-                variant="outline"
+                label="Create Poll"
+                icon={<IoMdAddCircleOutline size="1.7em" />}
                 style={{ maxWidth: "max-content" }}
-                onClick={() => closeSession()}
+                onClick={() => createPoll()}
               />
-            
-          </div>
+              <div className="row gap-3 p-3">
+                <IconButton
+                  label="Close Session"
+                  variant="outline"
+                  style={{ maxWidth: "max-content" }}
+                  onClick={() => closeSession()}
+                />
+              </div>
+            </div>
+          ) : null}
         </div>
-        ) : null }
       </div>
     );
   }
@@ -259,11 +259,10 @@ function SessionView(props) {
       .post(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
       )
-      .then((res) => {
-      })
+      .then((res) => {})
       .catch((err) => console.log(err));
-      setRefresh({ created: true });
-      const popup = window.open(
+    setRefresh({ created: true });
+    const popup = window.open(
       "/newpoll",
       "New Poll",
       "toolbar=no, location=no, statusbar=no, \
@@ -281,17 +280,18 @@ function SessionView(props) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
     await axios
-    .put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .put(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     setRefresh({ closed: true });
   }
-  
+
   return !authorized ? (
     <AccessDenied />
   ) : (
