@@ -155,6 +155,7 @@ class CourseDao {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
     session.polls[pollId] = {};
+    session.polls[pollId].name = "New Poll";
     session.polls[pollId].responses = {};
     session.polls[pollId].active = true;
     session.polls[pollId].liveResults = {};

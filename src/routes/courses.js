@@ -228,7 +228,7 @@ Course.post(
   }
 );
 
-Course.post("/:sectionId/:weekNum/:sessionId/:pollId/", async (req, res) => {
+Course.post("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;

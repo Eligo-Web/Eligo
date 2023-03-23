@@ -208,7 +208,16 @@ function SessionView(props) {
     return overlays;
   }
 
-  function createPoll() {
+  async function createPoll() {
+    const server = "http://localhost:3000";
+    const newPollId = `poll-${Date.now()}`;
+    await axios
+      .post(`${server}/course/${
+        location.state.sectionId}/${
+        location.state.weekNum}/${
+        location.state.sessionId}/${newPollId}`)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
     const popup = window.open(
       "/newpoll",
       "test",
