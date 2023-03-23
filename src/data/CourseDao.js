@@ -333,6 +333,29 @@ class CourseDao {
     return course;
   }
 
+  async closeAllPolls(sectionId, weekNum, sessionId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    for (const pollId of Object.keys(session.polls)) {
+      if (session.polls[pollId].active) {
+        session.polls[pollId].active = false;
+      }
+    }
+    course.markModified("sessions");
+    await course.save();
+    return course;
+  }
+
   async deleteSession(sectionId, weekNum, sessionId) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {

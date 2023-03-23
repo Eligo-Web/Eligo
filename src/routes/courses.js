@@ -280,6 +280,33 @@ Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
   }
 });
 
+Course.put("/:sectionId/:weekNum/:sessionId/:pollId/close", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  const pollId = req.params.pollId;
+  try {
+    let session = await courseDao.closeActivePoll(
+      sectionId,
+      weekNum,
+      sessionId,
+      pollId
+    );
+    res.json({
+      status: 200,
+      message: `Poll closed`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
 Course.put("/:sectionId/:weekNum/closeAll", async (req, res) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
@@ -288,6 +315,31 @@ Course.put("/:sectionId/:weekNum/closeAll", async (req, res) => {
     res.json({
       status: 200,
       message: `Sessions closed`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
+Course.put("/:sectionId/:weekNum/:sessionId/closeAll", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  try {
+    let session = await courseDao.closeAllPolls(
+      sectionId,
+      weekNum,
+      sessionId
+    );
+    res.json({
+      status: 200,
+      message: `Polls closed`,
       data: session,
     });
   } catch (err) {
