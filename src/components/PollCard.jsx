@@ -9,7 +9,7 @@ import { openPopup } from "./Overlay";
  */
 function PollCard(props) {
   let inactive = "";
-  if (props.disabled) {
+  if (props.inactive) {
     inactive = " inactive";
   }
   return (

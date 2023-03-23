@@ -110,6 +110,7 @@ class CourseDao {
     course.sessions.get(weekNum).set(sessionId, {
       name: name,
       active: true,
+      numPolls: 0,
       passcode: passcode,
       students: [],
       polls: {},
@@ -154,8 +155,14 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
+    for (let id in session.polls) {
+      if (session.polls[id].active) {
+        session.polls[id].active = false;
+      }
+    }
+    session.numPolls += 1;
     session.polls[pollId] = {};
-    session.polls[pollId].name = "New Poll";
+    session.polls[pollId].name = `Poll ${session.numPolls}`;
     session.polls[pollId].responses = {};
     session.polls[pollId].active = true;
     session.polls[pollId].liveResults = {};

@@ -48,9 +48,9 @@ export default function InstructorPoll() {
   let chart = PollChart(data, setChartRef);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       let pollUpdate = [];
-      axios
+      await axios
         .get(
           `${server}/course/:${location.state.sectionId}/:${location.state.weekNum}/:${location.state.sessionId}/:${location.state.pollId}`
         )
@@ -74,13 +74,16 @@ export default function InstructorPoll() {
   }
 
   function deactivatePoll() {
-    axios.put(`${server}/course/:${location.state.sectionId}/:${location.state.weekNum}/:${location.state.sessionId}/:${location.state.pollId}/close`)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    axios
+      .put(
+        `${server}/course/:${location.state.sectionId}/:${location.state.weekNum}/:${location.state.sessionId}/:${location.state.pollId}/close`
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   window.onload = function () {

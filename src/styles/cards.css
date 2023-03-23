@@ -146,6 +146,7 @@
 
 .poll-card-container {
   max-width: 50rem;
+  padding-bottom: 0;
 }
 
 .poll-card-container > * {
