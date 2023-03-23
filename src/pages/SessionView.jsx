@@ -87,7 +87,17 @@ function SessionView(props) {
   }
 
   function checkActivePoll() {
-
+    const server = "http://localhost:3000";
+    axios
+      .get(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/polls`
+      )
+      .then((res) => {
+        if (res.data.data.length > 0) {
+          setPollOpen(true);
+        }
+      })
+      .catch((err) => console.log(err));
   }
 
   function studentContent() {

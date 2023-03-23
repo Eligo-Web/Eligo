@@ -70,6 +70,26 @@ class CourseDao {
     return course.sessions;
   }
 
+  async readPoll(sectionId, weekNum, sessionId, pollId) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    const poll = session.polls[pollId];
+    if (!poll) {
+      throw new ApiError(404, `Poll with id ${pollId} not found`);
+    }
+    return poll;
+  }
+
   async createSession(sectionId, sessionId, name, passcode, weekNum) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
@@ -143,7 +163,15 @@ class CourseDao {
     return course;
   }
 
-  async addResponseToPoll(sectionId, weekNum, sessionId, pollId, email, timestamp, response) {
+  async addResponseToPoll(
+    sectionId,
+    weekNum,
+    sessionId,
+    pollId,
+    email,
+    timestamp,
+    response
+  ) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
@@ -156,7 +184,7 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
-    if (!session.polls[pollId]) { 
+    if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
     let poll = session.polls[pollId];
