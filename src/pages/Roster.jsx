@@ -11,10 +11,6 @@ function decodeEmail(str) {
   return str.replace(/[$]/g, ".");
 }
 
-function populateRoster() {
-  const rosterList = [];
-}
-
 function RosterItem(props) {
   return (
     <div className="roster-item">
