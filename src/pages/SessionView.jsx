@@ -18,7 +18,7 @@ function SessionView(props) {
   const navigate = useNavigate();
   const server = "http://localhost:3000";
   const authorized = location.state && location.state.permission;
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(null);
 
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
@@ -41,8 +41,7 @@ function SessionView(props) {
     console.log(location.state);
     await axios
       .get(
-        `${server}/course/${location.state.sectionId}/
-         ${location.state.weekNum}/${location.state.sessionId}`
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
       )
       .then((res) => {
         if (!res.data.data.active) {
@@ -56,8 +55,13 @@ function SessionView(props) {
     const server = "http://localhost:3000";
     await axios
       .put(
-        `${server}/course/${location.state.sectionId}/
-         ${location.state.weekNum}/${location.state.sessionId}/close`
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`
+      )
+      .then((res) => {})
+      .catch((err) => console.log(err));
+    await axios
+      .put(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
       )
       .then((res) => {})
       .catch((err) => console.log(err));
@@ -88,8 +92,8 @@ function SessionView(props) {
     });
   }
   let pollId = "";
-  function checkActivePoll() {
-    axios
+  async function checkActivePoll() {
+    await axios
       .get(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`
       )
@@ -141,9 +145,9 @@ function SessionView(props) {
     );
   }
 
+  
   function instructorContent() {
     const [polls, setPolls] = useState(null);
-
     useEffect(() => {
       async function loadContent() {
         const pollContainer = await populatePollCards();
@@ -151,7 +155,7 @@ function SessionView(props) {
       }
       loadContent();
     }, [refresh]);
-
+    
     return (
       <div className="card-wrapper">
         <Menu hideCreate />
@@ -166,13 +170,7 @@ function SessionView(props) {
           onClick={() => navigateBack()}
         />
         {polls}
-        {/* <Container className="poll-card-container">
-          <h3 className="card-title divisor">Active Poll</h3>
-          <PollCard title="Poll 1" key="Poll 1" />
-        </Container>
-        <Container className="poll-card-container">
-          <h3 className="card-title divisor">Inactive Polls</h3>
-        </Container> */}
+        {location.state.sessionActive ? (
         <div className="courses-bottom-row bottom-0 gap-3">
           <IconButton
             label="Create Poll"
@@ -181,16 +179,16 @@ function SessionView(props) {
             onClick={() => createPoll()}
           />
           <div className="row gap-3 p-3">
-            {location.state.sessionActive ? (
               <IconButton
                 label="Close Session"
                 variant="outline"
                 style={{ maxWidth: "max-content" }}
                 onClick={() => closeSession()}
               />
-            ) : null}
+            
           </div>
         </div>
+        ) : null }
       </div>
     );
   }
@@ -207,7 +205,7 @@ function SessionView(props) {
       .then((res) => {
         if (res.data.status === 200) {
           polls = Object.entries(res.data.data.polls);
-          polls = new Map([...polls.sort().reverse()]);
+          polls = new Map([...polls.sort()]);
         }
       })
       .catch((err) => console.log(err));
@@ -222,14 +220,14 @@ function SessionView(props) {
       }
     }
 
-    const cardContainer = []
+    const cardContainer = [];
     if (activeCards.length) {
       cardContainer.push(
         <Container className="poll-card-container" key="active-polls">
           <h3 className="card-title divisor">Active Poll</h3>
           {activeCards}
         </Container>
-      )
+      );
     }
     if (inactiveCards.length) {
       cardContainer.push(
@@ -237,7 +235,7 @@ function SessionView(props) {
           <h3 className="card-title divisor">Inactive Polls</h3>
           {inactiveCards}
         </Container>
-      )
+      );
     }
 
     return cardContainer;
@@ -262,19 +260,38 @@ function SessionView(props) {
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
       )
       .then((res) => {
-        setRefresh(!refresh);
       })
       .catch((err) => console.log(err));
-    const popup = window.open(
+      setRefresh({ created: true });
+      const popup = window.open(
       "/newpoll",
-      "test",
+      "New Poll",
       "toolbar=no, location=no, statusbar=no, \
        menubar=no, scrollbars=0, width=250, \
        height=100, top=110, left=1040"
     );
     // communicate with window
+    popup.props = {
+      sectionId: location.state.sectionId,
+      weekNum: location.state.weekNum,
+      sessionId: location.state.sessionId,
+      pollId: newPollId,
+    };
+    while (!popup.closed) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+    await axios
+    .put(
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    setRefresh({ closed: true });
   }
-
+  
   return !authorized ? (
     <AccessDenied />
   ) : (

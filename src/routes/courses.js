@@ -287,12 +287,14 @@ Course.put(
     const weekNum = req.params.weekNum;
     const sessionId = req.params.sessionId;
     const pollId = req.params.pollId;
+    const name = req.body.name || "";
     try {
       let session = await courseDao.closeActivePoll(
         sectionId,
         weekNum,
         sessionId,
-        pollId
+        pollId,
+        name
       );
       res.json({
         status: 200,

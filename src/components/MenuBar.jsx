@@ -4,7 +4,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { IconButton } from "./Buttons.jsx";
-import { useLocation } from "react-router-dom";
 import { IoIosMenu } from "react-icons/io";
 
 import "../styles/text.css";
@@ -12,7 +11,6 @@ import "../styles/menu.css";
 import { IconCheck, IconCopy, IconMenu2 } from "@tabler/icons-react";
 
 function MenuBar(props) {
-  const location = useLocation();
   const [copied, setCopied] = useState(false);
 
   function openMenu() {

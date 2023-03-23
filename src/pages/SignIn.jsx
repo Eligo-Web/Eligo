@@ -8,7 +8,7 @@ function SignIn() {
   const navigate = useNavigate();
 
   async function handleSignin(name, email, role) {
-    let user;
+    let user = {};
     await axios
       .get(`${server}/${role.toLowerCase()}/${email}`)
       .then(async (res) => {

@@ -19,6 +19,7 @@ export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
   const [showChart, setShowChart] = useState(false);
   const [pollData, setPollData] = useState([0, 0, 0, 0, 0]);
+  const [pollName, setPollName] = useState("");
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
   let fullHeight = winHeight;
@@ -45,24 +46,27 @@ export default function InstructorPoll() {
       },
     ],
   };
-  let chart = PollChart(data, setChartRef);
+  const chart = PollChart(data, setChartRef);
 
   useEffect(() => {
     const interval = setInterval(async () => {
       let pollUpdate = [];
       await axios
         .get(
-          `${server}/course/:${location.state.sectionId}/:${location.state.weekNum}/:${location.state.sessionId}/:${location.state.pollId}`
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
         )
         .then((res) => {
-          pollUpdate = Array.from(res.data.liveResults.values());
+          pollUpdate = Array.from(
+            new Map(Object.entries(res.data.data.liveResults).values())
+          );
+          setPollName(res.data.data.name);
           setPollData(pollUpdate);
         })
         .catch((err) => {
           console.log(err);
         });
       chartRef.getContext("2d").chart.update();
-    }, 500);
+    }, 5000);
     return () => clearInterval(interval);
   }, [chartRef]);
 
@@ -73,10 +77,15 @@ export default function InstructorPoll() {
     window.resizeTo(fullWidth, fullHeight);
   }
 
-  function deactivatePoll() {
-    axios
+  async function deactivatePoll(action="save") {
+    console.log(action)
+    if (action === "save") {
+    await axios
       .put(
-        `${server}/course/:${location.state.sectionId}/:${location.state.weekNum}/:${location.state.sessionId}/:${location.state.pollId}/close`
+        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/close`,
+        {
+          name: pollName,
+        }
       )
       .then((res) => {
         console.log(res);
@@ -84,6 +93,19 @@ export default function InstructorPoll() {
       .catch((err) => {
         console.log(err);
       });
+    } else if (action === "discard") {
+      await axios
+        .delete(
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    window.close();
   }
 
   window.onload = function () {
@@ -142,7 +164,13 @@ export default function InstructorPoll() {
             className="input-group"
             style={{ display: minimized ? "none" : "flex" }}
           >
-            <InputField label="Poll Name" input="ex: Question 1" />
+            <InputField
+              label="Poll Name"
+              input="ex: Question 1" 
+              onChange={(e) => {
+                setPollName(e.target.value);
+              }}
+              />
           </div>
           <div
             style={{
@@ -163,16 +191,14 @@ export default function InstructorPoll() {
               variant="secondary"
               label="Discard"
               onClick={() => {
-                console.log("discarded poll");
-                window.close();
+                deactivatePoll("discard");
               }}
             />
             <PrimaryButton
               variant="primary"
               label="Save"
               onClick={() => {
-                deactivatePoll();
-                window.close();
+                deactivatePoll("save");
               }}
             />
           </div>
@@ -235,7 +261,7 @@ function Stopwatch() {
 
 function PollChart(data, setChartRef) {
   defaults.font.family = "Inter";
-  defaults.font.size = 15;
+  defaults.font.size = 14;
   defaults.font.weight = 700;
   defaults.color = "#000f2abb";
 

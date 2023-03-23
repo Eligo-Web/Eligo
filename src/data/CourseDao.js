@@ -319,7 +319,7 @@ class CourseDao {
     return course;
   }
 
-  async closeActivePoll(sectionId, weekNum, sessionId, pollId) {
+  async closeActivePoll(sectionId, weekNum, sessionId, pollId, name) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
@@ -336,6 +336,9 @@ class CourseDao {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
     session.polls[pollId].active = false;
+    if (name !== "") {
+      session.polls[pollId].name = name;
+    }
     course.markModified("sessions");
     await course.save();
     return course;
