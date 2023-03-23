@@ -283,16 +283,21 @@ export function Poll(sectionId, weekNum, sessionId, pollId, email) {
   const server = "http://localhost:3000";
 
   function makeSelection(choice) {
-    axios.patch(`${server}/course/${sectionId}/${weekNum}/${sessionId}/${pollId}`, {
-      email: email,
-      timestamp: Date.now(),
-      response: choice,
-    }
-    ).then((res) => {
-      console.log(res);
-    }).catch((err) => {
-      console.log(err);
-    });
+    axios
+      .patch(
+        `${server}/course/${sectionId}/${weekNum}/${sessionId}/${pollId}`,
+        {
+          email: email,
+          timestamp: Date.now(),
+          response: choice,
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     if (selected !== "") {
       document.getElementById(selected).className = "card btn btn-vote";

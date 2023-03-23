@@ -280,32 +280,35 @@ Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
   }
 });
 
-Course.put("/:sectionId/:weekNum/:sessionId/:pollId/close", async (req, res) => {
-  const sectionId = req.params.sectionId;
-  const weekNum = req.params.weekNum;
-  const sessionId = req.params.sessionId;
-  const pollId = req.params.pollId;
-  try {
-    let session = await courseDao.closeActivePoll(
-      sectionId,
-      weekNum,
-      sessionId,
-      pollId
-    );
-    res.json({
-      status: 200,
-      message: `Poll closed`,
-      data: session,
-    });
-  } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+Course.put(
+  "/:sectionId/:weekNum/:sessionId/:pollId/close",
+  async (req, res) => {
+    const sectionId = req.params.sectionId;
+    const weekNum = req.params.weekNum;
+    const sessionId = req.params.sessionId;
+    const pollId = req.params.pollId;
+    try {
+      let session = await courseDao.closeActivePoll(
+        sectionId,
+        weekNum,
+        sessionId,
+        pollId
+      );
+      res.json({
+        status: 200,
+        message: `Poll closed`,
+        data: session,
+      });
+    } catch (err) {
+      console.log(err);
+      res.json({
+        status: err.status,
+        message: err.message,
+        data: null,
+      });
+    }
   }
-});
+);
 
 Course.put("/:sectionId/:weekNum/closeAll", async (req, res) => {
   const sectionId = req.params.sectionId;
@@ -332,11 +335,7 @@ Course.put("/:sectionId/:weekNum/:sessionId/closeAll", async (req, res) => {
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
   try {
-    let session = await courseDao.closeAllPolls(
-      sectionId,
-      weekNum,
-      sessionId
-    );
+    let session = await courseDao.closeAllPolls(sectionId, weekNum, sessionId);
     res.json({
       status: 200,
       message: `Polls closed`,
@@ -379,41 +378,38 @@ Course.patch("/:sectionId/:weekNum/:sessionId", async (req, res) => {
   }
 });
 
-Course.patch(
-  "/:sectionId/:weekNum/:sessionId/:pollId/",
-  async (req, res) => {
-    const sectionId = req.params.sectionId;
-    const weekNum = req.params.weekNum;
-    const sessionId = req.params.sessionId;
-    const pollId = req.params.pollId;
-    const email = req.body.email;
-    const timestamp = req.body.timestamp;
-    const response = req.body.response;
-    try {
-      let session = await courseDao.addResponseToPoll(
-        sectionId,
-        weekNum,
-        sessionId,
-        pollId,
-        email,
-        timestamp,
-        response
-      );
-      res.json({
-        status: 200,
-        message: `Response added`,
-        data: session,
-      });
-    } catch (err) {
-      console.log(err);
-      res.json({
-        status: err.status,
-        message: err.message,
-        data: null,
-      });
-    }
+Course.patch("/:sectionId/:weekNum/:sessionId/:pollId/", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  const pollId = req.params.pollId;
+  const email = req.body.email;
+  const timestamp = req.body.timestamp;
+  const response = req.body.response;
+  try {
+    let session = await courseDao.addResponseToPoll(
+      sectionId,
+      weekNum,
+      sessionId,
+      pollId,
+      email,
+      timestamp,
+      response
+    );
+    res.json({
+      status: 200,
+      message: `Response added`,
+      data: session,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
   }
-);
+});
 
 Course.post("/", async (req, res) => {
   let sectionId = toSectionId(

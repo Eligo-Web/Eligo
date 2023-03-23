@@ -54,7 +54,7 @@ export default function Overlay(props) {
       deleteBtns.style.maxHeight = "10rem";
       deleteBtns.style.margin = 0;
       buttonRow.style.maxHeight = 0;
-      buttonRow.style.margin = "-0.5rem 0"
+      buttonRow.style.margin = "-0.5rem 0";
     } else {
       deleteBtns.style.transition = "0.1s ease-out";
       buttonRow.style.transition = "0.1s ease-in";

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PrimaryButton } from "./Buttons.jsx";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   IconChartBar,
   IconChartBarOff,
@@ -13,27 +14,21 @@ import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import "../styles/newpoll.css";
 
+let chartRef = {};
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
   const [showChart, setShowChart] = useState(false);
-  const [pollData, setPollData] = useState([0,0,0,0,0]);
+  const [pollData, setPollData] = useState([0, 0, 0, 0, 0]);
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
   let fullHeight = winHeight;
   let fullWidth = winWidth;
+  const [chartRef, setChartRef] = useState({});
+  const location = useLocation();
+  const server = "http://localhost:3000";
   document.title = "New Poll" + (minimized ? " (mini)" : "");
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let pollUpdate = pollData;
-      pollUpdate[Math.floor(Math.random()*5)] += 1;
-      setPollData(pollUpdate);
-      console.log(chart)
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [])
-
-  const data = {
+  let data = {
     labels: ["A", "B", "C", "D", "E"],
     datasets: [
       {
@@ -50,14 +45,42 @@ export default function InstructorPoll() {
       },
     ],
   };
-  const chart = PollChart(data);
+  let chart = PollChart(data, setChartRef);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      let pollUpdate = [];
+      axios
+        .get(
+          `${server}/course/:${location.state.sectionId}/:${location.state.weekNum}/:${location.state.sessionId}/:${location.state.pollId}`
+        )
+        .then((res) => {
+          pollUpdate = Array.from(res.data.liveResults.values());
+          setPollData(pollUpdate);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      chartRef.getContext("2d").chart.update();
+    }, 500);
+    return () => clearInterval(interval);
+  }, [chartRef]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
     fullWidth = winWidth + content.offsetWidth;
     fullHeight = winHeight + content.offsetHeight;
     window.resizeTo(fullWidth, fullHeight);
+  }
+
+  function deactivatePoll() {
+    axios.put(`${server}/course/:${location.state.sectionId}/:${location.state.weekNum}/:${location.state.sessionId}/:${location.state.pollId}/close`)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   window.onload = function () {
@@ -145,7 +168,7 @@ export default function InstructorPoll() {
               variant="primary"
               label="Save"
               onClick={() => {
-                console.log("saved poll");
+                deactivatePoll();
                 window.close();
               }}
             />
@@ -207,7 +230,7 @@ function Stopwatch() {
   );
 }
 
-function PollChart(data) {
+function PollChart(data, setChartRef) {
   defaults.font.family = "Inter";
   defaults.font.size = 15;
   defaults.font.weight = 700;
@@ -217,6 +240,9 @@ function PollChart(data) {
     <Bar
       data={data}
       updateMode="active"
+      ref={(ref) => {
+        setChartRef(ref);
+      }}
       options={{
         plugins: {
           legend: {

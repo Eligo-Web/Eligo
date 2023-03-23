@@ -113,7 +113,7 @@ function SessionView(props) {
         />
         <BackButton label="Overview" onClick={() => navigateOverview()} />
         {pollOpen ? (
-          <Poll 
+          <Poll
             sectionId={location.state.sectionId}
             weekNum={location.state.weekNum}
             sessionId={location.state.sessionId}

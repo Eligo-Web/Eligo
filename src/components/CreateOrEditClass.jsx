@@ -110,7 +110,7 @@ function CreateOrEditClass(props) {
     }
 
     setShowError(false);
-    if(props.editMode) props.setMarkDelete(false);
+    if (props.editMode) props.setMarkDelete(false);
     nameField.className = "name-input form-control";
     sectionField.className = "section-input form-control";
     sisIdField.className = "sis-id-input form-control";
