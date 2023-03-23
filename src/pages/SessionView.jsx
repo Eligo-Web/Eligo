@@ -85,16 +85,17 @@ function SessionView(props) {
       },
     });
   }
-
+  let pollId = "";
   function checkActivePoll() {
     const server = "http://localhost:3000";
     axios
       .get(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/polls`
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`
       )
       .then((res) => {
-        if (res.data.data.length > 0) {
+        if (res.data.data) {
           setPollOpen(true);
+          pollId = res.data.data.activePollId;
         }
       })
       .catch((err) => console.log(err));
@@ -112,7 +113,13 @@ function SessionView(props) {
         />
         <BackButton label="Overview" onClick={() => navigateOverview()} />
         {pollOpen ? (
-          <Poll />
+          <Poll 
+            sectionId={location.state.sectionId}
+            weekNum={location.state.weekNum}
+            sessionId={location.state.sessionId}
+            pollId={pollId}
+            email={location.state.email}
+          />
         ) : (
           <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
             <div className="blank-state-msg">

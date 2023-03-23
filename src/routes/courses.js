@@ -380,13 +380,13 @@ Course.patch("/:sectionId/:weekNum/:sessionId", async (req, res) => {
 });
 
 Course.patch(
-  "/:sectionId/:weekNum/:sessionId/:pollId/:email",
+  "/:sectionId/:weekNum/:sessionId/:pollId/",
   async (req, res) => {
     const sectionId = req.params.sectionId;
     const weekNum = req.params.weekNum;
     const sessionId = req.params.sessionId;
     const pollId = req.params.pollId;
-    const email = req.params.email;
+    const email = req.body.email;
     const timestamp = req.body.timestamp;
     const response = req.body.response;
     try {
@@ -539,6 +539,33 @@ Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res) => {
     res.json({
       status: 200,
       message: "Session deleted",
+      data: course,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
+Course.delete("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
+  const sectionId = req.params.sectionId;
+  const weekNum = req.params.weekNum;
+  const sessionId = req.params.sessionId;
+  const pollId = req.params.pollId;
+  try {
+    const course = await courseDao.deletePoll(
+      sectionId,
+      weekNum,
+      sessionId,
+      pollId
+    );
+    res.json({
+      status: 200,
+      message: "Poll deleted",
       data: course,
     });
   } catch (err) {

@@ -278,13 +278,22 @@ export function JoinClass(props) {
   );
 }
 
-export function Poll(id) {
+export function Poll(sectionId, weekNum, sessionId, pollId, email) {
   const [selected, setSelected] = useState("");
+  const server = "http://localhost:3000";
 
   function makeSelection(choice) {
-    if (selected === choice) {
-      return;
+    axios.patch(`${server}/course/${sectionId}/${weekNum}/${sessionId}/${pollId}`, {
+      email: email,
+      timestamp: Date.now(),
+      response: choice,
     }
+    ).then((res) => {
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    });
+
     if (selected !== "") {
       document.getElementById(selected).className = "card btn btn-vote";
     }
