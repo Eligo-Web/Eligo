@@ -1,6 +1,7 @@
 import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Card from "./Card";
+import PollCard from "./PollCard";
 import SessionCard from "./SessionCard";
 
 export default function PageNotFound() {
@@ -52,6 +53,38 @@ export function BlankCourseView() {
       <SessionCard blank />
       <SessionCard blank />
       <SessionCard blank />
+      <SessionCard blank />
+      <SessionCard blank />
+      <SessionCard blank />
+      <SessionCard blank />
     </Container>
   );
+}
+
+export function BlankSessionView() {
+  return (
+    <Container className="poll-card-container loading">
+      <div className="card-title divisor-blank"></div>
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+      <PollCard blank />
+    </Container>
+  )
 }

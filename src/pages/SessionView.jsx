@@ -12,6 +12,7 @@ import { useState } from "react";
 import AccessDenied from "../components/AccessDenied";
 import { useEffect } from "react";
 import axios from "axios";
+import { BlankSessionView } from "../components/BlankStates";
 
 function SessionView(props) {
   const location = useLocation();
@@ -21,7 +22,7 @@ function SessionView(props) {
   const [refresh, setRefresh] = useState(null);
 
   function pause() {
-    return new Promise((res) => setTimeout(res, 400));
+    return new Promise((res) => setTimeout(res, 250));
   }
 
   useEffect(() => {
@@ -128,7 +129,6 @@ function SessionView(props) {
     }, []);
 
     useEffect(() => {
-      // set voteOverlay
       if (pollOpen && pollId) {
         setVotePopup(
           <Overlay
@@ -199,11 +199,15 @@ function SessionView(props) {
   }
 
   function instructorContent() {
-    const [polls, setPolls] = useState(null);
+    const [polls, setPolls] = useState(<BlankSessionView />);
     useEffect(() => {
       async function loadContent() {
         const pollContainer = await populatePollCards();
+        await pause();
+        document.querySelector(".poll-container").style.opacity = 0;
+        await pause();
         setPolls(pollContainer);
+        document.querySelector(".poll-container").style.opacity = 100;
       }
       loadContent();
     }, [refresh]);
@@ -227,7 +231,7 @@ function SessionView(props) {
             clickable
             showDescription
           />
-          {polls}
+          <div className="poll-container">{polls}</div>
           {location.state.sessionActive ? (
             <div className="courses-bottom-row bottom-0 gap-3">
               <IconButton

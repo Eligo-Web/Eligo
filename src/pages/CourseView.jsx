@@ -294,6 +294,7 @@ function CourseView(props) {
         const [sessionList, overlays] = await populateSessionCards(
           "INSTRUCTOR"
         );
+        await pause();
         container.style.opacity = 0;
         await pause();
         setCards(sessionList);

@@ -121,6 +121,7 @@ body {
   --mask: linear-gradient(to top, transparent, #ffffffbb, #ffffffbb);
   mask-image: var(--mask);
   -webkit-mask-image: var(--mask);
+  mix-blend-mode: hard-light;
   pointer-events: none;
   max-height: 65vh;
   overflow: hidden;

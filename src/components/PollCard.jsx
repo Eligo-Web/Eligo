@@ -8,6 +8,11 @@ import { openPopup } from "./Overlay";
  * @param {{title: string}} props
  */
 function PollCard(props) {
+  if (props.blank) {
+    return (
+      <div className="card poll-card clickable inactive"/>
+    )
+  }
   let inactive = "";
   if (props.inactive) {
     inactive = " inactive";
