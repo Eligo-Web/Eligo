@@ -56,9 +56,8 @@ export default function InstructorPoll() {
           `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
         )
         .then((res) => {
-          pollUpdate = Array.from(
-            new Map(Object.entries(res.data.data.liveResults).values())
-          );
+          pollUpdate = 
+            Object.values(res.data.data.liveResults);
           setPollName(res.data.data.name);
           setPollData(pollUpdate);
         })
@@ -105,7 +104,6 @@ export default function InstructorPoll() {
           console.log(err);
         });
     }
-    window.close();
   }
 
   window.onload = function () {
@@ -192,13 +190,15 @@ export default function InstructorPoll() {
               label="Discard"
               onClick={() => {
                 deactivatePoll("discard");
+                window.close();
               }}
             />
             <PrimaryButton
               variant="primary"
               label="Save"
               onClick={() => {
-                deactivatePoll("save");
+                deactivatePoll();
+                window.close();
               }}
             />
           </div>
@@ -225,6 +225,7 @@ function Stopwatch() {
     watch.style.color = "#1b2543";
     console.log(time);
     timeText.style.width = "fit-content";
+    deactivatePoll();
   }
 
   useEffect(() => {
@@ -261,7 +262,7 @@ function Stopwatch() {
 
 function PollChart(data, setChartRef) {
   defaults.font.family = "Inter";
-  defaults.font.size = 14;
+  defaults.font.size = 13;
   defaults.font.weight = 700;
   defaults.color = "#000f2abb";
 

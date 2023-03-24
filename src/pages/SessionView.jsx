@@ -91,10 +91,10 @@ function SessionView(props) {
       },
     });
   }
-  let pollId = "";
   
   function studentContent() {
     const [pollOpen, setPollOpen] = useState(false);
+    const [pollId, setPollId] = useState(null);
     async function checkActivePoll() {
       await axios
         .get(
@@ -102,8 +102,8 @@ function SessionView(props) {
         )
         .then((res) => {
           if (res.data.data) {
+            setPollId(res.data.data.activePollId);
             setPollOpen(true);
-            pollId = res.data.data.activePollId;
           }
         })
         .catch((err) => console.log(err));

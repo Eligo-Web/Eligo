@@ -282,13 +282,14 @@ export function Poll(props) {
   const [selected, setSelected] = useState("");
   const server = "http://localhost:3000";
 
+
   async function makeSelection(choice) {
     await axios
       .patch(
         `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
         {
           email: props.email,
-          timestamp: Date.now(),
+          timestamp: Date.now().toString(),
           response: choice,
         }
       )

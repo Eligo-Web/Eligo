@@ -163,9 +163,10 @@ class CourseDao {
     session.numPolls += 1;
     session.polls[pollId] = {};
     session.polls[pollId].name = `Poll ${session.numPolls}`;
-    session.polls[pollId].responses = {};
+    session.polls[pollId].responses = new Map();
     session.polls[pollId].active = true;
-    session.polls[pollId].liveResults = {};
+    session.polls[pollId].liveResults = new Map([ ["A", 0], ["B", 0], ["C", 0], ["D", 0], ["E", 0] ]);
+
     course.markModified("sessions");
     await course.save();
     return course;
@@ -196,16 +197,20 @@ class CourseDao {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
     let poll = session.polls[pollId];
-    if (!poll.responses.get(email)) {
-      poll.responses.set(email, {});
-      poll.reponses.get(email).finalAnswer = response;
-      poll.responses.get(email).answers = {};
+    let responses = new Map(Object.entries(poll.responses));
+    if (!responses.get(email)) {
+      responses.set(email, {});
+      responses.get(email).finalAnswer = response;
+      responses.get(email).answers = {};
     } else {
-      poll.liveResults[poll.get(email).finalAnswer] -= 1;
+      poll.liveResults[responses.get(email).finalAnswer] -= 1;
     }
-    poll.get(email).answers.set(timestamp, response);
-    poll.get(email).finalAnswer = response;
+    let answers = new Map(Object.entries(responses.get(email).answers));
+    answers.set(timestamp, response);
+    responses.get(email).answers = answers;
+    responses.get(email).finalAnswer = response;
     poll.liveResults[response] += 1;
+    poll.responses = responses;
     course.markModified("sessions");
     await course.save();
     return course;
