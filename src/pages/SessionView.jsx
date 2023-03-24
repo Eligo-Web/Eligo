@@ -71,7 +71,14 @@ function SessionView(props) {
   function navigateBack() {
     console.log(location.state);
     navigate("/class", {
-      state: location.state,
+      state: {
+        name: location.state.name,
+        permission: location.state.permission,
+        email: location.state.email,
+        courseName: location.state.courseName,
+        sectionId: location.state.sectionId,
+        passcode: location.state.classPasscode,
+      },
     });
   }
 

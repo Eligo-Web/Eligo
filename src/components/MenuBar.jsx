@@ -41,7 +41,7 @@ function MenuBar(props) {
         <IoIosMenu size="2.3em" />
       </Button>
       <Row className="menu-bar-items">
-        <Col className="large-title">{props.title}</Col>
+        <Col className="large-title">{props.title || "-Untitled-"}</Col>
         {props.showDescription ? (
           <Col
             className="large-title d-flex flex-row align-items-center"

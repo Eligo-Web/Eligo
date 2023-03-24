@@ -8,6 +8,7 @@ function Card(props) {
     event.stopPropagation();
     openPopup(props.id);
   };
+
   return (
     <div className="card clickable" href="/session" onClick={props.onClick}>
       <div className="card-body" id={props.id}>
