@@ -13,6 +13,7 @@ import AccessDenied from "../components/AccessDenied";
 import { useEffect } from "react";
 import axios from "axios";
 import { BlankSessionView } from "../components/BlankStates";
+import { IconDownload, IconLock } from "@tabler/icons-react";
 
 function SessionView(props) {
   const location = useLocation();
@@ -122,10 +123,12 @@ function SessionView(props) {
 
     useEffect(() => {
       checkActivePoll();
-      const interval = setInterval(() => {
-        checkActivePoll();
-      }, 1000);
-      return () => clearInterval(interval);
+      if (!pollOpen) {
+        const interval = setInterval(() => {
+          checkActivePoll();
+        }, 1000);
+        return () => clearInterval(interval);
+      }
     }, []);
 
     useEffect(() => {
@@ -200,6 +203,16 @@ function SessionView(props) {
 
   function instructorContent() {
     const [polls, setPolls] = useState(<BlankSessionView />);
+    const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
+
+    window.onresize = function () {
+      if (window.innerWidth < 900) {
+        setLabels(false);
+      } else if (!buttonLabels) {
+        setLabels(true);
+      }
+    };
+
     useEffect(() => {
       async function loadContent() {
         const pollContainer = await populatePollCards();
@@ -242,7 +255,14 @@ function SessionView(props) {
               />
               <div className="row gap-3 p-3">
                 <IconButton
-                  label="Close Session"
+                  label={buttonLabels ? "Download Session Data" : null}
+                  icon={<IconDownload size="1.6em" />}
+                  variant="outline"
+                  style={{ maxWidth: "max-content" }}
+                />
+                <IconButton
+                  label={buttonLabels ? "Close Session" : null}
+                  icon={<IconLock size="1.6em" />}
                   variant="outline"
                   style={{ maxWidth: "max-content" }}
                   onClick={() => closeSession()}

@@ -281,6 +281,17 @@ export function JoinClass(props) {
 export function Poll(props) {
   const [selected, setSelected] = useState("");
   const server = "http://localhost:3000";
+  const [voteButtons, setVoteButtons] = useState(null);
+
+  useEffect(() => {
+    setVoteButtons({
+      A: document.getElementById("A-button"),
+      B: document.getElementById("B-button"),
+      C: document.getElementById("C-button"),
+      D: document.getElementById("D-button"),
+      E: document.getElementById("E-button"),
+    });
+  }, []);
 
   async function makeSelection(choice) {
     await axios
@@ -300,13 +311,10 @@ export function Poll(props) {
       });
 
     if (selected !== "") {
-      document.getElementById(`${selected}-button`).className =
-        "card btn btn-vote";
+      voteButtons[selected].className = "card btn btn-vote";
     }
     setSelected(choice);
-    if (document.getElementById(`${choice}-button`)) {
-      document.getElementById(`${choice}-button`).className += " btn-active";
-    }
+    voteButtons[choice].className += " btn-active";
   }
 
   return (

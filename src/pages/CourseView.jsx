@@ -339,12 +339,6 @@ function CourseView(props) {
           />
           <div className="row gap-3 p-3">
             <IconButton
-              label={buttonLabels ? "Download Class Data" : null}
-              icon={<IconDownload size="1.6em" />}
-              variant="outline"
-              style={{ maxWidth: "max-content" }}
-            />
-            <IconButton
               label={buttonLabels ? "View Roster" : null}
               icon={<IconList size="1.6em" />}
               variant="outline"
