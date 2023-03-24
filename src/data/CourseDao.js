@@ -199,10 +199,11 @@ class CourseDao {
     if (!poll.responses.get(email)) {
       poll.responses.set(email, {});
       poll.reponses.get(email).finalAnswer = response;
+      poll.responses.get(email).answers = {};
     } else {
       poll.liveResults[poll.get(email).finalAnswer] -= 1;
     }
-    poll.get(email).set(timestamp, response);
+    poll.get(email).answers.set(timestamp, response);
     poll.get(email).finalAnswer = response;
     poll.liveResults[response] += 1;
     course.markModified("sessions");
@@ -336,7 +337,7 @@ class CourseDao {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
     session.polls[pollId].active = false;
-    if (name !== "") {
+    if (name && name !== "") {
       session.polls[pollId].name = name;
     }
     course.markModified("sessions");

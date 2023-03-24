@@ -278,16 +278,16 @@ export function JoinClass(props) {
   );
 }
 
-export function Poll(sectionId, weekNum, sessionId, pollId, email) {
+export function Poll(props) {
   const [selected, setSelected] = useState("");
   const server = "http://localhost:3000";
 
-  function makeSelection(choice) {
-    axios
+  async function makeSelection(choice) {
+    await axios
       .patch(
-        `${server}/course/${sectionId}/${weekNum}/${sessionId}/${pollId}`,
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
         {
-          email: email,
+          email: props.email,
           timestamp: Date.now(),
           response: choice,
         }
@@ -300,14 +300,16 @@ export function Poll(sectionId, weekNum, sessionId, pollId, email) {
       });
 
     if (selected !== "") {
-      document.getElementById(selected).className = "card btn btn-vote";
+      document.getElementById(props.pollId).className = "card btn btn-vote";
     }
     setSelected(choice);
-    document.getElementById(choice).className += " btn-active";
+    if (document.getElementById(props.pollId)) {
+      document.getElementById(props.pollId).className += " btn-active";
+    }
   }
 
   return (
-    <div className="vote-btn-container" id={id}>
+    <div className="vote-btn-container" id={props.pollId}>
       <VoteButton
         label="A"
         onClick={() => makeSelection("A")}
