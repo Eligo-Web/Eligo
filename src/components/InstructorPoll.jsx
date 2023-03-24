@@ -75,7 +75,7 @@ export default function InstructorPoll() {
     window.resizeTo(fullWidth, fullHeight);
   }
 
-  async function deactivatePoll(action = "save") {
+  async function deactivatePoll(action) {
     console.log(action);
     if (action === "save") {
       await axios
@@ -126,7 +126,7 @@ export default function InstructorPoll() {
       <div className="newpoll newpoll-pop-up">
         <div className="newpoll-pop-up-content">
           <div className="d-flex align-items-center gap-3">
-            <Stopwatch onStop={deactivatePoll} />
+            <Stopwatch onStop={deactivatePoll("save")} />
             {showChart ? (
               <IconChartBarOff
                 className="data-chart"
@@ -196,7 +196,7 @@ export default function InstructorPoll() {
               variant="primary"
               label="Save"
               onClick={() => {
-                deactivatePoll();
+                deactivatePoll("save");
                 window.close();
               }}
             />
