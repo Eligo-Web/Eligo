@@ -7,9 +7,10 @@ import {
   IconMaximize,
   IconMinimize,
   IconPlayerStopFilled,
+  IconUser,
 } from "@tabler/icons-react";
 import InputField from "./InputField";
-import Chart, { defaults, Legend, plugins } from "chart.js/auto";
+import { defaults } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import "../styles/newpoll.css";
@@ -18,15 +19,16 @@ let chartRef = {};
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
   const [showChart, setShowChart] = useState(false);
+  const [numResponses, setNumResponses] = useState(0);
   const [pollData, setPollData] = useState([0, 0, 0, 0, 0]);
   const [pollName, setPollName] = useState("");
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
-  let fullHeight = winHeight;
-  let fullWidth = winWidth;
   const [chartRef, setChartRef] = useState({});
   const location = useLocation();
   const server = "http://localhost:3000";
+  let fullHeight = winHeight;
+  let fullWidth = winWidth;
   document.title = "New Poll" + (minimized ? " (mini)" : "");
 
   let data = {
@@ -49,6 +51,14 @@ export default function InstructorPoll() {
   const chart = PollChart(data, setChartRef);
 
   useEffect(() => {
+    if (numResponses) {
+      const icon = document.querySelector(".responses")
+      icon.style.right = 0;
+      icon.style.opacity = 1;
+    }
+  }, [numResponses]);
+
+  useEffect(() => {
     const interval = setInterval(async () => {
       let pollUpdate = [];
       await axios
@@ -57,6 +67,7 @@ export default function InstructorPoll() {
         )
         .then((res) => {
           pollUpdate = Object.values(res.data.data.liveResults);
+          setNumResponses(res.data.data.numResponses);
           setPollName(res.data.data.name);
           setPollData(pollUpdate);
         })
@@ -127,6 +138,10 @@ export default function InstructorPoll() {
       <div className="newpoll newpoll-pop-up">
         <div className="newpoll-pop-up-content">
           <div className="d-flex align-items-center gap-3">
+            <div className="responses">
+              <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
+              {numResponses}
+            </div>
             <Stopwatch onStop={deactivatePoll} />
             {showChart ? (
               <IconChartBarOff

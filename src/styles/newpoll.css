@@ -57,14 +57,16 @@
   min-width: 0;
 }
 
-.stopwatch {
+.stopwatch,
+.responses {
   display: flex;
   justify-content: end;
-  background-color: #fbb8abd7;
+  align-items: center;
   width: fit-content;
   font-weight: 600;
   font-size: 1.2rem;
   color: #650000;
+  background-color: #fbb8abd7;
   padding: 0.5rem 1.3rem;
   border-radius: 10rem;
   transition: 0.2s ease-in-out;
@@ -75,6 +77,14 @@
 .stopwatch-buttons {
   display: flex;
   align-items: center;
+}
+
+.responses {
+  right: -2rem;
+  position: relative;
+  opacity: 0;
+  color: #1b2543;
+  background-color: #c2d3f3;
 }
 
 .stop-button {

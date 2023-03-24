@@ -164,6 +164,7 @@ class CourseDao {
     session.polls[pollId] = {};
     session.polls[pollId].name = `Poll ${session.numPolls}`;
     session.polls[pollId].responses = new Map();
+    session.polls[pollId].numResponses = 0;
     session.polls[pollId].active = true;
     session.polls[pollId].liveResults = new Map([
       ["A", 0],
@@ -211,6 +212,7 @@ class CourseDao {
       responses.set(email, {});
       responses.get(email).finalAnswer = response;
       responses.get(email).answers = {};
+      poll.numResponses++;
     } else {
       poll.liveResults[responses.get(email).finalAnswer] -= 1;
     }
