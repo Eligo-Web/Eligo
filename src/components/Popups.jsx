@@ -282,7 +282,6 @@ export function Poll(props) {
   const [selected, setSelected] = useState("");
   const server = "http://localhost:3000";
 
-
   async function makeSelection(choice) {
     await axios
       .patch(
@@ -301,11 +300,12 @@ export function Poll(props) {
       });
 
     if (selected !== "") {
-      document.getElementById(props.pollId).className = "card btn btn-vote";
+      document.getElementById(`${selected}-button`).className =
+        "card btn btn-vote";
     }
     setSelected(choice);
-    if (document.getElementById(props.pollId)) {
-      document.getElementById(props.pollId).className += " btn-active";
+    if (document.getElementById(`${choice}-button`)) {
+      document.getElementById(`${choice}-button`).className += " btn-active";
     }
   }
 

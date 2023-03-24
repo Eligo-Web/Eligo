@@ -56,8 +56,7 @@ export default function InstructorPoll() {
           `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
         )
         .then((res) => {
-          pollUpdate = 
-            Object.values(res.data.data.liveResults);
+          pollUpdate = Object.values(res.data.data.liveResults);
           setPollName(res.data.data.name);
           setPollData(pollUpdate);
         })
@@ -65,7 +64,7 @@ export default function InstructorPoll() {
           console.log(err);
         });
       chartRef.getContext("2d").chart.update();
-    }, 5000);
+    }, 50);
     return () => clearInterval(interval);
   }, [chartRef]);
 
@@ -127,7 +126,7 @@ export default function InstructorPoll() {
       <div className="newpoll newpoll-pop-up">
         <div className="newpoll-pop-up-content">
           <div className="d-flex align-items-center gap-3">
-            <Stopwatch />
+            <Stopwatch onStop={deactivatePoll} />
             {showChart ? (
               <IconChartBarOff
                 className="data-chart"
@@ -208,7 +207,7 @@ export default function InstructorPoll() {
   );
 }
 
-function Stopwatch() {
+function Stopwatch(props) {
   const [time, setTime] = useState(0);
   const [running, setRunning] = useState(true);
 
@@ -223,9 +222,8 @@ function Stopwatch() {
     watch.style.gap = 0;
     watch.style.backgroundColor = "#c2d3f3";
     watch.style.color = "#1b2543";
-    console.log(time);
     timeText.style.width = "fit-content";
-    deactivatePoll();
+    props.onStop();
   }
 
   useEffect(() => {

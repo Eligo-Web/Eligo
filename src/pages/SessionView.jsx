@@ -91,7 +91,7 @@ function SessionView(props) {
       },
     });
   }
-  
+
   function studentContent() {
     const [pollOpen, setPollOpen] = useState(false);
     const [pollId, setPollId] = useState(null);
@@ -108,9 +108,11 @@ function SessionView(props) {
         })
         .catch((err) => console.log(err));
     }
+
     useEffect(() => {
       checkActivePoll();
     }, []);
+
     return (
       <div>
         <BackButton label="Overview" onClick={() => navigateOverview()} />

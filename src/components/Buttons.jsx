@@ -36,7 +36,7 @@ export function IconButton(props) {
 export function VoteButton(props) {
   return (
     <Button
-      id={props.label + " button"}
+      id={props.label + "-button"}
       variant="vote"
       className="card"
       onClick={props.onClick}

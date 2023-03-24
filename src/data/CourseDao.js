@@ -165,7 +165,13 @@ class CourseDao {
     session.polls[pollId].name = `Poll ${session.numPolls}`;
     session.polls[pollId].responses = new Map();
     session.polls[pollId].active = true;
-    session.polls[pollId].liveResults = new Map([ ["A", 0], ["B", 0], ["C", 0], ["D", 0], ["E", 0] ]);
+    session.polls[pollId].liveResults = new Map([
+      ["A", 0],
+      ["B", 0],
+      ["C", 0],
+      ["D", 0],
+      ["E", 0],
+    ]);
 
     course.markModified("sessions");
     await course.save();
@@ -195,6 +201,9 @@ class CourseDao {
     }
     if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
+    }
+    if (!session.polls[pollId].active) {
+      throw new ApiError(403, `Cannot vote, poll has closed`);
     }
     let poll = session.polls[pollId];
     let responses = new Map(Object.entries(poll.responses));
