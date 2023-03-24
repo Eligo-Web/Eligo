@@ -169,6 +169,17 @@
   gap: 0.8rem;
 }
 
+.vote-container {
+  opacity: 0;
+  gap: 1.5rem;
+  padding: 3rem;
+  margin: 3rem;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+  transition: 0.1s ease-in-out;
+}
+
 @media screen and (max-width: 35rem) {
   .card-container > * {
     flex: 0 100%;

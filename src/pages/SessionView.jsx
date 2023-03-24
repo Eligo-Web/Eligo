@@ -3,7 +3,7 @@ import { Poll } from "../components/Popups";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
-import Overlay from "../components/Overlay";
+import Overlay, { openPopup } from "../components/Overlay";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { BackButton, IconButton } from "../components/Buttons";
@@ -19,6 +19,10 @@ function SessionView(props) {
   const server = "http://localhost:3000";
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(null);
+
+  function pause() {
+    return new Promise((res) => setTimeout(res, 400));
+  }
 
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
@@ -95,6 +99,8 @@ function SessionView(props) {
   function studentContent() {
     const [pollOpen, setPollOpen] = useState(false);
     const [pollId, setPollId] = useState(null);
+    const [votePopup, setVotePopup] = useState(null);
+
     async function checkActivePoll() {
       await axios
         .get(
@@ -113,6 +119,44 @@ function SessionView(props) {
       checkActivePoll();
     }, []);
 
+    useEffect(() => {
+      // set voteOverlay
+      if (pollOpen && pollId) {
+        setVotePopup(
+          <Overlay
+            title="Vote"
+            id="Vote"
+            content={
+              <Poll
+                sectionId={location.state.sectionId}
+                weekNum={location.state.weekNum}
+                sessionId={location.state.sessionId}
+                pollId={pollId}
+                email={location.state.email}
+              />
+            }
+            key="vote-popup"
+            vote
+          />
+        );
+      } else loadEmpty();
+      async function loadEmpty() {
+        await pause();
+        document.getElementById("vote-container").style.opacity = 100;
+      }
+    }, [pollOpen]);
+
+    useEffect(() => {
+      async function openVote() {
+        if (votePopup) {
+          document.getElementById("vote-container").style.opacity = 100;
+          await pause();
+          openPopup("Vote");
+        }
+      }
+      openVote();
+    }, [votePopup]);
+
     return (
       <div>
         <BackButton label="Overview" onClick={() => navigateOverview()} />
@@ -123,30 +167,24 @@ function SessionView(props) {
             description={location.state.passcode}
             clickable
           />
-          {pollOpen ? (
-            <Poll
-              sectionId={location.state.sectionId}
-              weekNum={location.state.weekNum}
-              sessionId={location.state.sessionId}
-              pollId={pollId}
-              email={location.state.email}
-            />
-          ) : (
-            <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
-              <div className="blank-state-msg">
-                Your instructor has no open polls right now.
-              </div>
-              <Button
-                variant="blank-state"
-                className="large-title"
-                onClick={() => {
-                  window.location.reload();
-                }}
-              >
-                Refresh
-              </Button>
+          {pollOpen ? votePopup : null}
+          <div className="vote-container" id="vote-container">
+            <div className="blank-state-msg">
+              {pollOpen
+                ? "There's a poll waiting - join below!"
+                : "Your instructor has no open polls right now."}
             </div>
-          )}
+            <Button
+              variant="blank-state"
+              className="large-title"
+              onClick={() => {
+                if (!pollOpen) window.location.reload();
+                else openPopup("Vote");
+              }}
+            >
+              {pollOpen ? "Vote" : "Refresh"}
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -251,17 +289,6 @@ function SessionView(props) {
     }
 
     return cardContainer;
-  }
-
-  function renderOverlays(num) {
-    let overlays = [];
-    for (let i = 1; i <= num; i++) {
-      let title = `Poll ${i}`;
-      overlays.push(
-        <Overlay title={title} content={Poll(title)} key={title} />
-      );
-    }
-    return overlays;
   }
 
   async function createPoll() {
