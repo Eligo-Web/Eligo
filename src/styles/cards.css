@@ -140,9 +140,12 @@
 .semester-container,
 .session-container {
   transition: all 0.1s ease-in-out;
-  mix-blend-mode: hard-light;
   max-height: fit-content;
   opacity: 100;
+}
+
+.semester-container {
+  mix-blend-mode: hard-light;
 }
 
 .session-container {
