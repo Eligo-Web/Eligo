@@ -114,7 +114,6 @@ function SessionView(props) {
     return (
       <div>
         <BackButton label="Overview" onClick={() => navigateOverview()} />
-<<<<<<< HEAD
         <div className="card-wrapper">
           <Menu />
           <MenuBar
@@ -144,23 +143,6 @@ function SessionView(props) {
               >
                 Refresh
               </Button>
-=======
-        {pollOpen ? (
-          <Overlay
-          content={
-          <Poll
-            sectionId={location.state.sectionId}
-            weekNum={location.state.weekNum}
-            sessionId={location.state.sessionId}
-            pollId={pollId}
-            email={location.state.email}
-          />
-          }/>
-        ) : (
-          <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
-            <div className="blank-state-msg">
-              Your instructor has no open polls right now.
->>>>>>> 1f27d31 (api calls fixed)
             </div>
           )}
         </div>
