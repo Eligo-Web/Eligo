@@ -75,7 +75,7 @@ export default function InstructorPoll() {
     window.resizeTo(fullWidth, fullHeight);
   }
 
-  async function deactivatePoll(action) {
+  async function deactivatePoll(action, close) {
     console.log(action);
     if (action === "save") {
       await axios
@@ -103,6 +103,7 @@ export default function InstructorPoll() {
           console.log(err);
         });
     }
+    if (close) window.close();
   }
 
   window.onload = function () {
@@ -126,7 +127,7 @@ export default function InstructorPoll() {
       <div className="newpoll newpoll-pop-up">
         <div className="newpoll-pop-up-content">
           <div className="d-flex align-items-center gap-3">
-            <Stopwatch onStop={deactivatePoll("save")} />
+            <Stopwatch onStop={deactivatePoll} />
             {showChart ? (
               <IconChartBarOff
                 className="data-chart"
@@ -188,16 +189,16 @@ export default function InstructorPoll() {
               variant="secondary"
               label="Discard"
               onClick={() => {
-                deactivatePoll("discard");
-                window.close();
+                console.log("will discard")
+                deactivatePoll("discard", true);
               }}
             />
             <PrimaryButton
               variant="primary"
               label="Save"
               onClick={() => {
-                deactivatePoll("save");
-                window.close();
+                console.log("will save")
+                deactivatePoll("save", true);
               }}
             />
           </div>
@@ -223,7 +224,7 @@ function Stopwatch(props) {
     watch.style.backgroundColor = "#c2d3f3";
     watch.style.color = "#1b2543";
     timeText.style.width = "fit-content";
-    props.onStop();
+    props.onStop("save", false);
   }
 
   useEffect(() => {

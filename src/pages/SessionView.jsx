@@ -3,7 +3,7 @@ import { Poll } from "../components/Popups";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuBar from "../components/MenuBar";
 import Menu from "../components/Menu";
-import Overlay, { openPopup } from "../components/Overlay";
+import Overlay, { closePopup, openPopup } from "../components/Overlay";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { BackButton, IconButton } from "../components/Buttons";
@@ -106,10 +106,14 @@ function SessionView(props) {
         .get(
           `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`
         )
-        .then((res) => {
+        .then(async (res) => {
           if (res.data.data) {
             setPollId(res.data.data.activePollId);
             setPollOpen(true);
+          } else {
+            closePopup("Vote");
+            await pause();
+            setPollOpen(false);
           }
         })
         .catch((err) => console.log(err));
@@ -117,6 +121,10 @@ function SessionView(props) {
 
     useEffect(() => {
       checkActivePoll();
+      const interval = setInterval(() => {
+        checkActivePoll();
+      }, 1000);
+      return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {

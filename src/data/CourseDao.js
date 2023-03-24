@@ -160,7 +160,7 @@ class CourseDao {
         session.polls[id].active = false;
       }
     }
-    session.numPolls += 1;
+    session.numPolls++;
     session.polls[pollId] = {};
     session.polls[pollId].name = `Poll ${session.numPolls}`;
     session.polls[pollId].responses = new Map();
@@ -218,7 +218,7 @@ class CourseDao {
     answers.set(timestamp, response);
     responses.get(email).answers = answers;
     responses.get(email).finalAnswer = response;
-    poll.liveResults[response] += 1;
+    poll.liveResults[response]++;
     poll.responses = responses;
     course.markModified("sessions");
     await course.save();
@@ -418,6 +418,7 @@ class CourseDao {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
     delete session.polls[pollId];
+    session.numPolls--;
     course.markModified("sessions");
     await course.save();
     return course;

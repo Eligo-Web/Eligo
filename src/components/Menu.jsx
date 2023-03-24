@@ -83,7 +83,7 @@ function Menu(props) {
               }
               style={{ cursor: "pointer" }}
             >
-              Eligo
+              EduPoll
             </div>
           </Container>
           <Container className="d-flex flex-row p-3 gap-3 card-subtitle">
