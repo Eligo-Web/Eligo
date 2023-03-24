@@ -189,7 +189,7 @@ export default function InstructorPoll() {
               variant="secondary"
               label="Discard"
               onClick={() => {
-                console.log("will discard")
+                console.log("will discard");
                 deactivatePoll("discard", true);
               }}
             />
@@ -197,7 +197,7 @@ export default function InstructorPoll() {
               variant="primary"
               label="Save"
               onClick={() => {
-                console.log("will save")
+                console.log("will save");
                 deactivatePoll("save", true);
               }}
             />

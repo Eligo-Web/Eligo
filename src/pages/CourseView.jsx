@@ -23,8 +23,8 @@ function CourseView(props) {
   const [refresh, setRefresh] = useState(false);
   const server = "http://localhost:3000";
 
-  function pause() {
-    return new Promise((res) => setTimeout(res, 250));
+  function pause(mult = 1) {
+    return new Promise((res) => setTimeout(res, 250 * mult));
   }
 
   useEffect(() => {
@@ -185,6 +185,7 @@ function CourseView(props) {
 
   function studentContent() {
     const [sessionOpen, setSessionOpen] = useState(false);
+    const [joining, setJoining] = useState("");
     const [props, setProps] = useState({
       name: "",
       permission: "",
@@ -200,7 +201,7 @@ function CourseView(props) {
     async function checkSession() {
       await axios
         .get(`${server}/course/${location.state.sectionId}/${getWeekNumber()}/`)
-        .then((res) => {
+        .then(async (res) => {
           console.log(res);
           const session = res.data.data;
           if (res.data.data) {
@@ -209,6 +210,9 @@ function CourseView(props) {
                 location.state.email
               )
             ) {
+              setJoining(session.activeSession.name);
+              container.style.opacity = 100;
+              await pause(4);
               navigate("/session", {
                 state: {
                   name: location.state.name,
@@ -224,6 +228,7 @@ function CourseView(props) {
               });
             }
             setSessionOpen(true);
+            container.style.opacity = 100;
             openPopup("Join Session");
             setProps({
               name: location.state.name,
@@ -259,23 +264,27 @@ function CourseView(props) {
         <div className="card-wrapper">
           <div id="session-container" className="session-container">
             <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
-              <div className="m-5 p-5 gap-4 d-flex flex-column align-items-center">
+              <div className="session-waiting">
                 <div className="blank-state-msg">
-                  {sessionOpen
+                  {joining
+                    ? `Please wait. Joining "${joining}"...`
+                    : sessionOpen
                     ? "Your instructor has started a session!"
                     : "Hmm... It seems your instructor has not started a session yet."}
                 </div>
-                <Button
-                  variant="blank-state"
-                  className="large-title"
-                  onClick={() => {
-                    sessionOpen
-                      ? openPopup("Join Session")
-                      : window.location.reload();
-                  }}
-                >
-                  {sessionOpen ? "Join Session" : "Refresh"}
-                </Button>
+                {joining ? null : (
+                  <Button
+                    variant="blank-state"
+                    className="large-title"
+                    onClick={() => {
+                      sessionOpen
+                        ? openPopup("Join Session")
+                        : window.location.reload();
+                    }}
+                  >
+                    {sessionOpen ? "Join Session" : "Refresh"}
+                  </Button>
+                )}
               </div>
             </div>
           </div>

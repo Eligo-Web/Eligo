@@ -185,6 +185,16 @@
   transition: 0.1s ease-in-out;
 }
 
+.session-waiting {
+  gap: 1.5rem;
+  padding: 3rem;
+  margin: 3rem;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+  flex: 1;
+}
+
 @media screen and (max-width: 35rem) {
   .card-container > * {
     flex: 0 100%;

@@ -86,5 +86,5 @@ export function BlankSessionView() {
       <PollCard blank />
       <PollCard blank />
     </Container>
-  )
+  );
 }

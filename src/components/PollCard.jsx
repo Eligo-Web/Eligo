@@ -9,9 +9,7 @@ import { openPopup } from "./Overlay";
  */
 function PollCard(props) {
   if (props.blank) {
-    return (
-      <div className="card poll-card clickable inactive"/>
-    )
+    return <div className="card poll-card clickable inactive" />;
   }
   let inactive = "";
   if (props.inactive) {
