@@ -245,21 +245,17 @@ function SessionView(props) {
             showDescription
           />
           <div className="poll-container">{polls}</div>
-          {location.state.sessionActive ? (
-            <div className="courses-bottom-row bottom-0 gap-3">
+          <div className="courses-bottom-row bottom-0 gap-3">
+            {location.state.sessionActive ? (
               <IconButton
                 label="Create Poll"
                 icon={<IoMdAddCircleOutline size="1.7em" />}
                 style={{ maxWidth: "max-content" }}
                 onClick={() => createPoll()}
               />
-              <div className="row gap-3 p-3">
-                <IconButton
-                  label={buttonLabels ? "Download Session Data" : null}
-                  icon={<IconDownload size="1.6em" />}
-                  variant="outline"
-                  style={{ maxWidth: "max-content" }}
-                />
+            ) : null}
+            <div className="row gap-3 p-3">
+              {location.state.sessionActive ? (
                 <IconButton
                   label={buttonLabels ? "Close Session" : null}
                   icon={<IconLock size="1.6em" />}
@@ -267,9 +263,19 @@ function SessionView(props) {
                   style={{ maxWidth: "max-content" }}
                   onClick={() => closeSession()}
                 />
-              </div>
+              ) : null}
+              <IconButton
+                label={
+                  buttonLabels || !location.state.sessionActive
+                    ? "Download Session Data"
+                    : null
+                }
+                icon={<IconDownload size="1.6em" />}
+                variant="outline"
+                style={{ maxWidth: "max-content" }}
+              />
             </div>
-          ) : null}
+          </div>
         </div>
       </div>
     );
