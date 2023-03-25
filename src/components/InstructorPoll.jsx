@@ -12,6 +12,7 @@ import {
   IconTrash,
   IconUser,
   IconDownload,
+  IconInfoCircle,
 } from "@tabler/icons-react";
 import InputField from "./InputField";
 import { defaults } from "chart.js/auto";
@@ -358,22 +359,20 @@ export function ClosedPoll(props) {
         <div
           className="pop-up-content align-items-center"
           id={`${props.pollId}-popup`}
+          style={{ padding: "0 1rem" }}
         >
           <div
             className="d-grid align-items-center gap-3"
             style={{
-              width: "90%",
+              width: "100%",
               paddingBottom: "0.5rem",
             }}
           >
-            <InputField
-              label="Date Created"
-              value={new Date(pollInfo.startTimestamp).toLocaleString()}
-              disabled
-            />
-            <InputField label="Poll Name" value={pollInfo.name} disabled />
+            <div className="input-group">
+              <InputField label="Poll Name" value={pollInfo.name} disabled />
+            </div>
             <div
-              className="d-flex gap-3"
+              className="d-flex gap-2"
               style={{
                 padding: "0 0.5rem",
                 justifyContent: "flex-start",
@@ -385,39 +384,49 @@ export function ClosedPoll(props) {
                   (pollInfo.endTimestamp - pollInfo.startTimestamp) / 1000
                 )}
               />
-              <div className="responses">
+              <div className="responses closed">
                 <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
                 {pollInfo.numResponses}
               </div>
-              <div className="delete-poll" onClick={() => deletePoll()}>
-                <IconTrash stroke="0.14rem" />
-                Delete
+              <div className="responses closed" style={{ marginLeft: "auto" }}>
+                {new Date(pollInfo.startTimestamp).toLocaleString()}
               </div>
             </div>
           </div>
           <div
             style={{
               height: "fit-content",
-              width: "90%",
+              width: "100%",
             }}
           >
-            {chart}
-            <div className="d-flex gap-3">
+            {pollInfo.numResponses ? (
+              chart
+            ) : (
+              <center className="card-subtitle large-title m-auto">
+                No responses recorded
+              </center>
+            )}
+          </div>
+          <div className="button-row flex-row-reverse">
             <IconButton
-                label="Detailed"
-                icon={<IconDownload size="1.6em" />}
-                variant="outline"
-                style={{ maxWidth: "max-content" }}
-                onClick={() => downloadPollDataDetailed()}
-              />
-              <IconButton
-                label="Final"
-                icon={<IconDownload size="1.6em" />}
-                variant="outline"
-                style={{ maxWidth: "max-content" }}
-                onClick={() => downloadPollDataFinal()}
-              />
-              </div>
+              label="Final Votes"
+              icon={<IconDownload size="1.6em" />}
+              variant="outline"
+              style={{ maxWidth: "max-content" }}
+              onClick={() => downloadPollDataFinal()}
+            />
+            <IconButton
+              label="Detailed"
+              icon={<IconDownload size="1.6em" />}
+              variant="outline"
+              style={{ maxWidth: "max-content" }}
+              onClick={() => downloadPollDataDetailed()}
+            />
+            <PrimaryButton
+              variant="delete"
+              label="Delete"
+              onClick={() => deletePoll()}
+            />
           </div>
         </div>
       ) : null}
