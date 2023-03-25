@@ -9,6 +9,7 @@ import {
   IconMaximize,
   IconMinimize,
   IconPlayerStopFilled,
+  IconTrash,
   IconUser,
 } from "@tabler/icons-react";
 import InputField from "./InputField";
@@ -16,6 +17,7 @@ import { defaults } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import "../styles/newpoll.css";
+import { closePopup } from "./Overlay.jsx";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -263,6 +265,23 @@ export function ClosedPoll(props) {
       .catch((err) => console.log(err));
   }
 
+  async function deletePoll() {
+    await axios
+      .delete(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    closePopup(props.pollId);
+    if (props.setRefresh) {
+      props.setRefresh(!props.refresh);
+    }
+  }
+
   useEffect(() => {
     getPollInfo();
   }, []);
@@ -296,6 +315,7 @@ export function ClosedPoll(props) {
               value={new Date(pollInfo.startTimestamp).toLocaleString()}
               disabled
             />
+            <InputField label="Poll Name" value={pollInfo.name} disabled />
             <div
               className="d-flex gap-3"
               style={{
@@ -312,6 +332,10 @@ export function ClosedPoll(props) {
               <div className="responses">
                 <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
                 {pollInfo.numResponses}
+              </div>
+              <div className="delete-poll" onClick={() => deletePoll()}>
+                <IconTrash stroke="0.14rem" />
+                Delete
               </div>
             </div>
           </div>
@@ -339,7 +363,9 @@ function Stopwatch(props) {
     }
   }, [props.stopTime]);
 
-  if (!props.autostart) renderStop();
+  useEffect(() => {
+    if (!props.autostart) renderStop();
+  }, []);
 
   function stopTime() {
     if (props.setStopTime) {

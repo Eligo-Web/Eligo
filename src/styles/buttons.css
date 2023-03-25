@@ -82,7 +82,9 @@
 }
 
 .btn-primary-red,
-.btn-sign-out {
+.btn-sign-out,
+.delete-poll:hover,
+.delete-poll:focus {
   background-color: #f1987c;
   color: #650000;
 }
@@ -97,7 +99,8 @@
 }
 
 .btn-primary-red:active,
-.btn-sign-out:active {
+.btn-sign-out:active,
+.delete-poll:active {
   background-color: #e66f5a;
   border-color: #5e0d06a0;
   color: #4e0000;

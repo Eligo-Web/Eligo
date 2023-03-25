@@ -58,6 +58,7 @@
 }
 
 .stopwatch,
+.delete-poll,
 .responses,
 .date-created {
   display: flex;
@@ -78,6 +79,13 @@
 .stopwatch-buttons {
   display: flex;
   align-items: center;
+}
+
+.delete-poll {
+  padding: 0 1rem;
+  cursor: pointer;
+  margin-left: auto;
+  border: 0.2rem solid transparent;
 }
 
 .responses {

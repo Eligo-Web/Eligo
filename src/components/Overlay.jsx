@@ -5,6 +5,7 @@ import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { useEffect, useState } from "react";
 import "../styles/overlay.css";
+import { ClosedPoll } from "./InstructorPoll";
 
 export function openPopup(id) {
   const overlay = document.getElementById(id + "-popup");
@@ -47,7 +48,7 @@ export default function Overlay(props) {
   }
 
   useEffect(() => {
-    if (props.vote || props.closed) return;
+    if (props.vote || props.closedPoll) return;
     const overlay = document.getElementById(props.id + "-popup");
     const buttonRow = overlay.querySelector(".button-row");
     const deleteBtns = overlay.querySelector(".delete-popup");
@@ -129,6 +130,15 @@ export default function Overlay(props) {
             <JoinSession
               childProps={props.joinSessionProps}
               control={childState}
+            />
+          ) : props.closedPoll ? (
+            <ClosedPoll
+              sectionId={props.childContent.sectionId}
+              weekNum={props.childContent.weekNum}
+              sessionId={props.childContent.sessionId}
+              pollId={props.pollId}
+              refresh={props.refresh}
+              setRefresh={props.setRefresh}
             />
           ) : (
             props.content || <Default />

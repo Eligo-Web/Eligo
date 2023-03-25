@@ -5,8 +5,7 @@
   background-color: #b2c6ed;
   mix-blend-mode: hard-light;
   border-radius: 1rem;
-  border-color: transparent;
-  border-width: 0.25rem;
+  border: 0.2rem solid transparent;
   transition: 0.1s ease-in-out;
   flex: 1;
 }
@@ -35,6 +34,7 @@
 .poll-card {
   height: 5rem;
   justify-content: center;
+  padding: 0 1rem;
   border: 0.2rem solid rgba(0, 6, 13, 0.55);
 }
 
@@ -46,7 +46,7 @@
 }
 
 .inactive {
-  border: transparent;
+  border-color: transparent;
   opacity: 80%;
 }
 

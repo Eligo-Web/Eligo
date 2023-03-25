@@ -23,6 +23,7 @@ function SessionView(props) {
   const server = "http://localhost:3000";
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(null);
+  const [popup, setPopup] = useState(null);
 
   function pause() {
     return new Promise((res) => setTimeout(res, 250));
@@ -425,16 +426,12 @@ function SessionView(props) {
           <Overlay
             key={pollId}
             id={pollId}
-            title={poll.name}
-            closed
-            content={
-              <ClosedPoll
-                sectionId={location.state.sectionId}
-                weekNum={location.state.weekNum}
-                sessionId={location.state.sessionId}
-                pollId={pollId}
-              />
-            }
+            title="Poll Details"
+            pollId={pollId}
+            childContent={location.state}
+            refresh={refresh}
+            setRefresh={setRefresh}
+            closedPoll
           />
         );
       }
@@ -464,6 +461,10 @@ function SessionView(props) {
   async function createPoll() {
     const server = "http://localhost:3000";
     const newPollId = `poll-${Date.now()}`;
+    if (popup) {
+      popup.focus();
+      return;
+    }
     await axios
       .post(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
@@ -471,23 +472,25 @@ function SessionView(props) {
       .then((res) => {})
       .catch((err) => console.log(err));
     setRefresh({ created: true });
-    const popup = window.open(
+    const newPopup = window.open(
       "/newpoll",
       "New Poll",
       "toolbar=no, location=no, statusbar=no, \
        menubar=no, scrollbars=0, width=250, \
        height=100, top=110, left=1040"
     );
+    setPopup(newPopup);
     // communicate with window
-    popup.props = {
+    newPopup.props = {
       sectionId: location.state.sectionId,
       weekNum: location.state.weekNum,
       sessionId: location.state.sessionId,
       pollId: newPollId,
     };
-    while (!popup.closed) {
+    while (!newPopup.closed) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
+    setPopup(null);
     await axios
       .put(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`
