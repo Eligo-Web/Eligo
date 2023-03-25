@@ -164,6 +164,8 @@ class CourseDao {
     session.numPolls++;
     session.polls[pollId] = {};
     session.polls[pollId].name = `Poll ${session.numPolls}`;
+    session.polls[pollId].startTimestamp = Date.now();
+    session.polls[pollId].endTimestamp = -1;
     session.polls[pollId].responses = new Map();
     session.polls[pollId].numResponses = 0;
     session.polls[pollId].active = true;
@@ -354,6 +356,7 @@ class CourseDao {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
     session.polls[pollId].active = false;
+    session.polls[pollId].endTimestamp = Date.now();
     if (name && name !== "") {
       session.polls[pollId].name = name;
     }
