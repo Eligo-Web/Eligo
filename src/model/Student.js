@@ -23,6 +23,10 @@ const StudentSchema = new mongoose.Schema({
     required: true,
     default: {},
   },
+  clickerId: {
+    type: String,
+    unique: true,
+  },
 });
 
 const Student = mongoose.model("Student", StudentSchema);

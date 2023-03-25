@@ -112,6 +112,26 @@ Student.put("/:email/:semester/:sectionId", async (req, res) => {
   }
 });
 
+Student.patch("/:email/:clickerId", async (req, res) => {
+  const email = req.params.email;
+  const clickerId = req.params.clickerId;
+  try {
+    const student = await studentDao.updateClickerId(email, clickerId);
+    res.json({
+      status: 200,
+      message: `Student updated`,
+      data: student,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
 Student.delete("/:email", async (req, res) => {
   const email = req.params.email;
   try {

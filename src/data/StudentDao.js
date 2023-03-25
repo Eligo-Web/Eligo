@@ -81,6 +81,16 @@ class StudentDao {
     return student;
   }
 
+  async updateClickerId(email, clickerId) {
+    const student = await Student.findOne({ email: email.toLowerCase() });
+    if (!student) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    student.clickerId = clickerId;
+    await student.save();
+    return student;
+  }
+
   async delete(id) {
     const student = await Student.findByIdAndDelete(id);
     if (!student) {
