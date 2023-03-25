@@ -109,6 +109,7 @@ class CourseDao {
     }
     course.sessions.get(weekNum).set(sessionId, {
       name: name,
+      date: new Date().toLocaleDateString(),
       active: true,
       numPolls: 0,
       passcode: passcode,

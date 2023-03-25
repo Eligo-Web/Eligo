@@ -52,7 +52,7 @@ export default function InstructorPoll() {
 
   useEffect(() => {
     if (numResponses) {
-      const icon = document.querySelector(".responses")
+      const icon = document.querySelector(".responses");
       icon.style.right = 0;
       icon.style.opacity = 1;
     }

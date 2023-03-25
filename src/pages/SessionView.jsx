@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { BlankSessionView } from "../components/BlankStates";
 import { IconDownload, IconLock } from "@tabler/icons-react";
+import Papa from "papaparse";
 
 function SessionView(props) {
   const location = useLocation();
@@ -225,6 +226,45 @@ function SessionView(props) {
       loadContent();
     }, [refresh]);
 
+    async function downloadSessionData() {
+      await axios
+        .get(
+          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/`
+        )
+        .then((res) => {
+          const csv = Papa.unparse({
+            fields: [
+              "Course Name",
+              "Session Name",
+              "Session Passcode",
+              "Session Date",
+              "Number of Polls",
+              "Number of Students",
+              "Student Emails",
+            ],
+            data: [
+              [
+                location.state.courseName,
+                res.data.data.name,
+                res.data.data.passcode,
+                res.data.data.date,
+                res.data.data.numPolls,
+                res.data.data.students.length,
+                res.data.data.students,
+              ],
+            ],
+          });
+          console.log(csv);
+          const blob = new Blob([csv], { type: "text/csv" });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.setAttribute("href", url);
+          link.setAttribute("download", "polls.csv");
+          link.click();
+        })
+        .catch((err) => console.log(err));
+    }
+
     return (
       <div>
         <BackButton
@@ -273,6 +313,7 @@ function SessionView(props) {
                 icon={<IconDownload size="1.6em" />}
                 variant="outline"
                 style={{ maxWidth: "max-content" }}
+                onClick={() => downloadSessionData()}
               />
             </div>
           </div>
