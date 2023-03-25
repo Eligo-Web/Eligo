@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PrimaryButton } from "./Buttons.jsx";
+import { PrimaryButton, IconButton } from "./Buttons.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   IconChartBar,
@@ -11,6 +11,7 @@ import {
   IconPlayerStopFilled,
   IconTrash,
   IconUser,
+  IconDownload,
 } from "@tabler/icons-react";
 import InputField from "./InputField";
 import { defaults } from "chart.js/auto";
@@ -18,6 +19,7 @@ import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import "../styles/newpoll.css";
 import { closePopup } from "./Overlay.jsx";
+import Papa from "papaparse";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -238,6 +240,7 @@ export default function InstructorPoll() {
 export function ClosedPoll(props) {
   const server = "http://localhost:3000";
   const [pollInfo, setPollInfo] = useState(null);
+  const [chartRef, setChartRef] = useState(null);
   const thisPollData = {
     labels: ["A", "B", "C", "D", "E"],
     datasets: [
@@ -255,6 +258,8 @@ export function ClosedPoll(props) {
       },
     ],
   };
+
+  const chart = PollChart(thisPollData, setChartRef);
 
   async function getPollInfo() {
     await axios
@@ -292,9 +297,60 @@ export function ClosedPoll(props) {
       const icon = overlay.querySelector(".responses");
       icon.style.right = 0;
       icon.style.opacity = 1;
-      thisPollData.datasets[0].data = Object.values(pollInfo.liveResults);
+      if (chartRef) {
+        thisPollData.datasets[0].data = Object.values(pollInfo.liveResults);
+        chartRef.getContext("2d").chart.data = thisPollData;
+        chartRef.getContext("2d").chart.options.animation = false;
+        chartRef.getContext("2d").chart.update();
+      }
     }
-  }, [pollInfo]);
+  }, [pollInfo, thisPollData]);
+
+  async function downloadPollDataDetailed() {
+    let emails = [];
+    let timestamps = [];
+    let responses = [];
+    for (const email in pollInfo.responses) {
+      for (const timestamp in pollInfo.responses[email].answers) {
+        emails.push(email);
+        timestamps.push(timestamp);
+        responses.push(
+          Object.values(pollInfo.responses[email].answers[timestamp])
+        );
+      }
+    }
+
+    const csv = Papa.unparse({
+      fields: ["Email", "Response", "Timestamp"],
+      data: emails.map((email, index) => [
+        email,
+        responses[index],
+        timestamps[index],
+      ]),
+    });
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${pollInfo.name}.csv`);
+    link.click();
+  }
+
+  async function downloadPollDataFinal() {
+    const csv = Papa.unparse({
+      fields: ["Email", "Final Response"],
+      data: Object.keys(pollInfo.responses).map((email) => [
+        email,
+        Object.values(pollInfo.responses[email].finalAnswer),
+      ]),
+    });
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${pollInfo.name}.csv`);
+    link.click();
+  }
 
   return (
     <div className="newpoll-pop-up-content">
@@ -345,7 +401,23 @@ export function ClosedPoll(props) {
               width: "90%",
             }}
           >
-            {PollChart(thisPollData)}
+            {chart}
+            <div className="d-flex gap-3">
+            <IconButton
+                label="Detailed"
+                icon={<IconDownload size="1.6em" />}
+                variant="outline"
+                style={{ maxWidth: "max-content" }}
+                onClick={() => downloadPollDataDetailed()}
+              />
+              <IconButton
+                label="Final"
+                icon={<IconDownload size="1.6em" />}
+                variant="outline"
+                style={{ maxWidth: "max-content" }}
+                onClick={() => downloadPollDataFinal()}
+              />
+              </div>
           </div>
         </div>
       ) : null}

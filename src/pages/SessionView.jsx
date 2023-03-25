@@ -15,7 +15,6 @@ import axios from "axios";
 import { BlankSessionView } from "../components/BlankStates";
 import { IconDownload, IconLock } from "@tabler/icons-react";
 import { ClosedPoll } from "../components/InstructorPoll";
-import Papa from "papaparse";
 
 function SessionView(props) {
   const location = useLocation();
@@ -273,70 +272,6 @@ function SessionView(props) {
           link.click();
         })
         .catch((err) => console.log(err));
-    }
-
-    async function downloadPollDataDetailed(pollId) {
-      const data = await axios
-        .get(
-          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}`
-        )
-        .then((res) => {
-          let emails = [];
-          let timestamps = [];
-          let responses = [];
-          for (const email in res.data.data.responses) {
-            for (const timestamp in res.data.data.responses[email].answers) {
-              emails.push(email);
-              timestamps.push(timestamp);
-              responses.push(
-                Object.values(res.data.data.responses[email].answers[timestamp])
-              );
-            }
-          }
-
-          const csv = Papa.unparse({
-            fields: ["Email", "Response", "Timestamp"],
-            data: emails.map((email, index) => [
-              email,
-              responses[index],
-              timestamps[index],
-            ]),
-          });
-          const blob = new Blob([csv], { type: "text/csv" });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", `${res.data.data.name}.csv`);
-          link.click();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-
-    async function downloadPollDataFinal(pollId) {
-      await axios
-        .get(
-          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}`
-        )
-        .then((res) => {
-          const csv = Papa.unparse({
-            fields: ["Email", "Final Response"],
-            data: Object.keys(res.data.data.responses).map((email) => [
-              email,
-              Object.values(res.data.data.responses[email].finalAnswer),
-            ]),
-          });
-          const blob = new Blob([csv], { type: "text/csv" });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", `${res.data.data.name}.csv`);
-          link.click();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     }
 
     return (
