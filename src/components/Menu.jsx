@@ -8,10 +8,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { IconLogout, IconUserCircle } from "@tabler/icons-react";
 import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import axios from "axios";
+import InputField from "./InputField";
+import { useEffect, useState } from "react";
 
 function Menu(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [clickerId, setClickerId] = useState(location.state.clickerId || "");
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
     getLabel = "Create Class";
@@ -34,6 +37,13 @@ function Menu(props) {
     closeMenu();
     navigate("/");
   }
+
+  useEffect(() => {
+    if (clickerId && clickerId.length === 8) {
+      console.log(clickerId);
+      // axios put clickerId to student
+    }
+  }, [clickerId]);
 
   async function leaveClass() {
     const server = "http://localhost:3000";
@@ -92,6 +102,19 @@ function Menu(props) {
           </Container>
         </Container>
         <Container className="d-flex flex-column p-3 gap-2 align-items-center">
+          {location.state.permission === "INSTRUCTOR" ? null : (
+            <center style={{ padding: "1rem" }}>
+              <InputField
+                label="iClicker Remote ID"
+                input="ex: 123ABC78"
+                default={clickerId}
+                maxLength={8}
+                onChange={(e) => setClickerId((e.target.value).toUpperCase())}
+                style={{ textTransform: "uppercase" }}
+                center
+              />
+            </center>
+          )}
           {props.hideCreate ? null : (
             <IconButton
               label={getLabel}

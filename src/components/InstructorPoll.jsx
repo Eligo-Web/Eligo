@@ -369,7 +369,7 @@ export function ClosedPoll(props) {
             }}
           >
             <div className="input-group">
-              <InputField label="Poll Name" value={pollInfo.name} disabled />
+              <InputField label="Poll Name" value={pollInfo.name} readOnly />
             </div>
             <div
               className="d-flex gap-2"

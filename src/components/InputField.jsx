@@ -22,7 +22,10 @@ export default function InputField(props) {
 
   return (
     <div className={props.small ? "input-field-small" : "input-field"}>
-      <div className="d-flex align-items-center gap-2">
+      <div
+        className="d-flex align-items-center gap-2"
+        style={{ justifyContent: props.center ? "center" : "" }}
+      >
         {props.label || "Title Text"}
         {props.disabled ? <IconLock size="1em" stroke="0.15rem" /> : null}
       </div>
@@ -33,7 +36,8 @@ export default function InputField(props) {
         onChange={props.onChange}
         onKeyDown={props.onKeyDown}
         value={props.value}
-        disabled={props.disabled}
+        readOnly={props.readOnly}
+        maxLength={props.maxLength}
         type={props.type}
         style={props.style}
       />
