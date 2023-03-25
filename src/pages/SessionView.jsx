@@ -232,6 +232,10 @@ function SessionView(props) {
           `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/`
         )
         .then((res) => {
+          let emails = [];
+          res.data.data.students.forEach((student) => {
+            emails.push(student);
+          });
           const csv = Papa.unparse({
             fields: [
               "Course Name",
@@ -250,11 +254,13 @@ function SessionView(props) {
                 res.data.data.date,
                 res.data.data.numPolls,
                 res.data.data.students.length,
-                res.data.data.students,
               ],
-            ],
+            ].concat(
+              emails.map((email) => {
+                return ["", "", "", "", "", "", email];
+              })
+            ),
           });
-          console.log(csv);
           const blob = new Blob([csv], { type: "text/csv" });
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement("a");
