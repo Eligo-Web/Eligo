@@ -13,7 +13,9 @@ export function openPopup(id) {
     overlay.querySelector(".overlay-bg").style.pointerEvents = "all";
     overlay.querySelector(".overlay-bg").style.opacity = 100;
     overlay.querySelector(".pop-up").style.opacity = 100;
-    if (id !== "Vote") overlay.querySelector(".form-control").focus();
+    if (overlay.querySelector(".form-control")) {
+      overlay.querySelector(".form-control").focus();
+    }
     overlay.style.height = "100vh";
   }
 }
@@ -45,7 +47,7 @@ export default function Overlay(props) {
   }
 
   useEffect(() => {
-    if (props.vote) return;
+    if (props.vote || props.closed) return;
     const overlay = document.getElementById(props.id + "-popup");
     const buttonRow = overlay.querySelector(".button-row");
     const deleteBtns = overlay.querySelector(".delete-popup");

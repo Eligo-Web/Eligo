@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   IconChartBar,
   IconChartBarOff,
+  IconClockHour3,
+  IconHourglassEmpty,
   IconMaximize,
   IconMinimize,
   IconPlayerStopFilled,
@@ -15,16 +17,16 @@ import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import "../styles/newpoll.css";
 
-let chartRef = {};
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
   const [showChart, setShowChart] = useState(false);
   const [numResponses, setNumResponses] = useState(0);
   const [pollData, setPollData] = useState([0, 0, 0, 0, 0]);
   const [pollName, setPollName] = useState("");
+  const [chartRef, setChartRef] = useState({});
+  const [stopTime, setStopTime] = useState(false);
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
-  const [chartRef, setChartRef] = useState({});
   const location = useLocation();
   const server = "http://localhost:3000";
   let fullHeight = winHeight;
@@ -68,7 +70,6 @@ export default function InstructorPoll() {
         .then((res) => {
           pollUpdate = Object.values(res.data.data.liveResults);
           setNumResponses(res.data.data.numResponses);
-          setPollName(res.data.data.name);
           setPollData(pollUpdate);
         })
         .catch((err) => {
@@ -86,8 +87,7 @@ export default function InstructorPoll() {
     window.resizeTo(fullWidth, fullHeight);
   }
 
-  async function deactivatePoll(action, close) {
-    console.log(action);
+  async function deactivatePoll(action) {
     if (action === "save") {
       await axios
         .put(
@@ -114,7 +114,6 @@ export default function InstructorPoll() {
           console.log(err);
         });
     }
-    if (close) window.close();
   }
 
   window.onload = function () {
@@ -133,6 +132,12 @@ export default function InstructorPoll() {
     }
   }, [minimized, showChart]);
 
+  useEffect(() => {
+    if (stopTime) {
+      deactivatePoll("save");
+    }
+  }, [stopTime]);
+
   return (
     <div className="newpoll-wrapper" id="New Poll">
       <div className="newpoll newpoll-pop-up">
@@ -142,7 +147,11 @@ export default function InstructorPoll() {
               <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
               {numResponses}
             </div>
-            <Stopwatch onStop={deactivatePoll} />
+            <Stopwatch
+              stopTime={stopTime}
+              setStopTime={setStopTime}
+              autostart
+            />
             {showChart ? (
               <IconChartBarOff
                 className="data-chart"
@@ -203,17 +212,18 @@ export default function InstructorPoll() {
             <PrimaryButton
               variant="secondary"
               label="Discard"
-              onClick={() => {
-                console.log("will discard");
-                deactivatePoll("discard", true);
+              onClick={async () => {
+                await deactivatePoll("discard");
+                window.close();
               }}
             />
             <PrimaryButton
               variant="primary"
               label="Save"
-              onClick={() => {
-                console.log("will save");
-                deactivatePoll("save", true);
+              onClick={async () => {
+                setStopTime(true);
+                await deactivatePoll("save");
+                window.close();
               }}
             />
           </div>
@@ -223,23 +233,137 @@ export default function InstructorPoll() {
   );
 }
 
+export function ClosedPoll(props) {
+  const server = "http://localhost:3000";
+  const [pollInfo, setPollInfo] = useState(null);
+  const thisPollData = {
+    labels: ["A", "B", "C", "D", "E"],
+    datasets: [
+      {
+        data: null,
+        backgroundColor: [
+          "#09507f",
+          "#2b8a35",
+          "#8c7300",
+          "#271e60",
+          "#8a0e03",
+        ],
+        borderWidth: 0,
+        borderRadius: 7,
+      },
+    ],
+  };
+
+  async function getPollInfo() {
+    await axios
+      .get(
+        `${server}/course//${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
+      )
+      .then((res) => setPollInfo(res.data.data))
+      .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    getPollInfo();
+  }, []);
+
+  useEffect(() => {
+    if (pollInfo) {
+      const overlay = document.getElementById(props.pollId + "-popup");
+      const icon = overlay.querySelector(".responses");
+      icon.style.right = 0;
+      icon.style.opacity = 1;
+      thisPollData.datasets[0].data = Object.values(pollInfo.liveResults);
+    }
+  }, [pollInfo]);
+
+  return (
+    <div className="newpoll-pop-up-content">
+      {pollInfo ? (
+        <div
+          className="pop-up-content align-items-center"
+          id={`${props.pollId}-popup`}
+        >
+          <div
+            className="d-grid align-items-center gap-3"
+            style={{
+              width: "90%",
+              paddingBottom: "0.5rem",
+            }}
+          >
+            <InputField
+              label="Date Created"
+              value={new Date(pollInfo.startTimestamp).toLocaleString()}
+              disabled
+            />
+            <div
+              className="d-flex gap-3"
+              style={{
+                padding: "0 0.5rem",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Stopwatch
+                id={props.pollId}
+                time={Math.floor(
+                  (pollInfo.endTimestamp - pollInfo.startTimestamp) / 1000
+                )}
+              />
+              <div className="responses">
+                <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
+                {pollInfo.numResponses}
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              height: "fit-content",
+              width: "90%",
+            }}
+          >
+            {PollChart(thisPollData)}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function Stopwatch(props) {
-  const [time, setTime] = useState(0);
-  const [running, setRunning] = useState(true);
+  const [time, setTime] = useState(props.time || 0);
+  const [running, setRunning] = useState(props.autostart);
+
+  useEffect(() => {
+    if (props.stopTime) {
+      stopTime();
+    }
+  }, [props.stopTime]);
+
+  if (!props.autostart) renderStop();
 
   function stopTime() {
+    if (props.setStopTime) {
+      props.setStopTime(true);
+    }
     setRunning(false);
-    const btn = document.querySelector(".stop-button");
-    const watch = document.querySelector(".stopwatch");
-    const timeText = document.querySelector(".min-sec");
-    btn.style.opacity = 0;
-    btn.style.width = 0;
-    btn.style.marginRight = 0;
-    watch.style.gap = 0;
-    watch.style.backgroundColor = "#c2d3f3";
-    watch.style.color = "#1b2543";
-    timeText.style.width = "fit-content";
-    props.onStop("save", false);
+    renderStop();
+  }
+
+  function renderStop() {
+    let overlay = document;
+    if (props.id) overlay = document.getElementById(props.id + "-popup");
+    const btn = overlay.querySelector(".stop-button");
+    const watch = overlay.querySelector(".stopwatch");
+    const timeText = overlay.querySelector(".min-sec");
+    if (btn && watch && timeText) {
+      btn.style.opacity = 0;
+      btn.style.width = 0;
+      btn.style.marginRight = 0;
+      watch.style.gap = 0;
+      watch.style.backgroundColor = "#c2d3f3";
+      watch.style.color = "#1b2543";
+      timeText.style.width = "fit-content";
+    }
   }
 
   useEffect(() => {
@@ -259,6 +383,9 @@ function Stopwatch(props) {
 
   return (
     <div className="stopwatch">
+      {props.autostart ? null : (
+        <IconClockHour3 stroke="0.14rem" style={{ marginRight: "0.6rem" }} />
+      )}
       <div className="min-sec">
         <span>{("0" + Math.floor((time / 60) % 60)).slice(-2)}:</span>
         <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
@@ -285,7 +412,7 @@ function PollChart(data, setChartRef) {
       data={data}
       updateMode="active"
       ref={(ref) => {
-        setChartRef(ref);
+        if (setChartRef) setChartRef(ref);
       }}
       options={{
         plugins: {

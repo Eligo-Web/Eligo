@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { BlankSessionView } from "../components/BlankStates";
 import { IconDownload, IconLock } from "@tabler/icons-react";
+import { ClosedPoll } from "../components/InstructorPoll";
 import Papa from "papaparse";
 
 function SessionView(props) {
@@ -204,6 +205,7 @@ function SessionView(props) {
 
   function instructorContent() {
     const [polls, setPolls] = useState(<BlankSessionView />);
+    const [overlays, setOverlays] = useState(null);
     const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
 
     window.onresize = function () {
@@ -216,11 +218,12 @@ function SessionView(props) {
 
     useEffect(() => {
       async function loadContent() {
-        const pollContainer = await populatePollCards();
+        const [pollContainer, pollOverlays] = await populatePollCards();
         await pause();
         document.querySelector(".poll-container").style.opacity = 0;
         await pause();
         setPolls(pollContainer);
+        setOverlays(pollOverlays);
         document.querySelector(".poll-container").style.opacity = 100;
       }
       loadContent();
@@ -354,6 +357,7 @@ function SessionView(props) {
             clickable
             showDescription
           />
+          {overlays}
           <div className="poll-container">{polls}</div>
           <div className="courses-bottom-row bottom-0 gap-3">
             {location.state.sessionActive ? (
@@ -395,6 +399,7 @@ function SessionView(props) {
   async function populatePollCards() {
     const activeCards = [];
     const inactiveCards = [];
+    const overlays = [];
     let polls;
 
     await axios
@@ -414,7 +419,23 @@ function SessionView(props) {
         activeCards.push(<PollCard title={poll.name} key={pollId} />);
       } else {
         inactiveCards.push(
-          <PollCard title={poll.name} key={pollId} inactive />
+          <PollCard title={poll.name} key={pollId} id={pollId} inactive />
+        );
+        overlays.push(
+          <Overlay
+            key={pollId}
+            id={pollId}
+            title={poll.name}
+            closed
+            content={
+              <ClosedPoll
+                sectionId={location.state.sectionId}
+                weekNum={location.state.weekNum}
+                sessionId={location.state.sessionId}
+                pollId={pollId}
+              />
+            }
+          />
         );
       }
     }
@@ -437,7 +458,7 @@ function SessionView(props) {
       );
     }
 
-    return cardContainer;
+    return [cardContainer, overlays];
   }
 
   async function createPoll() {

@@ -58,7 +58,8 @@
 }
 
 .stopwatch,
-.responses {
+.responses,
+.date-created {
   display: flex;
   justify-content: end;
   align-items: center;
@@ -83,6 +84,14 @@
   right: -2rem;
   position: relative;
   opacity: 0;
+  color: #1b2543;
+  background-color: #c2d3f3;
+}
+
+.date-created {
+  width: 100%;
+  font-weight: 500;
+  justify-content: left;
   color: #1b2543;
   background-color: #c2d3f3;
 }

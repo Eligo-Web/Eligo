@@ -356,7 +356,9 @@ class CourseDao {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
     session.polls[pollId].active = false;
-    session.polls[pollId].endTimestamp = Date.now();
+    if (session.polls[pollId].endTimestamp < 0) {
+      session.polls[pollId].endTimestamp = Date.now();
+    }
     if (name && name !== "") {
       session.polls[pollId].name = name;
     }
