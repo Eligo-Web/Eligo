@@ -1,4 +1,4 @@
-import { IconArrowUp, IconChevronUp } from "@tabler/icons-react";
+import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { BackButton } from "../components/Buttons";
@@ -18,12 +18,12 @@ function Roster() {
   const location = useLocation();
   const navigate = useNavigate();
   const students = location.state.students; // map of encoded student emails to student names
-  const [UP, DOWN] = ["0deg", "180deg"];
+  const [UP, DOWN] = ["ascending", "descending"];
   const [sortName, setSortName] = useState(false);
   const [sortEmail, setSortEmail] = useState(false);
   const [roster, setRoster] = useState(null);
-  const [list, setList] = useState(new Map(Object.entries(students)));
-  // const [list, setList] = useState(sampleList());
+  // const [list, setList] = useState(new Map(Object.entries(students)));
+  const [list, setList] = useState(sampleList());
   const compareValues = (a, b) => a[1].localeCompare(b[1]);
 
   function sampleList() {
@@ -103,6 +103,25 @@ function Roster() {
     }
   }
 
+  function IconSort(props) {
+    switch (props.selector) {
+      case UP:
+        return (
+          <IconArrowUp
+            size="2rem"
+            style={{ display: props.selector ? "flex" : "none" }}
+          />
+        );
+      case DOWN:
+        return (
+          <IconArrowDown
+            size="2rem"
+            style={{ display: props.selector ? "flex" : "none" }}
+          />
+        );
+    }
+  }
+
   return (
     <div>
       <BackButton
@@ -111,17 +130,11 @@ function Roster() {
       />
       <div className="roster-header">
         <div className="roster-buttons" onClick={() => handleSortName()}>
-          <IconChevronUp
-            size="2.5rem"
-            style={{ display: sortName ? "flex" : "none", rotate: sortName }}
-          />{" "}
+          <IconSort selector={sortName} />
           Name
         </div>
         <div className="roster-buttons" onClick={() => handleSortEmail()}>
-          <IconChevronUp
-            size="2.5rem"
-            style={{ display: sortEmail ? "flex" : "none", rotate: sortEmail }}
-          />{" "}
+          <IconSort selector={sortEmail} />
           Email
         </div>
       </div>

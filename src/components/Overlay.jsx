@@ -4,8 +4,8 @@ import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
 import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { useEffect, useState } from "react";
-import "../styles/overlay.css";
 import { ClosedPoll } from "./InstructorPoll";
+import "../styles/overlay.css";
 
 export function openPopup(id) {
   const overlay = document.getElementById(id + "-popup");

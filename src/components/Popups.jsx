@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
+import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { closePopup } from "./Overlay";
 import { useNavigate } from "react-router-dom";
 import InputField from "./InputField";
 import axios from "axios";
 import "../styles/newpoll.css";
-import { IconAlertTriangleFilled } from "@tabler/icons-react";
 
 export function Default() {
   return (

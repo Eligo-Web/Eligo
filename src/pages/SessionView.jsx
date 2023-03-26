@@ -11,12 +11,11 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import AccessDenied from "../components/AccessDenied";
 import { useEffect } from "react";
-import axios from "axios";
 import { BlankSessionView } from "../components/BlankStates";
 import { IconDownload, IconLock } from "@tabler/icons-react";
-import { ClosedPoll } from "../components/InstructorPoll";
-import Papa from "papaparse";
 import { pause } from "./CourseView";
+import Papa from "papaparse";
+import axios from "axios";
 
 function SessionView(props) {
   const location = useLocation();

@@ -29,14 +29,9 @@ export function BlankOverview() {
   return (
     <Container className="card-container loading">
       <div className="card-title divisor-blank"></div>
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
+      {Array.from(Array(8), (_, i) => (
+        <Card key={i} />
+      ))}
     </Container>
   );
 }
@@ -45,18 +40,9 @@ export function BlankCourseView() {
   return (
     <Container className="card-container loading">
       <div className="card-title divisor-blank"></div>
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
-      <SessionCard blank />
+      {Array.from(Array(12), (_, i) => (
+        <SessionCard blank key={i} />
+      ))}
     </Container>
   );
 }
@@ -65,26 +51,9 @@ export function BlankSessionView() {
   return (
     <Container className="poll-card-container loading">
       <div className="card-title divisor-blank"></div>
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
-      <PollCard blank />
+      {Array.from(Array(12), (_, i) => (
+        <PollCard blank key={i} />
+      ))}
     </Container>
   );
 }

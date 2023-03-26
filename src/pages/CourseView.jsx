@@ -7,13 +7,13 @@ import { BackButton, IconButton } from "../components/Buttons.jsx";
 import Overlay from "../components/Overlay";
 import { useNavigate, useLocation } from "react-router-dom";
 import { openPopup } from "../components/Overlay";
-import { IconDownload, IconList } from "@tabler/icons-react";
+import { IconList } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import "../styles/cards.css";
 import AccessDenied from "../components/AccessDenied";
 import { BlankCourseView } from "../components/BlankStates";
 import axios from "axios";
+import "../styles/cards.css";
 
 export function pause(mult = 1) {
   return new Promise((res) => setTimeout(res, 250 * mult));

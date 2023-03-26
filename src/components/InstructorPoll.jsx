@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PrimaryButton, IconButton } from "./Buttons.jsx";
 import { useLocation } from "react-router-dom";
-import {
-  IconChartBar,
-  IconChartBarOff,
-  IconClockHour3,
-  IconMaximize,
-  IconMinimize,
-  IconPlayerStopFilled,
-  IconUser,
-  IconDownload,
-} from "@tabler/icons-react";
+import * as Tabler from "@tabler/icons-react";
 import InputField from "./InputField";
 import { defaults } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
@@ -146,7 +137,7 @@ export default function InstructorPoll() {
         <div className="newpoll-pop-up-content">
           <div className="d-flex align-items-center gap-3">
             <div className="responses">
-              <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
+              <Tabler.IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
               {numResponses}
             </div>
             <Stopwatch
@@ -155,26 +146,26 @@ export default function InstructorPoll() {
               autostart
             />
             {showChart ? (
-              <IconChartBarOff
+              <Tabler.IconChartBarOff
                 className="data-chart"
                 size="2.8rem"
                 onClick={() => setShowChart(!showChart)}
               />
             ) : (
-              <IconChartBar
+              <Tabler.IconChartBar
                 className="data-chart"
                 size="2.8rem"
                 onClick={() => setShowChart(!showChart)}
               />
             )}
             {minimized ? (
-              <IconMaximize
+              <Tabler.IconMaximize
                 className="minimize"
                 size="2.8rem"
                 onClick={() => setMinimized(!minimized)}
               />
             ) : (
-              <IconMinimize
+              <Tabler.IconMinimize
                 className="minimize"
                 size="2.8rem"
                 onClick={() => {
@@ -376,7 +367,10 @@ export function ClosedPoll(props) {
                 )}
               />
               <div className="responses closed">
-                <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
+                <Tabler.IconUser
+                  stroke="0.14rem"
+                  style={{ margin: "-0.3rem" }}
+                />
                 {pollInfo.numResponses}
               </div>
               <div className="responses closed" style={{ marginLeft: "auto" }}>
@@ -401,14 +395,14 @@ export function ClosedPoll(props) {
           <div className="button-row flex-row-reverse">
             <IconButton
               label="Final Votes"
-              icon={<IconDownload size="1.6em" />}
+              icon={<Tabler.IconDownload size="1.6em" />}
               variant="outline"
               style={{ maxWidth: "max-content" }}
               onClick={() => downloadPollDataFinal()}
             />
             <IconButton
               label="Detailed"
-              icon={<IconDownload size="1.6em" />}
+              icon={<Tabler.IconDownload size="1.6em" />}
               variant="outline"
               style={{ maxWidth: "max-content" }}
               onClick={() => downloadPollDataDetailed()}
@@ -482,14 +476,17 @@ function Stopwatch(props) {
   return (
     <div className="stopwatch">
       {props.autostart ? null : (
-        <IconClockHour3 stroke="0.14rem" style={{ marginRight: "0.6rem" }} />
+        <Tabler.IconClockHour3
+          stroke="0.14rem"
+          style={{ marginRight: "0.6rem" }}
+        />
       )}
       <div className="min-sec">
         <span>{("0" + Math.floor((time / 60) % 60)).slice(-2)}:</span>
         <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
       </div>
       <div className="stopwatch-buttons">
-        <IconPlayerStopFilled
+        <Tabler.IconPlayerStopFilled
           className="stop-button"
           preserveAspectRatio="none"
           onClick={() => stopTime()}

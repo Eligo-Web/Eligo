@@ -1,4 +1,4 @@
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconChevronLeft } from "@tabler/icons-react";
 import Button from "react-bootstrap/Button";
 
 /**
@@ -58,7 +58,7 @@ export function BackButton(props) {
         top: "5rem",
         zIndex: 1,
       }}
-      icon={<IconArrowLeft size="1.5em" />}
+      icon={<IconChevronLeft size="1.5em" />}
       label={props.label}
       variant="transparent"
       onClick={props.onClick}
