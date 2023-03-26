@@ -35,6 +35,14 @@ class StudentDao {
     return student;
   }
 
+  async readByClickerId(clickerId) {
+    const student = await Student.findOne({ clickerId: clickerId });
+    if (!student) {
+      throw new ApiError(404, `User with clickerId ${clickerId} not found`);
+    }
+    return student;
+  }
+
   async create(student) {
     const newStudent = new Student(student);
     await newStudent.save();

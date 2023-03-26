@@ -48,6 +48,7 @@ function OverView(props) {
         sectionId: sectionId,
         passcode: passcode,
         semester: semester,
+        clickerId: location.state.clickerId,
       },
     });
   }

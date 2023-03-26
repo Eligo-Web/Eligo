@@ -39,6 +39,7 @@ function SignIn() {
         email: user.email,
         name: user.name,
         history: user.history,
+        clickerId: user.clickerId,
       },
     });
   }

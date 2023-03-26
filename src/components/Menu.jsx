@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 function Menu(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const server = "http://localhost:3000";
   const [clickerId, setClickerId] = useState(location.state.clickerId || "");
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
@@ -42,11 +43,16 @@ function Menu(props) {
     if (clickerId && clickerId.length === 8) {
       console.log(clickerId);
       // axios put clickerId to student
+      axios
+        .patch(`${server}/student/${location.state.email}/${clickerId}`)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
     }
   }, [clickerId]);
 
   async function leaveClass() {
-    const server = "http://localhost:3000";
     await axios
       .delete(
         `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`
@@ -109,7 +115,7 @@ function Menu(props) {
                 input="ex: 123ABC78"
                 default={clickerId}
                 maxLength={8}
-                onChange={(e) => setClickerId((e.target.value).toUpperCase())}
+                onChange={(e) => setClickerId(e.target.value.toUpperCase())}
                 style={{ textTransform: "uppercase" }}
                 center
               />
