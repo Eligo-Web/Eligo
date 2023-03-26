@@ -31,14 +31,23 @@ body {
   display: flex;
   position: relative;
   top: 8rem;
-  gap: 1rem;
-  padding: 0.7rem 5rem;
+  padding: 0.7rem 2.5rem;
   margin: 0 3rem;
   font-size: 2rem;
   font-weight: 600;
   color: #032256ba;
   justify-content: space-between;
   border-bottom: 0.2rem solid #0d28538a;
+}
+
+.roster-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  cursor: pointer;
+  width: 10rem;
+  gap: 0.5rem;
 }
 
 .sign-in-title {

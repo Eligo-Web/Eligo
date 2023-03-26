@@ -15,6 +15,10 @@ import AccessDenied from "../components/AccessDenied";
 import { BlankCourseView } from "../components/BlankStates";
 import axios from "axios";
 
+export function pause(mult = 1) {
+  return new Promise((res) => setTimeout(res, 250 * mult));
+}
+
 function CourseView(props) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -22,10 +26,6 @@ function CourseView(props) {
   const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
   const [refresh, setRefresh] = useState(false);
   const server = "http://localhost:3000";
-
-  function pause(mult = 1) {
-    return new Promise((res) => setTimeout(res, 250 * mult));
-  }
 
   useEffect(() => {
     if (
@@ -306,7 +306,6 @@ function CourseView(props) {
         const [sessionList, overlays] = await populateSessionCards(
           "INSTRUCTOR"
         );
-        await pause();
         container.style.opacity = 0;
         await pause();
         setCards(sessionList);

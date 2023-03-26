@@ -101,6 +101,13 @@
   opacity: 1;
 }
 
+.poll-info {
+  gap: 0.7rem;
+  display: flex;
+  padding: 0 0.5rem;
+  justify-content: flex-start;
+}
+
 .date-created {
   width: 100%;
   font-weight: 500;

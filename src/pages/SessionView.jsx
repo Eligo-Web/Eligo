@@ -16,6 +16,7 @@ import { BlankSessionView } from "../components/BlankStates";
 import { IconDownload, IconLock } from "@tabler/icons-react";
 import { ClosedPoll } from "../components/InstructorPoll";
 import Papa from "papaparse";
+import { pause } from "./CourseView";
 
 function SessionView(props) {
   const location = useLocation();
@@ -24,10 +25,6 @@ function SessionView(props) {
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(null);
   const [popup, setPopup] = useState(null);
-
-  function pause() {
-    return new Promise((res) => setTimeout(res, 250));
-  }
 
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
@@ -222,12 +219,11 @@ function SessionView(props) {
     useEffect(() => {
       async function loadContent() {
         const [pollContainer, pollOverlays] = await populatePollCards();
-        await pause();
         document.querySelector(".poll-container").style.opacity = 0;
         await pause();
         setPolls(pollContainer);
-        setOverlays(pollOverlays);
         document.querySelector(".poll-container").style.opacity = 100;
+        setOverlays(pollOverlays);
       }
       loadContent();
     }, [refresh]);

@@ -158,13 +158,13 @@ function CreateOrEditSession(props) {
           <InputField
             label="Date Created"
             value={new Date(parseInt(timeStamp)).toLocaleString()}
-            readOnly
+            disabled
           />
           <InputField
             small
             label="Passcode"
             value={props.session.passcode}
-            readOnly
+            disabled
           />
         </div>
       ) : null}

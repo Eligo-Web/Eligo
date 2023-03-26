@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { PrimaryButton, IconButton } from "./Buttons.jsx";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   IconChartBar,
   IconChartBarOff,
   IconClockHour3,
-  IconHourglassEmpty,
   IconMaximize,
   IconMinimize,
   IconPlayerStopFilled,
-  IconTrash,
   IconUser,
   IconDownload,
-  IconInfoCircle,
 } from "@tabler/icons-react";
 import InputField from "./InputField";
 import { defaults } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
-import "../styles/newpoll.css";
 import { closePopup } from "./Overlay.jsx";
 import Papa from "papaparse";
+import "../styles/newpoll.css";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -369,15 +366,9 @@ export function ClosedPoll(props) {
             }}
           >
             <div className="input-group">
-              <InputField label="Poll Name" value={pollInfo.name} readOnly />
+              <InputField label="Poll Name" value={pollInfo.name} disabled />
             </div>
-            <div
-              className="d-flex gap-2"
-              style={{
-                padding: "0 0.5rem",
-                justifyContent: "flex-start",
-              }}
-            >
+            <div className="poll-info">
               <Stopwatch
                 id={props.pollId}
                 time={Math.floor(

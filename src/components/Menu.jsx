@@ -42,7 +42,6 @@ function Menu(props) {
   useEffect(() => {
     if (clickerId && clickerId.length === 8) {
       console.log(clickerId);
-      // axios put clickerId to student
       axios
         .patch(`${server}/student/${location.state.email}/${clickerId}`)
         .then((res) => {
@@ -74,6 +73,7 @@ function Menu(props) {
         name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
+        clickerId: location.state.clickerId,
       },
     });
   }
@@ -94,6 +94,7 @@ function Menu(props) {
                     name: location.state.name,
                     permission: location.state.permission,
                     email: location.state.email,
+                    clickerId: location.state.clickerId,
                   },
                 })
               }

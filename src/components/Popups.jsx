@@ -102,6 +102,7 @@ export function JoinSession(props) {
               sessionName: props.sessionName,
               weekNum: props.weekNum,
               courseName: props.courseName,
+              clickerId: location.state.clickerId,
             },
           });
         } else if (res.data.status === 401) {
@@ -150,7 +151,6 @@ export function JoinClass(props) {
 
   useEffect(() => {
     const overlay = document.getElementById("join-class-popup");
-    console.log(overlay);
     if (overlay.offsetParent.style.height) {
       clearContents();
       console.log("clear contents");

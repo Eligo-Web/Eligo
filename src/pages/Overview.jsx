@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
 import { BlankOverview } from "../components/BlankStates";
 import { useEffect, useState } from "react";
+import { pause } from "./CourseView";
 import axios from "axios";
 import "../styles/overlay.css";
 import "../styles/cards.css";
@@ -32,10 +33,6 @@ function OverView(props) {
       }
     }
   }, []);
-
-  function pause() {
-    return new Promise((res) => setTimeout(res, 250));
-  }
 
   function handleViewClass(courseName, sectionId, semester, passcode) {
     console.log(location.state);

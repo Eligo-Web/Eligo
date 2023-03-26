@@ -36,7 +36,7 @@ export default function InputField(props) {
         onChange={props.onChange}
         onKeyDown={props.onKeyDown}
         value={props.value}
-        readOnly={props.readOnly}
+        disabled={props.disabled}
         maxLength={props.maxLength}
         type={props.type}
         style={props.style}

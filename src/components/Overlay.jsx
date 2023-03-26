@@ -15,9 +15,7 @@ export function openPopup(id) {
     overlay.querySelector(".overlay-bg").style.opacity = 100;
     overlay.querySelector(".pop-up").style.opacity = 100;
     const form = overlay.querySelector(".form-control");
-    if (form && form.getAttribute("readonly") !== "") {
-      overlay.querySelector(".form-control").focus();
-    }
+    if (form) overlay.querySelector(".form-control").focus();
     overlay.style.height = "100vh";
   }
 }
