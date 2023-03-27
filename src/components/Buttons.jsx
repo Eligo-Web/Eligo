@@ -1,4 +1,4 @@
-import { IconArrowLeft, IconChevronLeft } from "@tabler/icons-react";
+import { IconChevronLeft } from "@tabler/icons-react";
 import Button from "react-bootstrap/Button";
 
 /**

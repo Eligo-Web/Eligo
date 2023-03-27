@@ -1,7 +1,5 @@
 import express from "express";
 import InstructorDao from "../data/InstructorDao.js";
-import { UserRole } from "../model/UserRole.js";
-import * as db from "../data/db.js";
 import { toSectionId } from "./courses.js";
 
 const Instructor = express.Router();

@@ -1,7 +1,7 @@
-import Button from "react-bootstrap/Button";
 import { IconBook, IconSchool } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router-dom";
 
 function SignIn() {
   const server = "http://localhost:3000";

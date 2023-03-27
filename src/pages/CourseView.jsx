@@ -1,18 +1,17 @@
-import Container from "react-bootstrap/Container";
-import { IoMdAddCircleOutline } from "react-icons/io";
-import MenuBar from "../components/MenuBar";
-import Menu from "../components/Menu";
-import SessionCard from "../components/SessionCard";
-import { BackButton, IconButton } from "../components/Buttons.jsx";
-import Overlay from "../components/Overlay";
-import { useNavigate, useLocation } from "react-router-dom";
-import { openPopup } from "../components/Overlay";
 import { IconList } from "@tabler/icons-react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
 import { BlankCourseView } from "../components/BlankStates";
-import axios from "axios";
+import { BackButton, IconButton } from "../components/Buttons.jsx";
+import Menu from "../components/Menu";
+import MenuBar from "../components/MenuBar";
+import Overlay, { openPopup } from "../components/Overlay";
+import SessionCard from "../components/SessionCard";
 import "../styles/cards.css";
 
 export function pause(mult = 1) {

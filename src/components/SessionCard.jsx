@@ -1,10 +1,10 @@
+import { IconPencil } from "@tabler/icons-react";
+import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { IconPencil } from "@tabler/icons-react";
-import { openPopup } from "./Overlay";
 import "../styles/buttons.css";
 import "../styles/text.css";
+import { openPopup } from "./Overlay";
 
 function SessionCard(props) {
   let activity = "card session-card clickable";

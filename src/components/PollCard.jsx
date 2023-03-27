@@ -1,5 +1,5 @@
-import "../styles/text.css";
 import "../styles/buttons.css";
+import "../styles/text.css";
 
 import { openPopup } from "./Overlay";
 

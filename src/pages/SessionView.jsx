@@ -1,21 +1,20 @@
+import { IconDownload, IconLock } from "@tabler/icons-react";
+import axios from "axios";
+import Papa from "papaparse";
+import { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { useLocation, useNavigate } from "react-router-dom";
+import AccessDenied from "../components/AccessDenied";
+import { BlankSessionView } from "../components/BlankStates";
+import { BackButton, IconButton } from "../components/Buttons";
+import Menu from "../components/Menu";
+import MenuBar from "../components/MenuBar";
+import Overlay, { closePopup, openPopup } from "../components/Overlay";
 import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
-import { useNavigate, useLocation } from "react-router-dom";
-import MenuBar from "../components/MenuBar";
-import Menu from "../components/Menu";
-import Overlay, { closePopup, openPopup } from "../components/Overlay";
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
-import { BackButton, IconButton } from "../components/Buttons";
-import { IoMdAddCircleOutline } from "react-icons/io";
-import { useState } from "react";
-import AccessDenied from "../components/AccessDenied";
-import { useEffect } from "react";
-import { BlankSessionView } from "../components/BlankStates";
-import { IconDownload, IconLock } from "@tabler/icons-react";
 import { pause } from "./CourseView";
-import Papa from "papaparse";
-import axios from "axios";
 
 function SessionView(props) {
   const location = useLocation();

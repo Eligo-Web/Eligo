@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { PrimaryButton, IconButton } from "./Buttons.jsx";
-import { useLocation } from "react-router-dom";
 import * as Tabler from "@tabler/icons-react";
-import InputField from "./InputField";
-import { defaults } from "chart.js/auto";
-import { Bar } from "react-chartjs-2";
 import axios from "axios";
-import { closePopup } from "./Overlay.jsx";
+import { defaults } from "chart.js/auto";
 import Papa from "papaparse";
+import { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import { useLocation } from "react-router-dom";
 import "../styles/newpoll.css";
+import { IconButton, PrimaryButton } from "./Buttons.jsx";
+import InputField from "./InputField";
+import { closePopup } from "./Overlay.jsx";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);

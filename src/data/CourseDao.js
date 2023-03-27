@@ -1,6 +1,5 @@
-import Course from "../model/Course.js";
 import ApiError from "../model/ApiError.js";
-import mongoose from "mongoose";
+import Course from "../model/Course.js";
 import { encodeEmail } from "../routes/courses.js";
 
 class CourseDao {

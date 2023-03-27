@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import { IconButton } from "./Buttons.jsx";
 import { IoIosMenu } from "react-icons/io";
+import { IconButton } from "./Buttons.jsx";
 
-import "../styles/text.css";
+import { IconCheck, IconCopy } from "@tabler/icons-react";
 import "../styles/menu.css";
-import { IconCheck, IconCopy, IconMenu2 } from "@tabler/icons-react";
+import "../styles/text.css";
 
 function MenuBar(props) {
   const [copied, setCopied] = useState(false);

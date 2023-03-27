@@ -1,6 +1,6 @@
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BackButton } from "../components/Buttons";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
@@ -22,8 +22,8 @@ function Roster() {
   const [sortName, setSortName] = useState(false);
   const [sortEmail, setSortEmail] = useState(false);
   const [roster, setRoster] = useState(null);
-  // const [list, setList] = useState(new Map(Object.entries(students)));
-  const [list, setList] = useState(sampleList());
+  const [list, setList] = useState(new Map(Object.entries(students)));
+  // const [list, setList] = useState(sampleList());
   const compareValues = (a, b) => a[1].localeCompare(b[1]);
 
   function sampleList() {

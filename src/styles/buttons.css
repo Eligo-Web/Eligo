@@ -178,10 +178,10 @@
   border-radius: 3rem;
   padding-bottom: 1.5rem;
   border-width: 0.5rem;
-  font-size: 2rem;
+  font-size: 2rem !important;
   border-color: transparent;
   height: 18rem;
-  min-width: 18rem;
+  min-width: 18rem !important;
   margin: 0;
 }
 
@@ -198,7 +198,7 @@
   box-shadow: 0 0.6rem 1.2rem rgba(5, 32, 65, 0.15);
   border-radius: 3rem;
   border-width: 0;
-  font-size: 2.5rem;
+  font-size: 2.5rem !important;
   height: fit-content;
   padding: 1rem 3rem;
 }

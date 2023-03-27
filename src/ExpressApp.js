@@ -1,9 +1,9 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 import helmet from "helmet";
+import Course from "./routes/courses.js";
 import Instructor from "./routes/instructors.js";
 import Student from "./routes/students.js";
-import Course from "./routes/courses.js";
 
 const app = express();
 

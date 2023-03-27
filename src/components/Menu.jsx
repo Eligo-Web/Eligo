@@ -1,15 +1,15 @@
-import "../styles/text.css";
+import { IconLogout, IconUserCircle } from "@tabler/icons-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Button, Container } from "react-bootstrap";
+import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
-import { openPopup } from "./Overlay";
+import "../styles/text.css";
 import { IconButton } from "./Buttons.jsx";
-import { Button, Container } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
-import { IconLogout, IconUserCircle } from "@tabler/icons-react";
-import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
-import axios from "axios";
 import InputField from "./InputField";
-import { useEffect, useState } from "react";
+import { openPopup } from "./Overlay";
 
 function Menu(props) {
   const location = useLocation();
@@ -107,10 +107,8 @@ function Menu(props) {
             <IconUserCircle size="1.8em" />
             {location.state.name}
           </Container>
-        </Container>
-        <Container className="d-flex flex-column p-3 gap-2 align-items-center">
           {location.state.permission === "INSTRUCTOR" ? null : (
-            <center style={{ padding: "1rem" }}>
+            <center style={{ padding: "0.5rem 1.5rem" }}>
               <InputField
                 label="iClicker Remote ID"
                 input="ex: 123ABC78"
@@ -122,6 +120,8 @@ function Menu(props) {
               />
             </center>
           )}
+        </Container>
+        <Container className="d-flex flex-column p-3 gap-2 align-items-center">
           {props.hideCreate ? null : (
             <IconButton
               label={getLabel}

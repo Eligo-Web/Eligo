@@ -1,5 +1,4 @@
 import express from "express";
-import hash from "bcryptjs-react";
 import CourseDao from "../data/CourseDao.js";
 
 const Course = express.Router();

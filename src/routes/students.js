@@ -1,8 +1,6 @@
 import express from "express";
 import StudentDao from "../data/StudentDao.js";
-import { UserRole } from "../model/UserRole.js";
-import { encodeEmail, decodeEmail } from "./courses.js";
-import * as db from "../data/db.js";
+import { decodeEmail } from "./courses.js";
 
 const Student = express.Router();
 export const studentDao = new StudentDao();

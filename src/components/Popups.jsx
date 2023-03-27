@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
-import { closePopup } from "./Overlay";
-import { useNavigate } from "react-router-dom";
-import InputField from "./InputField";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/newpoll.css";
+import { PrimaryButton, VoteButton } from "./Buttons.jsx";
+import InputField from "./InputField";
+import { closePopup } from "./Overlay";
 
 export function Default() {
   return (
@@ -102,7 +102,7 @@ export function JoinSession(props) {
               sessionName: props.sessionName,
               weekNum: props.weekNum,
               courseName: props.courseName,
-              clickerId: location.state.clickerId,
+              clickerId: props.clickerId,
             },
           });
         } else if (res.data.status === 401) {

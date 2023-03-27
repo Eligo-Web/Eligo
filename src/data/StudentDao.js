@@ -1,7 +1,5 @@
-import Student from "../model/Student.js";
 import ApiError from "../model/ApiError.js";
-import mongoose from "mongoose";
-import { UserRole } from "../model/UserRole.js";
+import Student from "../model/Student.js";
 
 class StudentDao {
   async readAll({ name, email, role }) {

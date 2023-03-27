@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { PrimaryButton } from "./Buttons.jsx";
-import { closePopup } from "./Overlay";
-import InputField from "./InputField";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { PrimaryButton } from "./Buttons.jsx";
+import InputField from "./InputField";
+import { closePopup } from "./Overlay";
 
 export function CreateSession(props) {
   return (

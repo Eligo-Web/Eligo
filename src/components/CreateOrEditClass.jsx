@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { PrimaryButton } from "./Buttons.jsx";
-import { closePopup } from "./Overlay";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
-import InputField, { SelectField } from "./InputField";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "../styles/newpoll.css";
+import { PrimaryButton } from "./Buttons.jsx";
+import InputField, { SelectField } from "./InputField";
+import { closePopup } from "./Overlay";
 
 export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();

@@ -1,6 +1,6 @@
-import "../styles/text.css";
-import "../styles/buttons.css";
 import { IconPencil } from "@tabler/icons-react";
+import "../styles/buttons.css";
+import "../styles/text.css";
 import { openPopup } from "./Overlay";
 
 function Card(props) {

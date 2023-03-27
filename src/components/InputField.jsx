@@ -1,5 +1,4 @@
-import { IconAlertTriangleFilled, IconLock } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { IconLock } from "@tabler/icons-react";
 import Form from "react-bootstrap/Form";
 
 export default function InputField(props) {

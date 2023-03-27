@@ -1,11 +1,11 @@
+import { useEffect, useState } from "react";
 import { Button, Row } from "react-bootstrap";
 import { IoIosClose } from "react-icons/io";
-import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
-import { CreateSession, EditSession } from "./CreateOrEditSession";
-import { CreateClass, EditClass } from "./CreateOrEditClass";
-import { useEffect, useState } from "react";
-import { ClosedPoll } from "./InstructorPoll";
 import "../styles/overlay.css";
+import { CreateClass, EditClass } from "./CreateOrEditClass";
+import { CreateSession, EditSession } from "./CreateOrEditSession";
+import { ClosedPoll } from "./InstructorPoll";
+import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
 
 export function openPopup(id) {
   const overlay = document.getElementById(id + "-popup");

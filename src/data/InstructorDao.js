@@ -1,7 +1,5 @@
-import Instructor from "../model/Instructor.js";
 import ApiError from "../model/ApiError.js";
-import mongoose from "mongoose";
-import { UserRole } from "../model/UserRole.js";
+import Instructor from "../model/Instructor.js";
 
 class InstructorDao {
   async readAll({ name, email, role }) {
