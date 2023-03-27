@@ -252,9 +252,11 @@ function SessionView(props) {
                 res.data.data.date,
                 res.data.data.numPolls,
                 res.data.data.students.length,
+                emails[0],
               ],
             ].concat(
-              emails.map((email) => {
+              res.data.data.students.length < 2 ? [] :
+              emails.slice(1).map((email) => {
                 return ["", "", "", "", "", "", email];
               })
             ),
