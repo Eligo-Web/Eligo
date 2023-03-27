@@ -20,7 +20,7 @@
   font-weight: 600;
   font-size: 1.3rem;
   box-shadow: none !important;
-  border: solid 0.25rem transparent;
+  border: solid 0.25rem #ffffff46;
 }
 
 .btn-icon,
@@ -44,7 +44,7 @@
 .btn-icon:hover,
 .btn-icon:focus {
   background-color: #80d06c;
-  border-color: transparent;
+  border-color: #ffffff46;
   color: #002e08;
 }
 
@@ -58,6 +58,7 @@
 .btn-delete {
   color: #650000;
   max-width: fit-content;
+  border-color: transparent;
   padding: 0 1rem;
   display: grid;
 }
@@ -94,7 +95,7 @@
 .btn-sign-out:hover,
 .btn-sign-out:focus {
   background-color: #ef7d69;
-  border-color: transparent;
+  border-color: #ffffff46;
   color: #650000;
 }
 
