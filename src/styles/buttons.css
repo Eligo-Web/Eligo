@@ -20,7 +20,7 @@
   font-weight: 600;
   font-size: 1.3rem;
   box-shadow: none !important;
-  border: solid 0.25rem #ffffff46;
+  border: solid 0.25rem transparent;
 }
 
 .btn-icon,
@@ -124,21 +124,21 @@
 .btn-outline,
 .btn-outline:focus {
   background-color: transparent;
-  border-width: 0.2rem;
+  border-width: 0.22rem;
   border-color: #000d1db3;
   color: #00070fbf;
 }
 
 .btn-outline:hover {
-  background-color: #0a203911;
+  background-color: #0a203919;
   border-color: #000d1dbf;
   color: #00070fbf;
 }
 
 .btn-outline:active {
-  background-color: #0a203925;
-  border-color: #000d1de1;
-  color: #00070fbf;
+  background-color: #0a20393d;
+  border-color: #1f3045b7;
+  color: #0c1622bf;
 }
 
 .btn-transparent:hover {

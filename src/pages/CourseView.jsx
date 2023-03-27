@@ -302,11 +302,12 @@ function CourseView(props) {
         const [sessionList, overlays] = await populateSessionCards(
           "INSTRUCTOR"
         );
-        container.style.opacity = 0;
         await pause();
+        container.style.opacity = 0.2;
+        await pause(0.3);
         setCards(sessionList);
         setEditOverlays(overlays);
-        container.style.opacity = 100;
+        container.style.opacity = 1;
       }
       loadContent();
     }, [refresh]);

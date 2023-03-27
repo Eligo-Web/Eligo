@@ -148,7 +148,9 @@ function CreateOrEditSession(props) {
       <InputField
         class="session-name-input"
         label="Session Name"
-        default={props.editMode ? props.session.name : ""}
+        default={
+          props.editMode ? props.session.name : new Date().toDateString()
+        }
         input={`Default: ${new Date().toDateString()}`}
         onChange={(e) => setSessionName(e.target.value)}
         onKeyDown={handleKeyPresses}

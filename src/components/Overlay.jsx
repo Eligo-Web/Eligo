@@ -9,6 +9,10 @@ import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
 
 export function openPopup(id) {
   const overlay = document.getElementById(id + "-popup");
+  if (id === "Create Session") {
+    const nameField = overlay.querySelector(".session-name-input");
+    nameField.value = new Date().toDateString();
+  }
   if (overlay) {
     document.body.style.overflow = "hidden";
     overlay.querySelector(".overlay-bg").style.pointerEvents = "all";

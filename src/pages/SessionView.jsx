@@ -170,7 +170,7 @@ function SessionView(props) {
       <div>
         <BackButton label="Overview" onClick={() => navigateOverview()} />
         <div className="card-wrapper">
-          <Menu />
+          <Menu hideJoin />
           <MenuBar
             title={location.state.sessionName}
             description={location.state.passcode}
@@ -215,10 +215,11 @@ function SessionView(props) {
     useEffect(() => {
       async function loadContent() {
         const [pollContainer, pollOverlays] = await populatePollCards();
-        document.querySelector(".poll-container").style.opacity = 0;
         await pause();
+        document.querySelector(".poll-container").style.opacity = 0.2;
+        await pause(0.3);
         setPolls(pollContainer);
-        document.querySelector(".poll-container").style.opacity = 100;
+        document.querySelector(".poll-container").style.opacity = 1;
         setOverlays(pollOverlays);
       }
       loadContent();
@@ -255,10 +256,11 @@ function SessionView(props) {
                 emails[0],
               ],
             ].concat(
-              res.data.data.students.length < 2 ? [] :
-              emails.slice(1).map((email) => {
-                return ["", "", "", "", "", "", email];
-              })
+              res.data.data.students.length < 2
+                ? []
+                : emails.slice(1).map((email) => {
+                    return ["", "", "", "", "", "", email];
+                  })
             ),
           });
           const blob = new Blob([csv], { type: "text/csv" });

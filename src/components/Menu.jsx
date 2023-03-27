@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import { pause } from "../pages/CourseView";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
 import "../styles/text.css";
 import { IconButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { openPopup } from "./Overlay";
-import {pause} from "../pages/CourseView";
 
 function Menu(props) {
   const location = useLocation();
@@ -44,28 +44,35 @@ function Menu(props) {
   useEffect(() => {
     async function getClickerId() {
       let newClickerId;
-      await axios.get(`${server}/student/${location.state.email}`)
-      .then((res) => {
-        newClickerId = res.data.data.clickerId;
-      }).catch((err) => console.log(err))
+      await axios
+        .get(`${server}/student/${location.state.email}`)
+        .then((res) => {
+          newClickerId = res.data.data.clickerId;
+        })
+        .catch((err) => console.log(err));
       setClickerId(newClickerId);
     }
-    getClickerId();
+    if (location.state.permission === "STUDENT") {
+      getClickerId();
+    }
   }, []);
 
   useEffect(() => {
     let newClickerId;
     async function updateCickerId() {
-      await axios.get(`${server}/student/${location.state.email}`)
-      .then((res) => {
-        newClickerId = res.data.data.clickerId;
-      }).catch((err) => console.log(err))
-      if (newClickerId !== clickerId) {
-        await axios.patch(`${server}/student/${location.state.email}/${clickerId}`)
+      await axios
+        .get(`${server}/student/${location.state.email}`)
         .then((res) => {
-          console.log(res);
+          newClickerId = res.data.data.clickerId;
         })
         .catch((err) => console.log(err));
+      if (newClickerId !== clickerId) {
+        await axios
+          .patch(`${server}/student/${location.state.email}/${clickerId}`)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => console.log(err));
       }
     }
     if (clickerId && clickerId.length === 8) {
@@ -143,7 +150,7 @@ function Menu(props) {
           )}
         </Container>
         <Container className="d-flex flex-column p-3 gap-2 align-items-center">
-          {props.hideCreate ? null : (
+          {props.hideCreate || props.hideJoin ? null : (
             <IconButton
               label={getLabel}
               variant={props.leaveAction ? "delete" : ""}

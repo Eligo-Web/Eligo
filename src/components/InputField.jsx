@@ -7,7 +7,7 @@ export default function InputField(props) {
     if (props.class !== "clicker-id-input") return;
     const thisField = document.querySelector(`.${props.class}`);
     if (thisField) thisField.value = props.default;
-  }, [props.default])
+  }, [props.default]);
 
   function renderErrors() {
     const errors = [];

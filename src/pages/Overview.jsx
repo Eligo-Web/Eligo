@@ -124,10 +124,11 @@ function OverView(props) {
       const container = document.getElementById("semester-container");
       async function loadContent() {
         const semesterList = (await populateCourseCards("STUDENT"))[0];
-        container.style.opacity = 0;
         await pause();
+        container.style.opacity = 0.2;
+        await pause(0.3);
         setCards(semesterList);
-        container.style.opacity = 100;
+        container.style.opacity = 1;
       }
       loadContent();
     }, [refresh]);
@@ -155,10 +156,11 @@ function OverView(props) {
         const [semesterList, editOverlays] = await populateCourseCards(
           "INSTRUCTOR"
         );
-        container.style.opacity = 0;
         await pause();
+        container.style.opacity = 0.2;
+        await pause(0.3);
         setCards(semesterList.reverse());
-        container.style.opacity = 100;
+        container.style.opacity = 1;
         setOverlays(editOverlays);
       }
       loadContent();
