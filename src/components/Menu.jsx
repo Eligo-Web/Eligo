@@ -10,12 +10,13 @@ import "../styles/text.css";
 import { IconButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { openPopup } from "./Overlay";
+import {pause} from "../pages/CourseView";
 
 function Menu(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const server = "http://localhost:3000";
-  const [clickerId, setClickerId] = useState(location.state.clickerId || "");
+  const [clickerId, setClickerId] = useState("");
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
     getLabel = "Create Class";
@@ -34,20 +35,41 @@ function Menu(props) {
     openPopup(overlay);
   }
 
-  function handleSignOut() {
+  async function handleSignOut() {
     closeMenu();
+    await pause();
     navigate("/");
   }
 
   useEffect(() => {
-    if (clickerId && clickerId.length === 8) {
-      console.log(clickerId);
-      axios
-        .patch(`${server}/student/${location.state.email}/${clickerId}`)
+    async function getClickerId() {
+      let newClickerId;
+      await axios.get(`${server}/student/${location.state.email}`)
+      .then((res) => {
+        newClickerId = res.data.data.clickerId;
+      }).catch((err) => console.log(err))
+      setClickerId(newClickerId);
+    }
+    getClickerId();
+  }, []);
+
+  useEffect(() => {
+    let newClickerId;
+    async function updateCickerId() {
+      await axios.get(`${server}/student/${location.state.email}`)
+      .then((res) => {
+        newClickerId = res.data.data.clickerId;
+      }).catch((err) => console.log(err))
+      if (newClickerId !== clickerId) {
+        await axios.patch(`${server}/student/${location.state.email}/${clickerId}`)
         .then((res) => {
           console.log(res);
         })
         .catch((err) => console.log(err));
+      }
+    }
+    if (clickerId && clickerId.length === 8) {
+      updateCickerId();
     }
   }, [clickerId]);
 
@@ -73,7 +95,6 @@ function Menu(props) {
         name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
-        clickerId: location.state.clickerId,
       },
     });
   }
@@ -94,7 +115,6 @@ function Menu(props) {
                     name: location.state.name,
                     permission: location.state.permission,
                     email: location.state.email,
-                    clickerId: location.state.clickerId,
                   },
                 })
               }
@@ -110,6 +130,7 @@ function Menu(props) {
           {location.state.permission === "INSTRUCTOR" ? null : (
             <center style={{ padding: "0.5rem 1.5rem" }}>
               <InputField
+                class="clicker-id-input"
                 label="iClicker Remote ID"
                 input="ex: 123ABC78"
                 default={clickerId}

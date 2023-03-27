@@ -1,7 +1,14 @@
 import { IconLock } from "@tabler/icons-react";
+import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 
 export default function InputField(props) {
+  useEffect(() => {
+    if (props.class !== "clicker-id-input") return;
+    const thisField = document.querySelector(`.${props.class}`);
+    if (thisField) thisField.value = props.default;
+  }, [props.default])
+
   function renderErrors() {
     const errors = [];
     let key = 0;

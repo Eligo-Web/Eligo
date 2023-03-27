@@ -82,7 +82,6 @@ function SessionView(props) {
         courseName: location.state.courseName,
         sectionId: location.state.sectionId,
         passcode: location.state.classPasscode,
-        clickerId: location.state.clickerId,
       },
     });
   }
@@ -93,7 +92,6 @@ function SessionView(props) {
         name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
-        clickerId: location.state.clickerId,
       },
     });
   }

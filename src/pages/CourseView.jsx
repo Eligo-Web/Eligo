@@ -84,7 +84,6 @@ function CourseView(props) {
         classPasscode: location.state.passcode,
         semester: location.state.semester,
         weekNum: getWeekNumber(),
-        clickerId: location.state.clickerId,
       },
     });
   }
@@ -177,7 +176,6 @@ function CourseView(props) {
             name: location.state.name,
             permission: location.state.permission,
             email: location.state.email,
-            clickerId: location.state.clickerId,
           },
         })
       }
@@ -225,7 +223,6 @@ function CourseView(props) {
                   session: session.activeSession,
                   sessionName: session.activeSession.name,
                   weekNum: getWeekNumber(),
-                  clickerId: location.state.clickerId,
                 },
               });
             }
