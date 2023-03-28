@@ -102,6 +102,7 @@ export function JoinSession(props) {
               sessionName: props.sessionName,
               weekNum: props.weekNum,
               courseName: props.courseName,
+              clickerId: location.state.clickerId,
             },
           });
         } else if (res.data.status === 401) {

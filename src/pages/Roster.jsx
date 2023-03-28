@@ -28,7 +28,7 @@ function Roster() {
 
   function sampleList() {
     const newList = new Map();
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 500; i++) {
       const email = Math.random().toString(36).slice(2, 10);
       const name = Math.random().toString(10).slice(2, 10);
       newList.set(`${email}@jhu$edu`, name);

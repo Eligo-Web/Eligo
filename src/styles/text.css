@@ -172,8 +172,8 @@ body {
   justify-content: end;
   align-items: center;
   text-align: right;
-  font-weight: 500;
-  opacity: 0.8;
+  font-weight: 600;
+  opacity: 0.75;
   gap: 0.5rem;
 }
 

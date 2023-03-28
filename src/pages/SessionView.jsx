@@ -7,7 +7,7 @@ import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
-import { BlankSessionView } from "../components/BlankStates";
+import { BlankSessionView, EmptySessionView } from "../components/BlankStates";
 import { BackButton, IconButton } from "../components/Buttons";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
@@ -82,6 +82,7 @@ function SessionView(props) {
         courseName: location.state.courseName,
         sectionId: location.state.sectionId,
         passcode: location.state.classPasscode,
+        clickerId: location.state.clickerId,
       },
     });
   }
@@ -92,6 +93,7 @@ function SessionView(props) {
         name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
+        clickerId: location.state.clickerId,
       },
     });
   }
@@ -216,7 +218,7 @@ function SessionView(props) {
       async function loadContent() {
         const [pollContainer, pollOverlays] = await populatePollCards();
         await pause();
-        document.querySelector(".poll-container").style.opacity = 0.2;
+        document.querySelector(".poll-container").style.opacity = 0;
         await pause(0.3);
         setPolls(pollContainer);
         document.querySelector(".poll-container").style.opacity = 1;
@@ -389,6 +391,9 @@ function SessionView(props) {
       );
     }
 
+    if (!cardContainer.length) {
+      return [<EmptySessionView />, null];
+    }
     return [cardContainer, overlays];
   }
 

@@ -45,6 +45,7 @@ function OverView(props) {
         sectionId: sectionId,
         passcode: passcode,
         semester: semester,
+        clickerId: location.state.clickerId,
       },
     });
   }
@@ -125,7 +126,7 @@ function OverView(props) {
       async function loadContent() {
         const semesterList = (await populateCourseCards("STUDENT"))[0];
         await pause();
-        container.style.opacity = 0.2;
+        container.style.opacity = 0;
         await pause(0.3);
         setCards(semesterList);
         container.style.opacity = 1;
@@ -157,7 +158,7 @@ function OverView(props) {
           "INSTRUCTOR"
         );
         await pause();
-        container.style.opacity = 0.2;
+        container.style.opacity = 0;
         await pause(0.3);
         setCards(semesterList.reverse());
         container.style.opacity = 1;

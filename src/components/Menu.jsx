@@ -16,7 +16,7 @@ function Menu(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const server = "http://localhost:3000";
-  const [clickerId, setClickerId] = useState("");
+  const [clickerId, setClickerId] = useState(location.state.clickerId || "");
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
     getLabel = "Create Class";
@@ -51,8 +51,9 @@ function Menu(props) {
         })
         .catch((err) => console.log(err));
       setClickerId(newClickerId);
+      location.state.clickerId = newClickerId;
     }
-    if (location.state.permission === "STUDENT") {
+    if (location.state.permission === "STUDENT" && !location.state.clickerId) {
       getClickerId();
     }
   }, []);
@@ -73,6 +74,7 @@ function Menu(props) {
             console.log(res);
           })
           .catch((err) => console.log(err));
+        location.state.clickerId = newClickerId;
       }
     }
     if (clickerId && clickerId.length === 8) {
@@ -102,6 +104,7 @@ function Menu(props) {
         name: location.state.name,
         permission: location.state.permission,
         email: location.state.email,
+        clickerId: location.state.clickerId,
       },
     });
   }
@@ -122,6 +125,7 @@ function Menu(props) {
                     name: location.state.name,
                     permission: location.state.permission,
                     email: location.state.email,
+                    clickerId: location.state.clickerId,
                   },
                 })
               }

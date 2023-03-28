@@ -161,7 +161,7 @@ function CreateOrEditClass(props) {
       overlay.querySelector(".invalid-section").style.display = "none";
     }
 
-    if (sisId && !/^[a-zA-Z]{2}\.\d{3}\.\d{3}$/.test(sisId)) {
+    if (sisId && !/^[A-Z]{2}\.\d{3}\.\d{3}$/.test(sisId)) {
       sisIdField.className += " field-error";
       overlay.querySelector(".invalid-sis-id").style.display = "block";
       valid = false;
@@ -364,6 +364,7 @@ function CreateOrEditClass(props) {
           onChange={(e) => setSISId(e.target.value.toUpperCase())}
           onKeyDown={handleKeyPresses}
           errors={{ "invalid-sis-id": "Invalid format" }}
+          style={{ textTransform: "uppercase" }}
         />
       </div>
       <div className="input-group">

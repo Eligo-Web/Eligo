@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import PageNotFound from "../components/BlankStates";
+import { PageNotFound } from "../components/BlankStates";
 import InstructorPoll from "../components/InstructorPoll";
 import CourseView from "../pages/CourseView";
 import Overview from "../pages/Overview";

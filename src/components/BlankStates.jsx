@@ -4,7 +4,7 @@ import Card from "./Card";
 import PollCard from "./PollCard";
 import SessionCard from "./SessionCard";
 
-export default function PageNotFound() {
+export function PageNotFound() {
   const navigate = useNavigate();
   return (
     <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
@@ -56,4 +56,8 @@ export function BlankSessionView() {
       ))}
     </Container>
   );
+}
+
+export function EmptySessionView() {
+  return <Container>Hehe</Container>;
 }
