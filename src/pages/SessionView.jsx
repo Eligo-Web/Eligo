@@ -16,6 +16,7 @@ import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
+import * as clicker from "../components/ClickerBase";
 
 function SessionView(props) {
   const location = useLocation();
@@ -25,10 +26,6 @@ function SessionView(props) {
   const [refresh, setRefresh] = useState(null);
   const [popup, setPopup] = useState(null);
   const [base, setBase] = useContext(ClickerContext);
-
-  useEffect(() => {
-    if (base) console.log(base);
-  });
 
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
@@ -408,6 +405,8 @@ function SessionView(props) {
       popup.focus();
       return;
     }
+    console.log(base)
+    await clicker.startPoll(base);
     const newPopup = window.open(
       "/newpoll",
       "New Poll",
