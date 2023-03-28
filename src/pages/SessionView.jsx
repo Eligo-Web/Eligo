@@ -405,8 +405,7 @@ function SessionView(props) {
       popup.focus();
       return;
     }
-    console.log(base)
-    await clicker.startPoll(base);
+    if (base) await clicker.startPoll(base);
     const newPopup = window.open(
       "/newpoll",
       "New Poll",
@@ -428,11 +427,13 @@ function SessionView(props) {
       weekNum: location.state.weekNum,
       sessionId: location.state.sessionId,
       pollId: newPollId,
+      base: base,
     };
     while (!newPopup.closed) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
     setPopup(null);
+    if (base) clicker.stopPoll(base);
     await axios
       .put(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`

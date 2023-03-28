@@ -61,14 +61,12 @@ export function EmptyCourseView() {
     fadeIn();
   }, []);
   return (
-    <Container>
       <div className="img-container">
         <img className="empty-state-img" src={img} />
         <center className="blank-state-msg">
           No sessions found. Create a session and it will appear here.
         </center>
       </div>
-    </Container>
   );
 }
 
@@ -93,13 +91,11 @@ export function EmptySessionView() {
     fadeIn();
   }, []);
   return (
-    <Container>
       <div className="img-container">
         <img className="empty-state-img" src={img} />
         <center className="blank-state-msg">
           You have created no polls yet. Create some and they will appear here!
         </center>
       </div>
-    </Container>
   );
 }

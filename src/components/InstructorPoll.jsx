@@ -2,14 +2,12 @@ import * as Tabler from "@tabler/icons-react";
 import axios from "axios";
 import { defaults } from "chart.js/auto";
 import Papa from "papaparse";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { useLocation } from "react-router-dom";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
-import { ClickerContext } from "../containers/InAppContainer";
 import * as clicker from "./ClickerBase";
 
 export default function InstructorPoll() {
@@ -20,10 +18,8 @@ export default function InstructorPoll() {
   const [pollName, setPollName] = useState("");
   const [chartRef, setChartRef] = useState({});
   const [stopTime, setStopTime] = useState(false);
-  const base = useContext(ClickerContext);
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
-  const location = useLocation();
   const server = "http://localhost:3000";
   let fullHeight = winHeight;
   let fullWidth = winWidth;
@@ -84,7 +80,8 @@ export default function InstructorPoll() {
   }
 
   async function deactivatePoll(action) {
-    //clicker.stopPoll(base);
+    const base = window.props.base;
+    if (base && base.opened) await clicker.stopPoll(base);
     if (action === "save") {
       await axios
         .put(
