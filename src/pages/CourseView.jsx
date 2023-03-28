@@ -14,8 +14,8 @@ import Overlay, { openPopup } from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
 import "../styles/cards.css";
 
-export function pause(mult = 1) {
-  return new Promise((res) => setTimeout(res, 250 * mult));
+export function pause(interval) {
+  return new Promise((res) => setTimeout(res, interval));
 }
 
 function CourseView(props) {
@@ -214,7 +214,7 @@ function CourseView(props) {
             ) {
               setJoining(session.activeSession.name);
               container.style.opacity = 1;
-              await pause(4);
+              await pause(1000);
               navigate("/session", {
                 state: {
                   name: location.state.name,
@@ -307,9 +307,9 @@ function CourseView(props) {
         const [sessionList, overlays] = await populateSessionCards(
           "INSTRUCTOR"
         );
-        await pause();
+        await pause(250);
         container.style.opacity = 0;
-        await pause(0.4);
+        await pause(100);
         setCards(sessionList);
         setEditOverlays(overlays);
         container.style.opacity = 1;

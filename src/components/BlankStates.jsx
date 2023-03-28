@@ -54,7 +54,7 @@ export function BlankCourseView() {
 export function EmptyCourseView() {
   useEffect(() => {
     async function fadeIn() {
-      await pause();
+      await pause(250);
       const img = document.querySelector(".img-container");
       if (img) img.style.opacity = 1;
     }
@@ -86,7 +86,7 @@ export function BlankSessionView() {
 export function EmptySessionView() {
   useEffect(() => {
     async function fadeIn() {
-      await pause();
+      await pause(250);
       const img = document.querySelector(".img-container");
       if (img) img.style.opacity = 1;
     }

@@ -133,9 +133,9 @@ function OverView(props) {
       const container = document.getElementById("semester-container");
       async function loadContent() {
         const semesterList = (await populateCourseCards("STUDENT"))[0];
-        await pause();
+        await pause(250);
         container.style.opacity = 0;
-        await pause(0.4);
+        await pause(100);
         setCards(semesterList);
         container.style.opacity = 1;
       }
@@ -165,9 +165,9 @@ function OverView(props) {
         const [semesterList, editOverlays] = await populateCourseCards(
           "INSTRUCTOR"
         );
-        await pause();
+        await pause(250);
         container.style.opacity = 0;
-        await pause(0.4);
+        await pause(100);
         setCards(semesterList.reverse());
         container.style.opacity = 1;
         setOverlays(editOverlays);

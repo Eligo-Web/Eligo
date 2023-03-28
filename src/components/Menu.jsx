@@ -37,7 +37,7 @@ function Menu(props) {
 
   async function handleSignOut() {
     closeMenu();
-    await pause();
+    await pause(250);
     navigate("/");
   }
 

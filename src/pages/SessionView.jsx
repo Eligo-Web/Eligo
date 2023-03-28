@@ -120,7 +120,7 @@ function SessionView(props) {
             setPollOpen(true);
           } else {
             closePopup("Vote");
-            await pause();
+            await pause(250);
             setPollOpen(false);
           }
         })
@@ -158,7 +158,7 @@ function SessionView(props) {
         );
       } else loadEmpty();
       async function loadEmpty() {
-        await pause();
+        await pause(250);
         document.getElementById("vote-container").style.opacity = 1;
       }
     }, [pollOpen]);
@@ -167,7 +167,7 @@ function SessionView(props) {
       async function openVote() {
         if (votePopup) {
           document.getElementById("vote-container").style.opacity = 1;
-          await pause();
+          await pause(250);
           openPopup("Vote");
         }
       }
@@ -223,9 +223,9 @@ function SessionView(props) {
     useEffect(() => {
       async function loadContent() {
         const [pollContainer, pollOverlays] = await populatePollCards();
-        await pause();
+        await pause(250);
         document.querySelector(".poll-container").style.opacity = 0;
-        await pause(0.4);
+        await pause(100);
         setPolls(pollContainer);
         document.querySelector(".poll-container").style.opacity = 1;
         setOverlays(pollOverlays);
