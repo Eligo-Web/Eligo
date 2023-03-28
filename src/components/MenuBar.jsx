@@ -17,7 +17,7 @@ function MenuBar(props) {
     document.body.style.overflow = "hidden";
     const menu = document.getElementById("side-menu");
     menu.querySelector(".overlay-bg").style.pointerEvents = "all";
-    menu.querySelector(".overlay-bg").style.opacity = 100;
+    menu.querySelector(".overlay-bg").style.opacity = 1;
     menu.querySelector(".menu").style.left = 0;
     console.log("opened menu");
   }

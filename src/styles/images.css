@@ -1,0 +1,20 @@
+.img-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  transition: 0.4s cubic-bezier(0, 0, 0.4, 1);
+  mix-blend-mode: luminosity;
+  min-height: 28rem;
+  opacity: 0;
+  gap: 2rem;
+}
+
+.empty-state-img {
+  object-fit: cover;
+  overflow: hidden;
+  max-width: 65%;
+  vertical-align: bottom;
+  opacity: 0.75;
+  padding-top: 1rem;
+}

@@ -1,7 +1,7 @@
 import { IconDownload, IconLock } from "@tabler/icons-react";
 import axios from "axios";
 import Papa from "papaparse";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
@@ -14,6 +14,7 @@ import MenuBar from "../components/MenuBar";
 import Overlay, { closePopup, openPopup } from "../components/Overlay";
 import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
+import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
 
 function SessionView(props) {
@@ -23,6 +24,11 @@ function SessionView(props) {
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(null);
   const [popup, setPopup] = useState(null);
+  const [base, setBase] = useContext(ClickerContext);
+
+  useEffect(() => {
+    if (base) console.log(base);
+  });
 
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
@@ -153,14 +159,14 @@ function SessionView(props) {
       } else loadEmpty();
       async function loadEmpty() {
         await pause();
-        document.getElementById("vote-container").style.opacity = 100;
+        document.getElementById("vote-container").style.opacity = 1;
       }
     }, [pollOpen]);
 
     useEffect(() => {
       async function openVote() {
         if (votePopup) {
-          document.getElementById("vote-container").style.opacity = 100;
+          document.getElementById("vote-container").style.opacity = 1;
           await pause();
           openPopup("Vote");
         }
@@ -219,7 +225,7 @@ function SessionView(props) {
         const [pollContainer, pollOverlays] = await populatePollCards();
         await pause();
         document.querySelector(".poll-container").style.opacity = 0;
-        await pause(0.3);
+        await pause(0.4);
         setPolls(pollContainer);
         document.querySelector(".poll-container").style.opacity = 1;
         setOverlays(pollOverlays);
@@ -295,6 +301,7 @@ function SessionView(props) {
             showDescription
           />
           {overlays}
+          {polls ? null : <EmptySessionView />}
           <div className="poll-container">{polls}</div>
           <div className="courses-bottom-row bottom-0 gap-3">
             {location.state.sessionActive ? (
@@ -337,7 +344,7 @@ function SessionView(props) {
     const activeCards = [];
     const inactiveCards = [];
     const overlays = [];
-    let polls;
+    let newPolls;
 
     await axios
       .get(
@@ -345,13 +352,13 @@ function SessionView(props) {
       )
       .then((res) => {
         if (res.data.status === 200) {
-          polls = Object.entries(res.data.data.polls);
-          polls = new Map([...polls.sort()]);
+          newPolls = Object.entries(res.data.data.polls);
+          newPolls = new Map([...newPolls.sort()]);
         }
       })
       .catch((err) => console.log(err));
 
-    for (let [pollId, poll] of polls) {
+    for (let [pollId, poll] of newPolls) {
       if (poll.active) {
         activeCards.push(<PollCard title={poll.name} key={pollId} />);
       } else {
@@ -390,10 +397,7 @@ function SessionView(props) {
         </Container>
       );
     }
-
-    if (!cardContainer.length) {
-      return [<EmptySessionView />, null];
-    }
+    if (!cardContainer.length) return [null, null];
     return [cardContainer, overlays];
   }
 
@@ -404,13 +408,6 @@ function SessionView(props) {
       popup.focus();
       return;
     }
-    await axios
-      .post(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
-      )
-      .then((res) => {})
-      .catch((err) => console.log(err));
-    setRefresh({ created: true });
     const newPopup = window.open(
       "/newpoll",
       "New Poll",
@@ -418,7 +415,14 @@ function SessionView(props) {
        menubar=no, scrollbars=0, width=250, \
        height=100, top=110, left=1040"
     );
+    await axios
+      .post(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
+      )
+      .then((res) => {})
+      .catch((err) => console.log(err));
     setPopup(newPopup);
+    setRefresh({ created: true });
     // communicate with window
     newPopup.props = {
       sectionId: location.state.sectionId,

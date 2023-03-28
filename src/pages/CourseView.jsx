@@ -6,7 +6,7 @@ import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
-import { BlankCourseView } from "../components/BlankStates";
+import { BlankCourseView, EmptyCourseView } from "../components/BlankStates";
 import { BackButton, IconButton } from "../components/Buttons.jsx";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
@@ -165,6 +165,7 @@ function CourseView(props) {
         </Container>
       );
     }
+    if (!sessionList.length) return [null, null];
     return [sessionList.reverse(), overlays];
   }
 
@@ -212,7 +213,7 @@ function CourseView(props) {
               )
             ) {
               setJoining(session.activeSession.name);
-              container.style.opacity = 100;
+              container.style.opacity = 1;
               await pause(4);
               navigate("/session", {
                 state: {
@@ -230,7 +231,7 @@ function CourseView(props) {
               });
             }
             setSessionOpen(true);
-            container.style.opacity = 100;
+            container.style.opacity = 1;
             openPopup("Join Session");
             setProps({
               name: location.state.name,
@@ -247,7 +248,7 @@ function CourseView(props) {
           }
         })
         .catch((err) => console.log(err));
-      container.style.opacity = 100;
+      container.style.opacity = 1;
     }
 
     useEffect(() => {
@@ -301,14 +302,14 @@ function CourseView(props) {
     const [editOverlays, setEditOverlays] = useState(null);
 
     useEffect(() => {
-      const container = document.getElementById("semester-container");
+      const container = document.querySelector(".semester-container");
       async function loadContent() {
         const [sessionList, overlays] = await populateSessionCards(
           "INSTRUCTOR"
         );
         await pause();
         container.style.opacity = 0;
-        await pause(0.3);
+        await pause(0.4);
         setCards(sessionList);
         setEditOverlays(overlays);
         container.style.opacity = 1;
@@ -329,9 +330,8 @@ function CourseView(props) {
             createSession
           />
           {editOverlays}
-          <div id="semester-container" className="semester-container">
-            {cards}
-          </div>
+          {cards ? null : <EmptyCourseView />}
+          <div className="semester-container">{cards}</div>
         </div>
         <div className="courses-bottom-row bottom-0 gap-3">
           <IconButton

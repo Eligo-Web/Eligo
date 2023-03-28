@@ -1,13 +1,15 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
 import { BlankOverview } from "../components/BlankStates";
 import Card from "../components/Card";
+import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
 import Overlay from "../components/Overlay";
+import { ClickerContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
 import "../styles/overlay.css";
 import { pause } from "./CourseView";
@@ -20,6 +22,11 @@ function OverView(props) {
   const [refresh, setRefresh] = useState(false);
   const [cards, setCards] = useState(<BlankOverview />);
   const [overlays, setOverlays] = useState(null);
+  const [base, setBase] = useContext(ClickerContext);
+
+  async function loadBase() {
+    if (!base) setBase(await clicker.openDevice());
+  }
 
   useEffect(() => {
     if (
@@ -84,7 +91,8 @@ function OverView(props) {
                     ? `${course.SISId} (${course.section})`
                     : `Section ${course.section}`
                 }
-                onClick={() => {
+                onClick={async () => {
+                  if (!base) await loadBase();
                   handleViewClass(
                     course.name,
                     course.sectionId,
@@ -127,7 +135,7 @@ function OverView(props) {
         const semesterList = (await populateCourseCards("STUDENT"))[0];
         await pause();
         container.style.opacity = 0;
-        await pause(0.3);
+        await pause(0.4);
         setCards(semesterList);
         container.style.opacity = 1;
       }
@@ -159,7 +167,7 @@ function OverView(props) {
         );
         await pause();
         container.style.opacity = 0;
-        await pause(0.3);
+        await pause(0.4);
         setCards(semesterList.reverse());
         container.style.opacity = 1;
         setOverlays(editOverlays);

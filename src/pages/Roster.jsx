@@ -44,10 +44,10 @@ function Roster() {
     async function updateRoster() {
       const rosterItems = document.getElementById("roster-content");
       rosterItems.style.opacity = 0;
-      await pause(0.3);
+      await pause(0.4);
       populateRoster();
       document.querySelector(".roster-wrapper").scrollTop = 0;
-      rosterItems.style.opacity = 100;
+      rosterItems.style.opacity = 1;
     }
     if (list) {
       updateRoster();

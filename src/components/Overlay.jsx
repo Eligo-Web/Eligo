@@ -16,8 +16,8 @@ export function openPopup(id) {
   if (overlay) {
     document.body.style.overflow = "hidden";
     overlay.querySelector(".overlay-bg").style.pointerEvents = "all";
-    overlay.querySelector(".overlay-bg").style.opacity = 100;
-    overlay.querySelector(".pop-up").style.opacity = 100;
+    overlay.querySelector(".overlay-bg").style.opacity = 1;
+    overlay.querySelector(".pop-up").style.opacity = 1;
     const form = overlay.querySelector(".form-control");
     if (form) overlay.querySelector(".form-control").focus();
     overlay.style.height = "100vh";
