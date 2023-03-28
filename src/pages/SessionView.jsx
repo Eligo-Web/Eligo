@@ -427,7 +427,7 @@ function SessionView(props) {
       weekNum: location.state.weekNum,
       sessionId: location.state.sessionId,
       pollId: newPollId,
-      base: base,
+      base: base ? base : null,
     };
     while (!newPopup.closed) {
       await new Promise((resolve) => setTimeout(resolve, 1000));

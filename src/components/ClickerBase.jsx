@@ -24,7 +24,7 @@ export async function openDevice() {
 
 export async function initialize(device) {
   const freqCommand = [
-    new Uint8Array([0x01, 0x10, 0x22, 0x42]),
+    new Uint8Array([0x01, 0x10, 0x21, 0x41]),
     new Uint8Array([0x01, 0x16]),
   ];
   const commandA = [
@@ -44,7 +44,6 @@ export async function initialize(device) {
   device.oninputreport = ({device, reportId, data}) => {
     console.log(`Input report ${reportId} from ${device.productName}:`,
                 new Uint8Array(data.buffer));
-    console.log(Date.now())
   };
 
   try {

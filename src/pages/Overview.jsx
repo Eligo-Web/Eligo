@@ -42,7 +42,8 @@ function OverView(props) {
     }
   }, []);
 
-  function handleViewClass(courseName, sectionId, semester, passcode) {
+  async function handleViewClass(courseName, sectionId, semester, passcode) {
+    if (!base) await loadBase();
     console.log(location.state);
     navigate("/class", {
       state: {
@@ -92,8 +93,7 @@ function OverView(props) {
                     ? `${course.SISId} (${course.section})`
                     : `Section ${course.section}`
                 }
-                onClick={async () => {
-                  if (!base) await loadBase();
+                onClick={() => {
                   handleViewClass(
                     course.name,
                     course.sectionId,

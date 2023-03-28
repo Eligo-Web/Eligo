@@ -54,6 +54,7 @@ export default function InstructorPoll() {
 
   useEffect(() => {
     const interval = setInterval(async () => {
+      if (!window.props) return;
       let pollUpdate = [];
       await axios
         .get(
@@ -80,7 +81,7 @@ export default function InstructorPoll() {
   }
 
   async function deactivatePoll(action) {
-    const base = window.props.base;
+    const base = window.props ? window.props.base : null;
     if (base && base.opened) await clicker.stopPoll(base);
     if (action === "save") {
       await axios
