@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
+import * as clicker from "./ClickerBase";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
-import * as clicker from "./ClickerBase";
-import { pause } from "../pages/CourseView";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -45,11 +44,11 @@ export default function InstructorPoll() {
   };
   const chart = PollChart(data, setChartRef);
 
-    useEffect(() => {
-      if (window.props && window.props.base) {
-      window.props.base.oninputreport = async ({device, reportId, data}) => {
+  useEffect(() => {
+    if (window.props && window.props.base) {
+      window.props.base.oninputreport = async ({ device, reportId, data }) => {
         const bytes = new Uint8Array(data.buffer);
-        console.log(bytes)
+        console.log(bytes);
         const response = await clicker.parseResponse(bytes[2]);
         console.log(response);
         setPollData((prev) => {
@@ -60,7 +59,7 @@ export default function InstructorPoll() {
         });
         if (chartRef && chartRef.getContext("2d").chart) {
           chartRef.getContext("2d").chart.update();
-          console.log("updated")
+          console.log("updated");
         }
       };
     }
@@ -103,7 +102,7 @@ export default function InstructorPoll() {
 
   async function deactivatePoll(action) {
     const base = window.props ? window.props.base : null;
-    window.props.base.oninputreport = null;
+    if (base) base.oninputreport = null;
     if (base && base.opened) await clicker.stopPoll(base);
     if (action === "save") {
       await axios

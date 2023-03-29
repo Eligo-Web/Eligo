@@ -82,7 +82,6 @@ export async function startPoll(device) {
     await pause(200);
 
     await device.sendReport(0, commandB);
-
   } catch (error) {
     console.log(error);
   }

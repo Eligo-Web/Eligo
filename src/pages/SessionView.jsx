@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
 import { BlankSessionView, EmptySessionView } from "../components/BlankStates";
 import { BackButton, IconButton } from "../components/Buttons";
+import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
 import Overlay, { closePopup, openPopup } from "../components/Overlay";
@@ -16,7 +17,6 @@ import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
-import * as clicker from "../components/ClickerBase";
 
 function SessionView(props) {
   const location = useLocation();
@@ -41,6 +41,16 @@ function SessionView(props) {
         });
       }
     }
+  }, []);
+
+  useEffect(() => {
+    window.onbeforeunload = function () {
+      return "msg";
+    };
+
+    return () => {
+      window.onbeforeunload = null;
+    };
   }, []);
 
   async function checkActiveSession() {
@@ -284,12 +294,7 @@ function SessionView(props) {
           label={location.state.courseName}
           onClick={() => navigateBack()}
         />
-        <div
-          className="card-wrapper"
-          style={{
-            height: location.state.sessionActive ? "" : "calc(100vh - 9rem)",
-          }}
-        >
+        <div className="card-wrapper">
           <Menu hideCreate />
           <MenuBar
             title={location.state.sessionName}
@@ -409,7 +414,7 @@ function SessionView(props) {
       await clicker.startPoll(base);
       await pause(200);
     }
-      
+
     const newPopup = window.open(
       "/newpoll",
       "New Poll",

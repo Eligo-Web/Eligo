@@ -1,6 +1,6 @@
-import { IconList } from "@tabler/icons-react";
+import { IconCalculator, IconList } from "@tabler/icons-react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
@@ -8,10 +8,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
 import { BlankCourseView, EmptyCourseView } from "../components/BlankStates";
 import { BackButton, IconButton } from "../components/Buttons.jsx";
+import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
 import Overlay, { openPopup } from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
+import { ClickerContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
 
 export function pause(interval) {
@@ -22,9 +24,15 @@ function CourseView(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
+  const server = "http://localhost:3000";
   const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
   const [refresh, setRefresh] = useState(false);
-  const server = "http://localhost:3000";
+  const [base, setBase] = useContext(ClickerContext);
+
+  async function loadBase() {
+    let newBase = await clicker.openDevice();
+    if (newBase && !base) setBase(await clicker.initialize(newBase));
+  }
 
   useEffect(() => {
     if (
@@ -348,6 +356,15 @@ function CourseView(props) {
               onClick={() => handleViewRoster()}
               style={{ maxWidth: "max-content" }}
             />
+            {base ? null : (
+              <IconButton
+                label={buttonLabels ? "Use iClicker Base" : null}
+                icon={<IconCalculator size="1.6em" />}
+                variant="outline"
+                onClick={() => loadBase()}
+                style={{ maxWidth: "max-content" }}
+              />
+            )}
           </div>
         </div>
       </div>

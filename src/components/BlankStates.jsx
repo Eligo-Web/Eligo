@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import img from "../assets/empty-session-state.png";
+import emptyCourseImg from "../assets/empty-course-state.png";
+import emptySessionImg from "../assets/empty-session-state.png";
 import { pause } from "../pages/CourseView";
 import "../styles/images.css";
 import Card from "./Card";
@@ -61,12 +62,12 @@ export function EmptyCourseView() {
     fadeIn();
   }, []);
   return (
-      <div className="img-container">
-        <img className="empty-state-img" src={img} />
-        <center className="blank-state-msg">
-          No sessions found. Create a session and it will appear here.
-        </center>
-      </div>
+    <div className="img-container">
+      <img className="empty-state-img" src={emptyCourseImg} />
+      <center className="blank-state-msg p-2">
+        This class has no sessions. Create a session and it will appear here.
+      </center>
+    </div>
   );
 }
 
@@ -91,11 +92,11 @@ export function EmptySessionView() {
     fadeIn();
   }, []);
   return (
-      <div className="img-container">
-        <img className="empty-state-img" src={img} />
-        <center className="blank-state-msg">
-          You have created no polls yet. Create some and they will appear here!
-        </center>
-      </div>
+    <div className="img-container">
+      <img className="empty-state-img" src={emptySessionImg} />
+      <center className="blank-state-msg p-2">
+        You have created no polls yet. Create some and they will appear here!
+      </center>
+    </div>
   );
 }
