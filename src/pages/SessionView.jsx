@@ -27,12 +27,6 @@ function SessionView(props) {
   const [popup, setPopup] = useState(null);
   const [base, setBase] = useContext(ClickerContext);
 
-    console.log("setting event listener")
-    base.oninputreport = ({device, reportId, data}) => {
-      console.log(`Input report ${reportId} from ${device.productName}:`,
-                  new Uint8Array(data.buffer));
-    };
-
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
       checkActiveSession();
@@ -412,49 +406,49 @@ function SessionView(props) {
       return;
     }
     if (base) {
-      await clicker.initialize(base);
       await clicker.startPoll(base);
+      await pause(200);
     }
       
-    // const newPopup = window.open(
-    //   "/newpoll",
-    //   "New Poll",
-    //   "toolbar=no, location=no, statusbar=no, \
-    //    menubar=no, scrollbars=0, width=250, \
-    //    height=100, top=110, left=1040"
-    // );
-    // await axios
-    //   .post(
-    //     `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
-    //   )
-    //   .then((res) => {})
-    //   .catch((err) => console.log(err));
-    // setPopup(newPopup);
-    // setRefresh({ created: true });
-    // // communicate with window
-    // newPopup.props = {
-    //   sectionId: location.state.sectionId,
-    //   weekNum: location.state.weekNum,
-    //   sessionId: location.state.sessionId,
-    //   pollId: newPollId,
-    //   base: base ? base : null,
-    // };
-    // while (!newPopup.closed) {
-    //   await new Promise((resolve) => setTimeout(resolve, 1000));
-    // }
-    // setPopup(null);
-    // if (base) clicker.stopPoll(base);
-    // await axios
-    //   .put(
-    //     `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`
-    //   )
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // setRefresh({ closed: true });
+    const newPopup = window.open(
+      "/newpoll",
+      "New Poll",
+      "toolbar=no, location=no, statusbar=no, \
+       menubar=no, scrollbars=0, width=250, \
+       height=100, top=110, left=1040"
+    );
+    await axios
+      .post(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
+      )
+      .then((res) => {})
+      .catch((err) => console.log(err));
+    setPopup(newPopup);
+    setRefresh({ created: true });
+    // communicate with window
+    newPopup.props = {
+      sectionId: location.state.sectionId,
+      weekNum: location.state.weekNum,
+      sessionId: location.state.sessionId,
+      pollId: newPollId,
+      base: base ? base : null,
+    };
+    while (!newPopup.closed) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+    setPopup(null);
+    if (base) clicker.stopPoll(base);
+    await axios
+      .put(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setRefresh({ closed: true });
   }
 
   return !authorized ? (

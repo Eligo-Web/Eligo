@@ -9,6 +9,7 @@ import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
 import * as clicker from "./ClickerBase";
+import { pause } from "../pages/CourseView";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -44,6 +45,27 @@ export default function InstructorPoll() {
   };
   const chart = PollChart(data, setChartRef);
 
+    useEffect(() => {
+      if (window.props && window.props.base) {
+      window.props.base.oninputreport = async ({device, reportId, data}) => {
+        const bytes = new Uint8Array(data.buffer);
+        console.log(bytes)
+        const response = await clicker.parseResponse(bytes[2]);
+        console.log(response);
+        setPollData((prev) => {
+          let newData = [...prev];
+          newData[response.charCodeAt(0) - 65]++;
+          console.log(newData);
+          return newData;
+        });
+        if (chartRef && chartRef.getContext("2d").chart) {
+          chartRef.getContext("2d").chart.update();
+          console.log("updated")
+        }
+      };
+    }
+  }, [window.props, chartRef]);
+
   useEffect(() => {
     if (numResponses) {
       const icon = document.querySelector(".responses");
@@ -52,26 +74,25 @@ export default function InstructorPoll() {
     }
   }, [numResponses]);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (!window.props) return;
-      let pollUpdate = [];
-      await axios
-        .get(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
-        )
-        .then((res) => {
-          pollUpdate = Object.values(res.data.data.liveResults);
-          setNumResponses(res.data.data.numResponses);
-          setPollData(pollUpdate);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      chartRef.getContext("2d").chart.update();
-    }, 50);
-    return () => clearInterval(interval);
-  }, [chartRef]);
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     let pollUpdate = [];
+  //     await axios
+  //       .get(
+  //         `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
+  //       )
+  //       .then((res) => {
+  //         pollUpdate = Object.values(res.data.data.liveResults);
+  //         setNumResponses(res.data.data.numResponses);
+  //         setPollData(pollUpdate);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //     chartRef.getContext("2d").chart.update();
+  //   }, 50);
+  //   return () => clearInterval(interval);
+  // }, [chartRef]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
@@ -82,6 +103,7 @@ export default function InstructorPoll() {
 
   async function deactivatePoll(action) {
     const base = window.props ? window.props.base : null;
+    window.props.base.oninputreport = null;
     if (base && base.opened) await clicker.stopPoll(base);
     if (action === "save") {
       await axios

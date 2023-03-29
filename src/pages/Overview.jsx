@@ -25,9 +25,9 @@ function OverView(props) {
   const [base, setBase] = useContext(ClickerContext);
 
   async function loadBase() {
-    const newBase = await clicker.openDevice();
-    setBase(newBase)
-    //if (newBase && !base) setBase(await clicker.initialize(newBase));
+    let newBase = await clicker.openDevice();
+    setBase(newBase);
+    await clicker.initialize(newBase);
   }
 
   useEffect(() => {
