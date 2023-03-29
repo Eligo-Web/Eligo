@@ -4,6 +4,7 @@ import { defaults } from "chart.js/auto";
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
+import { pause } from "../pages/CourseView.jsx";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import * as clicker from "./ClickerBase";
@@ -18,6 +19,7 @@ export default function InstructorPoll() {
   const [pollName, setPollName] = useState("");
   const [chartRef, setChartRef] = useState({});
   const [stopTime, setStopTime] = useState(false);
+  const [prevResponse, setPrevResponse] = useState("");
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
   const server = "http://localhost:3000";
@@ -44,26 +46,29 @@ export default function InstructorPoll() {
   };
   const chart = PollChart(data, setChartRef);
 
-  useEffect(() => {
-    if (window.props && window.props.base) {
-      window.props.base.oninputreport = async ({ device, reportId, data }) => {
-        const bytes = new Uint8Array(data.buffer);
-        console.log(bytes);
-        const response = await clicker.parseResponse(bytes[2]);
-        console.log(response);
-        setPollData((prev) => {
-          let newData = [...prev];
-          newData[response.charCodeAt(0) - 65]++;
-          console.log(newData);
-          return newData;
-        });
-        if (chartRef && chartRef.getContext("2d").chart) {
-          chartRef.getContext("2d").chart.update();
-          console.log("updated");
-        }
-      };
-    }
-  }, [window.props, chartRef]);
+  if (window.props && window.props.base) {
+    window.props.base.oninputreport = async ({ device, reportId, data }) => {
+      let bytes = new Uint8Array(data.buffer);
+      if (bytes[0] === 1) {
+        bytes = bytes.slice(32);
+      }
+      let response = await clicker.parseResponse(bytes[2]);
+      if (response === prevResponse) {
+        response = await clicker.parseResponse(bytes[34]);
+      }
+      setPrevResponse(response);
+      console.log(response);
+      setPollData((prev) => {
+        let newData = [...prev];
+        newData[response.charCodeAt(0) - 65]++;
+        return newData;
+      });
+      if (chartRef && chartRef.getContext("2d").chart) {
+        chartRef.getContext("2d").chart.update();
+      }
+      await pause();
+    };
+  }
 
   useEffect(() => {
     if (numResponses) {
