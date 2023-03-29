@@ -175,7 +175,7 @@
   justify-content: center;
   align-items: center;
   background: #b3d2f7;
-  box-shadow: 0 0.6rem 1.2rem rgba(5, 32, 65, 0.15);
+  box-shadow: 0 0.6rem 1.2rem #05204126;
   border-radius: 3rem;
   padding-bottom: 1.5rem;
   border-width: 0.5rem;
@@ -187,7 +187,7 @@
 }
 
 .btn-sign-in:hover {
-  box-shadow: 0 1rem 2rem rgba(5, 32, 65, 0.15);
+  box-shadow: 0 1rem 2rem #05204126;
   background: #bdd9fb;
 }
 
@@ -196,7 +196,7 @@
 .btn-blank-state:focus,
 .btn-blank-state:disabled {
   background: #bfdffe;
-  box-shadow: 0 0.6rem 1.2rem rgba(5, 32, 65, 0.15);
+  box-shadow: 0 0.6rem 1.2rem #05204126;
   border-radius: 3rem;
   border-width: 0;
   font-size: 2.5rem !important;
@@ -205,7 +205,7 @@
 }
 
 .btn-blank-state:hover {
-  box-shadow: 0 1rem 2rem rgba(5, 32, 65, 0.15);
+  box-shadow: 0 1rem 2rem #05204126;
   background: rgb(202, 232, 255);
 }
 
@@ -235,6 +235,46 @@
   bottom: 0.5rem;
   right: 0.5rem;
   z-index: 5;
+}
+
+.reconnect-base-btn {
+  z-index: 2;
+  bottom: 1rem;
+  margin-left: 1.5rem;
+  position: absolute;
+  transition: 0.1s ease-in-out;
+  font-weight: 500;
+  font-size: 1.2rem;
+  background-color: #ffeacc;
+  color: #5f2d02;
+  padding: 0.7rem 1.1rem;
+  border-radius: 5rem;
+  border: 0.25rem solid transparent;
+  box-shadow: 0 0.1rem 0.3rem #05204116;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.reconnect-base-btn:hover,
+.reconnect-base-btn:focus,
+.reconnect-base-btn:active {
+  box-shadow: 0 0.6rem 1.2rem #05204116;
+  border-color: #ffffff5d;
+}
+
+.reconnect-base-btn:active {
+  border-color: #5f2d029c;
+}
+
+.reconnect-btn-label {
+  text-overflow: clip;
+  overflow: hidden;
+  white-space: nowrap;
+  align-items: center;
+  display: flex;
+  max-width: max-content;
+  transition: 0.3s ease-in-out;
+  width: 0;
 }
 
 .session-edit-button {

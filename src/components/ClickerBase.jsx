@@ -1,5 +1,5 @@
 import { pause } from "../pages/CourseView.jsx";
-export async function openDevice() {
+export async function getDevice() {
   let device;
   try {
     const devices = await navigator.hid.requestDevice({
@@ -13,6 +13,11 @@ export async function openDevice() {
   } catch (error) {
     console.log("An error occurred.");
   }
+  return device || null;
+}
+
+export async function openDevice() {
+  const device = await getDevice();
   if (device) {
     await device.open();
     console.log(device.productName);
@@ -42,11 +47,11 @@ export async function initialize(device) {
   ];
 
   try {
-    await pause(200);
+    await pause();
     await device.sendReport(0, freqCommand[0]);
-    await pause(200);
+    await pause();
     await device.sendReport(0, freqCommand[1]);
-    await pause(200);
+    await pause();
 
     await device.sendReport(0, commandA[0]);
     await device.sendReport(0, commandA[1]);
@@ -54,7 +59,7 @@ export async function initialize(device) {
     await device.sendReport(0, commandA[3]);
 
     await device.sendReport(0, commandProtocol);
-    await pause(200);
+    await pause();
 
     await device.sendReport(0, commandB[0]);
     await device.sendReport(0, commandB[1]);
@@ -83,7 +88,7 @@ export async function startPoll(device) {
     await device.sendReport(0, commandA[1]);
 
     await device.sendReport(0, commandPollType);
-    await pause(200);
+    await pause();
 
     await device.sendReport(0, commandB);
   } catch (error) {

@@ -1,4 +1,4 @@
-import { IconCalculator, IconList } from "@tabler/icons-react";
+import { IconList } from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
@@ -6,8 +6,12 @@ import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
-import { BlankCourseView, EmptyCourseView } from "../components/BlankStates";
-import { BackButton, IconButton } from "../components/Buttons.jsx";
+import { EmptyCourseView, LoadingCourseView } from "../components/BlankStates";
+import {
+  BackButton,
+  FloatingButton,
+  IconButton,
+} from "../components/Buttons.jsx";
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
@@ -16,7 +20,7 @@ import SessionCard from "../components/SessionCard";
 import { ClickerContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
 
-export function pause(interval) {
+export function pause(interval = 200) {
   return new Promise((res) => setTimeout(res, interval));
 }
 
@@ -31,7 +35,9 @@ function CourseView(props) {
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
-    if (newBase && !base) setBase(await clicker.initialize(newBase));
+    if (newBase && !base) {
+      setBase(await clicker.initialize(newBase));
+    }
   }
 
   useEffect(() => {
@@ -45,6 +51,23 @@ function CourseView(props) {
         });
       }
     }
+  }, []);
+
+  useEffect(() => {
+    async function reconnectBase() {
+      const devices = await navigator.hid.getDevices();
+      if (devices.length && !devices[0].opened) {
+        const device = devices[0];
+        setBase(device);
+        try {
+          await device.open();
+        } catch (err) {
+          console.log(err);
+        }
+        console.log(device.opened);
+      }
+    }
+    reconnectBase();
   }, []);
 
   window.onresize = function () {
@@ -306,7 +329,7 @@ function CourseView(props) {
   }
 
   function instructorContent() {
-    const [cards, setCards] = useState(<BlankCourseView />);
+    const [cards, setCards] = useState(<LoadingCourseView />);
     const [editOverlays, setEditOverlays] = useState(null);
 
     useEffect(() => {
@@ -338,6 +361,7 @@ function CourseView(props) {
             createSession
           />
           {editOverlays}
+          <FloatingButton base={base} onClick={() => loadBase()} />
           {cards ? null : <EmptyCourseView />}
           <div className="semester-container">{cards}</div>
         </div>
@@ -356,15 +380,6 @@ function CourseView(props) {
               onClick={() => handleViewRoster()}
               style={{ maxWidth: "max-content" }}
             />
-            {base ? null : (
-              <IconButton
-                label={buttonLabels ? "Use iClicker Base" : null}
-                icon={<IconCalculator size="1.6em" />}
-                variant="outline"
-                onClick={() => loadBase()}
-                style={{ maxWidth: "max-content" }}
-              />
-            )}
           </div>
         </div>
       </div>

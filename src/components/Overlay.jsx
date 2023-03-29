@@ -74,7 +74,7 @@ export default function Overlay(props) {
 
   return (
     <div className="overlay-wrapper" id={props.id + "-popup"}>
-      <div style={{ zIndex: 3 }}>
+      <div style={{ zIndex: 4 }}>
         <div className="overlay pop-up">
           <div className="pop-up-header">
             <Row className="pop-up-title large-title">
@@ -84,23 +84,21 @@ export default function Overlay(props) {
               <IoIosClose size={"2.5em"} onClick={() => close()} />
             </Button>
           </div>
-          {props.instructor ? (
-            props.editMode ? (
-              <EditClass
-                childContent={props.childContent}
-                refresh={props.refresh}
-                setRefresh={props.setRefresh}
-                setMarkDelete={setMarkDelete}
-                confirmDelete={confirmDelete}
-                control={childState}
-              />
-            ) : (
-              <CreateClass
-                refresh={props.refresh}
-                setRefresh={props.setRefresh}
-                control={childState}
-              />
-            )
+          {props.createClass ? (
+            <CreateClass
+              refresh={props.refresh}
+              setRefresh={props.setRefresh}
+              control={childState}
+            />
+          ) : props.editClass ? (
+            <EditClass
+              childContent={props.childContent}
+              refresh={props.refresh}
+              setRefresh={props.setRefresh}
+              setMarkDelete={setMarkDelete}
+              confirmDelete={confirmDelete}
+              control={childState}
+            />
           ) : props.joinClass ? (
             <JoinClass
               name={props.state.name}

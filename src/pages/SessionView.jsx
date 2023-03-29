@@ -7,8 +7,11 @@ import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
-import { BlankSessionView, EmptySessionView } from "../components/BlankStates";
-import { BackButton, IconButton } from "../components/Buttons";
+import {
+  EmptySessionView,
+  LoadingSessionView,
+} from "../components/BlankStates";
+import { BackButton, FloatingButton, IconButton } from "../components/Buttons";
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
@@ -27,6 +30,13 @@ function SessionView(props) {
   const [popup, setPopup] = useState(null);
   const [base, setBase] = useContext(ClickerContext);
 
+  async function loadBase() {
+    let newBase = await clicker.openDevice();
+    if (newBase && !base) {
+      setBase(await clicker.initialize(newBase));
+    }
+  }
+
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
       checkActiveSession();
@@ -44,13 +54,20 @@ function SessionView(props) {
   }, []);
 
   useEffect(() => {
-    window.onbeforeunload = function () {
-      return "msg";
-    };
-
-    return () => {
-      window.onbeforeunload = null;
-    };
+    async function reconnectBase() {
+      const devices = await navigator.hid.getDevices();
+      if (devices.length && !devices[0].opened) {
+        const device = devices[0];
+        setBase(device);
+        try {
+          await device.open();
+        } catch (err) {
+          console.log(err);
+        }
+        console.log(device.opened);
+      }
+    }
+    reconnectBase();
   }, []);
 
   async function checkActiveSession() {
@@ -215,7 +232,7 @@ function SessionView(props) {
   }
 
   function instructorContent() {
-    const [polls, setPolls] = useState(<BlankSessionView />);
+    const [polls, setPolls] = useState(<LoadingSessionView />);
     const [overlays, setOverlays] = useState(null);
     const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
 
@@ -303,6 +320,9 @@ function SessionView(props) {
             showDescription
           />
           {overlays}
+          {location.state.sessionActive ? (
+            <FloatingButton base={base} onClick={() => loadBase()} />
+          ) : null}
           {polls ? null : <EmptySessionView />}
           <div className="poll-container">{polls}</div>
           <div className="courses-bottom-row bottom-0 gap-3">
@@ -412,7 +432,7 @@ function SessionView(props) {
     }
     if (base) {
       await clicker.startPoll(base);
-      await pause(200);
+      await pause();
     }
 
     const newPopup = window.open(

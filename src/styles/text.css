@@ -141,13 +141,12 @@ body {
 }
 
 .form-control {
-  font-weight: 600;
-  color: rgb(0, 6, 13) !important;
+  color: #00060d !important;
 }
 
 .form-control::placeholder {
   font-weight: 600;
-  color: rgb(0, 6, 13) !important;
+  color: #00060d !important;
   opacity: 55%;
 }
 

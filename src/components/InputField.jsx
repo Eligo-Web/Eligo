@@ -80,6 +80,7 @@ export function SelectField(props) {
         defaultValue={props.default || options[0]}
         onChange={props.onChange}
         onKeyDown={props.onKeyDown}
+        onClick={() => console.log("clicked")}
       >
         \ {options}
       </Form.Select>

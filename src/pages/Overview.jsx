@@ -3,7 +3,8 @@ import { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
 import AccessDenied from "../components/AccessDenied";
-import { BlankOverview } from "../components/BlankStates";
+import { EmptyOverview, LoadingOverview } from "../components/BlankStates";
+import { FloatingButton } from "../components/Buttons";
 import Card from "../components/Card";
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
@@ -20,15 +21,33 @@ function OverView(props) {
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(false);
-  const [cards, setCards] = useState(<BlankOverview />);
+  const [cards, setCards] = useState(<LoadingOverview />);
   const [overlays, setOverlays] = useState(null);
   const [base, setBase] = useContext(ClickerContext);
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
-    setBase(newBase);
-    if (newBase) await clicker.initialize(newBase);
+    if (newBase && !base) {
+      setBase(await clicker.initialize(newBase));
+    }
   }
+
+  useEffect(() => {
+    async function reconnectBase() {
+      const devices = await navigator.hid.getDevices();
+      if (devices.length && !devices[0].opened) {
+        const device = devices[0];
+        setBase(device);
+        try {
+          await device.open();
+        } catch (err) {
+          console.log(err);
+        }
+        console.log(device.opened);
+      }
+    }
+    reconnectBase();
+  }, []);
 
   useEffect(() => {
     if (
@@ -44,8 +63,6 @@ function OverView(props) {
   }, []);
 
   async function handleViewClass(courseName, sectionId, semester, passcode) {
-    if (!base) await loadBase();
-    console.log(location.state);
     navigate("/class", {
       state: {
         name: location.state.name,
@@ -113,8 +130,7 @@ function OverView(props) {
                 childContent={course}
                 refresh={refresh}
                 setRefresh={setRefresh}
-                instructor
-                editMode
+                editClass
               />
             );
           })
@@ -127,12 +143,13 @@ function OverView(props) {
         </Container>
       );
     }
-    return [semesterList.reverse(), editOverlays];
+    if (!semesterList.length) return [null, null];
+    return [semesterList, editOverlays];
   }
 
   function studentContent() {
     useEffect(() => {
-      const container = document.getElementById("semester-container");
+      const container = document.querySelector(".semester-container");
       async function loadContent() {
         const semesterList = (await populateCourseCards("STUDENT"))[0];
         await pause(250);
@@ -153,16 +170,14 @@ function OverView(props) {
           state={location.state}
           joinClass
         />
-        <div id="semester-container" className="semester-container">
-          {cards}
-        </div>
+        <div className="semester-container">{cards}</div>
       </div>
     );
   }
 
   function instructorContent() {
     useEffect(() => {
-      const container = document.getElementById("semester-container");
+      const container = document.querySelector(".semester-container");
       async function loadContent() {
         const [semesterList, editOverlays] = await populateCourseCards(
           "INSTRUCTOR"
@@ -170,7 +185,7 @@ function OverView(props) {
         await pause(250);
         container.style.opacity = 0;
         await pause(100);
-        setCards(semesterList.reverse());
+        setCards(semesterList);
         container.style.opacity = 1;
         setOverlays(editOverlays);
       }
@@ -184,12 +199,12 @@ function OverView(props) {
           id="Create Class"
           refresh={refresh}
           setRefresh={setRefresh}
-          instructor
+          createClass
         />
         {overlays}
-        <div id="semester-container" className="semester-container">
-          {cards}
-        </div>
+        {cards ? null : <EmptyOverview />}
+        <FloatingButton base={base} onClick={() => loadBase()} />
+        <div className="semester-container">{cards}</div>
       </div>
     );
   }

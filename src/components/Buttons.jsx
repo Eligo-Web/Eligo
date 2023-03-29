@@ -1,5 +1,7 @@
-import { IconChevronLeft } from "@tabler/icons-react";
+import { IconCalculator, IconChevronLeft, IconX } from "@tabler/icons-react";
+import { useEffect } from "react";
 import Button from "react-bootstrap/Button";
+import { pause } from "../pages/CourseView";
 
 /**
  * @param {{variant: string, label: string, onClick: function}} props
@@ -30,6 +32,54 @@ export function IconButton(props) {
       {props.icon}
       {props.label}
     </Button>
+  );
+}
+
+export function FloatingButton(props) {
+  useEffect(() => {
+    load();
+    async function load() {
+      const devices = await navigator.hid.getDevices();
+      if (props.base || devices.length) {
+        await dismiss();
+        return;
+      }
+      await pause(1000);
+      const btn = document.querySelector(".reconnect-base-btn");
+      if (btn && !props.base) {
+        const label = btn.querySelector(".reconnect-btn-label");
+        btn.style.opacity = 0.5;
+        await pause(50);
+        if (label) label.style.width = "20rem";
+        btn.style.opacity = 1;
+      }
+    }
+  }, [props.base]);
+
+  async function dismiss(event) {
+    console.log("dismissed");
+    if (event) event.stopPropagation();
+    const btn = document.querySelector(".reconnect-base-btn");
+    if (btn) {
+      const label = btn.querySelector(".reconnect-btn-label");
+      if (label) label.style.width = 0;
+      await pause();
+      btn.style.opacity = 0;
+      btn.style.pointerEvents = "none";
+    }
+  }
+
+  return (
+    <div className="reconnect-base-btn" onClick={props.onClick}>
+      <div className="d-flex gap-3 align-items-center">
+        <IconCalculator size="1.5em" />
+        <div className="reconnect-btn-label">Connect iClicker Base</div>
+        <IconX
+          style={{ marginLeft: "0.5rem" }}
+          onClick={(event) => dismiss(event)}
+        />
+      </div>
+    </div>
   );
 }
 

@@ -20,7 +20,7 @@ function SessionCard(props) {
   };
 
   return (
-    <Container className={activity} onClick={props.onClick}>
+    <Container className={activity} id={props.id} onClick={props.onClick}>
       {props.blank ? null : (
         <Row className="align-items-center">
           <Col className="card-title session-card-title">

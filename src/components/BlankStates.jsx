@@ -30,7 +30,7 @@ export function PageNotFound() {
   );
 }
 
-export function BlankOverview() {
+export function LoadingOverview() {
   return (
     <Container className="card-container loading">
       <div className="card-title divisor-blank"></div>
@@ -41,7 +41,28 @@ export function BlankOverview() {
   );
 }
 
-export function BlankCourseView() {
+export function EmptyOverview() {
+  useEffect(() => {
+    async function fadeIn() {
+      await pause(250);
+      const img = document.querySelector(".img-container");
+      if (img) img.style.opacity = 1;
+    }
+    fadeIn();
+  }, []);
+  return (
+    <Container className="d-flex" style={{ paddingTop: "4rem" }}>
+      <div className="img-container">
+        <img className="empty-state-img" src={emptyCourseImg} />
+        <center className="blank-state-msg p-2">
+          You have no classes yet. As you create them, they will appear here.
+        </center>
+      </div>
+    </Container>
+  );
+}
+
+export function LoadingCourseView() {
   return (
     <Container className="card-container loading">
       <div className="card-title divisor-blank"></div>
@@ -71,7 +92,7 @@ export function EmptyCourseView() {
   );
 }
 
-export function BlankSessionView() {
+export function LoadingSessionView() {
   return (
     <Container className="poll-card-container loading">
       <div className="card-title divisor-blank"></div>

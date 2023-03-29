@@ -1,7 +1,7 @@
 .newpoll {
   display: flex;
   height: 100vh;
-  z-index: 3;
+  z-index: 4;
   top: 0;
 }
 
