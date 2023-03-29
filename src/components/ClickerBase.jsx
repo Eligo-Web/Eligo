@@ -22,6 +22,22 @@ export async function openDevice() {
   return device;
 }
 
+export async function setBaseFreq(device) {
+  const command = [
+    new Uint8Array([0x01, 0x17, 0x04]),
+    new Uint8Array([0x01, 0x17, 0x03]),
+    new Uint8Array([0x01, 0x16]),
+  ];
+  try {
+    await device.sendReport(0, command[0]);
+    await device.sendReport(0, command[1]);
+    await device.sendReport(0, command[2]);
+  } catch (error) {
+    console.log(error);
+  }
+  return device;
+}
+
 export async function initialize(device) {
   const freqCommand = [
     new Uint8Array([0x01, 0x10, 0x21, 0x41]),
@@ -41,10 +57,10 @@ export async function initialize(device) {
     new Uint8Array([0x01, 0x16]),
   ];
 
-  device.oninputreport = ({device, reportId, data}) => {
-    console.log(`Input report ${reportId} from ${device.productName}:`,
-                new Uint8Array(data.buffer));
-  };
+  // device.oninputreport = ({device, reportId, data}) => {
+  //   console.log(`Input report ${reportId} from ${device.productName}:`,
+  //               new Uint8Array(data.buffer));
+  // };
 
   try {
     await device.sendReport(0, freqCommand[0]);
@@ -75,10 +91,10 @@ export async function startPoll(device) {
   const commandPollType = new Uint8Array([0x01, 0x19, 0x66, 0x0a, 0x01]);
   const commandB = new Uint8Array([0x01, 0x11]);
 
-  device.oninputreport = ({device, reportId, data}) => {
-    console.log(`Input report ${reportId} from ${device.productName}:`,
-                new Uint8Array(data.buffer));
-  };
+  // device.oninputreport = ({device, reportId, data}) => {
+  //   console.log(`Input report ${reportId} from ${device.productName}:`,
+  //               new Uint8Array(data.buffer));
+  // };
 
   try {
     await device.sendReport(0, commandA[0]);

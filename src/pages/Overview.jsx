@@ -25,8 +25,9 @@ function OverView(props) {
   const [base, setBase] = useContext(ClickerContext);
 
   async function loadBase() {
-    let newBase = await clicker.openDevice();
-    if (newBase && !base) setBase(await clicker.initialize(newBase));
+    const newBase = await clicker.openDevice();
+    setBase(newBase)
+    //if (newBase && !base) setBase(await clicker.initialize(newBase));
   }
 
   useEffect(() => {
@@ -43,7 +44,9 @@ function OverView(props) {
   }, []);
 
   async function handleViewClass(courseName, sectionId, semester, passcode) {
-    if (!base) await loadBase();
+    if (!base) {
+       await loadBase(); 
+    }
     console.log(location.state);
     navigate("/class", {
       state: {
