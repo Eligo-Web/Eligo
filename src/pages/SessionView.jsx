@@ -452,6 +452,7 @@ function SessionView(props) {
     setRefresh({ created: true });
     // communicate with window
     newPopup.props = {
+      semester: location.state.semester,
       sectionId: location.state.sectionId,
       weekNum: location.state.weekNum,
       sessionId: location.state.sessionId,

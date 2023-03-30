@@ -229,6 +229,54 @@ class CourseDao {
     return course;
   }
 
+  async addClickerResponseToPoll(
+    sectionId,
+    weekNum,
+    sessionId,
+    pollId,
+    clickerId,
+    timestamp,
+    response
+  ) {
+    const course = await Course.findOne({ sectionId: sectionId });
+    if (!course) {
+      throw new ApiError(404, `Course with section id ${sectionId} not found`);
+    }
+    const week = course.sessions.get(weekNum);
+    if (!week) {
+      throw new ApiError(404, `Week ${weekNum} not found`);
+    }
+    const session = week.get(sessionId);
+    if (!session) {
+      throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    if (!session.polls[pollId]) {
+      throw new ApiError(404, `Poll with id ${pollId} not found`);
+    }
+    if (!session.polls[pollId].active) {
+      throw new ApiError(403, `Cannot vote, poll has closed`);
+    }
+    let poll = session.polls[pollId];
+    let responses = new Map(Object.entries(poll.responses));
+    if (!responses.get(clickerId)) {
+      responses.set(clickerId, {});
+      responses.get(clickerId).finalAnswer = response;
+      responses.get(clickerId).answers = {};
+      poll.numResponses++;
+    } else {
+      poll.liveResults[responses.get(clickerId).finalAnswer] -= 1;
+    }
+    let answers = new Map(Object.entries(responses.get(clickerId).answers));
+    answers.set(timestamp, response);
+    responses.get(clickerId).answers = answers;
+    responses.get(clickerId).finalAnswer = response;
+    poll.liveResults[response]++;
+    poll.responses = responses;
+    course.markModified("sessions");
+    await course.save();
+    return course;
+  }
+
   async readActiveSession(sectionId, weekNum) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {

@@ -42,6 +42,31 @@ Student.get("/:email", async (req, res) => {
   }
 });
 
+Student.get("/clicker/:semester/:sectionId/:clickerId", async (req, res) => {
+  const semester = req.params.semester;
+  const sectionId = req.params.sectionId;
+  const clickerId = req.params.clickerId;
+  try {
+    const student = await studentDao.readByClickerIdInCourse(
+      clickerId,
+      semester,
+      sectionId
+    );
+    res.json({
+      status: 200,
+      message: `Student found`,
+      data: student,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
 Student.post("/", async (req, res) => {
   try {
     studentDao.create(req.body);
@@ -137,6 +162,25 @@ Student.delete("/:email", async (req, res) => {
     res.json({
       status: 200,
       message: `Student with email ${email} deleted`,
+      data: student,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: err.status,
+      message: err.message,
+      data: null,
+    });
+  }
+});
+
+Student.delete("/:email/clickerId", async (req, res) => {
+  const email = req.params.email;
+  try {
+    const student = await studentDao.deleteClickerId(email);
+    res.json({
+      status: 200,
+      message: `Student's clickerId with email ${email} deleted`,
       data: student,
     });
   } catch (err) {

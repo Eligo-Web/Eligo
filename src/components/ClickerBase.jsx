@@ -113,8 +113,13 @@ export async function stopPoll(device) {
 }
 
 export function parseClickerId(byteSeq) {
-  byteSeq.push(byteSeq[0] ^ byteSeq[1] ^ byteSeq[2]);
-  return byte_seq.map((b) => ("0" + b.toString(16)).slice(-2)).join("");
+  let byteSeqCopy = new Uint8Array(byteSeq.length + 1);
+  byteSeqCopy.set(byteSeq);
+  byteSeqCopy[byteSeq.length] =
+    byteSeqCopy[0] ^ byteSeqCopy[1] ^ byteSeqCopy[2];
+  return Array.from(byteSeqCopy, (b) => ("0" + b.toString(16)).slice(-2))
+    .join("")
+    .toUpperCase();
 }
 
 export function parseResponse(byte) {

@@ -139,6 +139,7 @@ function CourseView(props) {
         passcode: location.state.passcode,
         semester: location.state.semester,
         students: students,
+        clickerId: location.state.clickerId,
       },
     });
   }

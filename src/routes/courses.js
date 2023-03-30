@@ -414,6 +414,42 @@ Course.patch("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
   }
 });
 
+Course.patch(
+  "/:sectionId/:weekNum/:sessionId/:pollId/unknownClicker",
+  async (req, res) => {
+    const sectionId = req.params.sectionId;
+    const weekNum = req.params.weekNum;
+    const sessionId = req.params.sessionId;
+    const pollId = req.params.pollId;
+    const clickerId = req.body.clickerId;
+    const timestamp = req.body.timestamp;
+    const response = req.body.response;
+    try {
+      let session = await courseDao.addResponseToPoll(
+        sectionId,
+        weekNum,
+        sessionId,
+        pollId,
+        clickerId,
+        timestamp,
+        response
+      );
+      res.json({
+        status: 200,
+        message: `Unknown Response added`,
+        data: session,
+      });
+    } catch (err) {
+      console.log(err);
+      res.json({
+        status: err.status,
+        message: err.message,
+        data: null,
+      });
+    }
+  }
+);
+
 Course.post("/", async (req, res) => {
   let sectionId = toSectionId(
     req.body.name + req.body.section + req.body.semester

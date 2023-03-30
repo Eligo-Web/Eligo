@@ -76,7 +76,7 @@ export function FloatingButton(props) {
       window.sessionStorage.setItem("dismissBasePrompt", "true");
     }
   }
-  
+
   async function handleClick() {
     setLabel("Connecting...");
     await props.onClick();

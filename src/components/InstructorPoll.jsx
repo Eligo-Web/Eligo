@@ -56,17 +56,66 @@ export default function InstructorPoll() {
       if (response === prevResponse) {
         response = await clicker.parseResponse(bytes[34]);
       }
-      setPrevResponse(response);
-      console.log(response);
-      setPollData((prev) => {
-        let newData = [...prev];
-        newData[response.charCodeAt(0) - 65]++;
-        return newData;
-      });
-      if (chartRef && chartRef.getContext("2d").chart) {
-        chartRef.getContext("2d").chart.update();
+      if (
+        response === "A" ||
+        response === "B" ||
+        response === "C" ||
+        response === "D" ||
+        response === "E"
+      ) {
+        setPrevResponse(response);
+        console.log(response);
+        const clickerId = await clicker.parseClickerId(bytes.slice(3, 6));
+        console.log(clickerId);
+
+        await axios
+          .get(
+            `${server}/student/clicker/${props.semester}/${props.sectionId}/${clickerId}`
+          )
+          .then(async (res) => {
+            if (res.data.data) {
+              const email = res.data.data.email;
+              await axios
+                .patch(
+                  `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
+                  {
+                    email: email,
+                    timestamp: Date.now().toString(),
+                    response: response,
+                  }
+                )
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            } else {
+              await axios
+                .patch(
+                  `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}/unknownClicker`,
+                  {
+                    clickerId: clickerId,
+                    timestamp: Date.now().toString(),
+                    response: response,
+                  }
+                )
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
+          })
+          .catch((err) => {
+            console.log("err");
+          });
+        if (chartRef && chartRef.getContext("2d").chart) {
+          chartRef.getContext("2d").chart.update();
+        }
+        await pause();
       }
-      await pause();
     };
   }
 
@@ -78,25 +127,25 @@ export default function InstructorPoll() {
     }
   }, [numResponses]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     let pollUpdate = [];
-  //     await axios
-  //       .get(
-  //         `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
-  //       )
-  //       .then((res) => {
-  //         pollUpdate = Object.values(res.data.data.liveResults);
-  //         setNumResponses(res.data.data.numResponses);
-  //         setPollData(pollUpdate);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //     chartRef.getContext("2d").chart.update();
-  //   }, 50);
-  //   return () => clearInterval(interval);
-  // }, [chartRef]);
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      let pollUpdate = [];
+      await axios
+        .get(
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
+        )
+        .then((res) => {
+          pollUpdate = Object.values(res.data.data.liveResults);
+          setNumResponses(res.data.data.numResponses);
+          setPollData(pollUpdate);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      chartRef.getContext("2d").chart.update();
+    }, 50);
+    return () => clearInterval(interval);
+  }, [chartRef]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
@@ -338,7 +387,7 @@ export function ClosedPoll(props) {
     }
 
     const csv = Papa.unparse({
-      fields: ["Email", "Response", "Timestamp"],
+      fields: ["Email/Clicker ID", "Response", "Timestamp"],
       data: emails.map((email, index) => [
         email,
         responses[index],
@@ -538,6 +587,11 @@ function PollChart(data, setChartRef) {
         if (setChartRef) setChartRef(ref);
       }}
       options={{
+        scale: {
+          ticks: {
+            precision: 0,
+          },
+        },
         plugins: {
           legend: {
             display: false,

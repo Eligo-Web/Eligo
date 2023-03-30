@@ -1,9 +1,14 @@
-import { IconCalculator, IconLogout, IconUserCircle } from "@tabler/icons-react";
+import {
+  IconCalculator,
+  IconLogout,
+  IconUserCircle,
+} from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import * as clicker from "../components/ClickerBase";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView";
 import "../styles/buttons.css";
@@ -12,7 +17,6 @@ import "../styles/text.css";
 import { IconButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { openPopup } from "./Overlay";
-import * as clicker from "../components/ClickerBase"
 
 function Menu(props) {
   const location = useLocation();
@@ -30,7 +34,7 @@ function Menu(props) {
         loadBase();
       }}
     />
-  )
+  );
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
     getLabel = "Create Class";
@@ -56,7 +60,6 @@ function Menu(props) {
       setBase(await clicker.initialize(newBase));
     }
   }
-
 
   function closeMenu(overlay) {
     const menu = document.getElementById("side-menu");

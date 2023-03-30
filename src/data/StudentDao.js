@@ -33,12 +33,19 @@ class StudentDao {
     return student;
   }
 
-  async readByClickerId(clickerId) {
-    const student = await Student.findOne({ clickerId: clickerId });
-    if (!student) {
-      throw new ApiError(404, `User with clickerId ${clickerId} not found`);
+  async readByClickerIdInCourse(clickerId, semester, sectionId) {
+    const students = await Student.find({ clickerId: clickerId });
+    for (const student of students) {
+      if (student.history.has(semester)) {
+        if (student.history.get(semester).includes(sectionId)) {
+          return student;
+        }
+      }
     }
-    return student;
+    throw new ApiError(
+      404,
+      `User with clickerId ${clickerId} in course ${sectionId} not found`
+    );
   }
 
   async create(student) {
@@ -93,6 +100,16 @@ class StudentDao {
       throw new ApiError(404, `User with email ${email} not found`);
     }
     student.clickerId = clickerId;
+    await student.save();
+    return student;
+  }
+
+  async deleteClickerId(email) {
+    const student = await Student.findOne({ email: email.toLowerCase() });
+    if (!student) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    student.clickerId = "";
     await student.save();
     return student;
   }

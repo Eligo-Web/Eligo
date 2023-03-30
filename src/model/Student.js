@@ -25,7 +25,6 @@ const StudentSchema = new mongoose.Schema({
   },
   clickerId: {
     type: String,
-    unique: true,
   },
 });
 
