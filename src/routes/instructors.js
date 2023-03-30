@@ -9,11 +9,11 @@ const server = "http://localhost:3000";
 Instructor.get("/", async (req, res, next) => {
   const instructors = await instructorDao.readAll(req.query);
   try {
-  res.json({
-    status: 200,
-    message: `${instructors.length} instructors found`,
-    data: instructors,
-  });
+    res.json({
+      status: 200,
+      message: `${instructors.length} instructors found`,
+      data: instructors,
+    });
   } catch (err) {
     next(err);
   }
@@ -36,14 +36,14 @@ Instructor.get("/:email", async (req, res, next) => {
 Instructor.post("/", async (req, res, next) => {
   instructorDao.create(req.body);
   try {
-  res.json({
-    status: 201,
-    message: "Instructor created",
-    data: req.body,
-  });
-} catch (err) {
-  next(err);
-}
+    res.json({
+      status: 201,
+      message: "Instructor created",
+      data: req.body,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 Instructor.put("/:email", async (req, res, next) => {

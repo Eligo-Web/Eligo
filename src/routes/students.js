@@ -32,25 +32,28 @@ Student.get("/:email", async (req, res, next) => {
   }
 });
 
-Student.get("/clicker/:semester/:sectionId/:clickerId", async (req, res, next) => {
-  const semester = req.params.semester;
-  const sectionId = req.params.sectionId;
-  const clickerId = req.params.clickerId;
-  try {
-    const student = await studentDao.readByClickerIdInCourse(
-      clickerId,
-      semester,
-      sectionId
-    );
-    res.json({
-      status: 200,
-      message: `Student found`,
-      data: student,
-    });
-  } catch (err) {
-    next(err);
+Student.get(
+  "/clicker/:semester/:sectionId/:clickerId",
+  async (req, res, next) => {
+    const semester = req.params.semester;
+    const sectionId = req.params.sectionId;
+    const clickerId = req.params.clickerId;
+    try {
+      const student = await studentDao.readByClickerIdInCourse(
+        clickerId,
+        semester,
+        sectionId
+      );
+      res.json({
+        status: 200,
+        message: `Student found`,
+        data: student,
+      });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 Student.post("/", async (req, res, next) => {
   try {

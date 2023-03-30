@@ -15,16 +15,15 @@ app.use("/student", Student);
 app.use("/course", Course);
 
 app.use((err, req, res, next) => {
-    if (err) {
-      const code = err.status || 500;
-      res.json({
-        status: code,
-        message: err.message || `Internal Server Error!`,
-        data: null,
-      });
-    }
-    next();
+  if (err) {
+    const code = err.status || 500;
+    res.json({
+      status: code,
+      message: err.message || `Internal Server Error!`,
+      data: null,
+    });
+  }
+  next();
 });
-
 
 export default app;
