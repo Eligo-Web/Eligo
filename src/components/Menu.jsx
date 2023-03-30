@@ -1,9 +1,10 @@
-import { IconLogout, IconUserCircle } from "@tabler/icons-react";
+import { IconCalculator, IconLogout, IconUserCircle } from "@tabler/icons-react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
@@ -11,12 +12,25 @@ import "../styles/text.css";
 import { IconButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { openPopup } from "./Overlay";
+import * as clicker from "../components/ClickerBase"
 
 function Menu(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const server = "http://localhost:3000";
   const [clickerId, setClickerId] = useState(location.state.clickerId || "");
+  const [base, setBase] = useContext(ClickerContext);
+  const [baseButton, setBaseButton] = useState(
+    <IconButton
+      label="Connect Base"
+      icon={<IconCalculator size="1.6em" />}
+      variant="outline"
+      onClick={async () => {
+        closeMenu();
+        loadBase();
+      }}
+    />
+  )
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
     getLabel = "Create Class";
@@ -25,6 +39,25 @@ function Menu(props) {
     getLabel = "Leave Class";
   }
 
+  useEffect(() => {
+    async function hideBaseButton() {
+      const devices = await navigator.hid.getDevices();
+      if (devices.length || location.state.permission !== "INSTRUCTOR") {
+        setBaseButton(null);
+      }
+    }
+    hideBaseButton();
+  }, [base]);
+
+  async function loadBase() {
+    window.sessionStorage.setItem("dismissBasePrompt", "false");
+    let newBase = await clicker.openDevice();
+    if (newBase && !base) {
+      setBase(await clicker.initialize(newBase));
+    }
+  }
+
+
   function closeMenu(overlay) {
     const menu = document.getElementById("side-menu");
     menu.querySelector(".overlay-bg").style.pointerEvents = "none";
@@ -32,7 +65,7 @@ function Menu(props) {
     menu.querySelector(".menu").style.left = "-18rem";
     document.body.style.overflow = "overlay";
     console.log("closed menu");
-    openPopup(overlay);
+    if (overlay) openPopup(overlay);
   }
 
   async function handleSignOut() {
@@ -154,6 +187,7 @@ function Menu(props) {
           )}
         </Container>
         <Container className="d-flex flex-column p-3 gap-2 align-items-center">
+          {baseButton}
           {props.hideCreate || props.hideJoin ? null : (
             <IconButton
               label={getLabel}

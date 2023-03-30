@@ -1,5 +1,5 @@
 import { IconCalculator, IconChevronLeft, IconX } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { pause } from "../pages/CourseView";
 
@@ -36,9 +36,14 @@ export function IconButton(props) {
 }
 
 export function FloatingButton(props) {
+  const [label, setLabel] = useState("Connect iClicker Base");
   useEffect(() => {
     load();
     async function load() {
+      const prompt = window.sessionStorage.getItem("dismissBasePrompt");
+      if (prompt === "true") {
+        return;
+      }
       const devices = await navigator.hid.getDevices();
       if (props.base || devices.length) {
         await dismiss();
@@ -56,7 +61,7 @@ export function FloatingButton(props) {
     }
   }, [props.base]);
 
-  async function dismiss(event) {
+  async function dismiss(event, saveState = false) {
     console.log("dismissed");
     if (event) event.stopPropagation();
     const btn = document.querySelector(".reconnect-base-btn");
@@ -67,16 +72,28 @@ export function FloatingButton(props) {
       btn.style.opacity = 0;
       btn.style.pointerEvents = "none";
     }
+    if (saveState) {
+      window.sessionStorage.setItem("dismissBasePrompt", "true");
+    }
+  }
+  
+  async function handleClick() {
+    setLabel("Connecting...");
+    await props.onClick();
+    const devices = await navigator.hid.getDevices();
+    if (!devices.length) {
+      setLabel("Connect iClicker Base");
+    }
   }
 
   return (
-    <div className="reconnect-base-btn" onClick={props.onClick}>
+    <div className="reconnect-base-btn" onClick={() => handleClick()}>
       <div className="d-flex gap-3 align-items-center">
         <IconCalculator size="1.5em" />
-        <div className="reconnect-btn-label">Connect iClicker Base</div>
+        <div className="reconnect-btn-label">{label}</div>
         <IconX
           style={{ marginLeft: "0.5rem" }}
-          onClick={(event) => dismiss(event)}
+          onClick={(event) => dismiss(event, true)}
         />
       </div>
     </div>
