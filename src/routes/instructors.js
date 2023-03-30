@@ -6,16 +6,20 @@ const Instructor = express.Router();
 export const instructorDao = new InstructorDao();
 const server = "http://localhost:3000";
 
-Instructor.get("/", async (req, res) => {
+Instructor.get("/", async (req, res, next) => {
   const instructors = await instructorDao.readAll(req.query);
+  try {
   res.json({
     status: 200,
     message: `${instructors.length} instructors found`,
     data: instructors,
   });
+  } catch (err) {
+    next(err);
+  }
 });
 
-Instructor.get("/:email", async (req, res) => {
+Instructor.get("/:email", async (req, res, next) => {
   const email = req.params.email;
   try {
     const instructor = await instructorDao.readByEmail(email);
@@ -25,25 +29,24 @@ Instructor.get("/:email", async (req, res) => {
       data: instructor,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Instructor.post("/", async (req, res) => {
+Instructor.post("/", async (req, res, next) => {
   instructorDao.create(req.body);
+  try {
   res.json({
     status: 201,
     message: "Instructor created",
     data: req.body,
   });
+} catch (err) {
+  next(err);
+}
 });
 
-Instructor.put("/:email", async (req, res) => {
+Instructor.put("/:email", async (req, res, next) => {
   const email = req.params.email;
   const newCourse = req.body.newCourse;
   const newSection = req.body.newSection;
@@ -61,16 +64,11 @@ Instructor.put("/:email", async (req, res) => {
       data: instructor,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Instructor.put("/:email/:semester/:sectionId", async (req, res) => {
+Instructor.put("/:email/:semester/:sectionId", async (req, res, next) => {
   const email = req.params.email;
   const oldSemester = req.params.semester;
   const newSemester = req.body.newSemester;
@@ -90,16 +88,11 @@ Instructor.put("/:email/:semester/:sectionId", async (req, res) => {
       data: instructor,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Instructor.delete("/:email", async (req, res) => {
+Instructor.delete("/:email", async (req, res, next) => {
   const email = req.params.email;
   try {
     const instructor = await instructorDao.deleteByEmail(email);
@@ -109,16 +102,11 @@ Instructor.delete("/:email", async (req, res) => {
       data: instructor,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Instructor.delete("/:email/:semester/:sectionId", async (req, res) => {
+Instructor.delete("/:email/:semester/:sectionId", async (req, res, next) => {
   const email = req.params.email;
   const semester = req.params.semester;
   const sectionId = req.params.sectionId;
@@ -134,12 +122,7 @@ Instructor.delete("/:email/:semester/:sectionId", async (req, res) => {
       data: instructor,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 

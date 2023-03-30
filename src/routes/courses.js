@@ -16,16 +16,20 @@ export function decodeEmail(str) {
   return str.replace(/[$]/g, ".");
 }
 
-Course.get("/", async (req, res) => {
+Course.get("/", async (req, res, next) => {
+  try {
   const courses = await courseDao.readAll(req.query);
   res.json({
     status: 200,
     message: `${courses.length} courses found`,
     data: courses,
   });
+} catch (err) {
+  next(err);
+}
 });
 
-Course.get("/:sectionId", async (req, res) => {
+Course.get("/:sectionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   try {
     let course = await courseDao.readBySectionId(sectionId);
@@ -35,16 +39,11 @@ Course.get("/:sectionId", async (req, res) => {
       data: course,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.get("/student/:passcode", async (req, res) => {
+Course.get("/student/:passcode", async (req, res, next) => {
   const passcode = req.params.passcode;
   try {
     let course = await courseDao.readByPasscode(passcode);
@@ -54,16 +53,11 @@ Course.get("/student/:passcode", async (req, res) => {
       data: course,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.get("/:sectionId/:weekNum/:sessionId", async (req, res) => {
+Course.get("/:sectionId/:weekNum/:sessionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -75,16 +69,11 @@ Course.get("/:sectionId/:weekNum/:sessionId", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.get("/:sectionId/:weekNum", async (req, res) => {
+Course.get("/:sectionId/:weekNum", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   try {
@@ -95,16 +84,11 @@ Course.get("/:sectionId/:weekNum", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.get("/:sectionId/sessions", async (req, res) => {
+Course.get("/:sectionId/sessions", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   try {
     let sessions = await courseDao.readAllSessions(sectionId);
@@ -114,16 +98,11 @@ Course.get("/:sectionId/sessions", async (req, res) => {
       data: sessions,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.get("/:sectionId/:weekNum/:sessionId/openPoll", async (req, res) => {
+Course.get("/:sectionId/:weekNum/:sessionId/openPoll", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -135,16 +114,11 @@ Course.get("/:sectionId/:weekNum/:sessionId/openPoll", async (req, res) => {
       data: poll,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.get("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
+Course.get("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -157,16 +131,11 @@ Course.get("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
       data: poll,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.post("/:sectionId/:sessionId", async (req, res) => {
+Course.post("/:sectionId/:sessionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const sessionId = req.params.sessionId;
   const name = req.body.name;
@@ -186,18 +155,13 @@ Course.post("/:sectionId/:sessionId", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
 Course.post(
   "/:sectionId/:weekNum/:sessionId/:email/:passcode",
-  async (req, res) => {
+  async (req, res, next) => {
     const sectionId = req.params.sectionId;
     const weekNum = req.params.weekNum;
     const sessionId = req.params.sessionId;
@@ -217,17 +181,12 @@ Course.post(
         data: session,
       });
     } catch (err) {
-      console.log(err);
-      res.json({
-        status: err.status,
-        message: err.message,
-        data: null,
-      });
+      next(err);
     }
   }
 );
 
-Course.post("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
+Course.post("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -245,16 +204,11 @@ Course.post("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
+Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -270,18 +224,13 @@ Course.put("/:sectionId/:weekNum/:sessionId/close", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
 Course.put(
   "/:sectionId/:weekNum/:sessionId/:pollId/close",
-  async (req, res) => {
+  async (req, res, next) => {
     const sectionId = req.params.sectionId;
     const weekNum = req.params.weekNum;
     const sessionId = req.params.sessionId;
@@ -303,17 +252,12 @@ Course.put(
         data: session,
       });
     } catch (err) {
-      console.log(err);
-      res.json({
-        status: err.status,
-        message: err.message,
-        data: null,
-      });
+      next(err);
     }
   }
 );
 
-Course.put("/:sectionId/:weekNum/closeAll", async (req, res) => {
+Course.put("/:sectionId/:weekNum/closeAll", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   try {
@@ -324,16 +268,11 @@ Course.put("/:sectionId/:weekNum/closeAll", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.put("/:sectionId/:weekNum/:sessionId/closeAll", async (req, res) => {
+Course.put("/:sectionId/:weekNum/:sessionId/closeAll", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -345,16 +284,11 @@ Course.put("/:sectionId/:weekNum/:sessionId/closeAll", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.patch("/:sectionId/:weekNum/:sessionId", async (req, res) => {
+Course.patch("/:sectionId/:weekNum/:sessionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -372,16 +306,11 @@ Course.patch("/:sectionId/:weekNum/:sessionId", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.patch("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
+Course.patch("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -405,18 +334,13 @@ Course.patch("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
       data: session,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
 Course.patch(
   "/:sectionId/:weekNum/:sessionId/:pollId/unknownClicker",
-  async (req, res) => {
+  async (req, res, next) => {
     const sectionId = req.params.sectionId;
     const weekNum = req.params.weekNum;
     const sessionId = req.params.sessionId;
@@ -440,17 +364,12 @@ Course.patch(
         data: session,
       });
     } catch (err) {
-      console.log(err);
-      res.json({
-        status: err.status,
-        message: err.message,
-        data: null,
-      });
+      next(err);
     }
   }
 );
 
-Course.post("/", async (req, res) => {
+Course.post("/", async (req, res, next) => {
   let sectionId = toSectionId(
     req.body.name + req.body.section + req.body.semester
   );
@@ -463,16 +382,11 @@ Course.post("/", async (req, res) => {
       data: req.body,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.put("/:sectionId", async (req, res) => {
+Course.put("/:sectionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const name = req.body.name;
   const section = req.body.section;
@@ -496,16 +410,11 @@ Course.put("/:sectionId", async (req, res) => {
       data: course,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.put("/:sectionId/:email", async (req, res) => {
+Course.put("/:sectionId/:email", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const email = req.params.email;
   const name = req.body.name;
@@ -517,16 +426,11 @@ Course.put("/:sectionId/:email", async (req, res) => {
       data: course,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.delete("/:sectionId", async (req, res) => {
+Course.delete("/:sectionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   try {
     const course = await courseDao.deleteBySectionId(sectionId);
@@ -536,16 +440,11 @@ Course.delete("/:sectionId", async (req, res) => {
       data: course,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.delete("/:sectionId/:email", async (req, res) => {
+Course.delete("/:sectionId/:email", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const email = req.params.email;
   try {
@@ -556,16 +455,11 @@ Course.delete("/:sectionId/:email", async (req, res) => {
       data: course,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res) => {
+Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -577,16 +471,11 @@ Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res) => {
       data: course,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
-Course.delete("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
+Course.delete("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
@@ -604,12 +493,7 @@ Course.delete("/:sectionId/:weekNum/:sessionId/:pollId", async (req, res) => {
       data: course,
     });
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: err.status,
-      message: err.message,
-      data: null,
-    });
+    next(err);
   }
 });
 
