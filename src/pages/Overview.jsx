@@ -203,7 +203,6 @@ function OverView(props) {
         />
         {overlays}
         {cards ? null : <EmptyOverview />}
-        <FloatingButton base={base} onClick={() => loadBase()} />
         <div className="semester-container">{cards}</div>
       </div>
     );
@@ -225,17 +224,22 @@ function OverView(props) {
   return !authorized ? (
     <AccessDenied />
   ) : (
-    <div className="overview-wrapper">
-      <Menu />
-      <MenuBar
-        title="Your Courses"
-        description={location.state.email}
-        onClick={props.onClick}
-        showDescription
-      />
-      {location.state.permission === "STUDENT"
-        ? studentContent()
-        : instructorContent()}
+    <div>
+      {location.state.permission === "STUDENT" ? null : (
+        <FloatingButton base={base} onClick={() => loadBase()} bottom />
+      )}
+      <div className="overview-wrapper">
+        <Menu />
+        <MenuBar
+          title="Your Courses"
+          description={location.state.email}
+          onClick={props.onClick}
+          showDescription
+        />
+        {location.state.permission === "STUDENT"
+          ? studentContent()
+          : instructorContent()}
+      </div>
     </div>
   );
 }

@@ -19,7 +19,6 @@ function MenuBar(props) {
     menu.querySelector(".overlay-bg").style.pointerEvents = "all";
     menu.querySelector(".overlay-bg").style.opacity = 1;
     menu.querySelector(".menu").style.left = 0;
-    console.log("opened menu");
   }
 
   function copyDescription() {

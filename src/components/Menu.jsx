@@ -1,13 +1,10 @@
-import {
-  IconCalculator,
-  IconLogout,
-  IconUserCircle,
-} from "@tabler/icons-react";
+import * as Tabler from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import { isAwaitExpression } from "typescript";
 import * as clicker from "../components/ClickerBase";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView";
@@ -27,8 +24,8 @@ function Menu(props) {
   const [baseButton, setBaseButton] = useState(
     <IconButton
       label="Connect Base"
-      icon={<IconCalculator size="1.6em" />}
-      variant="outline"
+      icon={<Tabler.IconCalculator size="1.6em" />}
+      variant="outline btn-secondary"
       onClick={async () => {
         closeMenu();
         loadBase();
@@ -54,7 +51,7 @@ function Menu(props) {
   }, [base]);
 
   async function loadBase() {
-    window.sessionStorage.setItem("dismissBasePrompt", "false");
+    sessionStorage.setItem("dismissBasePrompt", "false");
     let newBase = await clicker.openDevice();
     if (newBase && !base) {
       setBase(await clicker.initialize(newBase));
@@ -67,14 +64,32 @@ function Menu(props) {
     menu.querySelector(".overlay-bg").style.opacity = 0;
     menu.querySelector(".menu").style.left = "-18rem";
     document.body.style.overflow = "overlay";
-    console.log("closed menu");
     if (overlay) openPopup(overlay);
   }
 
   async function handleSignOut() {
     closeMenu();
     await pause(250);
+    sessionStorage.setItem("dismissBasePrompt", "false");
     navigate("/");
+  }
+
+  async function updateCickerId() {
+    if (clickerId) {
+      await axios
+        .patch(`${server}/student/${location.state.email}/${clickerId}`)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      await axios
+        .delete(`${server}/student/${location.state.email}/clickerId`)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => console.log(err));
+    }
   }
 
   useEffect(() => {
@@ -86,37 +101,13 @@ function Menu(props) {
           newClickerId = res.data.data.clickerId;
         })
         .catch((err) => console.log(err));
-      setClickerId(newClickerId);
-      location.state.clickerId = newClickerId;
+      setClickerId(newClickerId || "");
+      location.state.clickerId = newClickerId || "";
     }
     if (location.state.permission === "STUDENT" && !location.state.clickerId) {
       getClickerId();
     }
   }, []);
-
-  useEffect(() => {
-    let newClickerId;
-    async function updateCickerId() {
-      await axios
-        .get(`${server}/student/${location.state.email}`)
-        .then((res) => {
-          newClickerId = res.data.data.clickerId;
-        })
-        .catch((err) => console.log(err));
-      if (newClickerId !== clickerId) {
-        await axios
-          .patch(`${server}/student/${location.state.email}/${clickerId}`)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => console.log(err));
-        location.state.clickerId = newClickerId;
-      }
-    }
-    if (clickerId && clickerId.length === 8) {
-      updateCickerId();
-    }
-  }, [clickerId]);
 
   async function leaveClass() {
     await axios
@@ -171,23 +162,25 @@ function Menu(props) {
             </div>
           </Container>
           <Container className="d-flex flex-row p-3 gap-3 card-subtitle">
-            <IconUserCircle size="1.8em" />
+            <Tabler.IconUserCircle size="1.8em" />
             {location.state.name}
           </Container>
-          {location.state.permission === "INSTRUCTOR" ? null : (
+          {location.state.permission === "STUDENT" ? (
             <center style={{ padding: "0.5rem 1.5rem" }}>
               <InputField
                 class="clicker-id-input"
                 label="iClicker Remote ID"
-                input="ex: 123ABC78"
+                input="123ABC78"
                 default={clickerId}
                 maxLength={8}
                 onChange={(e) => setClickerId(e.target.value.toUpperCase())}
+                onClick={() => updateCickerId()}
                 style={{ textTransform: "uppercase" }}
                 center
+                save
               />
             </center>
-          )}
+          ) : null}
         </Container>
         <Container className="d-flex flex-column p-3 gap-2 align-items-center">
           {baseButton}
@@ -209,7 +202,7 @@ function Menu(props) {
           <IconButton
             label="Sign Out"
             variant="sign-out"
-            icon={<IconLogout size="1.65em" />}
+            icon={<Tabler.IconLogout size="1.65em" />}
             onClick={handleSignOut}
           />
         </Container>

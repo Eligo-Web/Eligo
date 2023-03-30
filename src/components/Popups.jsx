@@ -153,7 +153,6 @@ export function JoinClass(props) {
     const overlay = document.getElementById("join-class-popup");
     if (overlay.offsetParent.style.height) {
       clearContents();
-      console.log("clear contents");
     }
   }, [props.control]);
 

@@ -1,6 +1,7 @@
 import { IconLock } from "@tabler/icons-react";
 import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
+import { PrimaryButton } from "./Buttons";
 
 export default function InputField(props) {
   useEffect(() => {
@@ -35,18 +36,28 @@ export default function InputField(props) {
         {props.label || "Title Text"}
         {props.disabled ? <IconLock size="1em" stroke="0.15rem" /> : null}
       </div>
-      <Form.Control
-        className={props.class}
-        placeholder={props.input || "Placeholder Text"}
-        defaultValue={props.default}
-        onChange={props.onChange}
-        onKeyDown={props.onKeyDown}
-        value={props.value}
-        disabled={props.disabled}
-        maxLength={props.maxLength}
-        type={props.type}
-        style={props.style}
-      />
+      <div className="d-flex flex-row align-content-center">
+        <Form.Control
+          className={props.class}
+          placeholder={props.input || "Placeholder Text"}
+          defaultValue={props.default}
+          onChange={props.onChange}
+          onKeyDown={props.onKeyDown}
+          value={props.value}
+          disabled={props.disabled}
+          maxLength={props.maxLength}
+          type={props.type}
+          style={props.style}
+        />
+        {props.save ? (
+          <PrimaryButton
+            label="Save"
+            variant="clicker-save"
+            style={{ padding: "0 1rem", margin: "auto" }}
+            onClick={props.onClick}
+          />
+        ) : null}
+      </div>
       {renderErrors()}
     </div>
   );
@@ -80,9 +91,8 @@ export function SelectField(props) {
         defaultValue={props.default || options[0]}
         onChange={props.onChange}
         onKeyDown={props.onKeyDown}
-        onClick={() => console.log("clicked")}
       >
-        \ {options}
+        {options}
       </Form.Select>
     </div>
   );

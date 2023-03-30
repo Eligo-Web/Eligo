@@ -103,7 +103,7 @@ export function LoadingSessionView() {
   );
 }
 
-export function EmptySessionView() {
+export function EmptySessionView(props) {
   useEffect(() => {
     async function fadeIn() {
       await pause(250);
@@ -116,7 +116,9 @@ export function EmptySessionView() {
     <div className="img-container">
       <img className="empty-state-img" src={emptySessionImg} />
       <center className="blank-state-msg p-2">
-        You have created no polls yet. Create some and they will appear here!
+        {props.open
+          ? "You have created no polls yet. Create some and they will appear here!"
+          : "This session has no polls to show."}
       </center>
     </div>
   );

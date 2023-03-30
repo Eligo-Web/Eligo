@@ -352,6 +352,7 @@ function CourseView(props) {
     return (
       <div className="d-flex flex-column ">
         {backButton}
+        <FloatingButton base={base} onClick={() => loadBase()} />
         <div className="card-wrapper">
           <Overlay
             title="Create Session"
@@ -362,7 +363,6 @@ function CourseView(props) {
             createSession
           />
           {editOverlays}
-          <FloatingButton base={base} onClick={() => loadBase()} />
           {cards ? null : <EmptyCourseView />}
           <div className="semester-container">{cards}</div>
         </div>

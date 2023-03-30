@@ -1,4 +1,4 @@
-import { IconCalculator, IconChevronLeft, IconX } from "@tabler/icons-react";
+import * as Tabler from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { pause } from "../pages/CourseView";
@@ -37,10 +37,11 @@ export function IconButton(props) {
 
 export function FloatingButton(props) {
   const [label, setLabel] = useState("Connect iClicker Base");
+
   useEffect(() => {
     load();
     async function load() {
-      const prompt = window.sessionStorage.getItem("dismissBasePrompt");
+      const prompt = sessionStorage.getItem("dismissBasePrompt");
       if (prompt === "true") {
         return;
       }
@@ -50,30 +51,52 @@ export function FloatingButton(props) {
         return;
       }
       await pause(1000);
-      const btn = document.querySelector(".reconnect-base-btn");
+      const btn = document.querySelector(".connect-base-btn");
       if (btn && !props.base) {
-        const label = btn.querySelector(".reconnect-btn-label");
+        btn.style.pointerEvents = "all";
+        const label = btn.querySelector(".connect-btn-label");
         btn.style.opacity = 0.5;
-        await pause(50);
         if (label) label.style.width = "20rem";
+        await pause(50)
         btn.style.opacity = 1;
       }
     }
   }, [props.base]);
 
+  useEffect(() => {
+    if (props.bottom) {
+      document.querySelector(".connect-base-btn").style.bottom = "2rem";
+    }
+  }, []);
+
   async function dismiss(event, saveState = false) {
-    console.log("dismissed");
     if (event) event.stopPropagation();
-    const btn = document.querySelector(".reconnect-base-btn");
+    const btn = document.querySelector(".connect-base-btn");
     if (btn) {
-      const label = btn.querySelector(".reconnect-btn-label");
+      const label = btn.querySelector(".connect-btn-label");
       if (label) label.style.width = 0;
       await pause();
       btn.style.opacity = 0;
       btn.style.pointerEvents = "none";
     }
     if (saveState) {
-      window.sessionStorage.setItem("dismissBasePrompt", "true");
+      sessionStorage.setItem("dismissBasePrompt", "true");
+      await pause();
+      await showTooltip();
+    }
+  }
+
+  async function showTooltip() {
+    const msg = document.querySelector(".connect-base-tooltip");
+    if (msg) {
+      msg.style.pointerEvents = "all";
+      msg.style.opacity = 1;
+      msg.style.width = "30rem";
+      await pause(2500);
+      msg.style.width = 0;
+      await pause(50);
+      msg.style.opacity = 0;
+      msg.style.pointerEvents = "none";
     }
   }
 
@@ -87,14 +110,24 @@ export function FloatingButton(props) {
   }
 
   return (
-    <div className="reconnect-base-btn" onClick={() => handleClick()}>
-      <div className="d-flex gap-3 align-items-center">
-        <IconCalculator size="1.5em" />
-        <div className="reconnect-btn-label">{label}</div>
-        <IconX
-          style={{ marginLeft: "0.5rem" }}
-          onClick={(event) => dismiss(event, true)}
-        />
+    <div>
+      <div className="connect-base-tooltip">
+        <Tabler.IconInfoCircle className="tooltip-icon" stroke="0.1rem" />
+        <div style={{ minWidth: "19rem", maxWidth: "19rem" }}>
+          You can always connect your iClicker base station from the menu.
+        </div>
+      </div>
+      <div className="connect-base-btn" onClick={() => handleClick()}>
+        <div className="d-flex gap-3 align-items-center">
+          <Tabler.IconCalculator size="1.4em" />
+          <div className="connect-btn-label">{label}</div>
+          <Tabler.IconX
+            size="1.5em"
+            stroke="0.14rem"
+            style={{ marginLeft: "0.7rem" }}
+            onClick={(event) => dismiss(event, true)}
+          />
+        </div>
       </div>
     </div>
   );
@@ -125,7 +158,7 @@ export function BackButton(props) {
         top: "5rem",
         zIndex: 1,
       }}
-      icon={<IconChevronLeft size="1.5em" />}
+      icon={<Tabler.IconChevronLeft size="1.5em" />}
       label={props.label}
       variant="transparent"
       onClick={props.onClick}

@@ -311,6 +311,9 @@ function SessionView(props) {
           label={location.state.courseName}
           onClick={() => navigateBack()}
         />
+        {location.state.sessionActive ? (
+          <FloatingButton base={base} onClick={() => loadBase()} />
+        ) : null}
         <div className="card-wrapper">
           <Menu hideCreate />
           <MenuBar
@@ -320,10 +323,9 @@ function SessionView(props) {
             showDescription
           />
           {overlays}
-          {location.state.sessionActive ? (
-            <FloatingButton base={base} onClick={() => loadBase()} />
-          ) : null}
-          {polls ? null : <EmptySessionView />}
+          {polls ? null : (
+            <EmptySessionView open={location.state.sessionActive} />
+          )}
           <div className="poll-container">{polls}</div>
           <div className="courses-bottom-row bottom-0 gap-3">
             {location.state.sessionActive ? (
@@ -463,6 +465,7 @@ function SessionView(props) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
     setPopup(null);
+    window.focus();
     if (base) clicker.stopPoll(base);
     await axios
       .put(

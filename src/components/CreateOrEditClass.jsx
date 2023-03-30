@@ -65,7 +65,6 @@ function CreateOrEditClass(props) {
     const overlay = document.getElementById(popupName);
     if (overlay.offsetParent.style.height) {
       clearContents(props.editMode);
-      console.log("clear contents");
     }
   }, [props.control]);
 
@@ -221,7 +220,6 @@ function CreateOrEditClass(props) {
       setShowError(false);
       return;
     }
-    console.log("valid");
 
     if (
       name === props.name &&

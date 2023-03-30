@@ -156,7 +156,7 @@
 .form-select,
 .form-select:focus,
 .form-control:disabled {
-  flex: none;
+  flex: 1;
   display: flex;
   padding: 0.3rem 1rem;
   mix-blend-mode: hard-light;
