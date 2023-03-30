@@ -4,12 +4,13 @@ import { defaults } from "chart.js/auto";
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { pause } from "../pages/CourseView.jsx";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import * as clicker from "./ClickerBase";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
+import { pause } from "../pages/CourseView.jsx";
+import {Mutex} from 'async-mutex';
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -20,6 +21,9 @@ export default function InstructorPoll() {
   const [chartRef, setChartRef] = useState({});
   const [stopTime, setStopTime] = useState(false);
   const [prevResponse, setPrevResponse] = useState("");
+  const [prevClickerId, setPrevClickerId] = useState("");
+  const [queue, setQueue] = useState([]);
+  const mutex = new Mutex();
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
   const server = "http://localhost:3000";
@@ -46,15 +50,16 @@ export default function InstructorPoll() {
   };
   const chart = PollChart(data, setChartRef);
 
-  if (window.props && window.props.base) {
-    window.props.base.oninputreport = async ({ device, reportId, data }) => {
-      let bytes = new Uint8Array(data.buffer);
+  async function updateClickerResponses(data) {
+    let bytes = new Uint8Array(data.buffer);
       if (bytes[0] === 1) {
         bytes = bytes.slice(32);
       }
       let response = await clicker.parseResponse(bytes[2]);
-      if (response === prevResponse) {
+      let clickerId = await clicker.parseClickerId(bytes.slice(3, 6));
+      if (response === prevResponse && clickerId === prevClickerId) {
         response = await clicker.parseResponse(bytes[34]);
+        clickerId = await clicker.parseClickerId(bytes.slice(35, 38));
       }
       if (
         response === "A" ||
@@ -64,60 +69,87 @@ export default function InstructorPoll() {
         response === "E"
       ) {
         setPrevResponse(response);
-        console.log(response);
-        const clickerId = await clicker.parseClickerId(bytes.slice(3, 6));
-        console.log(clickerId);
-
+        setPrevClickerId(clickerId);
+        console.log(response, Date.now().toString());
+        console.log(clickerId, Date.now().toString());
+        let email = "";
+        console.log("entering axios")
+        await mutex.acquire();
         await axios
           .get(
             `${server}/student/clicker/${props.semester}/${props.sectionId}/${clickerId}`
           )
-          .then(async (res) => {
+          .then((res) => {
+            console.log("response")
             if (res.data.data) {
-              const email = res.data.data.email;
-              await axios
-                .patch(
-                  `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
-                  {
-                    email: email,
-                    timestamp: Date.now().toString(),
-                    response: response,
-                  }
-                )
-                .then((res) => {
-                  console.log(res);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            } else {
-              await axios
-                .patch(
-                  `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}/unknownClicker`,
-                  {
-                    clickerId: clickerId,
-                    timestamp: Date.now().toString(),
-                    response: response,
-                  }
-                )
-                .then((res) => {
-                  console.log(res);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
+              email = res.data.data.email;
             }
           })
           .catch((err) => {
             console.log("err");
           });
+          mutex.release();
+        console.log("get done")
+        if (email) {
+          await mutex.acquire();
+          await axios
+            .patch(
+              `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
+              {
+                email: email,
+                timestamp: Date.now().toString(),
+                response: response,
+              }
+            )
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+            mutex.release();
+        } else {
+          await mutex.acquire();
+          await axios
+            .patch(
+              `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}/unknownClicker`,
+              {
+                clickerId: clickerId,
+                timestamp: Date.now().toString(),
+                response: response,
+              }
+            )
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+            mutex.release();
+        }
+        console.log("patch done")
         if (chartRef && chartRef.getContext("2d").chart) {
           chartRef.getContext("2d").chart.update();
         }
-        await pause();
       }
+  }
+
+  if (window.props && window.props.base) {
+    window.props.base.oninputreport = async ({ device, reportId, data }) => {
+        setQueue((queue) => [...queue, data]);
     };
   }
+
+  useEffect(() => {
+    if (queue.length > 0) {
+      let data = queue[0];
+      setQueue((queue) => queue.slice(1));
+      //updateClickerResponses(data); 
+      (async () => {
+          await updateClickerResponses(data);
+      })();
+    }
+    }, [queue]);
 
   useEffect(() => {
     if (numResponses) {

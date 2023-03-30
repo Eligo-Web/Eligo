@@ -373,7 +373,7 @@ Course.patch(
     const timestamp = req.body.timestamp;
     const response = req.body.response;
     try {
-      let session = await courseDao.addResponseToPoll(
+      let session = await courseDao.addClickerResponseToPoll(
         sectionId,
         weekNum,
         sessionId,
