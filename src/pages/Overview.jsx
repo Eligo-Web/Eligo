@@ -32,6 +32,14 @@ function OverView(props) {
     }
   }
 
+  if (base) {
+    navigator.hid.ondisconnect = ({device}) => {
+      if (device.vendorId === 0x1881) {
+        setBase(null);
+      }
+    };
+  }
+
   useEffect(() => {
     async function reconnectBase() {
       const devices = await navigator.hid.getDevices();

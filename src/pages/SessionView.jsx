@@ -37,6 +37,14 @@ function SessionView(props) {
     }
   }
 
+  if (base) {
+    navigator.hid.ondisconnect = ({device}) => {
+      if (device.vendorId === 0x1881) {
+        setBase(null);
+      }
+    };
+  }
+
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
       checkActiveSession();
@@ -64,7 +72,6 @@ function SessionView(props) {
         } catch (err) {
           console.log(err);
         }
-        console.log(device.opened);
       }
     }
     reconnectBase();
@@ -72,7 +79,6 @@ function SessionView(props) {
 
   async function checkActiveSession() {
     const server = "http://localhost:3000";
-    console.log(location.state);
     await axios
       .get(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
@@ -103,17 +109,8 @@ function SessionView(props) {
   }
 
   function navigateBack() {
-    console.log(location.state);
     navigate("/class", {
-      state: {
-        name: location.state.name,
-        permission: location.state.permission,
-        email: location.state.email,
-        courseName: location.state.courseName,
-        sectionId: location.state.sectionId,
-        passcode: location.state.classPasscode,
-        clickerId: location.state.clickerId,
-      },
+      state: location.state,
     });
   }
 
@@ -435,6 +432,8 @@ function SessionView(props) {
     if (base) {
       await clicker.startPoll(base);
       await pause();
+      await clicker.setScreen(base, 1, "Poll Started");
+      await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
     }
 
     const newPopup = window.open(
@@ -466,7 +465,13 @@ function SessionView(props) {
     }
     setPopup(null);
     window.focus();
-    if (base) clicker.stopPoll(base);
+    if (base) {
+      await clicker.stopPoll(base);
+      await pause();
+      await clicker.setScreen(base, 1, "Poll Ended");
+      await pause();
+      await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
+    }
     await axios
       .put(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`

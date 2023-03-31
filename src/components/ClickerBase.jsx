@@ -125,3 +125,16 @@ export function parseClickerId(byteSeq) {
 export function parseResponse(byte) {
   return String.fromCharCode(byte - 0x81 + 65);
 }
+
+export function setScreen(device, line, message) {
+  let commandScreen = new Uint8Array(18);
+  commandScreen[0] = 0x01;
+  commandScreen[1] = (line === 1) ? 0x13 : 0x14;
+  message = message.slice(0, 16);
+  const padding = Math.ceil((16 - message.length) / 2);
+  message = " ".repeat(padding) + message + " ".repeat(padding);
+  for (let i = 2; i < 18; i++) {
+    commandScreen[i] = message.charCodeAt(i - 2);
+  }
+  device.sendReport(0, commandScreen);
+}

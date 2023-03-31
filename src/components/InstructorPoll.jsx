@@ -66,10 +66,7 @@ export default function InstructorPoll() {
       if (responseArray.includes(response)) {
         setPrevResponse(response);
         setPrevClickerId(clickerId);
-        console.log(response, Date.now().toString());
-        console.log(clickerId, Date.now().toString());
         let email = "";
-        console.log("entering axios")
         await axiosMutex.acquire();
         await axios
           .get(
@@ -77,14 +74,15 @@ export default function InstructorPoll() {
           )
           .then((res) => {
             console.log("response")
+            console.log(res)
             if (res.data.data) {
               email = res.data.data.email;
+              console.log(res.data.data.email)
             }
           })
           .catch((err) => {
             console.log(err);
           });
-        console.log("get done")
         if (email) {
           await axios
             .patch(
@@ -119,7 +117,6 @@ export default function InstructorPoll() {
             });
           }
         axiosMutex.release();
-        console.log("patch done")
         if (chartRef && chartRef.getContext("2d").chart) {
           chartRef.getContext("2d").chart.update();
         }
@@ -172,7 +169,13 @@ export default function InstructorPoll() {
   async function deactivatePoll(action) {
     const base = window.props ? window.props.base : null;
     if (base) base.oninputreport = null;
-    if (base && base.opened) await clicker.stopPoll(base);
+    if (base && base.opened) {
+    await clicker.stopPoll(base);
+    await pause();
+    await clicker.setScreen(base, 1, "Poll Ended");
+    await pause();
+    await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
+    }
     if (action === "save") {
       await axios
         .put(

@@ -103,10 +103,9 @@ export function FloatingButton(props) {
   async function handleClick() {
     setLabel("Connecting...");
     await props.onClick();
-    const devices = await navigator.hid.getDevices();
-    if (!devices.length) {
-      setLabel("Connect iClicker Base");
-    }
+    await navigator.hid.getDevices();
+    await pause(1000);
+    setLabel("Connect iClicker Base");
   }
 
   return (

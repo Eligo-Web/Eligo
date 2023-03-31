@@ -40,9 +40,9 @@ Student.get(
     const clickerId = req.params.clickerId;
     try {
       const student = await studentDao.readByClickerIdInCourse(
-        clickerId,
         semester,
-        sectionId
+        sectionId,
+        clickerId
       );
       res.json({
         status: 200,

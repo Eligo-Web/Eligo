@@ -40,6 +40,14 @@ function CourseView(props) {
     }
   }
 
+  if (base) {
+    navigator.hid.ondisconnect = ({device}) => {
+      if (device.vendorId === 0x1881) {
+        setBase(null);
+      }
+    };
+  }
+
   useEffect(() => {
     if (
       navigator.userAgent.indexOf("Safari") != -1 &&

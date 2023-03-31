@@ -33,7 +33,7 @@ class StudentDao {
     return student;
   }
 
-  async readByClickerIdInCourse(clickerId, semester, sectionId) {
+  async readByClickerIdInCourse(semester, sectionId, clickerId) {
     const students = await Student.find({ clickerId: clickerId });
     for (const student of students) {
       if (student.history.has(semester)) {
