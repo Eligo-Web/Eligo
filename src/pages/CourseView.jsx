@@ -19,6 +19,7 @@ import Overlay, { openPopup } from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
 import { ClickerContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
+import waitingCourseImg from "../assets/empty-course-state.png"
 
 export function pause(interval = 200) {
   return new Promise((res) => setTimeout(res, interval));
@@ -41,7 +42,7 @@ function CourseView(props) {
   }
 
   if (base) {
-    navigator.hid.ondisconnect = ({device}) => {
+    navigator.hid.ondisconnect = ({ device }) => {
       if (device.vendorId === 0x1881) {
         setBase(null);
       }
@@ -253,6 +254,7 @@ function CourseView(props) {
               )
             ) {
               setJoining(session.activeSession.name);
+              document.querySelector(".img-container").style.opacity = 1;
               container.style.opacity = 1;
               await pause(1000);
               navigate("/session", {
@@ -271,6 +273,7 @@ function CourseView(props) {
               });
             }
             setSessionOpen(true);
+            document.querySelector(".img-container").style.opacity = 1;
             container.style.opacity = 1;
             openPopup("Join Session");
             setProps({
@@ -288,6 +291,7 @@ function CourseView(props) {
           }
         })
         .catch((err) => console.log(err));
+      document.querySelector(".img-container").style.opacity = 1;
       container.style.opacity = 1;
     }
 
@@ -305,17 +309,13 @@ function CourseView(props) {
           joinSession
         />
         {backButton}
-        <div className="card-wrapper">
-          <div id="session-container" className="session-container">
-            <div className="card-title d-flex justify-content-center align-items-center p-5 gap-5">
-              <div className="session-waiting">
-                <div className="blank-state-msg">
-                  {joining
-                    ? `Please wait. Joining "${joining}"...`
-                    : sessionOpen
-                    ? "Your instructor has started a session!"
-                    : "Hmm... It seems your instructor has not started a session yet."}
+        <div className="card-wrapper-student">
+        <div className="img-container" style={{ minHeight: 0}}>
+                  <img src={waitingCourseImg} className="waiting-state-img"/>
                 </div>
+          <div id="session-container" className="session-container">
+            <div className="card-title d-flex justify-content-center align-items-center gap-5">
+              <div className="session-waiting">
                 {joining ? null : (
                   <Button
                     variant="blank-state"
@@ -329,6 +329,13 @@ function CourseView(props) {
                     {sessionOpen ? "Join Session" : "Refresh"}
                   </Button>
                 )}
+                <div className="blank-state-msg">
+                  {joining
+                    ? `Please wait. Joining "${joining}"...`
+                    : sessionOpen
+                    ? "Your instructor has started a session!"
+                    : "Hmm... It seems your instructor has not started a session yet."}
+                </div>
               </div>
             </div>
           </div>

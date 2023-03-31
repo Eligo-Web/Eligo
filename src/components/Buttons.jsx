@@ -1,4 +1,9 @@
-import * as Tabler from "@tabler/icons-react";
+import {
+  IconCalculator,
+  IconChevronLeft,
+  IconInfoCircle,
+  IconX,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { pause } from "../pages/CourseView";
@@ -57,7 +62,7 @@ export function FloatingButton(props) {
         const label = btn.querySelector(".connect-btn-label");
         btn.style.opacity = 0.5;
         if (label) label.style.width = "20rem";
-        await pause(50)
+        await pause(50);
         btn.style.opacity = 1;
       }
     }
@@ -87,6 +92,9 @@ export function FloatingButton(props) {
   }
 
   async function showTooltip() {
+    const numTimes = localStorage.getItem("hideTooltip") || 0;
+    if (parseInt(numTimes) > 1) return;
+    localStorage.setItem("hideTooltip", parseInt(numTimes) + 1);
     const msg = document.querySelector(".connect-base-tooltip");
     if (msg) {
       msg.style.pointerEvents = "all";
@@ -111,16 +119,16 @@ export function FloatingButton(props) {
   return (
     <div>
       <div className="connect-base-tooltip">
-        <Tabler.IconInfoCircle className="tooltip-icon" stroke="0.1rem" />
+        <IconInfoCircle className="tooltip-icon" stroke="0.1rem" />
         <div style={{ minWidth: "19rem", maxWidth: "19rem" }}>
           You can always connect your iClicker base station from the menu.
         </div>
       </div>
       <div className="connect-base-btn" onClick={() => handleClick()}>
         <div className="d-flex gap-3 align-items-center">
-          <Tabler.IconCalculator size="1.4em" />
+          <IconCalculator size="1.4em" />
           <div className="connect-btn-label">{label}</div>
-          <Tabler.IconX
+          <IconX
             size="1.5em"
             stroke="0.14rem"
             style={{ marginLeft: "0.7rem" }}
@@ -157,7 +165,7 @@ export function BackButton(props) {
         top: "5rem",
         zIndex: 1,
       }}
-      icon={<Tabler.IconChevronLeft size="1.5em" />}
+      icon={<IconChevronLeft size="1.5em" />}
       label={props.label}
       variant="transparent"
       onClick={props.onClick}

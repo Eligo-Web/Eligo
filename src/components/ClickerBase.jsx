@@ -129,7 +129,7 @@ export function parseResponse(byte) {
 export function setScreen(device, line, message) {
   let commandScreen = new Uint8Array(18);
   commandScreen[0] = 0x01;
-  commandScreen[1] = (line === 1) ? 0x13 : 0x14;
+  commandScreen[1] = line === 1 ? 0x13 : 0x14;
   message = message.slice(0, 16);
   const padding = Math.ceil((16 - message.length) / 2);
   message = " ".repeat(padding) + message + " ".repeat(padding);

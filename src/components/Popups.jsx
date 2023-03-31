@@ -67,9 +67,28 @@ export function JoinSession(props) {
     }
   }, [control]);
 
+  function checkPasscode() {
+    const overlay = document.getElementById("join-session-popup");
+    const passcodeField = overlay.querySelector(".passcode-input");
+    let valid = true;
+
+    if (!passcode) {
+      passcodeField.className += " field-error";
+      overlay.querySelector(".empty-code").style.display = "block";
+      setInvalidErr(false);
+      valid = false;
+    } else {
+      passcodeField.className = "passcode-input form-control";
+      overlay.querySelector(".empty-code").style.display = "none";
+    }
+    return valid;
+  }
+
   function clearContents() {
     const overlay = document.getElementById("join-session-popup");
     const passcodeField = overlay.querySelector(".passcode-input");
+    passcodeField.className = "passcode-input form-control";
+    overlay.querySelector(".empty-code").style.display = "none";
     passcodeField.value = "";
     setPasscode("");
     setInvalidErr(false);
@@ -77,8 +96,8 @@ export function JoinSession(props) {
 
   async function joinSession() {
     const server = "http://localhost:3000";
-    if (!passcode) {
-      setInvalidErr(true);
+    if (!checkPasscode()) {
+      console.log("passcode invalid!");
       return;
     }
     let valid = true;
@@ -124,6 +143,7 @@ export function JoinSession(props) {
           setPasscode(e.target.value);
         }}
         onKeyDown={handleKeyPresses}
+        errors={{ "empty-code": "Required" }}
         type="password"
       />
       <div
@@ -149,6 +169,17 @@ export function JoinClass(props) {
   const [dupeError, setDupeError] = useState(false);
   const [invalidError, setInvalidError] = useState(false);
 
+  const handleKeyPresses = (event) => {
+    switch (event.key) {
+      case "Escape":
+        clearContents();
+        break;
+      case "Enter":
+        joinClass();
+        break;
+    }
+  };
+
   useEffect(() => {
     const overlay = document.getElementById("join-class-popup");
     if (overlay.offsetParent.style.height) {
@@ -164,6 +195,8 @@ export function JoinClass(props) {
     if (!passcode) {
       passcodeField.className += " field-error";
       overlay.querySelector(".empty-code").style.display = "block";
+      setInvalidError(false);
+      setDupeError(false);
       valid = false;
     } else {
       passcodeField.className = "passcode-input form-control";
@@ -246,6 +279,7 @@ export function JoinClass(props) {
         onChange={(e) => setPasscode(e.target.value)}
         errors={{ "empty-code": "Required" }}
         style={{ textTransform: "uppercase" }}
+        onKeyDown={handleKeyPresses}
       />
       <div
         className="error-banner"

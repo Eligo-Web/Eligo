@@ -20,6 +20,7 @@ import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
+import waitingSessionImg from "../assets/empty-session-state.png"
 
 function SessionView(props) {
   const location = useLocation();
@@ -38,7 +39,7 @@ function SessionView(props) {
   }
 
   if (base) {
-    navigator.hid.ondisconnect = ({device}) => {
+    navigator.hid.ondisconnect = ({ device }) => {
       if (device.vendorId === 0x1881) {
         setBase(null);
       }
@@ -159,6 +160,12 @@ function SessionView(props) {
     }, []);
 
     useEffect(() => {
+      async function loadEmpty() {
+        await pause(250);
+        document.querySelector(".img-container").style.opacity = 1;
+        document.getElementById("vote-container").style.opacity = 1;
+      }
+
       if (pollOpen && pollId) {
         setVotePopup(
           <Overlay
@@ -178,10 +185,6 @@ function SessionView(props) {
           />
         );
       } else loadEmpty();
-      async function loadEmpty() {
-        await pause(250);
-        document.getElementById("vote-container").style.opacity = 1;
-      }
     }, [pollOpen]);
 
     useEffect(() => {
@@ -198,7 +201,7 @@ function SessionView(props) {
     return (
       <div>
         <BackButton label="Overview" onClick={() => navigateOverview()} />
-        <div className="card-wrapper">
+        <div className="card-wrapper-student">
           <Menu hideJoin />
           <MenuBar
             title={location.state.sessionName}
@@ -206,7 +209,11 @@ function SessionView(props) {
             clickable
           />
           {pollOpen ? votePopup : null}
-          <div className="vote-container" id="vote-container">
+          <div className="img-container" style={{minHeight: 0}}>
+            {/* illustration to be changed */}
+            <img src={waitingSessionImg} className="waiting-state-img"/>
+          </div>
+          <div className="vote-container-student" id="vote-container">
             <div className="blank-state-msg">
               {pollOpen
                 ? "There's a poll waiting - join below!"

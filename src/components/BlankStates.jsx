@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import emptyCourseImg from "../assets/empty-course-state.png";
+import emptyOverviewImg from "../assets/empty-overview-state.png";
 import emptySessionImg from "../assets/empty-session-state.png";
 import { pause } from "../pages/CourseView";
 import "../styles/images.css";
@@ -41,7 +42,7 @@ export function LoadingOverview() {
   );
 }
 
-export function EmptyOverview() {
+export function EmptyOverview(props) {
   useEffect(() => {
     async function fadeIn() {
       await pause(250);
@@ -53,9 +54,11 @@ export function EmptyOverview() {
   return (
     <Container className="d-flex" style={{ paddingTop: "4rem" }}>
       <div className="img-container">
-        <img className="empty-state-img" src={emptyCourseImg} />
+        <img className="empty-state-img" src={emptyOverviewImg} />
         <center className="blank-state-msg p-2">
-          You have no classes yet. As you create them, they will appear here.
+          {props.student
+            ? "Your class list is empty. Join some and they will appear here."
+            : "You have no classes yet. As you create them, they will appear here."}
         </center>
       </div>
     </Container>

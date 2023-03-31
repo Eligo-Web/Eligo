@@ -6,12 +6,13 @@
   transition: 0.4s cubic-bezier(0, 0, 0.4, 1);
   mix-blend-mode: luminosity;
   min-height: 28rem;
-  margin: auto;
+  margin: 0 auto;
   opacity: 0;
   gap: 2rem;
 }
 
-.empty-state-img {
+.empty-state-img,
+.waiting-state-img {
   object-fit: cover;
   overflow: hidden;
   max-width: 60%;

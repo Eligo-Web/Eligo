@@ -1,10 +1,13 @@
-import * as Tabler from "@tabler/icons-react";
+import {
+  IconCalculator,
+  IconLogout,
+  IconUserCircle,
+} from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
-import { isAwaitExpression } from "typescript";
 import * as clicker from "../components/ClickerBase";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView";
@@ -24,7 +27,7 @@ function Menu(props) {
   const [baseButton, setBaseButton] = useState(
     <IconButton
       label="Connect Base"
-      icon={<Tabler.IconCalculator size="1.6em" />}
+      icon={<IconCalculator size="1.6em" />}
       variant="outline btn-secondary"
       onClick={async () => {
         closeMenu();
@@ -86,7 +89,7 @@ function Menu(props) {
       await axios
         .delete(`${server}/student/${location.state.email}/clickerId`)
         .then((res) => {
-          console.log(res)
+          console.log(res);
         })
         .catch((err) => console.log(err));
     }
@@ -162,7 +165,7 @@ function Menu(props) {
             </div>
           </Container>
           <Container className="d-flex flex-row p-3 gap-3 card-subtitle">
-            <Tabler.IconUserCircle size="1.8em" />
+            <IconUserCircle size="1.8em" />
             {location.state.name}
           </Container>
           {location.state.permission === "STUDENT" ? (
@@ -202,7 +205,7 @@ function Menu(props) {
           <IconButton
             label="Sign Out"
             variant="sign-out"
-            icon={<Tabler.IconLogout size="1.65em" />}
+            icon={<IconLogout size="1.65em" />}
             onClick={handleSignOut}
           />
         </Container>

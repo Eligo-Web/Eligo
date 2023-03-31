@@ -1,4 +1,14 @@
-import * as Tabler from "@tabler/icons-react";
+import {
+  IconChartBar,
+  IconChartBarOff,
+  IconClockHour3,
+  IconDownload,
+  IconMaximize,
+  IconMinimize,
+  IconPlayerStopFilled,
+  IconUser,
+} from "@tabler/icons-react";
+import { Mutex } from "async-mutex";
 import axios from "axios";
 import { defaults } from "chart.js/auto";
 import Papa from "papaparse";
@@ -9,8 +19,6 @@ import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import * as clicker from "./ClickerBase";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
-import { pause } from "../pages/CourseView.jsx";
-import {Mutex} from 'async-mutex';
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -22,7 +30,6 @@ export default function InstructorPoll() {
   const [stopTime, setStopTime] = useState(false);
   const [prevResponse, setPrevResponse] = useState("");
   const [prevClickerId, setPrevClickerId] = useState("");
-  const [queue, setQueue] = useState([]);
   const [axiosMutex, setAxiosMutex] = useState(new Mutex());
   const [dataMutex, setDataMutex] = useState(new Mutex());
   const winWidth = window.outerWidth - window.innerWidth;
@@ -54,73 +61,73 @@ export default function InstructorPoll() {
   async function updateClickerResponses(data) {
     const responseArray = ["A", "B", "C", "D", "E"];
     let bytes = new Uint8Array(data.buffer);
-      if (bytes[0] === 1) {
-        bytes = bytes.slice(32);
-      }
-      let response = clicker.parseResponse(bytes[2]);
-      let clickerId = clicker.parseClickerId(bytes.slice(3, 6));
-      if (response === prevResponse && clickerId === prevClickerId) {
-        response = clicker.parseResponse(bytes[34]);
-        clickerId = clicker.parseClickerId(bytes.slice(35, 38));
-      }
-      if (responseArray.includes(response)) {
-        setPrevResponse(response);
-        setPrevClickerId(clickerId);
-        let email = "";
-        await axiosMutex.acquire();
+    if (bytes[0] === 1) {
+      bytes = bytes.slice(32);
+    }
+    let response = clicker.parseResponse(bytes[2]);
+    let clickerId = clicker.parseClickerId(bytes.slice(3, 6));
+    if (response === prevResponse && clickerId === prevClickerId) {
+      response = clicker.parseResponse(bytes[34]);
+      clickerId = clicker.parseClickerId(bytes.slice(35, 38));
+    }
+    if (responseArray.includes(response)) {
+      setPrevResponse(response);
+      setPrevClickerId(clickerId);
+      let email = "";
+      await axiosMutex.acquire();
+      await axios
+        .get(
+          `${server}/student/clicker/${props.semester}/${props.sectionId}/${clickerId}`
+        )
+        .then((res) => {
+          console.log("response");
+          console.log(res);
+          if (res.data.data) {
+            email = res.data.data.email;
+            console.log(res.data.data.email);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      if (email) {
         await axios
-          .get(
-            `${server}/student/clicker/${props.semester}/${props.sectionId}/${clickerId}`
+          .patch(
+            `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
+            {
+              email: email,
+              timestamp: Date.now().toString(),
+              response: response,
+            }
           )
           .then((res) => {
-            console.log("response")
-            console.log(res)
-            if (res.data.data) {
-              email = res.data.data.email;
-              console.log(res.data.data.email)
-            }
+            console.log(res);
           })
           .catch((err) => {
             console.log(err);
           });
-        if (email) {
-          await axios
-            .patch(
-              `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
-              {
-                email: email,
-                timestamp: Date.now().toString(),
-                response: response,
-              }
-            )
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          await axios
-            .patch(
-              `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}/unknownClicker`,
-              {
-                clickerId: clickerId,
-                timestamp: Date.now().toString(),
-                response: response,
-              }
-            )
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          }
-        axiosMutex.release();
-        if (chartRef && chartRef.getContext("2d").chart) {
-          chartRef.getContext("2d").chart.update();
-        }
+      } else {
+        await axios
+          .patch(
+            `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}/unknownClicker`,
+            {
+              clickerId: clickerId,
+              timestamp: Date.now().toString(),
+              response: response,
+            }
+          )
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
+      axiosMutex.release();
+      if (chartRef && chartRef.getContext("2d").chart) {
+        chartRef.getContext("2d").chart.update();
+      }
+    }
   }
 
   if (window.props && window.props.base) {
@@ -170,11 +177,11 @@ export default function InstructorPoll() {
     const base = window.props ? window.props.base : null;
     if (base) base.oninputreport = null;
     if (base && base.opened) {
-    await clicker.stopPoll(base);
-    await pause();
-    await clicker.setScreen(base, 1, "Poll Ended");
-    await pause();
-    await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
+      await clicker.stopPoll(base);
+      await pause();
+      await clicker.setScreen(base, 1, "Poll Ended");
+      await pause();
+      await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
     }
     if (action === "save") {
       await axios
@@ -232,7 +239,7 @@ export default function InstructorPoll() {
         <div className="newpoll-pop-up-content">
           <div className="d-flex align-items-center gap-3">
             <div className="responses">
-              <Tabler.IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
+              <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
               {numResponses}
             </div>
             <Stopwatch
@@ -241,26 +248,26 @@ export default function InstructorPoll() {
               autostart
             />
             {showChart ? (
-              <Tabler.IconChartBarOff
+              <IconChartBarOff
                 className="data-chart"
                 size="2.8rem"
                 onClick={() => setShowChart(!showChart)}
               />
             ) : (
-              <Tabler.IconChartBar
+              <IconChartBar
                 className="data-chart"
                 size="2.8rem"
                 onClick={() => setShowChart(!showChart)}
               />
             )}
             {minimized ? (
-              <Tabler.IconMaximize
+              <IconMaximize
                 className="minimize"
                 size="2.8rem"
                 onClick={() => setMinimized(!minimized)}
               />
             ) : (
-              <Tabler.IconMinimize
+              <IconMinimize
                 className="minimize"
                 size="2.8rem"
                 onClick={() => {
@@ -462,10 +469,7 @@ export function ClosedPoll(props) {
                 )}
               />
               <div className="responses closed">
-                <Tabler.IconUser
-                  stroke="0.14rem"
-                  style={{ margin: "-0.3rem" }}
-                />
+                <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
                 {pollInfo.numResponses}
               </div>
               <div className="responses closed" style={{ marginLeft: "auto" }}>
@@ -490,14 +494,14 @@ export function ClosedPoll(props) {
           <div className="button-row flex-row-reverse">
             <IconButton
               label="Final Votes"
-              icon={<Tabler.IconDownload size="1.6em" />}
+              icon={<IconDownload size="1.6em" />}
               variant="outline"
               style={{ maxWidth: "max-content" }}
               onClick={() => downloadPollDataFinal()}
             />
             <IconButton
               label="Detailed"
-              icon={<Tabler.IconDownload size="1.6em" />}
+              icon={<IconDownload size="1.6em" />}
               variant="outline"
               style={{ maxWidth: "max-content" }}
               onClick={() => downloadPollDataDetailed()}
@@ -571,17 +575,14 @@ function Stopwatch(props) {
   return (
     <div className="stopwatch">
       {props.autostart ? null : (
-        <Tabler.IconClockHour3
-          stroke="0.14rem"
-          style={{ marginRight: "0.6rem" }}
-        />
+        <IconClockHour3 stroke="0.14rem" style={{ marginRight: "0.6rem" }} />
       )}
       <div className="min-sec">
         <span>{("0" + Math.floor((time / 60) % 60)).slice(-2)}:</span>
         <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
       </div>
       <div className="stopwatch-buttons">
-        <Tabler.IconPlayerStopFilled
+        <IconPlayerStopFilled
           className="stop-button"
           preserveAspectRatio="none"
           onClick={() => stopTime()}

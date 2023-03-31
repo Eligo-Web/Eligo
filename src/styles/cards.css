@@ -110,13 +110,18 @@
 /* ====================== Containers ======================= */
 /* ========================================================= */
 
-.card-wrapper {
+.card-wrapper,
+.card-wrapper-student {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 14rem);
   overflow-y: overlay;
   position: relative;
   top: 9rem;
+}
+
+.card-wrapper-student {
+  height: calc(100vh - 9rem);
 }
 
 .card-container,
@@ -180,7 +185,8 @@
   gap: 0.8rem;
 }
 
-.vote-container {
+.vote-container,
+.vote-container-student {
   opacity: 0;
   gap: 1.5rem;
   padding: 3rem;
@@ -191,10 +197,15 @@
   transition: 0.1s ease-in-out;
 }
 
+.vote-container-student {
+  padding: 0;
+  margin: 1rem 3rem;
+}
+
 .session-waiting {
   gap: 1.5rem;
   padding: 3rem;
-  margin: 3rem;
+  margin: 0 auto;
   align-items: center;
   flex-direction: column;
   display: flex;

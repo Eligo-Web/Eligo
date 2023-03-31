@@ -33,7 +33,7 @@ function OverView(props) {
   }
 
   if (base) {
-    navigator.hid.ondisconnect = ({device}) => {
+    navigator.hid.ondisconnect = ({ device }) => {
       if (device.vendorId === 0x1881) {
         setBase(null);
       }
@@ -178,6 +178,7 @@ function OverView(props) {
           state={location.state}
           joinClass
         />
+        {cards ? null : <EmptyOverview student />}
         <div className="semester-container">{cards}</div>
       </div>
     );
