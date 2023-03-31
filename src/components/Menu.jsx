@@ -23,6 +23,7 @@ function Menu(props) {
   const navigate = useNavigate();
   const server = "http://localhost:3000";
   const [clickerId, setClickerId] = useState(location.state.clickerId || "");
+  const [showError, setShowError] = useState(false);
   const [base, setBase] = useContext(ClickerContext);
   const [baseButton, setBaseButton] = useState(
     <IconButton
@@ -77,8 +78,12 @@ function Menu(props) {
     navigate("/");
   }
 
-  async function updateCickerId() {
+  async function updateClickerId() {
     if (clickerId) {
+      if (clickerId.length !== 8) {
+        setShowError(true);
+        return;
+      }
       await axios
         .patch(`${server}/student/${location.state.email}/${clickerId}`)
         .then((res) => {
@@ -93,6 +98,7 @@ function Menu(props) {
         })
         .catch((err) => console.log(err));
     }
+    setShowError(false);
   }
 
   useEffect(() => {
@@ -177,11 +183,22 @@ function Menu(props) {
                 default={clickerId}
                 maxLength={8}
                 onChange={(e) => setClickerId(e.target.value.toUpperCase())}
-                onClick={() => updateCickerId()}
+                onClick={() => updateClickerId()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    updateClickerId();
+                  }
+                }}
                 style={{ textTransform: "uppercase" }}
                 center
                 save
               />
+                    <div
+        className="error-banner"
+        style={{ height: showError ? "fit-content" : 0, fontSize: "0.9rem" }}
+      >
+        Clicker ID must contain 8 digits.
+      </div>
             </center>
           ) : null}
         </Container>
