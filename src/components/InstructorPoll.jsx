@@ -23,8 +23,8 @@ export default function InstructorPoll() {
   const [prevResponse, setPrevResponse] = useState("");
   const [prevClickerId, setPrevClickerId] = useState("");
   const [queue, setQueue] = useState([]);
-  const [queueMutex, setQueueMutex] = useState(new Mutex());
   const [axiosMutex, setAxiosMutex] = useState(new Mutex());
+  const [dataMutex, setDataMutex] = useState(new Mutex());
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
   const server = "http://localhost:3000";
@@ -52,6 +52,7 @@ export default function InstructorPoll() {
   const chart = PollChart(data, setChartRef);
 
   async function updateClickerResponses(data) {
+    const responseArray = ["A", "B", "C", "D", "E"];
     let bytes = new Uint8Array(data.buffer);
       if (bytes[0] === 1) {
         bytes = bytes.slice(32);
@@ -62,13 +63,7 @@ export default function InstructorPoll() {
         response = clicker.parseResponse(bytes[34]);
         clickerId = clicker.parseClickerId(bytes.slice(35, 38));
       }
-      if (
-        response === "A" ||
-        response === "B" ||
-        response === "C" ||
-        response === "D" ||
-        response === "E"
-      ) {
+      if (responseArray.includes(response)) {
         setPrevResponse(response);
         setPrevClickerId(clickerId);
         console.log(response, Date.now().toString());
@@ -133,23 +128,11 @@ export default function InstructorPoll() {
 
   if (window.props && window.props.base) {
     window.props.base.oninputreport = async ({ device, reportId, data }) => {
-      await queueMutex.acquire();
-      setQueue((queue) => [...queue, data]);
-      queueMutex.release();
+      await dataMutex.acquire();
+      await updateClickerResponses(data);
+      dataMutex.release();
     };
   }
-
-  useEffect(() => {
-    if (queue.length > 0) {
-      queueMutex.acquire().then(async function(release) {
-        let data = queue[0];
-        setQueue((queue) => queue.slice(1));
-        await updateClickerResponses(data);
-        release();
-      }).catch((err) => console.log(err));
-      //updateClickerResponses(data); 
-    }
-    }, [queue]);
 
   useEffect(() => {
     if (numResponses) {
