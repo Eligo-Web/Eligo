@@ -79,13 +79,13 @@ function CourseView(props) {
     reconnectBase();
   }, []);
 
-  window.onresize = function() {
+  window.onresize = function () {
     if (window.innerWidth < 650) {
       setLabels(false);
     } else if (!buttonLabels) {
       setLabels(true);
     }
-  }
+  };
 
   function toMap(object) {
     return Object.entries(object);

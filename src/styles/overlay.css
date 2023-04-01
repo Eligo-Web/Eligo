@@ -47,8 +47,8 @@
 }
 
 .menu-overlay-header {
-  display: grid;
-  justify-content: center;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   mix-blend-mode: hard-light;
   border-bottom: 0.25rem solid rgba(5, 32, 65, 0.24);
@@ -56,10 +56,9 @@
 }
 
 .menu-overlay-back {
-  position: absolute;
   align-self: center;
-  justify-self: flex-start;
-  padding: 1rem;
+  padding: 1rem 0;
+  padding-right: 0.5rem;
 }
 
 .pop-up {

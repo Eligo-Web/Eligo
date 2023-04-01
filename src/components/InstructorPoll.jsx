@@ -136,7 +136,7 @@ export default function InstructorPoll() {
       axiosMutex.release();
     })();
   }, [prevResponse, prevClickerId]);
-      
+
   if (window.props && window.props.base) {
     window.props.base.oninputreport = async ({ device, reportId, data }) => {
       await dataMutex.acquire();
@@ -175,7 +175,9 @@ export default function InstructorPoll() {
         });
       chartRef.getContext("2d").chart.update();
       if (window.props && window.props.base) {
-        const percentArray = pollUpdate.map((x) => (((x || 0) / (numUpdate || 1)) * 100).toFixed(0));
+        const percentArray = pollUpdate.map((x) =>
+          (((x || 0) / (numUpdate || 1)) * 100).toFixed(0)
+        );
         let percentString = "";
         for (let i = 0; i < percentArray.length; i++) {
           if (percentArray[i] < 10) {
@@ -187,7 +189,7 @@ export default function InstructorPoll() {
           }
         }
         percentString += "%";
-        await clicker.setScreen(window.props.base, 2, percentString);
+        clicker.setScreen(window.props.base, 2, percentString);
         await pause();
       }
     }, 50);
@@ -202,6 +204,7 @@ export default function InstructorPoll() {
   }
 
   async function deactivatePoll(action) {
+    if (!window.props) window.close();
     const base = window.props ? window.props.base : null;
     if (base && base.opened) {
       await clicker.stopPoll(base);
@@ -666,6 +669,7 @@ function PollChart(data, setChartRef) {
         },
         layout: {
           padding: 10,
+          height: 900,
         },
       }}
     />

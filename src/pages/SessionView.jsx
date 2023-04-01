@@ -46,6 +46,10 @@ function SessionView(props) {
     };
   }
 
+  window.onbeforeunload = function () {
+    return popup;
+  };
+
   useEffect(() => {
     if (location.state && location.state.permission === "STUDENT") {
       checkActiveSession();
@@ -297,13 +301,13 @@ function SessionView(props) {
         .catch((err) => console.log(err));
     }
 
-    window.onresize = function() {
+    window.onresize = function () {
       if (window.innerWidth < 900) {
         setLabels(false);
       } else if (!buttonLabels) {
         setLabels(true);
       }
-    }
+    };
 
     return (
       <div>

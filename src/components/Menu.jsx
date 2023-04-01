@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import logo from "../assets/eligo-logo.svg";
 import * as clicker from "../components/ClickerBase";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView";
@@ -167,7 +168,8 @@ function Menu(props) {
               }
               style={{ cursor: "pointer" }}
             >
-              EduPoll
+              <img className="eligo-logo" src={logo} />
+              Eligo
             </div>
           </Container>
           <Container className="d-flex flex-row p-3 gap-3 card-subtitle">

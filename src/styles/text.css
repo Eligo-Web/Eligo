@@ -154,8 +154,14 @@ body {
 }
 
 .menu-overlay-title {
-  font-weight: 500;
-  font-size: 2rem;
+  font-family: "Exo 2";
+  font-weight: 700;
+  font-size: 2.5rem;
+  display: flex;
+  height: inherit;
+  align-items: center;
+  margin-right: auto;
+  gap: 1rem;
 }
 
 .poll-card-title {
