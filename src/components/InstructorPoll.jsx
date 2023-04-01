@@ -14,6 +14,7 @@ import { defaults } from "chart.js/auto";
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
+import { pause } from "../pages/CourseView.jsx";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import * as clicker from "./ClickerBase";
@@ -73,15 +74,21 @@ export default function InstructorPoll() {
     if (responseArray.includes(response)) {
       setPrevResponse(response);
       setPrevClickerId(clickerId);
-      let email = "";
+    }
+  }
+
+  useEffect(() => {
+    let email = "";
+    if (!window.props || !prevResponse || !prevClickerId) {
+      return;
+    }
+    (async () => {
       await axiosMutex.acquire();
       await axios
         .get(
-          `${server}/student/clicker/${props.semester}/${props.sectionId}/${clickerId}`
+          `${server}/student/clicker/${window.props.semester}/${window.props.sectionId}/${prevClickerId}`
         )
         .then((res) => {
-          console.log("response");
-          console.log(res);
           if (res.data.data) {
             email = res.data.data.email;
             console.log(res.data.data.email);
@@ -93,15 +100,15 @@ export default function InstructorPoll() {
       if (email) {
         await axios
           .patch(
-            `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
+            `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`,
             {
               email: email,
               timestamp: Date.now().toString(),
-              response: response,
+              response: prevResponse,
             }
           )
           .then((res) => {
-            console.log(res);
+            //console.log(res);
           })
           .catch((err) => {
             console.log(err);
@@ -109,27 +116,27 @@ export default function InstructorPoll() {
       } else {
         await axios
           .patch(
-            `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}/unknownClicker`,
+            `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/unknownClicker`,
             {
-              clickerId: clickerId,
+              clickerId: prevClickerId,
               timestamp: Date.now().toString(),
-              response: response,
+              response: prevResponse,
             }
           )
           .then((res) => {
-            console.log(res);
+            //console.log(res);
           })
           .catch((err) => {
             console.log(err);
           });
       }
-      axiosMutex.release();
       if (chartRef && chartRef.getContext("2d").chart) {
         chartRef.getContext("2d").chart.update();
       }
-    }
-  }
-
+      axiosMutex.release();
+    })();
+  }, [prevResponse, prevClickerId]);
+      
   if (window.props && window.props.base) {
     window.props.base.oninputreport = async ({ device, reportId, data }) => {
       await dataMutex.acquire();
@@ -147,14 +154,19 @@ export default function InstructorPoll() {
   }, [numResponses]);
 
   useEffect(() => {
+    if (!window.props) {
+      return;
+    }
     const interval = setInterval(async () => {
       let pollUpdate = [];
+      let numUpdate = 0;
       await axios
         .get(
           `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
         )
         .then((res) => {
           pollUpdate = Object.values(res.data.data.liveResults);
+          numUpdate = res.data.data.numResponses;
           setNumResponses(res.data.data.numResponses);
           setPollData(pollUpdate);
         })
@@ -162,9 +174,25 @@ export default function InstructorPoll() {
           console.log(err);
         });
       chartRef.getContext("2d").chart.update();
+      if (window.props && window.props.base) {
+        const percentArray = pollUpdate.map((x) => (((x || 0) / (numUpdate || 1)) * 100).toFixed(0));
+        let percentString = "";
+        for (let i = 0; i < percentArray.length; i++) {
+          if (percentArray[i] < 10) {
+            percentString += "  " + percentArray[i];
+          } else if (percentArray[i] < 100) {
+            percentString += " " + percentArray[i];
+          } else {
+            percentString += percentArray[i];
+          }
+        }
+        percentString += "%";
+        await clicker.setScreen(window.props.base, 2, percentString);
+        await pause();
+      }
     }, 50);
     return () => clearInterval(interval);
-  }, [chartRef]);
+  }, [window.props, chartRef]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
@@ -175,13 +203,13 @@ export default function InstructorPoll() {
 
   async function deactivatePoll(action) {
     const base = window.props ? window.props.base : null;
-    if (base) base.oninputreport = null;
     if (base && base.opened) {
       await clicker.stopPoll(base);
       await pause();
       await clicker.setScreen(base, 1, "Poll Ended");
       await pause();
       await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
+      await pause();
     }
     if (action === "save") {
       await axios
@@ -355,7 +383,7 @@ export function ClosedPoll(props) {
   async function getPollInfo() {
     await axios
       .get(
-        `${server}/course//${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
       )
       .then((res) => setPollInfo(res.data.data))
       .catch((err) => console.log(err));

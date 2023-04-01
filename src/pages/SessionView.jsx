@@ -435,8 +435,10 @@ function SessionView(props) {
     if (base) {
       await clicker.startPoll(base);
       await pause();
-      await clicker.setScreen(base, 1, "Poll Started");
-      await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
+      await clicker.setScreen(base, 1, " A  B  C  D  E");
+      await pause();
+      await clicker.setScreen(base, 2, " 0  0  0  0  0%");
+      await pause();
     }
 
     const newPopup = window.open(
@@ -474,6 +476,7 @@ function SessionView(props) {
       await clicker.setScreen(base, 1, "Poll Ended");
       await pause();
       await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
+      await pause();
     }
     await axios
       .put(
