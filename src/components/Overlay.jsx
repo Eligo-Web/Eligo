@@ -14,21 +14,23 @@ export function openPopup(id) {
     nameField.value = new Date().toDateString();
   }
   if (overlay) {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflowY = "hidden";
+    overlay.style.overflow = "inherit";
     overlay.querySelector(".overlay-bg").style.pointerEvents = "all";
     overlay.querySelector(".overlay-bg").style.opacity = 1;
     overlay.querySelector(".pop-up").style.opacity = 1;
     const form = overlay.querySelector(".form-control");
     if (form) overlay.querySelector(".form-control").focus();
-    overlay.style.height = "100vh";
+    overlay.style.maxHeight = "100vh";
   }
 }
 
 export function closePopup(id) {
   const overlay = document.getElementById(id + "-popup");
   if (overlay) {
-    overlay.style.height = 0;
-    document.body.style.overflow = "auto";
+    overlay.style.maxHeight = 0;
+    document.body.style.overflowY = "overlay";
+    overlay.style.overflow = "hidden";
     overlay.querySelector(".overlay-bg").style.opacity = 0;
     overlay.querySelector(".pop-up").style.opacity = 0;
     overlay.querySelector(".overlay-bg").style.pointerEvents = "none";

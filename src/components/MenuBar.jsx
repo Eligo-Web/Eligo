@@ -14,7 +14,7 @@ function MenuBar(props) {
   const [copied, setCopied] = useState(false);
 
   function openMenu() {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflowY = "hidden";
     const menu = document.getElementById("side-menu");
     menu.querySelector(".overlay-bg").style.pointerEvents = "all";
     menu.querySelector(".overlay-bg").style.opacity = 1;
@@ -46,24 +46,20 @@ function MenuBar(props) {
             className="large-title d-flex flex-row align-items-center"
             onClick={() => copyDescription()}
           >
-            <IconCheck
-              size="1.4em"
-              stroke="0.18rem"
-              id="check"
-              style={{
-                opacity: copied ? 1 : 0,
-                color: "#2a3c52",
-                mixBlendMode: "hard-light",
-                transition: "0.1s ease-in-out",
-              }}
-            />
+            <div
+              className="copy-success"
+              style={{ opacity: copied ? 1 : 0, width: copied ? "10rem" : 0 }}
+            >
+              Copied!
+              <IconCheck stroke="0.16rem" style={{ flexShrink: 0 }} />
+            </div>
             <IconButton
               style={{
                 padding: "1rem",
                 cursor: props.clickable ? "pointer" : "default",
               }}
               icon={props.clickable ? <IconCopy size="1.5em" /> : null}
-              label={props.description || "No description"}
+              label={props.description || "None"}
               variant="transparent"
             />
           </Col>

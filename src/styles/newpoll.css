@@ -60,6 +60,7 @@
 .stopwatch,
 .delete-poll,
 .responses,
+.copy-success,
 .date-created {
   display: flex;
   justify-content: end;
@@ -108,12 +109,21 @@
   justify-content: flex-start;
 }
 
-.date-created {
+.date-created,
+.copy-success {
   width: 100%;
   font-weight: 500;
   justify-content: left;
   color: #1b2543;
   background-color: #c2d3f3;
+}
+
+.copy-success {
+  line-height: normal;
+  max-width: max-content;
+  overflow: hidden;
+  font-weight: 600;
+  width: 0;
 }
 
 .stop-button {

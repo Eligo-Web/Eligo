@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import waitingCourseImg from "../assets/empty-course-state.png";
 import AccessDenied from "../components/AccessDenied";
 import { EmptyCourseView, LoadingCourseView } from "../components/BlankStates";
 import {
@@ -19,7 +20,6 @@ import Overlay, { openPopup } from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
 import { ClickerContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
-import waitingCourseImg from "../assets/empty-course-state.png"
 
 export function pause(interval = 200) {
   return new Promise((res) => setTimeout(res, interval));
@@ -79,13 +79,13 @@ function CourseView(props) {
     reconnectBase();
   }, []);
 
-  window.onresize = function () {
-    if (window.innerWidth < 900) {
+  window.onresize = function() {
+    if (window.innerWidth < 650) {
       setLabels(false);
     } else if (!buttonLabels) {
       setLabels(true);
     }
-  };
+  }
 
   function toMap(object) {
     return Object.entries(object);
@@ -120,8 +120,8 @@ function CourseView(props) {
         sectionId: location.state.sectionId,
         sessionActive: session.active,
         courseName: location.state.courseName,
-        passcode: session.passcode,
-        classPasscode: location.state.passcode,
+        sessionPasscode: session.passcode,
+        classPasscode: location.state.classPasscode,
         semester: location.state.semester,
         weekNum: getWeekNumber(),
         clickerId: location.state.clickerId,
@@ -145,7 +145,7 @@ function CourseView(props) {
         email: location.state.email,
         sectionId: location.state.sectionId,
         courseName: location.state.courseName,
-        passcode: location.state.passcode,
+        classPasscode: location.state.classPasscode,
         semester: location.state.semester,
         students: students,
         clickerId: location.state.clickerId,
@@ -310,9 +310,9 @@ function CourseView(props) {
         />
         {backButton}
         <div className="card-wrapper-student">
-        <div className="img-container" style={{ minHeight: 0}}>
-                  <img src={waitingCourseImg} className="waiting-state-img"/>
-                </div>
+          <div className="img-container" style={{ minHeight: 0 }}>
+            <img src={waitingCourseImg} className="waiting-state-img" />
+          </div>
           <div id="session-container" className="session-container">
             <div className="card-title d-flex justify-content-center align-items-center gap-5">
               <div className="session-waiting">
@@ -382,13 +382,7 @@ function CourseView(props) {
           <div className="semester-container">{cards}</div>
         </div>
         <div className="courses-bottom-row bottom-0 gap-3">
-          <IconButton
-            label="Create Session"
-            icon={<IoMdAddCircleOutline size="1.7em" />}
-            onClick={() => openPopup("Create Session")}
-            style={{ maxWidth: "max-content" }}
-          />
-          <div className="row gap-3 p-3">
+          <div className="d-flex flex-row gap-3">
             <IconButton
               label={buttonLabels ? "View Roster" : null}
               icon={<IconList size="1.6em" />}
@@ -397,6 +391,12 @@ function CourseView(props) {
               style={{ maxWidth: "max-content" }}
             />
           </div>
+          <IconButton
+            label="Create Session"
+            icon={<IoMdAddCircleOutline size="1.7em" />}
+            onClick={() => openPopup("Create Session")}
+            style={{ maxWidth: "max-content" }}
+          />
         </div>
       </div>
     );
@@ -412,7 +412,7 @@ function CourseView(props) {
       />
       <MenuBar
         title={location.state.courseName}
-        description={location.state.passcode}
+        description={location.state.classPasscode}
         onClick={props.onClick}
         clickable
         showDescription={location.state.permission !== "STUDENT"}

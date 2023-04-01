@@ -30,7 +30,7 @@ export default function InputField(props) {
   return (
     <div className={props.small ? "input-field-small" : "input-field"}>
       <div
-        className="d-flex align-items-center gap-2"
+        className="input-field-label"
         style={{ justifyContent: props.center ? "center" : "" }}
       >
         {props.label || "Title Text"}

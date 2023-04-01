@@ -78,7 +78,7 @@ function OverView(props) {
         email: location.state.email,
         courseName: courseName,
         sectionId: sectionId,
-        passcode: passcode,
+        classPasscode: passcode,
         semester: semester,
         clickerId: location.state.clickerId,
       },
@@ -168,6 +168,7 @@ function OverView(props) {
       }
       loadContent();
     }, [refresh]);
+
     return (
       <div style={{ marginBottom: "5rem" }}>
         <Overlay
@@ -216,20 +217,7 @@ function OverView(props) {
       </div>
     );
   }
-  if (window.innerWidth < 600 && location.state.permission === "INSTRUCTOR") {
-    return (
-      <div className="d-flex justify-content-center align-items-center">
-        <div
-          className="d-flex flex-column align-items-center"
-          style={{ width: "95%", paddingTop: "5rem" }}
-        >
-          <div className="blank-state-msg">
-            Please sign in on a desktop device to use Edupoll as an instructor.
-          </div>
-        </div>
-      </div>
-    );
-  }
+
   return !authorized ? (
     <AccessDenied />
   ) : (

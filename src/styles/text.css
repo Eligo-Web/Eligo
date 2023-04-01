@@ -2,7 +2,9 @@ body {
   font-family: "Inter";
   font-style: normal;
   color: rgb(0, 6, 13);
-  background: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
+  overflow-x: clip;
+  --body-bg: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
+  background: var(--body-bg);
 }
 
 @-moz-document url-prefix() {
@@ -191,6 +193,18 @@ body {
   text-align: center;
   opacity: 50%;
   width: 75%;
+}
+
+.window-alert {
+  display: none;
+  transition: 0.1s ease-in-out;
+  width: 100%;
+  height: 100%;
+  background: var(--body-bg);
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 5;
 }
 
 /* =============== Scroll Bar =============== */

@@ -29,8 +29,9 @@ export function PrimaryButton(props) {
 export function IconButton(props) {
   return (
     <Button
-      id={props.label + " button"}
+      id={props.label + "-button"}
       variant={props.variant || "icon"}
+      className={props.className}
       onClick={props.onClick}
       style={props.style}
     >
@@ -111,8 +112,8 @@ export function FloatingButton(props) {
   async function handleClick() {
     setLabel("Connecting...");
     await props.onClick();
-    await navigator.hid.getDevices();
-    await pause(1000);
+    const devices = await navigator.hid.getDevices();
+    if (devices.length) await pause(1000);
     setLabel("Connect iClicker Base");
   }
 
@@ -156,15 +157,7 @@ export function VoteButton(props) {
 export function BackButton(props) {
   return (
     <IconButton
-      style={{
-        padding: "1rem",
-        paddingLeft: "1.5rem",
-        color: "#000d1db3",
-        fontWeight: "500",
-        position: "absolute",
-        top: "5rem",
-        zIndex: 1,
-      }}
+      className="back-navigate"
       icon={<IconChevronLeft size="1.5em" />}
       label={props.label}
       variant="transparent"

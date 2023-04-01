@@ -52,16 +52,16 @@ export function EmptyOverview(props) {
     fadeIn();
   }, []);
   return (
-    <Container className="d-flex" style={{ paddingTop: "4rem" }}>
+    <div className="d-flex" style={{ paddingTop: "4rem" }}>
       <div className="img-container">
         <img className="empty-state-img" src={emptyOverviewImg} />
         <center className="blank-state-msg p-2">
           {props.student
-            ? "Your class list is empty. Join some and they will appear here."
+            ? "You jave not joined a class yet. Join one and it will appear here."
             : "You have no classes yet. As you create them, they will appear here."}
         </center>
       </div>
-    </Container>
+    </div>
   );
 }
 

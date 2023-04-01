@@ -67,7 +67,7 @@ function Menu(props) {
     menu.querySelector(".overlay-bg").style.pointerEvents = "none";
     menu.querySelector(".overlay-bg").style.opacity = 0;
     menu.querySelector(".menu").style.left = "-18rem";
-    document.body.style.overflow = "overlay";
+    document.body.style.overflowY = "overlay";
     if (overlay) openPopup(overlay);
   }
 
@@ -193,12 +193,15 @@ function Menu(props) {
                 center
                 save
               />
-                    <div
-        className="error-banner"
-        style={{ height: showError ? "fit-content" : 0, fontSize: "0.9rem" }}
-      >
-        Clicker ID must contain 8 digits.
-      </div>
+              <div
+                className="error-banner"
+                style={{
+                  height: showError ? "fit-content" : 0,
+                  fontSize: "0.9rem",
+                }}
+              >
+                Clicker ID must contain 8 digits.
+              </div>
             </center>
           ) : null}
         </Container>

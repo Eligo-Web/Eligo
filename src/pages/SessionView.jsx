@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import waitingSessionImg from "../assets/empty-session-state.png";
 import AccessDenied from "../components/AccessDenied";
 import {
   EmptySessionView,
@@ -20,7 +21,6 @@ import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
-import waitingSessionImg from "../assets/empty-session-state.png"
 
 function SessionView(props) {
   const location = useLocation();
@@ -203,15 +203,11 @@ function SessionView(props) {
         <BackButton label="Overview" onClick={() => navigateOverview()} />
         <div className="card-wrapper-student">
           <Menu hideJoin />
-          <MenuBar
-            title={location.state.sessionName}
-            description={location.state.passcode}
-            clickable
-          />
+          <MenuBar title={location.state.sessionName} />
           {pollOpen ? votePopup : null}
-          <div className="img-container" style={{minHeight: 0}}>
+          <div className="img-container" style={{ minHeight: 0 }}>
             {/* illustration to be changed */}
-            <img src={waitingSessionImg} className="waiting-state-img"/>
+            <img src={waitingSessionImg} className="waiting-state-img" />
           </div>
           <div className="vote-container-student" id="vote-container">
             <div className="blank-state-msg">
@@ -239,14 +235,6 @@ function SessionView(props) {
     const [polls, setPolls] = useState(<LoadingSessionView />);
     const [overlays, setOverlays] = useState(null);
     const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
-
-    window.onresize = function () {
-      if (window.innerWidth < 900) {
-        setLabels(false);
-      } else if (!buttonLabels) {
-        setLabels(true);
-      }
-    };
 
     useEffect(() => {
       async function loadContent() {
@@ -309,6 +297,14 @@ function SessionView(props) {
         .catch((err) => console.log(err));
     }
 
+    window.onresize = function() {
+      if (window.innerWidth < 900) {
+        setLabels(false);
+      } else if (!buttonLabels) {
+        setLabels(true);
+      }
+    }
+
     return (
       <div>
         <BackButton
@@ -322,7 +318,7 @@ function SessionView(props) {
           <Menu hideCreate />
           <MenuBar
             title={location.state.sessionName}
-            description={location.state.passcode}
+            description={location.state.sessionPasscode}
             clickable
             showDescription
           />
@@ -332,15 +328,7 @@ function SessionView(props) {
           )}
           <div className="poll-container">{polls}</div>
           <div className="courses-bottom-row bottom-0 gap-3">
-            {location.state.sessionActive ? (
-              <IconButton
-                label="Create Poll"
-                icon={<IoMdAddCircleOutline size="1.7em" />}
-                style={{ maxWidth: "max-content" }}
-                onClick={() => createPoll()}
-              />
-            ) : null}
-            <div className="row gap-3 p-3">
+            <div className="d-flex flex-row gap-3">
               {location.state.sessionActive ? (
                 <IconButton
                   label={buttonLabels ? "Close Session" : null}
@@ -362,6 +350,14 @@ function SessionView(props) {
                 onClick={() => downloadSessionData()}
               />
             </div>
+            {location.state.sessionActive ? (
+              <IconButton
+                label="Create Poll"
+                icon={<IoMdAddCircleOutline size="1.7em" />}
+                style={{ maxWidth: "max-content" }}
+                onClick={() => createPoll()}
+              />
+            ) : null}
           </div>
         </div>
       </div>
