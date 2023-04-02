@@ -238,7 +238,7 @@
   padding-left: 1.5rem;
   color: #000d1db3 !important;
   font-weight: 500;
-  position: absolute;
+  position: fixed;
   z-index: 1;
   top: 5rem;
 }
@@ -269,7 +269,7 @@
   z-index: 2;
   bottom: 5.5rem;
   margin-left: 1.5rem;
-  position: absolute;
+  position: fixed;
   transition: 0.1s ease-in-out;
   font-weight: 600;
   font-size: 1.2rem;
@@ -302,7 +302,7 @@
   display: flex;
   align-items: center;
   margin-left: 4rem;
-  position: absolute;
+  position: fixed;
   max-width: max-content;
   transition: 0.4s ease-in-out;
   overflow: hidden;
@@ -316,11 +316,6 @@
   pointer-events: none;
   width: 0;
   opacity: 0;
-}
-
-.tooltip-icon {
-  min-height: 2.5em;
-  min-width: 2.5em;
 }
 
 .connect-btn-label {
@@ -353,6 +348,10 @@
   max-height: 100%;
 }
 
+.sign-in-icon {
+  flex-shrink: 1 !important;
+}
+
 @media screen and (max-width: 44rem) {
   .sign-in-content {
     flex-direction: column;
@@ -369,8 +368,7 @@
     font-size: 2.4rem;
     gap: 2rem;
   }
-  .sign-in-icon,
-  .sign-in-logo {
+  .sign-in-icon {
     display: none;
   }
   .sign-in-title {

@@ -26,17 +26,7 @@ function Menu(props) {
   const [clickerId, setClickerId] = useState(location.state.clickerId || "");
   const [showError, setShowError] = useState(false);
   const [base, setBase] = useContext(ClickerContext);
-  const [baseButton, setBaseButton] = useState(
-    <IconButton
-      label="Connect Base"
-      icon={<IconCalculator size="1.6em" />}
-      variant="outline btn-secondary"
-      onClick={async () => {
-        closeMenu();
-        loadBase();
-      }}
-    />
-  );
+  const [baseButton, setBaseButton] = useState(null);
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
     getLabel = "Create Class";
@@ -47,16 +37,27 @@ function Menu(props) {
 
   useEffect(() => {
     if (!navigator.hid) return;
-    async function hideBaseButton() {
+    async function showBaseButton() {
       const devices = await navigator.hid.getDevices();
-      if (devices.length || location.state.permission !== "INSTRUCTOR") {
-        setBaseButton(null);
+      if (devices.length || location.state.permission === "INSTRUCTOR") {
+        setBaseButton(
+          <IconButton
+            label="Connect Base"
+            icon={<IconCalculator size="1.6em" />}
+            variant="outline btn-secondary"
+            onClick={async () => {
+              closeMenu();
+              loadBase();
+            }}
+          />
+        );
       }
     }
-    hideBaseButton();
+    showBaseButton();
   }, [base]);
 
   async function loadBase() {
+    if (!navigator.hid) return;
     sessionStorage.setItem("dismissBasePrompt", "false");
     let newBase = await clicker.openDevice();
     if (newBase && !base) {
@@ -156,6 +157,7 @@ function Menu(props) {
               <IoIosArrowBack size="1.8em" onClick={closeMenu} />
             </Button>
             <div
+              id="Eligo"
               className="menu-overlay-title"
               onClick={() =>
                 navigate("/overview", {
@@ -170,7 +172,7 @@ function Menu(props) {
               style={{ cursor: "pointer" }}
             >
               <img className="eligo-logo" src={logo} />
-              Eligo
+              ligo
             </div>
           </Container>
           <Container className="d-flex flex-row p-3 gap-3 card-subtitle">

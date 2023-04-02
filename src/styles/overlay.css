@@ -9,8 +9,7 @@
 .overlay-wrapper {
   bottom: 0;
   width: 100%;
-  height: -webkit-fill-available;
-  height: -moz-available;
+  height: 100%;
   max-height: 0;
   z-index: 4;
   display: flex;
@@ -28,8 +27,7 @@
   z-index: 3;
   pointer-events: none;
   width: 100%;
-  height: -webkit-fill-available;
-  height: -moz-available;
+  height: 100%;
   background-color: #032a4a77;
   opacity: 0;
   transition: 0.5s cubic-bezier(0.5, 0.05, 0, 1);
@@ -58,8 +56,7 @@
 
 .menu-overlay-back {
   align-self: center;
-  padding: 1rem 0;
-  padding-right: 0.5rem;
+  padding: 1rem;
 }
 
 .pop-up {

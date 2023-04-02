@@ -2,7 +2,6 @@ body {
   font-family: "Inter";
   font-style: normal;
   color: rgb(0, 6, 13);
-  overflow-x: clip;
   --body-bg: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
   background: var(--body-bg);
 }
@@ -11,6 +10,10 @@ body {
   body {
     height: 100vh;
   }
+}
+
+svg {
+  flex-shrink: 0;
 }
 
 .overview-wrapper,
@@ -62,13 +65,14 @@ body {
   font-size: 5rem;
   line-height: 116px;
   text-align: center;
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
   display: grid;
   padding-bottom: 2rem;
   align-content: center;
   overflow-y: overlay;
+  overflow-x: clip;
   color: #052041;
   gap: 1.5rem;
   top: 0;
@@ -76,13 +80,13 @@ body {
 
 .sign-in-title {
   font-family: "Exo 2";
+  font-style: italic;
   font-weight: 700;
   font-size: 8rem;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 14rem;
-  gap: 2rem;
 }
 
 .card-title,
@@ -169,13 +173,13 @@ body {
 
 .menu-overlay-title {
   font-family: "Exo 2";
+  font-style: italic;
   font-weight: 700;
-  font-size: 2.5rem;
+  font-size: 2.7rem;
   display: flex;
   height: inherit;
   align-items: center;
   margin-right: auto;
-  gap: 1rem;
 }
 
 .poll-card-title {

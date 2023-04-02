@@ -2,7 +2,7 @@ import { IconBook, IconSchool } from "@tabler/icons-react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/eligo-logo.svg"
+import logo from "../assets/eligo-logo.svg";
 
 function SignIn() {
   const server = "http://localhost:3000";
@@ -46,11 +46,10 @@ function SignIn() {
   }
   return (
     <div className="sign-in-container">
-      <div
-        className="sign-in-title"
-      >
-        <img className="eligo-logo sign-in-logo" src={logo} />
-        Eligo
+      <title>Eligo - Sign in</title>
+      <div className="sign-in-title" id="Eligo">
+        <img className="eligo-logo sign-in-logo" src={logo} alt="Eligo brand logo." />
+        ligo
       </div>
       <div className="sign-in-content">
         <Button

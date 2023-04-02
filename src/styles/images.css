@@ -24,5 +24,6 @@
 .eligo-logo {
   object-fit: cover;
   overflow: hidden;
-  max-height: 70%;
+  height: 70%;
+  aspect-ratio: 1;
 }
