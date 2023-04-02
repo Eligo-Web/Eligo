@@ -45,6 +45,7 @@ export function FloatingButton(props) {
   const [label, setLabel] = useState("Connect iClicker Base");
 
   useEffect(() => {
+    if (!navigator.hid) return;
     load();
     async function load() {
       const prompt = sessionStorage.getItem("dismissBasePrompt");

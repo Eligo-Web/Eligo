@@ -41,7 +41,7 @@ function CourseView(props) {
     }
   }
 
-  if (base) {
+  if (navigator.hid && base) {
     navigator.hid.ondisconnect = ({ device }) => {
       if (device.vendorId === 0x1881) {
         setBase(null);
@@ -63,6 +63,7 @@ function CourseView(props) {
   }, []);
 
   useEffect(() => {
+    if (!navigator.hid) return;
     async function reconnectBase() {
       const devices = await navigator.hid.getDevices();
       if (devices.length && !devices[0].opened) {

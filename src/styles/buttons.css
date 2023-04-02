@@ -342,16 +342,19 @@
   padding: 0.7rem;
 }
 
-.sign-in-wrapper {
+.sign-in-content {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 4rem;
-  margin-top: 2rem;
 }
 
-@media screen and (max-width: 40rem) {
-  .sign-in-wrapper {
+.sign-in-logo {
+  max-height: 100%;
+}
+
+@media screen and (max-width: 44rem) {
+  .sign-in-content {
     flex-direction: column;
     gap: 1.5rem;
   }
@@ -366,12 +369,17 @@
     font-size: 2.4rem;
     gap: 2rem;
   }
-  .sign-in-icon {
+  .sign-in-icon,
+  .sign-in-logo {
     display: none;
+  }
+  .sign-in-title {
+    height: 11rem !important;
+    font-size: 7rem !important;
   }
 }
 
-@media screen and (max-height: 35rem) {
+@media screen and (max-height: 38rem) {
   .btn-sign-in,
   .btn-sign-in:hover,
   .btn-sign-in:focus {
@@ -380,10 +388,10 @@
     padding: 1rem;
   }
   .sign-in-title {
-    padding: 0.5rem 0;
+    height: 11rem !important;
+    font-size: 7rem !important;
   }
-  .sign-in-wrapper {
-    margin-top: 1rem;
+  .sign-in-content {
     gap: 1.5rem;
   }
   .sign-in-icon {
@@ -392,7 +400,7 @@
 }
 
 @media screen and (max-width: 25rem) {
-  .sign-in-title {
+  .sign-in-container {
     font-size: 4rem;
   }
 }

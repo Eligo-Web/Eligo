@@ -46,6 +46,7 @@ function Menu(props) {
   }
 
   useEffect(() => {
+    if (!navigator.hid) return;
     async function hideBaseButton() {
       const devices = await navigator.hid.getDevices();
       if (devices.length || location.state.permission !== "INSTRUCTOR") {

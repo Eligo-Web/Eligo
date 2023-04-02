@@ -38,7 +38,7 @@ function SessionView(props) {
     }
   }
 
-  if (base) {
+  if (navigator.hid && base) {
     navigator.hid.ondisconnect = ({ device }) => {
       if (device.vendorId === 0x1881) {
         setBase(null);

@@ -1,5 +1,6 @@
 import { pause } from "../pages/CourseView.jsx";
 export async function getDevice() {
+  if (!navigator.hid) return;
   let device;
   try {
     const devices = await navigator.hid.requestDevice({
