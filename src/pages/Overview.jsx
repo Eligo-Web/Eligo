@@ -223,6 +223,7 @@ function OverView(props) {
     <AccessDenied />
   ) : (
     <div>
+      <title>Your Courses | Eligo</title>
       {location.state.permission === "STUDENT" ? null : (
         <FloatingButton base={base} onClick={() => loadBase()} bottom />
       )}

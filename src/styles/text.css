@@ -69,7 +69,7 @@ svg {
   width: 100%;
   height: 100%;
   display: grid;
-  padding-bottom: 2rem;
+  padding-bottom: 6rem;
   align-content: center;
   overflow-y: overlay;
   overflow-x: clip;

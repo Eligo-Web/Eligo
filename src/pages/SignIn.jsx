@@ -46,7 +46,7 @@ function SignIn() {
   }
   return (
     <div className="sign-in-container">
-      <title>Eligo - Sign in</title>
+      <title>Sign in | Eligo</title>
       <div className="sign-in-title" id="Eligo">
         <img className="eligo-logo sign-in-logo" src={logo} alt="Eligo brand logo." />
         ligo

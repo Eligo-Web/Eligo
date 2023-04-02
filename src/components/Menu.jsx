@@ -80,7 +80,7 @@ function Menu(props) {
     if (navigator.hid) {
       sessionStorage.setItem("dismissBasePrompt", "false");
     }
-    navigate("/");
+    navigate("/signin");
   }
 
   async function updateClickerId() {

@@ -367,6 +367,7 @@ function CourseView(props) {
 
     return (
       <div className="d-flex flex-column ">
+        <title>{location.state.courseName} | Eligo</title>
         {backButton}
         <FloatingButton base={base} onClick={() => loadBase()} />
         <div className="card-wrapper">

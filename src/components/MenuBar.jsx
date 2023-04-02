@@ -37,7 +37,7 @@ function MenuBar(props) {
   return (
     <Container fluid className="menu-bar">
       <Button variant="transparent" onClick={openMenu}>
-        <IoIosMenu size="2.3em" />
+        <IoIosMenu size="2.3em" alt="Button to open menu overlay" />
       </Button>
       <Row className="menu-bar-items">
         <Col className="large-title">{props.title || "-Untitled-"}</Col>
@@ -51,14 +51,14 @@ function MenuBar(props) {
               style={{ opacity: copied ? 1 : 0, width: copied ? "10rem" : 0 }}
             >
               Copied!
-              <IconCheck stroke="0.16rem" style={{ flexShrink: 0 }} />
+              <IconCheck stroke="0.16rem" style={{ flexShrink: 0 }} alt="Icon indicator of successful copy" />
             </div>
             <IconButton
               style={{
                 padding: "1rem",
                 cursor: props.clickable ? "pointer" : "default",
               }}
-              icon={props.clickable ? <IconCopy size="1.5em" /> : null}
+              icon={props.clickable ? <IconCopy size="1.5em" alt="Copy passcode" /> : null}
               label={props.description || "None"}
               variant="transparent"
             />
