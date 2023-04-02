@@ -77,7 +77,9 @@ function Menu(props) {
   async function handleSignOut() {
     closeMenu();
     await pause(250);
-    sessionStorage.setItem("dismissBasePrompt", "false");
+    if (navigator.hid) {
+      sessionStorage.setItem("dismissBasePrompt", "false");
+    }
     navigate("/");
   }
 
