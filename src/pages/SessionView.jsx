@@ -67,6 +67,7 @@ function SessionView(props) {
   }, []);
 
   useEffect(() => {
+    if (!navigator.hid) return;
     async function reconnectBase() {
       const devices = await navigator.hid.getDevices();
       if (devices.length && !devices[0].opened) {

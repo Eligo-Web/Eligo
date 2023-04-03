@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Form from "react-bootstrap/Form";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay";
@@ -77,13 +78,34 @@ function CreateOrEditSession(props) {
   async function createSession() {
     const sessionId = `session-${Date.now()}`;
     const server = "http://localhost:3000";
+    const locationCheckbox = document.getElementById("location-checkbox");
     await axios.put(
       `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`
     );
+    let latitude = 0;
+    let longitude = 0;
+    if (locationCheckbox.checked) {
+      if (navigator.geolocation) {
+        await navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+          },
+          (error) => {
+            return;
+          }
+        );
+        while (latitude === 0 && longitude === 0) {
+          await new Promise((r) => setTimeout(r, 100));
+        }
+      }
+    }
     await axios.post(`${server}/course/${props.sectionId}/${sessionId}`, {
       name: sessionName ? sessionName : new Date().toDateString(),
       passcode: Math.random().toString(10).slice(-4),
       weekNum: getWeekNumber(),
+      latitude: latitude,
+      longitude: longitude,
     });
     props.setRefresh(!props.refresh);
     clearContents();
@@ -116,7 +138,9 @@ function CreateOrEditSession(props) {
     );
     if (props.editMode) props.setMarkDelete(false);
     const nameField = overlay.querySelector(".session-name-input");
+    const locationCheckbox = document.getElementById("location-checkbox");
     nameField.value = props.editMode ? props.session.name : "";
+    locationCheckbox.checked = false;
     setSessionName(props.editMode ? props.session.name : "");
     closePopup(props.editMode ? props.id : "Create Session");
   }
@@ -136,6 +160,15 @@ function CreateOrEditSession(props) {
         onChange={(e) => setSessionName(e.target.value)}
         onKeyDown={handleKeyPresses}
       />
+      {props.editMode ? null : (
+        <Form.Check
+          type="checkbox"
+          id="location-checkbox"
+          label="Require students to be in the same location"
+          className="location-checkbox"
+          style={{ paddingLeft: "2rem" }}
+        />
+      )}
       {props.editMode ? (
         <div className="input-group">
           <InputField
@@ -166,6 +199,7 @@ function CreateOrEditSession(props) {
         />
         <PrimaryButton
           variant="primary"
+          id={props.editMode ? "save-session" : "create-session"}
           label={props.editMode ? "Save" : "Create"}
           onClick={() => (props.editMode ? handleEdit() : createSession())}
         />

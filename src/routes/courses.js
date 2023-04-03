@@ -152,13 +152,17 @@ Course.post("/:sectionId/:sessionId", async (req, res, next) => {
   const name = req.body.name;
   const passcode = req.body.passcode;
   const weekNum = req.body.weekNum;
+  const latitude = req.body.latitude;
+  const longitude = req.body.longitude;
   try {
     let session = await courseDao.createSession(
       sectionId,
       sessionId,
       name,
       passcode,
-      weekNum
+      weekNum,
+      latitude,
+      longitude
     );
     res.json({
       status: 201,

@@ -244,12 +244,8 @@ function CourseView(props) {
         .get(`${server}/course/${location.state.sectionId}/${getWeekNumber()}/`)
         .then(async (res) => {
           const session = res.data.data;
-          if (res.data.data) {
-            if (
-              res.data.data.activeSession.students.includes(
-                location.state.email
-              )
-            ) {
+          if (session) {
+            if (session.activeSession.students.includes(location.state.email)) {
               setJoining(session.activeSession.name);
               document.querySelector(".img-container").style.opacity = 1;
               container.style.opacity = 1;
@@ -279,11 +275,12 @@ function CourseView(props) {
               email: location.state.email,
               courseName: location.state.courseName,
               sectionId: location.state.sectionId,
-              sessionId: res.data.data.activeSessionId,
-              session: res.data.data.activeSession,
-              sessionName: res.data.data.activeSession.name,
+              sessionId: session.activeSessionId,
+              session: session.activeSession,
+              sessionName: session.activeSession.name,
               weekNum: getWeekNumber(),
               clickerId: location.state.clickerId,
+              locationRequired: session.latitude && session.longitude,
             });
           }
         });

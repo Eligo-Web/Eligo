@@ -81,7 +81,15 @@ class CourseDao {
     return poll;
   }
 
-  async createSession(sectionId, sessionId, name, passcode, weekNum) {
+  async createSession(
+    sectionId,
+    sessionId,
+    name,
+    passcode,
+    weekNum,
+    latitude,
+    longitude
+  ) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
@@ -104,6 +112,8 @@ class CourseDao {
       active: true,
       numPolls: 0,
       passcode: passcode,
+      latitude: latitude,
+      longitude: longitude,
       students: [],
       polls: {},
     });
