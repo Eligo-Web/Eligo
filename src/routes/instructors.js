@@ -34,12 +34,12 @@ Instructor.get("/:email", async (req, res, next) => {
 });
 
 Instructor.post("/", async (req, res, next) => {
-  instructorDao.create(req.body);
+  const instructor = instructorDao.create(req.body);
   try {
     res.json({
       status: 201,
       message: "Instructor created",
-      data: req.body,
+      data: instructor,
     });
   } catch (err) {
     next(err);

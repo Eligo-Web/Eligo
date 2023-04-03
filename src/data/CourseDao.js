@@ -21,14 +21,6 @@ class CourseDao {
     return courses;
   }
 
-  async read(id) {
-    const course = await Course.findById(id);
-    if (!course) {
-      throw new ApiError(404, `Course with id ${id} not found`);
-    }
-    return course;
-  }
-
   async readBySectionId(sectionId) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
@@ -117,7 +109,7 @@ class CourseDao {
     });
     course.markModified("sessions");
     await course.save();
-    return course;
+    return course.sessions.get(weekNum).get(sessionId);
   }
 
   async addStudentToSession(sectionId, weekNum, sessionId, email, passcode) {
@@ -139,7 +131,7 @@ class CourseDao {
     session.students.push(email);
     course.markModified("sessions");
     await course.save();
-    return course;
+    return session;
   }
 
   async addPollToSession(sectionId, weekNum, sessionId, pollId) {
@@ -178,7 +170,7 @@ class CourseDao {
 
     course.markModified("sessions");
     await course.save();
-    return course;
+    return session.polls[pollId];
   }
 
   async addResponseToPoll(
@@ -226,7 +218,7 @@ class CourseDao {
     poll.responses = responses;
     course.markModified("sessions");
     await course.save();
-    return course;
+    return poll;
   }
 
   async addClickerResponseToPoll(
@@ -274,7 +266,7 @@ class CourseDao {
     poll.responses = responses;
     course.markModified("sessions");
     await course.save();
-    return course;
+    return poll;
   }
 
   async readActiveSession(sectionId, weekNum) {
@@ -345,7 +337,7 @@ class CourseDao {
     session.name = name;
     course.markModified("sessions");
     await course.save();
-    return course;
+    return session;
   }
 
   async closeActiveSession(sectionId, weekNum, sessionId) {
@@ -364,7 +356,7 @@ class CourseDao {
     session.active = false;
     course.markModified("sessions");
     await course.save();
-    return course;
+    return session;
   }
 
   async closeAllSessions(sectionId, weekNum) {
@@ -411,7 +403,7 @@ class CourseDao {
     }
     course.markModified("sessions");
     await course.save();
-    return course;
+    return session;
   }
 
   async closeAllPolls(sectionId, weekNum, sessionId) {
@@ -434,7 +426,7 @@ class CourseDao {
     }
     course.markModified("sessions");
     await course.save();
-    return course;
+    return session;
   }
 
   async deleteSession(sectionId, weekNum, sessionId) {
@@ -453,7 +445,7 @@ class CourseDao {
     week.delete(sessionId);
     course.markModified("sessions");
     await course.save();
-    return course;
+    return session;
   }
 
   async deletePoll(sectionId, weekNum, sessionId, pollId) {
@@ -476,7 +468,7 @@ class CourseDao {
     session.numPolls--;
     course.markModified("sessions");
     await course.save();
-    return course;
+    return session;
   }
 
   async create(course) {
@@ -490,14 +482,6 @@ class CourseDao {
     const newCourse = new Course(course);
     await newCourse.save();
     return newCourse;
-  }
-
-  async delete(id) {
-    const course = await Course.findByIdAndDelete(id);
-    if (!course) {
-      throw new ApiError(404, `Course with id ${id} not found`);
-    }
-    return course;
   }
 
   async deleteBySectionId(sectionId) {
@@ -556,14 +540,6 @@ class CourseDao {
     return course;
   }
 
-  async removeStudent(id, studentId) {
-    Course.findByIdAndUpdate(
-      id,
-      { $pull: { students: studentId } },
-      { new: true }
-    );
-  }
-
   async removeStudentByEmail(sectionId, email) {
     email = encodeEmail(email);
     const course = await Course.findOne({ sectionId: sectionId });
@@ -573,22 +549,6 @@ class CourseDao {
     course.students.delete(email);
     await course.save();
     return course;
-  }
-
-  async addInstructor(id, instructorId) {
-    Course.findByIdAndUpdate(
-      id,
-      { $push: { instructors: instructorId } },
-      { new: true }
-    );
-  }
-
-  async removeInstructor(id, instructorId) {
-    Course.findByIdAndUpdate(
-      id,
-      { $pull: { instructors: instructorId } },
-      { new: true }
-    );
   }
 }
 

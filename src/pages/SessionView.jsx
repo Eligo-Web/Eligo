@@ -452,16 +452,20 @@ function SessionView(props) {
        menubar=no, scrollbars=0, width=250, \
        height=100, top=110, left=1040"
     );
+    let pollName = "";
     await axios
       .post(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
       )
-      .then((res) => {})
+      .then((res) => {
+        pollName = res.data.data.name;
+      })
       .catch((err) => console.log(err));
     setPopup(newPopup);
     setRefresh({ created: true });
     // communicate with window
     newPopup.props = {
+      defaultName: pollName,
       semester: location.state.semester,
       sectionId: location.state.sectionId,
       weekNum: location.state.weekNum,

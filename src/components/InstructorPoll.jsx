@@ -26,7 +26,7 @@ export default function InstructorPoll() {
   const [showChart, setShowChart] = useState(false);
   const [numResponses, setNumResponses] = useState(0);
   const [pollData, setPollData] = useState([0, 0, 0, 0, 0]);
-  const [pollName, setPollName] = useState("");
+  const [pollName, setPollName] = useState(window.props ? window.props.pollName : "");
   const [chartRef, setChartRef] = useState({});
   const [stopTime, setStopTime] = useState(false);
   const [prevResponse, setPrevResponse] = useState("");
@@ -144,6 +144,15 @@ export default function InstructorPoll() {
       dataMutex.release();
     };
   }
+
+  useEffect(() => {
+    if (window.props) {
+      console.log(window.props)
+      const inputField = document.querySelector(".form-control");
+      inputField.value = window.props.defaultName;
+      setPollName(window.props.defaultName);
+    }
+  }, [window.props]);
 
   useEffect(() => {
     if (numResponses) {

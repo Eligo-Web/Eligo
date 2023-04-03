@@ -205,7 +205,7 @@ Course.post(
     const sessionId = req.params.sessionId;
     const pollId = req.params.pollId;
     try {
-      let session = await courseDao.addPollToSession(
+      let poll = await courseDao.addPollToSession(
         sectionId,
         weekNum,
         sessionId,
@@ -214,7 +214,7 @@ Course.post(
       res.json({
         status: 200,
         message: `Poll added`,
-        data: session,
+        data: poll,
       });
     } catch (err) {
       next(err);
@@ -275,11 +275,11 @@ Course.put("/:sectionId/:weekNum/closeAll", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   try {
-    let session = await courseDao.closeAllSessions(sectionId, weekNum);
+    let course = await courseDao.closeAllSessions(sectionId, weekNum);
     res.json({
       status: 200,
       message: `Sessions closed`,
-      data: session,
+      data: course,
     });
   } catch (err) {
     next(err);
@@ -373,7 +373,7 @@ Course.patch(
     const timestamp = req.body.timestamp;
     const response = req.body.response;
     try {
-      let session = await courseDao.addClickerResponseToPoll(
+      let poll = await courseDao.addClickerResponseToPoll(
         sectionId,
         weekNum,
         sessionId,
@@ -385,7 +385,7 @@ Course.patch(
       res.json({
         status: 200,
         message: `Unknown Response added`,
-        data: session,
+        data: poll,
       });
     } catch (err) {
       next(err);
@@ -403,7 +403,7 @@ Course.post("/", async (req, res, next) => {
     res.json({
       status: 201,
       message: "Course created",
-      data: req.body,
+      data: course,
     });
   } catch (err) {
     next(err);
@@ -488,11 +488,11 @@ Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res, next) => {
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
   try {
-    const course = await courseDao.deleteSession(sectionId, weekNum, sessionId);
+    const session = await courseDao.deleteSession(sectionId, weekNum, sessionId);
     res.json({
       status: 200,
       message: "Session deleted",
-      data: course,
+      data: session,
     });
   } catch (err) {
     next(err);
@@ -507,7 +507,7 @@ Course.delete(
     const sessionId = req.params.sessionId;
     const pollId = req.params.pollId;
     try {
-      const course = await courseDao.deletePoll(
+      const session = await courseDao.deletePoll(
         sectionId,
         weekNum,
         sessionId,
@@ -516,7 +516,7 @@ Course.delete(
       res.json({
         status: 200,
         message: "Poll deleted",
-        data: course,
+        data: session,
       });
     } catch (err) {
       next(err);
