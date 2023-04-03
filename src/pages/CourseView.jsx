@@ -74,7 +74,6 @@ function CourseView(props) {
         } catch (err) {
           console.log(err);
         }
-        console.log(device.opened);
       }
     }
     reconnectBase();
@@ -136,8 +135,7 @@ function CourseView(props) {
       .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
         students = res.data.data.students;
-      })
-      .catch((err) => console.log(err));
+      });
 
     navigate("/roster", {
       state: {
@@ -161,8 +159,7 @@ function CourseView(props) {
       .then((res) => {
         courseSessions = res.data.data.sessions;
         courseSessions = toMap(courseSessions).sort();
-      })
-      .catch((err) => console.log(err));
+      });
     const sessionList = [];
     const overlays = [];
 
@@ -246,7 +243,6 @@ function CourseView(props) {
       await axios
         .get(`${server}/course/${location.state.sectionId}/${getWeekNumber()}/`)
         .then(async (res) => {
-          console.log(res);
           const session = res.data.data;
           if (res.data.data) {
             if (
@@ -290,8 +286,7 @@ function CourseView(props) {
               clickerId: location.state.clickerId,
             });
           }
-        })
-        .catch((err) => console.log(err));
+        });
       document.querySelector(".img-container").style.opacity = 1;
       container.style.opacity = 1;
     }

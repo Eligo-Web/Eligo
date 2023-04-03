@@ -57,7 +57,7 @@ Student.get(
 
 Student.post("/", async (req, res, next) => {
   try {
-    studentDao.create(req.body);
+    const student = await studentDao.create(req.body);
     res.json({
       status: 201,
       message: "Student created",

@@ -1,6 +1,6 @@
 import ApiError from "../model/ApiError.js";
 import Course from "../model/Course.js";
-import { encodeEmail } from "../routes/courses.js";
+import { decodeEmail, encodeEmail } from "../routes/courses.js";
 
 class CourseDao {
   async readAll({ name, instructor, section, semester }) {
@@ -532,8 +532,11 @@ class CourseDao {
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
-    if (course.students[email]) {
-      throw new ApiError(409, `Student with email ${email} already exists`);
+    if (course.students.get(email)) {
+      throw new ApiError(
+        409,
+        `Student with email ${decodeEmail(email)} already exists`
+      );
     }
     course.students.set(email, name);
     await course.save();

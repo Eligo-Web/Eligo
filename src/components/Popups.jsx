@@ -97,7 +97,6 @@ export function JoinSession(props) {
   async function joinSession() {
     const server = "http://localhost:3000";
     if (!checkPasscode()) {
-      console.log("passcode invalid!");
       return;
     }
     let valid = true;
@@ -106,7 +105,6 @@ export function JoinSession(props) {
         `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.email}/${passcode}`
       )
       .then((res) => {
-        console.log(res.data);
         if (res.data.status === 200) {
           setInvalidErr(false);
           clearContents();
@@ -128,8 +126,7 @@ export function JoinSession(props) {
           setInvalidErr(true);
           valid = false;
         }
-      })
-      .catch((err) => console.log(err));
+      });
     if (valid) closePopup("Join Session");
   }
 
@@ -219,7 +216,6 @@ export function JoinClass(props) {
 
   async function joinClass() {
     if (!checkPasscode()) {
-      console.log("passcode invalid!");
       setDupeError(false);
       return;
     }
@@ -227,7 +223,6 @@ export function JoinClass(props) {
     await axios
       .get(`${server}/course/student/${passcode.toUpperCase()}`)
       .then(async (res) => {
-        console.log(res);
         if (res.data.status === 404) {
           setDupeError(false);
           setInvalidError(true);
@@ -242,31 +237,21 @@ export function JoinClass(props) {
               semester: semester,
             })
             .then((res) => {
-              if (res.data.status === 404) {
+              if (res.data.status === 409) {
                 setInvalidError(false);
                 setDupeError(true);
                 return;
               }
               props.setRefresh(!props.refresh);
               clearContents();
-            })
-            .catch((err) => {
-              console.log(err);
             });
-          await axios
-            .put(`${server}/course/${res.data.data.sectionId}/${props.email}`, {
+          await axios.put(
+            `${server}/course/${res.data.data.sectionId}/${props.email}`,
+            {
               name: props.name,
-            })
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+            }
+          );
         }
-      })
-      .catch((err) => {
-        console.log(err);
       });
   }
 
@@ -327,21 +312,14 @@ export function Poll(props) {
   }, []);
 
   async function makeSelection(choice) {
-    await axios
-      .patch(
-        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
-        {
-          email: props.email,
-          timestamp: Date.now().toString(),
-          response: choice,
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await axios.patch(
+      `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
+      {
+        email: props.email,
+        timestamp: Date.now().toString(),
+        response: choice,
+      }
+    );
 
     if (selected !== "") {
       voteButtons[selected].className = "card btn btn-vote";

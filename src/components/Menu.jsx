@@ -89,19 +89,11 @@ function Menu(props) {
         setShowError(true);
         return;
       }
-      await axios
-        .patch(`${server}/student/${location.state.email}/${clickerId}`)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
+      await axios.patch(
+        `${server}/student/${location.state.email}/${clickerId}`
+      );
     } else {
-      await axios
-        .delete(`${server}/student/${location.state.email}/clickerId`)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
+      await axios.delete(`${server}/student/${location.state.email}/clickerId`);
     }
     setShowError(false);
   }
@@ -113,8 +105,7 @@ function Menu(props) {
         .get(`${server}/student/${location.state.email}`)
         .then((res) => {
           newClickerId = res.data.data.clickerId;
-        })
-        .catch((err) => console.log(err));
+        });
       setClickerId(newClickerId || "");
       location.state.clickerId = newClickerId || "";
     }
@@ -124,22 +115,12 @@ function Menu(props) {
   }, []);
 
   async function leaveClass() {
-    await axios
-      .delete(
-        `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err));
-    await axios
-      .delete(
-        `${server}/course/${location.state.sectionId}/${location.state.email}`
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err));
+    await axios.delete(
+      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`
+    );
+    await axios.delete(
+      `${server}/course/${location.state.sectionId}/${location.state.email}`
+    );
     navigate("/overview", {
       state: {
         name: location.state.name,

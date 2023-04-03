@@ -149,7 +149,7 @@ function CreateOrEditClass(props) {
       overlay.querySelector(".empty-section").style.display = "block";
       overlay.querySelector(".invalid-section").style.display = "none";
       valid = false;
-    } else if (isNaN(section)) {
+    } else if (isNaN(section) || section < 1) {
       overlay.querySelector(".empty-section").style.display = "none";
       overlay.querySelector(".invalid-section").style.display = "block";
       sectionField.className += " field-error";
@@ -173,7 +173,6 @@ function CreateOrEditClass(props) {
 
   async function postCourse() {
     if (!paramsValid()) {
-      console.log("some fields invalid!");
       setShowError(false);
       return;
     }
@@ -188,11 +187,7 @@ function CreateOrEditClass(props) {
         passcode: Math.random().toString(36).slice(-8).toUpperCase(),
       })
       .then((res) => {
-        console.log(res);
         response = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
       });
     if (response.status === 409) {
       setShowError(true);
@@ -200,23 +195,17 @@ function CreateOrEditClass(props) {
     } else {
       setShowError(false);
     }
-    await axios
-      .put(`${server}/instructor/${location.state.email}`, {
-        newCourse: name,
-        newSection: section,
-        newSemester: semester,
-      })
-      .then(() => {})
-      .catch((err) => {
-        console.log(err);
-      });
+    await axios.put(`${server}/instructor/${location.state.email}`, {
+      newCourse: name,
+      newSection: section,
+      newSemester: semester,
+    });
     clearContents(props.editMode);
     setRefresh(!refresh);
   }
 
   async function putCourse() {
     if (!paramsValid()) {
-      console.log("some fields invalid!");
       setShowError(false);
       return;
     }
@@ -238,12 +227,9 @@ function CreateOrEditClass(props) {
     let checkDupe;
     let course;
 
-    await axios
-      .get(`${server}/course/${sectionId}`)
-      .then((res) => {
-        checkDupe = res.data;
-      })
-      .catch((err) => console.log(err));
+    await axios.get(`${server}/course/${sectionId}`).then((res) => {
+      checkDupe = res.data;
+    });
 
     if (checkDupe.status === 200 && sisId === props.sisId) {
       setShowError(true);
@@ -260,38 +246,27 @@ function CreateOrEditClass(props) {
       })
       .then((res) => {
         course = res.data.data;
-        console.log(res);
         if (res.data.status === 409) {
           setShowError(true);
         } else {
           setShowError(false);
         }
-      })
-      .catch((err) => {
-        console.log(err);
       });
-    await axios
-      .put(
-        `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`,
+    await axios.put(
+      `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`,
+      {
+        newSectionId: sectionId,
+        newSemester: semester,
+      }
+    );
+    for (let student in course.students) {
+      await axios.put(
+        `${server}/student/${student}/${props.semester}/${oldSectionId}`,
         {
           newSectionId: sectionId,
           newSemester: semester,
         }
-      )
-      .then(() => {})
-      .catch((err) => {
-        console.log(err);
-      });
-    for (let student in course.students) {
-      await axios
-        .put(`${server}/student/${student}/${props.semester}/${oldSectionId}`, {
-          newSectionId: sectionId,
-          newSemester: semester,
-        })
-        .then(() => {})
-        .catch((err) => {
-          console.log(err);
-        });
+      );
     }
     closePopup(popupName);
     setRefresh(!refresh);
@@ -302,37 +277,16 @@ function CreateOrEditClass(props) {
       props.name + props.section + props.semester
     );
     let students = [];
-    await axios
-      .delete(`${server}/course/${oldSectionId}`)
-      .then((res) => {
-        console.log(res);
-        students = res.data.data.students;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    await axios
-      .delete(
-        `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log(students);
+    await axios.delete(`${server}/course/${oldSectionId}`).then((res) => {
+      students = res.data.data.students;
+    });
+    await axios.delete(
+      `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`
+    );
     for (let student in students) {
-      await axios
-        .delete(
-          `${server}/student/${student}/${props.semester}/${oldSectionId}`
-        )
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      await axios.delete(
+        `${server}/student/${student}/${props.semester}/${oldSectionId}`
+      );
     }
     closePopup(popupName);
     setRefresh(!refresh);

@@ -52,7 +52,6 @@ function OverView(props) {
         } catch (err) {
           console.log(err);
         }
-        console.log(device.opened);
       }
     }
     reconnectBase();
@@ -92,8 +91,7 @@ function OverView(props) {
       .get(`${server}/${role.toLowerCase()}/${location.state.email}`)
       .then((res) => {
         history = res.data.data.history;
-      })
-      .catch((err) => console.log(err));
+      });
 
     const semesterList = [];
     const editOverlays = [];
@@ -142,8 +140,7 @@ function OverView(props) {
                 editClass
               />
             );
-          })
-          .catch((err) => console.log(err));
+          });
       }
       semesterList.push(
         <Container className="card-container" key={semester}>

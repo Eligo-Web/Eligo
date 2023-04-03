@@ -488,7 +488,11 @@ Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res, next) => {
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
   try {
-    const session = await courseDao.deleteSession(sectionId, weekNum, sessionId);
+    const session = await courseDao.deleteSession(
+      sectionId,
+      weekNum,
+      sessionId
+    );
     res.json({
       status: 200,
       message: "Session deleted",

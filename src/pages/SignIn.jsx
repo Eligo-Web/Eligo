@@ -23,16 +23,9 @@ function SignIn() {
               role: role,
             })
             .then((res) => {
-              console.log(res);
               user = res.data.data;
-            })
-            .catch((err) => {
-              console.log(err);
             });
         }
-      })
-      .catch((err) => {
-        console.log(err);
       });
     navigate("/overview", {
       state: {
@@ -48,7 +41,11 @@ function SignIn() {
     <div className="sign-in-container">
       <title>Sign in | Eligo</title>
       <div className="sign-in-title" id="Eligo">
-        <img className="eligo-logo sign-in-logo" src={logo} alt="Eligo brand logo." />
+        <img
+          className="eligo-logo sign-in-logo"
+          src={logo}
+          alt="Eligo brand logo."
+        />
         ligo
       </div>
       <div className="sign-in-content">

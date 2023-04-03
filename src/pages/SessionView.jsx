@@ -92,24 +92,17 @@ function SessionView(props) {
         if (!res.data.data.active) {
           navigateBack();
         }
-      })
-      .catch((err) => console.log(err));
+      });
   }
 
   async function closeSession() {
     const server = "http://localhost:3000";
-    await axios
-      .put(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`
-      )
-      .then((res) => {})
-      .catch((err) => console.log(err));
-    await axios
-      .put(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
-      )
-      .then((res) => {})
-      .catch((err) => console.log(err));
+    await axios.put(
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`
+    );
+    await axios.put(
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
+    );
     navigateBack();
   }
 
@@ -149,8 +142,7 @@ function SessionView(props) {
             await pause(250);
             setPollOpen(false);
           }
-        })
-        .catch((err) => console.log(err));
+        });
     }
 
     useEffect(() => {
@@ -297,8 +289,7 @@ function SessionView(props) {
           link.setAttribute("href", url);
           link.setAttribute("download", `${res.data.data.name}.csv`);
           link.click();
-        })
-        .catch((err) => console.log(err));
+        });
     }
 
     window.onresize = function () {
@@ -383,8 +374,7 @@ function SessionView(props) {
           newPolls = Object.entries(res.data.data.polls);
           newPolls = new Map([...newPolls.sort()]);
         }
-      })
-      .catch((err) => console.log(err));
+      });
 
     for (let [pollId, poll] of newPolls) {
       if (poll.active) {
@@ -459,8 +449,7 @@ function SessionView(props) {
       )
       .then((res) => {
         pollName = res.data.data.name;
-      })
-      .catch((err) => console.log(err));
+      });
     setPopup(newPopup);
     setRefresh({ created: true });
     // communicate with window
@@ -486,16 +475,9 @@ function SessionView(props) {
       await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
       await pause();
     }
-    await axios
-      .put(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await axios.put(
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`
+    );
     setRefresh({ closed: true });
   }
 

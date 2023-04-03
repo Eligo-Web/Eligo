@@ -25,7 +25,6 @@ function MenuBar(props) {
     if (props.clickable) {
       try {
         navigator.clipboard.writeText(props.description);
-        console.log("Copied to clipboard!");
         setCopied(true);
         setTimeout(() => setCopied(false), 5000);
       } catch (err) {
@@ -51,14 +50,22 @@ function MenuBar(props) {
               style={{ opacity: copied ? 1 : 0, width: copied ? "10rem" : 0 }}
             >
               Copied!
-              <IconCheck stroke="0.16rem" style={{ flexShrink: 0 }} alt="Icon indicator of successful copy" />
+              <IconCheck
+                stroke="0.16rem"
+                style={{ flexShrink: 0 }}
+                alt="Icon indicator of successful copy"
+              />
             </div>
             <IconButton
               style={{
                 padding: "1rem",
                 cursor: props.clickable ? "pointer" : "default",
               }}
-              icon={props.clickable ? <IconCopy size="1.5em" alt="Copy passcode" /> : null}
+              icon={
+                props.clickable ? (
+                  <IconCopy size="1.5em" alt="Copy passcode" />
+                ) : null
+              }
               label={props.description || "None"}
               variant="transparent"
             />

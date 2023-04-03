@@ -77,54 +77,35 @@ function CreateOrEditSession(props) {
   async function createSession() {
     const sessionId = `session-${Date.now()}`;
     const server = "http://localhost:3000";
-    await axios
-      .put(`${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`)
-      .then((res) => {
-        console.log(res.data.data);
-      })
-      .catch((err) => console.log(err));
-    await axios
-      .post(`${server}/course/${props.sectionId}/${sessionId}`, {
-        name: sessionName ? sessionName : new Date().toDateString(),
-        passcode: Math.random().toString(10).slice(-4),
-        weekNum: getWeekNumber(),
-      })
-      .then((res) => {
-        console.log(res.data.data);
-      })
-      .catch((err) => console.log(err));
+    await axios.put(
+      `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`
+    );
+    await axios.post(`${server}/course/${props.sectionId}/${sessionId}`, {
+      name: sessionName ? sessionName : new Date().toDateString(),
+      passcode: Math.random().toString(10).slice(-4),
+      weekNum: getWeekNumber(),
+    });
     props.setRefresh(!props.refresh);
     clearContents();
   }
 
   async function handleEdit() {
     const server = "http://localhost:3000";
-    await axios
-      .patch(
-        `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
-        {
-          name: sessionName ? sessionName : new Date().toDateString(),
-        }
-      )
-      .then((res) => {
-        console.log(res.data.data);
-      })
-      .catch((err) => console.log(err));
+    await axios.patch(
+      `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
+      {
+        name: sessionName ? sessionName : new Date().toDateString(),
+      }
+    );
     props.setRefresh(!props.refresh);
     clearContents();
   }
 
   async function handleDelete() {
     const server = "http://localhost:3000";
-    console.log(props);
-    await axios
-      .delete(
-        `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`
-      )
-      .then((res) => {
-        console.log(res.data.data);
-      })
-      .catch((err) => console.log(err));
+    await axios.delete(
+      `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`
+    );
     props.setRefresh(!props.refresh);
     clearContents();
   }

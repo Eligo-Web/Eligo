@@ -26,7 +26,9 @@ export default function InstructorPoll() {
   const [showChart, setShowChart] = useState(false);
   const [numResponses, setNumResponses] = useState(0);
   const [pollData, setPollData] = useState([0, 0, 0, 0, 0]);
-  const [pollName, setPollName] = useState(window.props ? window.props.pollName : "");
+  const [pollName, setPollName] = useState(
+    window.props ? window.props.pollName : ""
+  );
   const [chartRef, setChartRef] = useState({});
   const [stopTime, setStopTime] = useState(false);
   const [prevResponse, setPrevResponse] = useState("");
@@ -91,44 +93,26 @@ export default function InstructorPoll() {
         .then((res) => {
           if (res.data.data) {
             email = res.data.data.email;
-            console.log(res.data.data.email);
           }
-        })
-        .catch((err) => {
-          console.log(err);
         });
       if (email) {
-        await axios
-          .patch(
-            `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`,
-            {
-              email: email,
-              timestamp: Date.now().toString(),
-              response: prevResponse,
-            }
-          )
-          .then((res) => {
-            //console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        await axios.patch(
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`,
+          {
+            email: email,
+            timestamp: Date.now().toString(),
+            response: prevResponse,
+          }
+        );
       } else {
-        await axios
-          .patch(
-            `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/unknownClicker`,
-            {
-              clickerId: prevClickerId,
-              timestamp: Date.now().toString(),
-              response: prevResponse,
-            }
-          )
-          .then((res) => {
-            //console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        await axios.patch(
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/unknownClicker`,
+          {
+            clickerId: prevClickerId,
+            timestamp: Date.now().toString(),
+            response: prevResponse,
+          }
+        );
       }
       if (chartRef && chartRef.getContext("2d").chart) {
         chartRef.getContext("2d").chart.update();
@@ -147,7 +131,6 @@ export default function InstructorPoll() {
 
   useEffect(() => {
     if (window.props) {
-      console.log(window.props)
       const inputField = document.querySelector(".form-control");
       inputField.value = window.props.defaultName;
       setPollName(window.props.defaultName);
@@ -178,9 +161,6 @@ export default function InstructorPoll() {
           numUpdate = res.data.data.numResponses;
           setNumResponses(res.data.data.numResponses);
           setPollData(pollUpdate);
-        })
-        .catch((err) => {
-          console.log(err);
         });
       chartRef.getContext("2d").chart.update();
       if (window.props && window.props.base) {
@@ -224,30 +204,16 @@ export default function InstructorPoll() {
       await pause();
     }
     if (action === "save") {
-      await axios
-        .put(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/close`,
-          {
-            name: pollName,
-          }
-        )
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      await axios.put(
+        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/close`,
+        {
+          name: pollName,
+        }
+      );
     } else if (action === "discard") {
-      await axios
-        .delete(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
-        )
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      await axios.delete(
+        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
+      );
     }
   }
 
@@ -397,21 +363,13 @@ export function ClosedPoll(props) {
       .get(
         `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
       )
-      .then((res) => setPollInfo(res.data.data))
-      .catch((err) => console.log(err));
+      .then((res) => setPollInfo(res.data.data));
   }
 
   async function deletePoll() {
-    await axios
-      .delete(
-        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await axios.delete(
+      `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
+    );
     closePopup(props.pollId);
     if (props.setRefresh) {
       props.setRefresh(!props.refresh);
