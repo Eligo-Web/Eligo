@@ -330,7 +330,7 @@ function CreateOrEditClass(props) {
           onKeyDown={handleKeyPresses}
           errors={{
             "empty-section": "Required",
-            "invalid-section": "Invalid number",
+            "invalid-section": "Invalid section",
           }}
         />
         <SelectField

@@ -85,15 +85,17 @@ export function SelectField(props) {
   return (
     <div className={props.section ? "input-field-small" : "input-field"}>
       {props.label || "Title Text"}
-      <Form.Select
-        className={props.class}
-        placeholder="Select Semester"
-        defaultValue={props.default || options[0]}
-        onChange={props.onChange}
-        onKeyDown={props.onKeyDown}
-      >
-        {options}
-      </Form.Select>
+      <div className="d-flex flex-row align-content-center">
+        <Form.Select
+          className={props.class}
+          placeholder="Select Semester"
+          defaultValue={props.default || options[0]}
+          onChange={props.onChange}
+          onKeyDown={props.onKeyDown}
+        >
+          {options}
+        </Form.Select>
+      </div>
     </div>
   );
 }
