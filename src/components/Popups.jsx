@@ -45,9 +45,29 @@ export function ConfirmDelete(props) {
 export function JoinSession(props) {
   const [passcode, setPasscode] = useState("");
   const [invalidErr, setInvalidErr] = useState(false);
+  const [invalidLoc, setInvalidLoc] = useState(false);
   const navigate = useNavigate();
   const control = props.control;
   props = props.childProps;
+
+  function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+  }
+
+  function getDistanceFromLatLonInKm(lat1, long1, lat2, long2) {
+    let R = 6371; // Radius of the earth in km
+    let dLat = deg2rad(lat2 - lat1); // deg2rad below
+    let dLong = deg2rad(long2 - long1);
+    let a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLong / 2) *
+        Math.sin(dLong / 2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c; // Distance in km
+    return d;
+  }
 
   const handleKeyPresses = (event) => {
     switch (event.key) {
@@ -94,9 +114,38 @@ export function JoinSession(props) {
     setInvalidErr(false);
   }
 
+  async function checkLocation() {
+    let lat = 0;
+    let long = 0;
+    let present = true;
+    if (props.session.latitude && props.session.longitude) {
+      await navigator.geolocation.getCurrentPosition((position) => {
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+        let distance = getDistanceFromLatLonInKm(
+          lat,
+          long,
+          props.session.latitude,
+          props.session.longitude
+        );
+        if (distance > 0.1) {
+          setInvalidLoc(true);
+          present = false;
+        }
+      });
+      while (lat === 0 && long === 0) {
+        await new Promise((r) => setTimeout(r, 100));
+      }
+    }
+    return present;
+  }
+
   async function joinSession() {
     const server = "http://localhost:3000";
+    console.log("here");
     if (!checkPasscode()) {
+      return;
+    } else if (!(await checkLocation())) {
       return;
     }
     let valid = true;
@@ -149,6 +198,13 @@ export function JoinSession(props) {
       >
         <IconAlertTriangleFilled />
         Failed to join session. Passcode is invalid!
+      </div>
+      <div
+        className="error-banner"
+        style={{ display: invalidLoc ? "flex" : "none" }}
+      >
+        <IconAlertTriangleFilled />
+        Location is too far away from session location!
       </div>
       <div className="button-row">
         <PrimaryButton

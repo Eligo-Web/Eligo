@@ -280,7 +280,6 @@ function CourseView(props) {
               sessionName: session.activeSession.name,
               weekNum: getWeekNumber(),
               clickerId: location.state.clickerId,
-              locationRequired: session.latitude && session.longitude,
             });
           }
         });
