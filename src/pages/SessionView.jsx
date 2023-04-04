@@ -303,6 +303,7 @@ function SessionView(props) {
 
     return (
       <div>
+        <title>{location.state.sessionName} | Eligo</title>
         <BackButton
           label={location.state.courseName}
           onClick={() => navigateBack()}

@@ -16,7 +16,7 @@ export function PrimaryButton(props) {
     <Button
       variant={props.variant || "primary"}
       onClick={props.onClick}
-      id={props.id ? props.id + "-save-button" : null}
+      id={props.id}
     >
       {props.label || "Label"}
     </Button>
@@ -39,6 +39,17 @@ export function IconButton(props) {
       {props.label}
     </Button>
   );
+}
+
+export async function displayMessage(msg) {
+  msg.style.pointerEvents = "all";
+  msg.style.opacity = 1;
+  msg.style.width = "30rem";
+  await pause(2500);
+  msg.style.width = 0;
+  await pause(50);
+  msg.style.opacity = 0;
+  msg.style.pointerEvents = "none";
 }
 
 export function FloatingButton(props) {
@@ -98,16 +109,7 @@ export function FloatingButton(props) {
     if (parseInt(numTimes) > 1) return;
     localStorage.setItem("hideTooltip", parseInt(numTimes) + 1);
     const msg = document.querySelector(".connect-base-tooltip");
-    if (msg) {
-      msg.style.pointerEvents = "all";
-      msg.style.opacity = 1;
-      msg.style.width = "30rem";
-      await pause(2500);
-      msg.style.width = 0;
-      await pause(50);
-      msg.style.opacity = 0;
-      msg.style.pointerEvents = "none";
-    }
+    if (msg) await displayMessage(msg);
   }
 
   async function handleClick() {
@@ -121,9 +123,15 @@ export function FloatingButton(props) {
   return (
     <div>
       <div className="connect-base-tooltip">
-        <IconInfoCircle className="tooltip-icon" stroke="0.1rem" />
+        <IconInfoCircle size="2.5em" stroke="0.1rem" />
         <div style={{ minWidth: "19rem", maxWidth: "19rem" }}>
           You can always connect your iClicker base station from the menu.
+        </div>
+      </div>
+      <div className="disconnected-tooltip">
+        <IconInfoCircle size="2em" stroke="0.1rem" />
+        <div style={{ minWidth: "10rem", maxWidth: "10rem" }}>
+          Base Disconnected
         </div>
       </div>
       <div className="connect-base-btn" onClick={() => handleClick()}>

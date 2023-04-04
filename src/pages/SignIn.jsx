@@ -1,8 +1,9 @@
-import { IconBook, IconSchool } from "@tabler/icons-react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/eligo-logo.svg";
+import instructorIcon from "../assets/instructor-button.png";
+import studentIcon from "../assets/student-button.png";
 
 function SignIn() {
   const server = "http://localhost:3000";
@@ -56,7 +57,11 @@ function SignIn() {
             handleSignin("Student Name", "student@jhu.edu", "STUDENT")
           }
         >
-          <IconSchool size="8em" stroke={1} className="sign-in-icon" />
+          <img
+            src={studentIcon}
+            className="sign-in-icon"
+            alt="Student sign in button illustration"
+          />
           Student
         </Button>
         <Button
@@ -66,7 +71,11 @@ function SignIn() {
             handleSignin("Instructor Name", "instructor@jhu.edu", "INSTRUCTOR")
           }
         >
-          <IconBook size="8em" stroke={1} className="sign-in-icon" />
+          <img
+            src={instructorIcon}
+            className="sign-in-icon"
+            alt="Instructor sign in button illustration"
+          />
           Instructor
         </Button>
       </div>

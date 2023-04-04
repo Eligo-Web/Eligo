@@ -127,7 +127,7 @@ export function parseResponse(byte) {
   return String.fromCharCode(byte - 0x81 + 65);
 }
 
-export function setScreen(device, line, message) {
+export async function setScreen(device, line, message) {
   let commandScreen = new Uint8Array(18);
   commandScreen[0] = 0x01;
   commandScreen[1] = line === 1 ? 0x13 : 0x14;
@@ -137,5 +137,5 @@ export function setScreen(device, line, message) {
   for (let i = 2; i < 18; i++) {
     commandScreen[i] = message.charCodeAt(i - 2);
   }
-  device.sendReport(0, commandScreen);
+  await device.sendReport(0, commandScreen);
 }

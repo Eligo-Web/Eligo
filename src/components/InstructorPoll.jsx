@@ -192,7 +192,7 @@ export default function InstructorPoll() {
     window.resizeTo(fullWidth, fullHeight);
   }
 
-  async function deactivatePoll(action) {
+  async function deactivatePoll() {
     if (!window.props) window.close();
     const base = window.props ? window.props.base : null;
     if (base && base.opened) {
@@ -203,18 +203,12 @@ export default function InstructorPoll() {
       await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
       await pause();
     }
-    if (action === "save") {
-      await axios.put(
-        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/close`,
-        {
-          name: pollName,
-        }
-      );
-    } else if (action === "discard") {
-      await axios.delete(
-        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
-      );
-    }
+    await axios.put(
+      `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/close`,
+      {
+        name: pollName,
+      }
+    );
   }
 
   window.onload = function () {
@@ -311,19 +305,11 @@ export default function InstructorPoll() {
             style={{ display: minimized ? "none" : "flex" }}
           >
             <PrimaryButton
-              variant="secondary"
-              label="Discard"
-              onClick={async () => {
-                await deactivatePoll("discard");
-                window.close();
-              }}
-            />
-            <PrimaryButton
               variant="primary"
               label="Save"
               onClick={async () => {
                 setStopTime(true);
-                await deactivatePoll("save");
+                await deactivatePoll();
                 window.close();
               }}
             />

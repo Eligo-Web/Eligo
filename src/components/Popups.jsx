@@ -46,6 +46,7 @@ export function JoinSession(props) {
   const [passcode, setPasscode] = useState("");
   const [invalidErr, setInvalidErr] = useState(false);
   const [invalidLoc, setInvalidLoc] = useState(false);
+  const [locErr, setLocError] = useState(false);
   const navigate = useNavigate();
   const control = props.control;
   props = props.childProps;
@@ -54,7 +55,7 @@ export function JoinSession(props) {
     return deg * (Math.PI / 180);
   }
 
-  function getDistanceFromLatLonInKm(lat1, long1, lat2, long2) {
+  function getKmDistanceFromCoords(lat1, long1, lat2, long2) {
     let R = 6371; // Radius of the earth in km
     let dLat = deg2rad(lat2 - lat1); // deg2rad below
     let dLong = deg2rad(long2 - long1);
@@ -82,7 +83,7 @@ export function JoinSession(props) {
 
   useEffect(() => {
     const overlay = document.getElementById("join-session-popup");
-    if (overlay.offsetParent.style.height) {
+    if (overlay.offsetParent.style.maxHeight) {
       clearContents();
     }
   }, [control]);
@@ -96,6 +97,8 @@ export function JoinSession(props) {
       passcodeField.className += " field-error";
       overlay.querySelector(".empty-code").style.display = "block";
       setInvalidErr(false);
+      setInvalidLoc(false);
+      setLocError(false);
       valid = false;
     } else {
       passcodeField.className = "passcode-input form-control";
@@ -112,17 +115,20 @@ export function JoinSession(props) {
     passcodeField.value = "";
     setPasscode("");
     setInvalidErr(false);
+    setInvalidLoc(false);
+    setLocError(false);
   }
 
   async function checkLocation() {
     let lat = 0;
     let long = 0;
     let present = true;
+    let thisError;
     if (props.session.latitude && props.session.longitude) {
-      await navigator.geolocation.getCurrentPosition((position) => {
+      navigator.geolocation.getCurrentPosition((position) => {
         lat = position.coords.latitude;
         long = position.coords.longitude;
-        let distance = getDistanceFromLatLonInKm(
+        let distance = getKmDistanceFromCoords(
           lat,
           long,
           props.session.latitude,
@@ -130,12 +136,25 @@ export function JoinSession(props) {
         );
         if (distance > 0.1) {
           setInvalidLoc(true);
+          setLocError(false);
+          present = false;
+        }
+      }, (error) => {
+        thisError = error.PERMISSION_DENIED;
+        if (thisError) {
+          setLocError(true);
+          setInvalidErr(false);
           present = false;
         }
       });
-      while (lat === 0 && long === 0) {
+      const button = document.getElementById("join-session-button");
+      let buttonText;
+      if (button) buttonText = button.childNodes[0];
+      buttonText.data = "Joining...";
+      while (lat === 0 && long === 0 && !thisError) {
         await new Promise((r) => setTimeout(r, 100));
       }
+      buttonText.data = "Join";
     }
     return present;
   }
@@ -155,7 +174,6 @@ export function JoinSession(props) {
       )
       .then((res) => {
         if (res.data.status === 200) {
-          setInvalidErr(false);
           clearContents();
           navigate("/session", {
             state: {
@@ -204,10 +222,18 @@ export function JoinSession(props) {
         style={{ display: invalidLoc ? "flex" : "none" }}
       >
         <IconAlertTriangleFilled />
-        Location is too far away from session location!
+        You are not within range to join the session!
+      </div>
+      <div
+        className="error-banner"
+        style={{ display: locErr ? "flex" : "none" }}
+      >
+        <IconAlertTriangleFilled />
+        Location denied! Cannot join session.
       </div>
       <div className="button-row">
         <PrimaryButton
+          id="join-session-button"
           variant="primary"
           label="Join"
           onClick={() => joinSession()}
@@ -235,7 +261,7 @@ export function JoinClass(props) {
 
   useEffect(() => {
     const overlay = document.getElementById("join-class-popup");
-    if (overlay.offsetParent.style.height) {
+    if (overlay.offsetParent.style.maxHeight) {
       clearContents();
     }
   }, [props.control]);

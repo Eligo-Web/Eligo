@@ -142,7 +142,9 @@ function Menu(props) {
             <div
               id="Eligo"
               className="menu-overlay-title"
-              onClick={() =>
+              onClick={async () => {
+                closeMenu();
+                await pause(300);
                 navigate("/overview", {
                   state: {
                     name: location.state.name,
@@ -150,8 +152,8 @@ function Menu(props) {
                     email: location.state.email,
                     clickerId: location.state.clickerId,
                   },
-                })
-              }
+                });
+              }}
               style={{ cursor: "pointer" }}
             >
               <img className="eligo-logo" src={logo} />
@@ -184,7 +186,7 @@ function Menu(props) {
               <div
                 className="error-banner"
                 style={{
-                  height: showError ? "fit-content" : 0,
+                  display: showError ? "flex" : "none",
                   fontSize: "0.9rem",
                 }}
               >

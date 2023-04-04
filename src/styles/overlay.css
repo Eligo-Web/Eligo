@@ -161,7 +161,10 @@
 .form-control:focus,
 .form-select,
 .form-select:focus,
-.form-control:disabled {
+.form-control:disabled,
+.form-check-input,
+.form-check-input:focus,
+.form-check-input:checked {
   flex: 1;
   display: flex;
   padding: 0.3rem 1rem;
@@ -175,7 +178,8 @@
   font-weight: 500;
 }
 
-.form-control:disabled {
+.form-control:disabled,
+.form-check-input:disabled {
   color: #182d44 !important;
   opacity: 0.8;
 }

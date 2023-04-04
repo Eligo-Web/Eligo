@@ -4,6 +4,7 @@ body {
   color: rgb(0, 6, 13);
   --body-bg: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
   background: var(--body-bg);
+  min-height: 8rem;
 }
 
 @-moz-document url-prefix() {

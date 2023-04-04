@@ -1,3 +1,4 @@
+import { IconAlertTriangleFilled, IconChevronsDownLeft, IconInfoCircle, IconLock } from "@tabler/icons-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
@@ -40,12 +41,13 @@ function CreateOrEditSession(props) {
   );
   const editId = `edit-${props.id}-popup`;
   const timeStamp = props.id.replace("session-", "");
+  const [locError, setLocError] = useState(false);
 
   useEffect(() => {
     const overlay = document.getElementById(
       props.editMode ? editId : props.id + "-popup"
     );
-    if (overlay.offsetParent.style.height) {
+    if (overlay.offsetParent.style.maxHeight) {
       clearContents();
     }
   }, [props.control]);
@@ -78,37 +80,47 @@ function CreateOrEditSession(props) {
   async function createSession() {
     const sessionId = `session-${Date.now()}`;
     const server = "http://localhost:3000";
-    const locationCheckbox = document.getElementById("location-checkbox");
+    const locationSwitch = document.getElementById("location-switch");
+    const button = document.getElementById("create-session");
+    let buttonText;
+    if (button) buttonText = button.childNodes[0];
+    buttonText.data = "Creating...";
     await axios.put(
       `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`
     );
     let latitude = 0;
     let longitude = 0;
-    if (locationCheckbox.checked) {
+    let thisError = 0;
+    if (locationSwitch.checked) {
       if (navigator.geolocation) {
-        await navigator.geolocation.getCurrentPosition(
-          async (position) => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
             latitude = position.coords.latitude;
             longitude = position.coords.longitude;
           },
           (error) => {
-            return;
+            thisError = error.PERMISSION_DENIED;
+            if (thisError) setLocError(true);
           }
         );
-        while (latitude === 0 && longitude === 0) {
+        while (latitude === 0 && longitude === 0 && !thisError) {
+          console.log("waiting", thisError);
           await new Promise((r) => setTimeout(r, 100));
         }
       }
     }
-    await axios.post(`${server}/course/${props.sectionId}/${sessionId}`, {
-      name: sessionName ? sessionName : new Date().toDateString(),
-      passcode: Math.random().toString(10).slice(-4),
-      weekNum: getWeekNumber(),
-      latitude: latitude,
-      longitude: longitude,
-    });
-    props.setRefresh(!props.refresh);
-    clearContents();
+    if (!thisError) {
+      await axios.post(`${server}/course/${props.sectionId}/${sessionId}`, {
+        name: sessionName ? sessionName : new Date().toDateString(),
+        passcode: Math.random().toString(10).slice(-4),
+        weekNum: getWeekNumber(),
+        latitude: latitude,
+        longitude: longitude,
+      });
+      props.setRefresh(!props.refresh);
+      clearContents();
+    }
+    buttonText.data = "Create";
   }
 
   async function handleEdit() {
@@ -138,9 +150,10 @@ function CreateOrEditSession(props) {
     );
     if (props.editMode) props.setMarkDelete(false);
     const nameField = overlay.querySelector(".session-name-input");
-    const locationCheckbox = document.getElementById("location-checkbox");
+    const locationSwitch = document.getElementById("location-switch");
     nameField.value = props.editMode ? props.session.name : "";
-    locationCheckbox.checked = false;
+    locationSwitch.checked = false;
+    setLocError(false);
     setSessionName(props.editMode ? props.session.name : "");
     closePopup(props.editMode ? props.id : "Create Session");
   }
@@ -160,15 +173,6 @@ function CreateOrEditSession(props) {
         onChange={(e) => setSessionName(e.target.value)}
         onKeyDown={handleKeyPresses}
       />
-      {props.editMode ? null : (
-        <Form.Check
-          type="checkbox"
-          id="location-checkbox"
-          label="Require students to be in the same location"
-          className="location-checkbox"
-          style={{ paddingLeft: "2rem" }}
-        />
-      )}
       {props.editMode ? (
         <div className="input-group">
           <InputField
@@ -184,6 +188,31 @@ function CreateOrEditSession(props) {
           />
         </div>
       ) : null}
+      <div className="flex-row input-field align-items-center gap-2">
+        {props.editMode ? <IconLock size="1em" stroke="0.15rem" /> : null}
+        <Form.Switch
+          type="switch"
+          id="location-switch"
+          className="location-switch input-field"
+          checked={
+            props.editMode
+              ? props.session.latitude || props.session.longitude
+              : null
+          }
+          disabled={props.editMode}
+        />
+        Require Attendance
+        <div className="location-switch-info d-grid">
+          <IconInfoCircle size="1.1em" stroke="0.14rem" />
+        </div>
+      </div>
+      <div
+        className="error-banner"
+        style={{ display: locError ? "flex" : "none" }}
+      >
+        <IconAlertTriangleFilled />
+        Location permission denied!
+      </div>
       <div className="button-row">
         {props.editMode ? (
           <PrimaryButton

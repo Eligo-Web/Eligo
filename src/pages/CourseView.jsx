@@ -12,6 +12,7 @@ import {
   BackButton,
   FloatingButton,
   IconButton,
+  displayMessage,
 } from "../components/Buttons.jsx";
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
@@ -44,6 +45,8 @@ function CourseView(props) {
   if (navigator.hid && base) {
     navigator.hid.ondisconnect = ({ device }) => {
       if (device.vendorId === 0x1881) {
+        const msg = document.querySelector(".disconnected-tooltip");
+        if (msg) displayMessage(msg);
         setBase(null);
       }
     };

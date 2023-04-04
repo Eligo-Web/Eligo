@@ -14,8 +14,8 @@ export function openPopup(id) {
     nameField.value = new Date().toDateString();
   }
   if (overlay) {
+    overlay.style.overflow = "visible";
     document.body.style.overflowY = "hidden";
-    overlay.style.overflow = "inherit";
     overlay.querySelector(".overlay-bg").style.pointerEvents = "all";
     overlay.querySelector(".overlay-bg").style.opacity = 1;
     overlay.querySelector(".pop-up").style.opacity = 1;

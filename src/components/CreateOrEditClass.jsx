@@ -63,7 +63,7 @@ function CreateOrEditClass(props) {
 
   useEffect(() => {
     const overlay = document.getElementById(popupName);
-    if (overlay.offsetParent.style.height) {
+    if (overlay.offsetParent.style.maxHeight) {
       clearContents(props.editMode);
     }
   }, [props.control]);
@@ -344,7 +344,7 @@ function CreateOrEditClass(props) {
       </div>
       <div
         className="error-banner"
-        style={{ height: showError ? "fit-content" : 0 }}
+        style={{ display: showError ? "flex" : "none" }}
       >
         <IconAlertTriangleFilled />
         Warning: This course already exists!
