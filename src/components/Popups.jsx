@@ -28,11 +28,13 @@ export function ConfirmDelete(props) {
       </div>
       <div className="button-row-delete">
         <PrimaryButton
+          id={"cancel-delete-" + props.id}
           variant="secondary"
           label="Cancel"
           onClick={props.cancelClick}
         />
         <PrimaryButton
+          id={"confirm-delete-" + props.id}
           variant="primary-red"
           label="Delete"
           onClick={props.deleteClick}
@@ -125,28 +127,31 @@ export function JoinSession(props) {
     let present = true;
     let thisError;
     if (props.session.latitude && props.session.longitude) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        lat = position.coords.latitude;
-        long = position.coords.longitude;
-        let distance = getKmDistanceFromCoords(
-          lat,
-          long,
-          props.session.latitude,
-          props.session.longitude
-        );
-        if (distance > 0.1) {
-          setInvalidLoc(true);
-          setLocError(false);
-          present = false;
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          lat = position.coords.latitude;
+          long = position.coords.longitude;
+          let distance = getKmDistanceFromCoords(
+            lat,
+            long,
+            props.session.latitude,
+            props.session.longitude
+          );
+          if (distance > 0.1) {
+            setInvalidLoc(true);
+            setLocError(false);
+            present = false;
+          }
+        },
+        (error) => {
+          thisError = error.PERMISSION_DENIED;
+          if (thisError) {
+            setLocError(true);
+            setInvalidErr(false);
+            present = false;
+          }
         }
-      }, (error) => {
-        thisError = error.PERMISSION_DENIED;
-        if (thisError) {
-          setLocError(true);
-          setInvalidErr(false);
-          present = false;
-        }
-      });
+      );
       const button = document.getElementById("join-session-button");
       let buttonText;
       if (button) buttonText = button.childNodes[0];
@@ -222,14 +227,14 @@ export function JoinSession(props) {
         style={{ display: invalidLoc ? "flex" : "none" }}
       >
         <IconAlertTriangleFilled />
-        You are not within range to join the session!
+        Permission denied: Failed to join, out of range.
       </div>
       <div
         className="error-banner"
         style={{ display: locErr ? "flex" : "none" }}
       >
         <IconAlertTriangleFilled />
-        Location denied! Cannot join session.
+        Location permission denied! Cannot join session.
       </div>
       <div className="button-row">
         <PrimaryButton

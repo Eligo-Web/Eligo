@@ -82,7 +82,10 @@ export default function Overlay(props) {
             <Row className="pop-up-title large-title">
               {props.title || "Overlay Title"}
             </Row>
-            <Button variant="transparent">
+            <Button
+              variant="transparent"
+              aria-label={`Close Overlay ${props.title}`}
+            >
               <IoIosClose size={"2.5em"} onClick={() => close()} />
             </Button>
           </div>
@@ -147,6 +150,7 @@ export default function Overlay(props) {
             props.content || <Default />
           )}
           <ConfirmDelete
+            id={props.id || "no-id"}
             cancelClick={() => setMarkDelete(false)}
             deleteClick={() => setConfirmDelete(true)}
           />

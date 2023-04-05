@@ -22,7 +22,7 @@ import { Poll } from "../components/Popups";
 import { ClickerContext } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
 
-function SessionView(props) {
+function SessionView() {
   const location = useLocation();
   const navigate = useNavigate();
   const server = "http://localhost:3000";

@@ -16,7 +16,7 @@ export function PrimaryButton(props) {
     <Button
       variant={props.variant || "primary"}
       onClick={props.onClick}
-      id={props.id}
+      id={props.id + "-button"}
     >
       {props.label || "Label"}
     </Button>
@@ -29,7 +29,7 @@ export function PrimaryButton(props) {
 export function IconButton(props) {
   return (
     <Button
-      id={props.label + "-button"}
+      id={props.label + "-icon-button"}
       variant={props.variant || "icon"}
       className={props.className}
       onClick={props.onClick}

@@ -26,7 +26,7 @@ export function pause(interval = 200) {
   return new Promise((res) => setTimeout(res, interval));
 }
 
-function CourseView(props) {
+function CourseView() {
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
@@ -409,9 +409,8 @@ function CourseView(props) {
       <MenuBar
         title={location.state.courseName}
         description={location.state.classPasscode}
-        onClick={props.onClick}
-        clickable
         showDescription={location.state.permission !== "STUDENT"}
+        clickable
       />
       {location.state.permission === "STUDENT"
         ? studentContent()

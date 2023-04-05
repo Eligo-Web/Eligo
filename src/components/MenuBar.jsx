@@ -35,7 +35,7 @@ function MenuBar(props) {
 
   return (
     <Container fluid className="menu-bar">
-      <Button variant="transparent" onClick={openMenu}>
+      <Button variant="transparent" onClick={openMenu} aria-label="Open Menu">
         <IoIosMenu size="2.3em" alt="Button to open menu overlay" />
       </Button>
       <Row className="menu-bar-items">

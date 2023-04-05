@@ -15,7 +15,7 @@ import { pause } from "../pages/CourseView";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
 import "../styles/text.css";
-import { IconButton } from "./Buttons.jsx";
+import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { openPopup } from "./Overlay";
 
@@ -136,7 +136,11 @@ function Menu(props) {
       <div className="overlay menu">
         <Container className="p-0">
           <Container className="menu-overlay-header">
-            <Button variant="transparent" className="menu-overlay-back">
+            <Button
+              variant="transparent"
+              className="menu-overlay-back"
+              aria-label="Close Menu"
+            >
               <IoIosArrowBack size="1.8em" onClick={closeMenu} />
             </Button>
             <div
@@ -156,7 +160,9 @@ function Menu(props) {
               }}
               style={{ cursor: "pointer" }}
             >
-              <img className="eligo-logo" src={logo} />
+              <div className="eligo-logo d-flex">
+                <img src={logo} alt="Eligo Logo" width="100%" height="100%" />
+              </div>
               ligo
             </div>
           </Container>
@@ -164,8 +170,10 @@ function Menu(props) {
             <IconUserCircle size="1.8em" />
             {location.state.name}
           </Container>
+        </Container>
+        <Container className="d-flex flex-column p-3 gap-2 align-items-center">
           {location.state.permission === "STUDENT" ? (
-            <center style={{ padding: "0.5rem 1.5rem" }}>
+            <center style={{ padding: "1rem 0" }}>
               <InputField
                 class="clicker-id-input"
                 label="iClicker Remote ID"
@@ -194,24 +202,24 @@ function Menu(props) {
               </div>
             </center>
           ) : null}
-        </Container>
-        <Container className="d-flex flex-column p-3 gap-2 align-items-center">
           {baseButton}
-          {props.hideCreate || props.hideJoin ? null : (
+          {props.hideCreate || props.hideJoin || props.leaveAction ? null : (
             <IconButton
               label={getLabel}
-              variant={props.leaveAction ? "delete" : ""}
-              icon={
-                props.leaveAction ? null : <IoMdAddCircleOutline size="1.7em" />
-              }
-              onClick={() => {
-                closeMenu(getLabel);
-                if (props.leaveAction) {
-                  leaveClass();
-                }
-              }}
+              icon={<IoMdAddCircleOutline size="1.7em" />}
+              onClick={() => closeMenu(getLabel)}
             />
           )}
+          {props.leaveAction ? (
+            <PrimaryButton
+              label="Leave Class"
+              variant="outline justify-content-center"
+              onClick={() => {
+                closeMenu(getLabel);
+                leaveClass();
+              }}
+            />
+          ) : null}
           <IconButton
             label="Sign Out"
             variant="sign-out"

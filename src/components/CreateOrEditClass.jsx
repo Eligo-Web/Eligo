@@ -31,12 +31,13 @@ export function EditClass(props) {
       section={content.section} //  from axios get
       sisId={content.SISId} //    from axios get
       semester={content.semester} // from axios get
-      editMode
+      sectionId={content.sectionId}
       refresh={props.refresh}
       setRefresh={props.setRefresh}
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
+      editMode 
     />
   );
 }
@@ -352,12 +353,14 @@ function CreateOrEditClass(props) {
       <div className="button-row">
         {props.editMode ? (
           <PrimaryButton
+            id={"delete-" + props.sectionId}
             variant="delete"
             label="Delete"
             onClick={() => props.setMarkDelete(true)}
           />
         ) : null}
         <PrimaryButton
+          id={"discard-edit-" + props.sectionId}
           variant="secondary"
           label="Discard"
           onClick={() => clearContents(props.editMode)}

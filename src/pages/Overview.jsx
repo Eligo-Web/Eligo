@@ -15,7 +15,7 @@ import "../styles/cards.css";
 import "../styles/overlay.css";
 import { pause } from "./CourseView";
 
-function OverView(props) {
+function OverView() {
   const server = "http://localhost:3000";
   const location = useLocation();
   const navigate = useNavigate();
@@ -229,7 +229,6 @@ function OverView(props) {
         <MenuBar
           title="Your Courses"
           description={location.state.email}
-          onClick={props.onClick}
           showDescription
         />
         {location.state.permission === "STUDENT"
