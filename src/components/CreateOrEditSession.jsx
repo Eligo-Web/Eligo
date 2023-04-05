@@ -85,10 +85,12 @@ function CreateOrEditSession(props) {
     const sessionId = `session-${Date.now()}`;
     const server = "http://localhost:3000";
     const locationSwitch = document.getElementById("location-switch");
-    const button = document.getElementById("create-session");
+    const button = document.getElementById("create-session-button");
     let buttonText;
-    if (button) buttonText = button.childNodes[0];
-    buttonText.data = "Creating...";
+    if (button) {
+      buttonText = button.childNodes[0];
+      buttonText.data = "Creating...";
+    }
     await axios.put(
       `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`
     );
@@ -108,7 +110,6 @@ function CreateOrEditSession(props) {
           }
         );
         while (latitude === 0 && longitude === 0 && !thisError) {
-          console.log("waiting", thisError);
           await new Promise((r) => setTimeout(r, 100));
         }
       }
@@ -124,7 +125,9 @@ function CreateOrEditSession(props) {
       props.setRefresh(!props.refresh);
       clearContents();
     }
-    buttonText.data = "Create";
+    if (buttonText) {
+      buttonText.data = "Create";
+    }
   }
 
   async function handleEdit() {
