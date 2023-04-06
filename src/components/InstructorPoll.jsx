@@ -12,14 +12,16 @@ import { Mutex } from "async-mutex";
 import axios from "axios";
 import { defaults } from "chart.js/auto";
 import Papa from "papaparse";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
+import { EditPopupContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView.jsx";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import * as clicker from "./ClickerBase";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
+import { server } from "../ServerUrl";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -37,7 +39,6 @@ export default function InstructorPoll() {
   const [dataMutex, setDataMutex] = useState(new Mutex());
   const winWidth = window.outerWidth - window.innerWidth;
   const winHeight = window.outerHeight - window.innerHeight;
-  const server = "http://localhost:3000";
   let fullHeight = winHeight;
   let fullWidth = winWidth;
   document.title = "New Poll" + (minimized ? " (mini)" : "");
@@ -78,6 +79,10 @@ export default function InstructorPoll() {
       setPrevClickerId(clickerId);
     }
   }
+
+  useEffect(() => {
+    console.log(window.opener);
+  }, [window.opener])
 
   useEffect(() => {
     let email = "";
@@ -321,9 +326,9 @@ export default function InstructorPoll() {
 }
 
 export function ClosedPoll(props) {
-  const server = "http://localhost:3000";
   const [pollInfo, setPollInfo] = useState(null);
   const [chartRef, setChartRef] = useState(null);
+  const [editPopup, setEditPopup] = useContext(EditPopupContext);
   const thisPollData = {
     labels: ["A", "B", "C", "D", "E"],
     datasets: [
@@ -356,7 +361,7 @@ export function ClosedPoll(props) {
     await axios.delete(
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
     );
-    closePopup(props.pollId);
+    closePopup(props.pollId, setEditPopup);
     if (props.setRefresh) {
       props.setRefresh(!props.refresh);
     }
@@ -450,7 +455,8 @@ export function ClosedPoll(props) {
                 id={props.pollId}
                 time={Math.floor(
                   (pollInfo.endTimestamp - pollInfo.startTimestamp) / 1000
-                )}
+                  )
+                }
               />
               <div className="responses closed">
                 <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
@@ -562,8 +568,12 @@ function Stopwatch(props) {
         <IconClockHour3 stroke="0.14rem" style={{ marginRight: "0.6rem" }} />
       )}
       <div className="min-sec">
-        <span>{("0" + Math.floor((time / 60) % 60)).slice(-2)}:</span>
-        <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
+        {isNaN(props.time) || props.time < 0 ? "ERROR" :
+        <div>
+          <span>{("0" + Math.floor((time / 60) % 60)).slice(-2)}:</span>
+          <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
+        </div>
+        }
       </div>
       <div className="stopwatch-buttons">
         <IconPlayerStopFilled

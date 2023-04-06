@@ -4,7 +4,6 @@ import { toSectionId } from "./courses.js";
 
 const Instructor = express.Router();
 export const instructorDao = new InstructorDao();
-const server = "http://localhost:3000";
 
 Instructor.get("/", async (req, res, next) => {
   const instructors = await instructorDao.readAll(req.query);

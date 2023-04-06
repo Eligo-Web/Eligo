@@ -19,17 +19,18 @@ import MenuBar from "../components/MenuBar";
 import Overlay, { closePopup, openPopup } from "../components/Overlay";
 import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
-import { ClickerContext } from "../containers/InAppContainer";
+import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
+import { server } from "../ServerUrl";
 
 function SessionView() {
   const location = useLocation();
   const navigate = useNavigate();
-  const server = "http://localhost:3000";
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(null);
   const [popup, setPopup] = useState(null);
   const [base, setBase] = useContext(ClickerContext);
+  const [editPopup, setEditPopup] = useContext(EditPopupContext);
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
@@ -46,8 +47,8 @@ function SessionView() {
     };
   }
 
-  window.onbeforeunload = function () {
-    return popup;
+  window.onbeforeunload = function() {
+    if (popup) popup.close();
   };
 
   useEffect(() => {
@@ -84,7 +85,6 @@ function SessionView() {
   }, []);
 
   async function checkActiveSession() {
-    const server = "http://localhost:3000";
     await axios
       .get(
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
@@ -97,7 +97,6 @@ function SessionView() {
   }
 
   async function closeSession() {
-    const server = "http://localhost:3000";
     await axios.put(
       `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`
     );
@@ -230,21 +229,28 @@ function SessionView() {
 
   function instructorContent() {
     const [polls, setPolls] = useState(<LoadingSessionView />);
-    const [overlays, setOverlays] = useState(null);
     const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
+    const [editPopup, setEditPopup] = useContext(EditPopupContext);
 
     useEffect(() => {
       async function loadContent() {
-        const [pollContainer, pollOverlays] = await populatePollCards();
+        const pollContainer = await populatePollCards();
         await pause(250);
         document.querySelector(".poll-container").style.opacity = 0;
         await pause(100);
         setPolls(pollContainer);
         document.querySelector(".poll-container").style.opacity = 1;
-        setOverlays(pollOverlays);
       }
       loadContent();
     }, [refresh]);
+
+    useEffect(() => {
+      if (editPopup) {
+        pause(15).then(() => {
+          openPopup(editPopup.key);
+        })
+      }
+    }, [editPopup]);
 
     async function downloadSessionData() {
       await axios
@@ -308,6 +314,7 @@ function SessionView() {
           label={location.state.courseName}
           onClick={() => navigateBack()}
         />
+        {editPopup}
         {location.state.sessionActive ? (
           <FloatingButton base={base} onClick={() => loadBase()} />
         ) : null}
@@ -319,7 +326,6 @@ function SessionView() {
             clickable
             showDescription
           />
-          {overlays}
           {polls ? null : (
             <EmptySessionView open={location.state.sessionActive} />
           )}
@@ -364,7 +370,6 @@ function SessionView() {
   async function populatePollCards() {
     const activeCards = [];
     const inactiveCards = [];
-    const overlays = [];
     let newPolls;
 
     await axios
@@ -380,12 +385,23 @@ function SessionView() {
 
     for (let [pollId, poll] of newPolls) {
       if (poll.active) {
-        activeCards.push(<PollCard title={poll.name} key={pollId} />);
-      } else {
-        inactiveCards.push(
-          <PollCard title={poll.name} key={pollId} id={pollId} inactive />
+        const activePopup = (
+          <Overlay
+            key={pollId}
+            id={pollId}
+            title="Poll Details"
+            pollId={pollId}
+            childContent={location.state}
+            refresh={refresh}
+            setRefresh={setRefresh}
+            activePoll
+          />
         );
-        overlays.push(
+        activeCards.push(
+          <PollCard title={poll.name} key={pollId} id={pollId} onClick={() => setEditPopup(activePopup)} />
+        );
+      } else {
+        const newPopup = (
           <Overlay
             key={pollId}
             id={pollId}
@@ -395,6 +411,15 @@ function SessionView() {
             refresh={refresh}
             setRefresh={setRefresh}
             closedPoll
+          />
+        );
+        inactiveCards.push(
+          <PollCard
+            title={poll.name}
+            key={pollId}
+            id={pollId}
+            onClick={() => setEditPopup(newPopup)}
+            inactive
           />
         );
       }
@@ -417,12 +442,13 @@ function SessionView() {
         </Container>
       );
     }
-    if (!cardContainer.length) return [null, null];
-    return [cardContainer, overlays];
+    if (!cardContainer.length) {
+      return null;
+    }
+    return cardContainer;
   }
 
   async function createPoll() {
-    const server = "http://localhost:3000";
     const newPollId = `poll-${Date.now()}`;
     if (popup) {
       popup.focus();

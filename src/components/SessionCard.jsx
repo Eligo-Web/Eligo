@@ -4,7 +4,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import "../styles/buttons.css";
 import "../styles/text.css";
-import { openPopup } from "./Overlay";
 
 function SessionCard(props) {
   let activity = "card session-card clickable";
@@ -16,7 +15,7 @@ function SessionCard(props) {
 
   const handleEdit = (event) => {
     event.stopPropagation();
-    openPopup(props.id);
+    props.onEdit();
   };
 
   return (

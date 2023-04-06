@@ -18,7 +18,7 @@ function PollCard(props) {
   return (
     <div
       className={"card poll-card clickable" + inactive}
-      onClick={() => openPopup(props.id)}
+      onClick={props.onClick}
       id={props.id}
     >
       <p className="card-title poll-card-title">{props.title}</p>

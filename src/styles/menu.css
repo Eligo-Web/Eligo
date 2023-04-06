@@ -35,3 +35,25 @@
   max-width: max-content;
   padding-left: 1.5rem;
 }
+
+
+.menu-bar-title {
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-right: 2rem;
+  min-width: 0 !important;
+}
+
+.menu-bar-subtitle {
+  display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+
+@media screen and (max-width: 45rem) {
+  .menu-bar-subtitle {
+    display: none;
+  }
+}

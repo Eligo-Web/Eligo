@@ -18,11 +18,11 @@ import "../styles/text.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { openPopup } from "./Overlay";
+import { server } from "../ServerUrl";
 
 function Menu(props) {
   const location = useLocation();
   const navigate = useNavigate();
-  const server = "http://localhost:3000";
   const [clickerId, setClickerId] = useState(location.state.clickerId || "");
   const [showError, setShowError] = useState(false);
   const [base, setBase] = useContext(ClickerContext);
@@ -69,7 +69,7 @@ function Menu(props) {
     const menu = document.getElementById("side-menu");
     menu.querySelector(".overlay-bg").style.pointerEvents = "none";
     menu.querySelector(".overlay-bg").style.opacity = 0;
-    menu.querySelector(".menu").style.left = "-18rem";
+    menu.querySelector(".menu").style.transform = "translate(-18rem,0)";
     document.body.style.overflowY = "overlay";
     if (overlay) openPopup(overlay);
   }

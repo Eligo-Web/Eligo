@@ -19,8 +19,9 @@ import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
 import Overlay, { openPopup } from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
-import { ClickerContext } from "../containers/InAppContainer";
+import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
+import { server } from "../ServerUrl";
 
 export function pause(interval = 200) {
   return new Promise((res) => setTimeout(res, interval));
@@ -30,10 +31,10 @@ function CourseView() {
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
-  const server = "http://localhost:3000";
   const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
   const [refresh, setRefresh] = useState(false);
   const [base, setBase] = useContext(ClickerContext);
+  const [editPopup, setEditPopup] = useContext(EditPopupContext);
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
@@ -53,6 +54,7 @@ function CourseView() {
   }
 
   useEffect(() => {
+    setEditPopup(null);
     if (
       navigator.userAgent.indexOf("Safari") != -1 &&
       navigator.userAgent.indexOf("Chrome") == -1
@@ -81,6 +83,12 @@ function CourseView() {
     }
     reconnectBase();
   }, []);
+
+  useEffect(() => {
+    if (editPopup) {
+      openPopup(editPopup.key);
+    }
+  }, [editPopup]);
 
   window.onresize = function () {
     if (window.innerWidth < 650) {
@@ -164,7 +172,6 @@ function CourseView() {
         courseSessions = toMap(courseSessions).sort();
       });
     const sessionList = [];
-    const overlays = [];
 
     for (let [weekNum, week] of courseSessions) {
       week = toMap(week).sort();
@@ -177,16 +184,7 @@ function CourseView() {
 
       let weekSessions = [];
       for (let [id, session] of week) {
-        weekSessions.push(
-          <SessionCard
-            key={id}
-            id={id}
-            title={session.name}
-            active={session.active}
-            onClick={() => handleViewSession(id, session)}
-          />
-        );
-        overlays.push(
+        const popup = (
           <Overlay
             key={id}
             id={id}
@@ -199,6 +197,16 @@ function CourseView() {
             editSession
           />
         );
+        weekSessions.push(
+          <SessionCard
+            key={id}
+            id={id}
+            title={session.name}
+            active={session.active}
+            onEdit={() => setEditPopup(popup)}
+            onClick={() => handleViewSession(id, session)}
+          />
+        );
       }
       sessionList.push(
         <Container className="card-container" key={weekNum}>
@@ -206,9 +214,13 @@ function CourseView() {
           {weekSessions.reverse()}
         </Container>
       );
+      if (sessionList.length > 2 && !fullHistory) break;
     }
-    if (!sessionList.length) return [null, null];
-    return [sessionList.reverse(), overlays];
+
+    if (!sessionList.length) {
+      return null;
+    }
+    return sessionList.reverse();
   }
 
   const backButton = (
@@ -342,18 +354,18 @@ function CourseView() {
   function instructorContent() {
     const [cards, setCards] = useState(<LoadingCourseView />);
     const [editOverlays, setEditOverlays] = useState(null);
+    const [fullHistory, setFullHistory] = useState(false);
 
     useEffect(() => {
       const container = document.querySelector(".semester-container");
       async function loadContent() {
-        const [sessionList, overlays] = await populateSessionCards(
+        const sessionList = await populateSessionCards(
           "INSTRUCTOR"
         );
         await pause(250);
         container.style.opacity = 0;
         await pause(100);
         setCards(sessionList);
-        setEditOverlays(overlays);
         container.style.opacity = 1;
       }
       loadContent();
@@ -363,17 +375,17 @@ function CourseView() {
       <div className="d-flex flex-column ">
         <title>{location.state.courseName} | Eligo</title>
         {backButton}
+        <Overlay
+          title="Create Session"
+          id="Create Session"
+          sectionId={location.state.sectionId}
+          refresh={refresh}
+          setRefresh={setRefresh}
+          createSession
+        />
+        {editPopup}
         <FloatingButton base={base} onClick={() => loadBase()} />
         <div className="card-wrapper">
-          <Overlay
-            title="Create Session"
-            id="Create Session"
-            sectionId={location.state.sectionId}
-            refresh={refresh}
-            setRefresh={setRefresh}
-            createSession
-          />
-          {editOverlays}
           {cards ? null : <EmptyCourseView />}
           <div className="semester-container">{cards}</div>
         </div>

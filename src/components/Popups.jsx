@@ -6,6 +6,7 @@ import "../styles/newpoll.css";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay";
+import { server } from "../ServerUrl";
 
 export function Default() {
   return (
@@ -165,7 +166,6 @@ export function JoinSession(props) {
   }
 
   async function joinSession() {
-    const server = "http://localhost:3000";
     console.log("here");
     if (!checkPasscode()) {
       return;
@@ -306,7 +306,6 @@ export function JoinClass(props) {
       setDupeError(false);
       return;
     }
-    const server = "http://localhost:3000";
     await axios
       .get(`${server}/course/student/${passcode.toUpperCase()}`)
       .then(async (res) => {
@@ -385,7 +384,6 @@ export function JoinClass(props) {
 
 export function Poll(props) {
   const [selected, setSelected] = useState("");
-  const server = "http://localhost:3000";
   const [voteButtons, setVoteButtons] = useState(null);
 
   useEffect(() => {

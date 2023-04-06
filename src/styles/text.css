@@ -4,7 +4,7 @@ body {
   color: rgb(0, 6, 13);
   --body-bg: radial-gradient(105% 220% at 6% 50%, #b8e3fb 0%, #80a7e1 100%);
   background: var(--body-bg);
-  min-height: 8rem;
+  min-height: 50%;
 }
 
 @-moz-document url-prefix() {
@@ -23,7 +23,7 @@ svg {
   flex-direction: column;
   height: calc(100vh - 5rem);
   position: relative;
-  overflow-y: scroll;
+  overflow-y: overlay;
   padding-bottom: 5rem;
   top: 5rem;
 }
@@ -72,8 +72,7 @@ svg {
   display: grid;
   padding-bottom: 6rem;
   align-content: center;
-  overflow-y: scroll;
-  overflow-x: clip;
+  overflow: clip;
   color: #052041;
   gap: 1.5rem;
   top: 0;
@@ -200,7 +199,7 @@ svg {
   align-items: center;
   text-align: right;
   font-weight: 600;
-  opacity: 0.75;
+  opacity: 75%;
   gap: 0.5rem;
 }
 
@@ -236,6 +235,8 @@ svg {
 
 /* width */
 ::-webkit-scrollbar {
+  position: fixed;
+  height: 100%;
   width: 1rem;
 }
 

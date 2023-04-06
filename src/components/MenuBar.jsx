@@ -18,7 +18,7 @@ function MenuBar(props) {
     const menu = document.getElementById("side-menu");
     menu.querySelector(".overlay-bg").style.pointerEvents = "all";
     menu.querySelector(".overlay-bg").style.opacity = 1;
-    menu.querySelector(".menu").style.left = 0;
+    menu.querySelector(".menu").style.transform = "translate(18rem,0)";
   }
 
   function copyDescription() {
@@ -39,15 +39,15 @@ function MenuBar(props) {
         <IoIosMenu size="2.3em" alt="Button to open menu overlay" />
       </Button>
       <Row className="menu-bar-items">
-        <Col className="large-title">{props.title || "-Untitled-"}</Col>
+        <Col className="large-title menu-bar-title">{props.title || "-Untitled-"}</Col>
         {props.showDescription ? (
           <Col
-            className="large-title d-flex flex-row align-items-center"
+            className="large-title menu-bar-subtitle"
             onClick={() => copyDescription()}
           >
             <div
               className="copy-success"
-              style={{ opacity: copied ? 1 : 0, width: copied ? "10rem" : 0 }}
+              style={{ opacity: copied ? "100%" : 0, width: copied ? "10rem" : 0 }}
             >
               Copied!
               <IconCheck

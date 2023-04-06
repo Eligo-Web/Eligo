@@ -9,21 +9,21 @@ import Card from "../components/Card";
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
-import Overlay from "../components/Overlay";
-import { ClickerContext } from "../containers/InAppContainer";
+import Overlay, { openPopup } from "../components/Overlay";
+import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
 import "../styles/overlay.css";
 import { pause } from "./CourseView";
+import { server } from "../ServerUrl";
 
 function OverView() {
-  const server = "http://localhost:3000";
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(false);
   const [cards, setCards] = useState(<LoadingOverview />);
-  const [overlays, setOverlays] = useState(null);
   const [base, setBase] = useContext(ClickerContext);
+  const [editPopup, setEditPopup] = useContext(EditPopupContext);
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
@@ -58,6 +58,7 @@ function OverView() {
   }, []);
 
   useEffect(() => {
+    setEditPopup(null);
     if (
       navigator.userAgent.indexOf("Safari") != -1 &&
       navigator.userAgent.indexOf("Chrome") == -1
@@ -94,7 +95,6 @@ function OverView() {
       });
 
     const semesterList = [];
-    const editOverlays = [];
 
     for (let semester in history) {
       if (history[semester].length === 0) {
@@ -107,6 +107,17 @@ function OverView() {
           .get(`${server}/course/${history[semester][i]}`)
           .then((res) => {
             const course = res.data.data;
+            const popup = (
+              <Overlay
+                key={course.sectionId}
+                id={course.sectionId}
+                title="Edit Class"
+                childContent={course}
+                refresh={refresh}
+                setRefresh={setRefresh}
+                editClass
+              />
+            );
             courseList.push(
               <Card
                 key={course.sectionId}
@@ -118,6 +129,7 @@ function OverView() {
                     ? `${course.SISId} (${course.section})`
                     : `Section ${course.section}`
                 }
+                onEdit={() => setEditPopup(popup)}
                 onClick={() => {
                   handleViewClass(
                     course.name,
@@ -129,17 +141,6 @@ function OverView() {
                 editable={role === "INSTRUCTOR"}
               />
             );
-            editOverlays.push(
-              <Overlay
-                key={course.sectionId}
-                id={course.sectionId}
-                title="Edit Class"
-                childContent={course}
-                refresh={refresh}
-                setRefresh={setRefresh}
-                editClass
-              />
-            );
           });
       }
       semesterList.push(
@@ -149,15 +150,17 @@ function OverView() {
         </Container>
       );
     }
-    if (!semesterList.length) return [null, null];
-    return [semesterList, editOverlays];
+    if (!semesterList.length) {
+      return null;
+    }
+    return semesterList;
   }
 
   function studentContent() {
     useEffect(() => {
       const container = document.querySelector(".semester-container");
       async function loadContent() {
-        const semesterList = (await populateCourseCards("STUDENT"))[0];
+        const semesterList = await populateCourseCards("STUDENT");
         await pause(250);
         container.style.opacity = 0;
         await pause(100);
@@ -187,21 +190,24 @@ function OverView() {
     useEffect(() => {
       const container = document.querySelector(".semester-container");
       async function loadContent() {
-        const [semesterList, editOverlays] = await populateCourseCards(
-          "INSTRUCTOR"
-        );
+        const semesterList = await populateCourseCards("INSTRUCTOR");
         await pause(250);
         container.style.opacity = 0;
         await pause(100);
         setCards(semesterList);
         container.style.opacity = 1;
-        setOverlays(editOverlays);
       }
       loadContent();
     }, [refresh]);
 
+    useEffect(() => {
+      if (editPopup) {
+        openPopup(editPopup.key);
+      }
+    }, [editPopup]);
+
     return (
-      <div style={{ marginBottom: "5rem" }}>
+      <div>
         <Overlay
           title="New Class"
           id="Create Class"
@@ -209,7 +215,7 @@ function OverView() {
           setRefresh={setRefresh}
           createClass
         />
-        {overlays}
+        {editPopup}
         {cards ? null : <EmptyOverview />}
         <div className="semester-container">{cards}</div>
       </div>

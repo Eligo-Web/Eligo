@@ -181,7 +181,7 @@
 .form-control:disabled,
 .form-check-input:disabled {
   color: #182d44 !important;
-  opacity: 0.8;
+  opacity: 80%;
 }
 
 .form-control:focus,

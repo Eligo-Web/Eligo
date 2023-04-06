@@ -211,7 +211,7 @@
 }
 
 .btn-sign-in:hover .sign-in-icon {
-  opacity: 0.9;
+  opacity: 90%;
 }
 
 .btn-blank-state,
@@ -238,13 +238,18 @@
 }
 
 .back-navigate {
+  top: 5rem;
+  z-index: 1;
+  font-weight: 500;
   padding: 1rem;
   padding-left: 1.5rem;
-  color: #000d1db3 !important;
-  font-weight: 500;
   position: fixed;
-  z-index: 1;
-  top: 5rem;
+  display: inline-flex;
+  color: #000d1db3 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 90%;
 }
 
 .courses-bottom-row {
@@ -338,7 +343,7 @@
   flex-direction: row !important;
   transition: 0.15s ease-in-out;
   align-items: center;
-  gap: 1rem !important;
+  gap: 0.5rem !important;
   max-width: fit-content;
   margin: 0 !important;
 }
@@ -364,18 +369,18 @@
 }
 
 .form-check-input:disabled ~ .form-check-label {
-  opacity: 1;
+  opacity: 100%;
 }
 
 .location-switch-info::before {
   content: "When enabled, students' location will be used to ensure attendance.";
   position: absolute;
   background-color: #e6f2fc;
-  font-size: 0.8rem;
-  max-width: 16rem;
+  font-size: 0.9rem;
+  max-width: 17rem;
   color: #00060d;
   border-radius: 1rem 1rem 1rem 0.2rem;
-  transform: translate(1.1rem, -3.1rem);
+  transform: translate(1.1rem, -3.3rem);
   transition: 0.1s ease-in-out;
   box-shadow: 0 0.5rem 1rem #05204128;
   padding: 0.5rem 1rem;
@@ -385,7 +390,7 @@
 
 .location-switch-info:hover::before {
   pointer-events: all;
-  opacity: 1;
+  opacity: 100%;
 }
 
 .session-edit-button {
@@ -442,7 +447,7 @@
   }
 }
 
-@media screen and (max-height: 38rem) {
+@media screen and (max-height: 40rem) {
   .btn-sign-in,
   .btn-sign-in:hover,
   .btn-sign-in:focus {
@@ -460,10 +465,26 @@
   .sign-in-icon {
     display: none;
   }
+  .img-container {
+    gap: 0 !important;
+  }
 }
 
-@media screen and (max-width: 25rem) {
-  .sign-in-container {
-    font-size: 4rem;
+@media screen and (max-height: 32rem) {
+  .empty-state-img {
+    height: 0;
+  }  
+}
+
+@media screen and (max-width: 24rem) {
+  .btn-blank-state {
+    font-size: 1.8rem !important;
+  }
+  .btn-sign-in {
+    min-width: 15rem !important;
+  }
+  .sign-in-title {
+    font-size: 5rem !important;
+    height: 9rem !important;
   }
 }

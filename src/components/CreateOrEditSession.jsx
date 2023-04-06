@@ -4,11 +4,13 @@ import {
   IconLock,
 } from "@tabler/icons-react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
+import { EditPopupContext } from "../containers/InAppContainer";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay";
+import { server } from "../ServerUrl";
 
 export function CreateSession(props) {
   return (
@@ -34,6 +36,7 @@ export function EditSession(props) {
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
+      overrideInit={props.overrideInit}
       editMode
     />
   );
@@ -43,15 +46,18 @@ function CreateOrEditSession(props) {
   const [sessionName, setSessionName] = useState(
     props.editMode ? props.session.name : ""
   );
-  const editId = `edit-${props.id}-popup`;
-  const timeStamp = props.id.replace("session-", "");
   const [locError, setLocError] = useState(false);
+  const [popup, setPopup] = useContext(EditPopupContext);
+  const timeStamp = props.id.replace("session-", "");
+  const editId = `edit-${props.id}-popup`;
 
   useEffect(() => {
     const overlay = document.getElementById(
       props.editMode ? editId : props.id + "-popup"
     );
-    if (overlay.offsetParent.style.maxHeight) {
+    if (!overlay) return;
+    const isOpen = !!overlay.offsetParent.style.maxHeight;
+    if (isOpen && !props.overrideInit) {
       clearContents();
     }
   }, [props.control]);
@@ -83,7 +89,6 @@ function CreateOrEditSession(props) {
 
   async function createSession() {
     const sessionId = `session-${Date.now()}`;
-    const server = "http://localhost:3000";
     const locationSwitch = document.getElementById("location-switch");
     const button = document.getElementById("create-session-button");
     let buttonText;
@@ -131,7 +136,6 @@ function CreateOrEditSession(props) {
   }
 
   async function handleEdit() {
-    const server = "http://localhost:3000";
     await axios.patch(
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
       {
@@ -143,7 +147,6 @@ function CreateOrEditSession(props) {
   }
 
   async function handleDelete() {
-    const server = "http://localhost:3000";
     await axios.delete(
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`
     );
@@ -162,7 +165,11 @@ function CreateOrEditSession(props) {
     locationSwitch.checked = false;
     setLocError(false);
     setSessionName(props.editMode ? props.session.name : "");
-    closePopup(props.editMode ? props.id : "Create Session");
+    if (props.editMode) {
+      closePopup(props.id, setPopup);
+    } else {
+      closePopup("Create Session");
+    }
   }
 
   return (
@@ -200,6 +207,7 @@ function CreateOrEditSession(props) {
         <Form.Switch
           type="switch"
           id="location-switch"
+          label="Require Attendance"
           className="location-switch input-field"
           checked={
             props.editMode
@@ -208,7 +216,6 @@ function CreateOrEditSession(props) {
           }
           disabled={props.editMode}
         />
-        Require Attendance
         <div className="location-switch-info d-grid">
           <IconInfoCircle size="1.1em" stroke="0.14rem" />
         </div>

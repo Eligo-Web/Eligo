@@ -1,11 +1,13 @@
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { EditPopupContext } from "../containers/InAppContainer";
 import "../styles/newpoll.css";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField, { SelectField } from "./InputField";
 import { closePopup } from "./Overlay";
+import { server } from "../ServerUrl";
 
 export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
@@ -37,19 +39,20 @@ export function EditClass(props) {
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
-      editMode 
+      overrideInit={props.overrideInit}
+      editMode
     />
   );
 }
 
 function CreateOrEditClass(props) {
-  const server = "http://localhost:3000";
   const [name, setName] = useState(props.name || "");
   const [section, setSection] = useState(props.section || "");
   const [sisId, setSISId] = useState(props.sisId || "");
   const [semester, setSemester] = useState(props.semester || "");
   const [showError, setShowError] = useState(false);
   const [refresh, setRefresh] = [props.refresh, props.setRefresh];
+  const [popup, setPopup] = useContext(EditPopupContext);
   const validCharset = /^[ -~]+$/;
   const location = useLocation();
   const popupName = props.editMode
@@ -64,7 +67,9 @@ function CreateOrEditClass(props) {
 
   useEffect(() => {
     const overlay = document.getElementById(popupName);
-    if (overlay.offsetParent.style.maxHeight) {
+    if (!overlay) return;
+    const isOpen = !!overlay.offsetParent.style.maxHeight;
+    if (isOpen && !props.overrideInit) {
       clearContents(props.editMode);
     }
   }, [props.control]);
@@ -87,7 +92,7 @@ function CreateOrEditClass(props) {
   };
 
   function handleDelete() {
-    closePopup(popupName);
+    closePopup(popupName, setPopup);
     deleteCourse();
   }
 
@@ -119,7 +124,7 @@ function CreateOrEditClass(props) {
     overlay.querySelector(".empty-section").style.display = "none";
     overlay.querySelector(".invalid-section").style.display = "none";
     overlay.querySelector(".invalid-sis-id").style.display = "none";
-    closePopup(popupName);
+    closePopup(popupName, setPopup);
   }
 
   function paramsValid() {
@@ -269,7 +274,7 @@ function CreateOrEditClass(props) {
         }
       );
     }
-    closePopup(popupName);
+    closePopup(popupName, setPopup);
     setRefresh(!refresh);
   }
 
@@ -289,7 +294,7 @@ function CreateOrEditClass(props) {
         `${server}/student/${student}/${props.semester}/${oldSectionId}`
       );
     }
-    closePopup(popupName);
+    closePopup(popupName, setPopup);
     setRefresh(!refresh);
   }
 

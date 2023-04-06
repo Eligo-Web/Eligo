@@ -54,7 +54,7 @@ export function EmptyOverview(props) {
   return (
     <div className="d-flex" style={{ paddingTop: "4rem" }}>
       <div className="img-container">
-        <img className="empty-state-img" src={emptyOverviewImg} />
+        <img className="empty-state-img" src={emptyOverviewImg} alt="No Courses" />
         <center className="blank-state-msg p-2">
           {props.student
             ? "You jave not joined a class yet. Join one and it will appear here."
@@ -87,7 +87,7 @@ export function EmptyCourseView() {
   }, []);
   return (
     <div className="img-container">
-      <img className="empty-state-img" src={emptyCourseImg} />
+      <img className="empty-state-img" src={emptyCourseImg} alt="No sessions" />
       <center className="blank-state-msg p-2">
         This class has no sessions. Create a session and it will appear here.
       </center>
@@ -117,7 +117,7 @@ export function EmptySessionView(props) {
   }, []);
   return (
     <div className="img-container">
-      <img className="empty-state-img" src={emptySessionImg} />
+      <img className="empty-state-img" src={emptySessionImg} alt="No polls" />
       <center className="blank-state-msg p-2">
         {props.open
           ? "You have created no polls yet. Create some and they will appear here!"
