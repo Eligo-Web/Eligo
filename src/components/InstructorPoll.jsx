@@ -14,6 +14,7 @@ import { defaults } from "chart.js/auto";
 import Papa from "papaparse";
 import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
+import { server } from "../ServerUrl";
 import { EditPopupContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView.jsx";
 import "../styles/newpoll.css";
@@ -21,7 +22,6 @@ import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import * as clicker from "./ClickerBase";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
-import { server } from "../ServerUrl";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);
@@ -79,10 +79,6 @@ export default function InstructorPoll() {
       setPrevClickerId(clickerId);
     }
   }
-
-  useEffect(() => {
-    console.log(window.opener);
-  }, [window.opener])
 
   useEffect(() => {
     let email = "";
@@ -224,6 +220,11 @@ export default function InstructorPoll() {
 
   window.onresize = function () {
     // window.resizeTo(fullWidth, fullHeight);
+  };
+
+  window.onpagehide = function () {
+    window.opener.savePoll();
+    window.close();
   };
 
   useEffect(() => {
@@ -455,8 +456,7 @@ export function ClosedPoll(props) {
                 id={props.pollId}
                 time={Math.floor(
                   (pollInfo.endTimestamp - pollInfo.startTimestamp) / 1000
-                  )
-                }
+                )}
               />
               <div className="responses closed">
                 <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
@@ -509,7 +509,7 @@ export function ClosedPoll(props) {
 }
 
 function Stopwatch(props) {
-  const [time, setTime] = useState(props.time || 0);
+  const [time, setTime] = useState(props.autostart ? 0 : props.time);
   const [running, setRunning] = useState(props.autostart);
 
   useEffect(() => {
@@ -563,17 +563,19 @@ function Stopwatch(props) {
   }, [running]);
 
   return (
-    <div className="stopwatch">
+    <div className={`stopwatch${props.autostart ? "" : " stopped"}`}>
       {props.autostart ? null : (
         <IconClockHour3 stroke="0.14rem" style={{ marginRight: "0.6rem" }} />
       )}
       <div className="min-sec">
-        {isNaN(props.time) || props.time < 0 ? "ERROR" :
-        <div>
-          <span>{("0" + Math.floor((time / 60) % 60)).slice(-2)}:</span>
-          <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
-        </div>
-        }
+        {isNaN(time) || time < 0 ? (
+          "ERROR"
+        ) : (
+          <div>
+            <span>{("0" + Math.floor((time / 60) % 60)).slice(-2)}:</span>
+            <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
+          </div>
+        )}
       </div>
       <div className="stopwatch-buttons">
         <IconPlayerStopFilled

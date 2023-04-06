@@ -256,7 +256,7 @@ Course.put(
     const name = req.body.name || "";
     const time = req.body.time || 0;
     try {
-      let session = await courseDao.closeActivePoll(
+      let poll = await courseDao.closeActivePoll(
         sectionId,
         weekNum,
         sessionId,
@@ -267,7 +267,7 @@ Course.put(
       res.json({
         status: 200,
         message: `Poll closed`,
-        data: session,
+        data: poll,
       });
     } catch (err) {
       next(err);

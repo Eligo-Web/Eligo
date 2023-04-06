@@ -54,7 +54,11 @@ export function EmptyOverview(props) {
   return (
     <div className="d-flex" style={{ paddingTop: "4rem" }}>
       <div className="img-container">
-        <img className="empty-state-img" src={emptyOverviewImg} alt="No Courses" />
+        <img
+          className="empty-state-img"
+          src={emptyOverviewImg}
+          alt="No Courses"
+        />
         <center className="blank-state-msg p-2">
           {props.student
             ? "You jave not joined a class yet. Join one and it will appear here."

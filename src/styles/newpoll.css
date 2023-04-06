@@ -82,6 +82,25 @@
   align-items: center;
 }
 
+/* const btn = overlay.querySelector(".stop-button");
+    const watch = overlay.querySelector(".stopwatch");
+    const timeText = overlay.querySelector(".min-sec");
+    if (btn && watch && timeText) {
+      btn.style.opacity = 0;
+      btn.style.width = 0;
+      btn.style.marginRight = 0;
+      watch.style.gap = 0;
+      watch.style.backgroundColor = "#c2d3f3";
+      watch.style.color = "#1b2543";
+      timeText.style.width = "fit-content";
+    } */
+
+.stopped {
+  gap: 0;
+  background-color: #c2d3f3;
+  color: #1b2543;
+}
+
 .delete-poll {
   padding: 0 1rem;
   cursor: pointer;

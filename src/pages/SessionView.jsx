@@ -1,4 +1,4 @@
-import { IconDownload, IconLock } from "@tabler/icons-react";
+import { IconArrowUpRight, IconDownload, IconLock } from "@tabler/icons-react";
 import axios from "axios";
 import Papa from "papaparse";
 import { useContext, useEffect, useState } from "react";
@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import { server } from "../ServerUrl";
 import waitingSessionImg from "../assets/empty-session-state.png";
 import AccessDenied from "../components/AccessDenied";
 import {
@@ -19,18 +20,22 @@ import MenuBar from "../components/MenuBar";
 import Overlay, { closePopup, openPopup } from "../components/Overlay";
 import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
-import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
+import {
+  ClickerContext,
+  EditPopupContext,
+  NewPollContext,
+} from "../containers/InAppContainer";
 import { pause } from "./CourseView";
-import { server } from "../ServerUrl";
 
 function SessionView() {
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(null);
-  const [popup, setPopup] = useState(null);
   const [base, setBase] = useContext(ClickerContext);
   const [editPopup, setEditPopup] = useContext(EditPopupContext);
+  const [pollWinInfo, setPollWinInfo] = useContext(NewPollContext);
+  const [popup, setPopup] = useState(pollWinInfo);
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
@@ -47,7 +52,8 @@ function SessionView() {
     };
   }
 
-  window.onbeforeunload = function() {
+  window.onpagehide = function () {
+    setPollWinInfo(null);
     if (popup) popup.close();
   };
 
@@ -107,12 +113,14 @@ function SessionView() {
   }
 
   function navigateBack() {
+    setPollWinInfo(popup);
     navigate("/class", {
       state: location.state,
     });
   }
 
   function navigateOverview() {
+    setPollWinInfo(popup);
     navigate("/overview", {
       state: {
         name: location.state.name,
@@ -229,8 +237,7 @@ function SessionView() {
 
   function instructorContent() {
     const [polls, setPolls] = useState(<LoadingSessionView />);
-    const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
-    const [editPopup, setEditPopup] = useContext(EditPopupContext);
+    const [hideLabels, setHideLabels] = useState(window.innerWidth < 900);
 
     useEffect(() => {
       async function loadContent() {
@@ -246,9 +253,9 @@ function SessionView() {
 
     useEffect(() => {
       if (editPopup) {
-        pause(15).then(() => {
+        pause(5).then(() => {
           openPopup(editPopup.key);
-        })
+        });
       }
     }, [editPopup]);
 
@@ -300,11 +307,7 @@ function SessionView() {
     }
 
     window.onresize = function () {
-      if (window.innerWidth < 900) {
-        setLabels(false);
-      } else if (!buttonLabels) {
-        setLabels(true);
-      }
+      setHideLabels(window.innerWidth < 900);
     };
 
     return (
@@ -334,19 +337,18 @@ function SessionView() {
             <div className="d-flex flex-row gap-3">
               {location.state.sessionActive ? (
                 <IconButton
-                  label={buttonLabels ? "Close Session" : null}
+                  label="Close Session"
+                  hideLabel={hideLabels}
                   icon={<IconLock size="1.6em" />}
                   variant="outline"
                   style={{ maxWidth: "max-content" }}
                   onClick={() => closeSession()}
+                  disabled={!!popup}
                 />
               ) : null}
               <IconButton
-                label={
-                  buttonLabels || !location.state.sessionActive
-                    ? "Download Session Data"
-                    : null
-                }
+                label="Download Session Data"
+                hideLabel={hideLabels}
                 icon={<IconDownload size="1.6em" />}
                 variant="outline"
                 style={{ maxWidth: "max-content" }}
@@ -355,8 +357,14 @@ function SessionView() {
             </div>
             {location.state.sessionActive ? (
               <IconButton
-                label="Create Poll"
-                icon={<IoMdAddCircleOutline size="1.7em" />}
+                label={popup ? "Return to Poll" : "Create Poll"}
+                icon={
+                  popup ? (
+                    <IconArrowUpRight size="1.7em" />
+                  ) : (
+                    <IoMdAddCircleOutline size="1.7em" />
+                  )
+                }
                 style={{ maxWidth: "max-content" }}
                 onClick={() => createPoll()}
               />
@@ -384,35 +392,37 @@ function SessionView() {
       });
 
     for (let [pollId, poll] of newPolls) {
+      if (poll.active && poll.endTimestamp < 0 && !popup) {
+        await axios
+          .put(
+            `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`
+          )
+          .then((res) => (poll = res.data.data));
+      }
+      const newPopup = (
+        <Overlay
+          key={pollId}
+          id={pollId}
+          title="Poll Details"
+          pollId={pollId}
+          childContent={location.state}
+          refresh={refresh}
+          setRefresh={setRefresh}
+          activePoll={poll.active}
+          poll
+        />
+      );
+
       if (poll.active) {
-        const activePopup = (
-          <Overlay
+        activeCards.push(
+          <PollCard
+            title={poll.name}
             key={pollId}
             id={pollId}
-            title="Poll Details"
-            pollId={pollId}
-            childContent={location.state}
-            refresh={refresh}
-            setRefresh={setRefresh}
-            activePoll
+            onClick={() => setEditPopup(newPopup)}
           />
-        );
-        activeCards.push(
-          <PollCard title={poll.name} key={pollId} id={pollId} onClick={() => setEditPopup(activePopup)} />
         );
       } else {
-        const newPopup = (
-          <Overlay
-            key={pollId}
-            id={pollId}
-            title="Poll Details"
-            pollId={pollId}
-            childContent={location.state}
-            refresh={refresh}
-            setRefresh={setRefresh}
-            closedPoll
-          />
-        );
         inactiveCards.push(
           <PollCard
             title={poll.name}
@@ -490,10 +500,14 @@ function SessionView() {
       pollId: newPollId,
       base: base ? base : null,
     };
-    while (!newPopup.closed) {
+  }
+
+  async function waitForPoll(popup, pollId) {
+    while (!popup.closed) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
     setPopup(null);
+    setPollWinInfo(null);
     window.focus();
     if (base) {
       await clicker.stopPoll(base);
@@ -504,10 +518,18 @@ function SessionView() {
       await pause();
     }
     await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}/close`
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`
     );
-    setRefresh({ closed: true });
+    if (!popup.props || popup.props.sessionId === location.state.sessionId) {
+      setRefresh({ closed: true });
+    }
   }
+
+  window.savePoll = () => {
+    if (popup) {
+      waitForPoll(popup, popup.props.pollId);
+    }
+  };
 
   return !authorized ? (
     <AccessDenied />

@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { IoIosArrowBack, IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import * as clicker from "../components/ClickerBase";
 import { ClickerContext } from "../containers/InAppContainer";
@@ -18,7 +19,6 @@ import "../styles/text.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { openPopup } from "./Overlay";
-import { server } from "../ServerUrl";
 
 function Menu(props) {
   const location = useLocation();

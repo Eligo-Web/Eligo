@@ -1,10 +1,10 @@
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import instructorIcon from "../assets/instructor-button.png";
 import studentIcon from "../assets/student-button.png";
-import { server } from "../ServerUrl";
 
 function SignIn() {
   const navigate = useNavigate();

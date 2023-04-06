@@ -413,7 +413,7 @@ class CourseDao {
     }
     course.markModified("sessions");
     await course.save();
-    return session;
+    return session.polls[pollId];
   }
 
   async closeAllPolls(sectionId, weekNum, sessionId) {

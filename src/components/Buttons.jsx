@@ -30,13 +30,15 @@ export function IconButton(props) {
   return (
     <Button
       id={props.label + "-icon-button"}
+      title={props.label}
       variant={props.variant || "icon"}
       className={props.className}
       onClick={props.onClick}
       style={props.style}
+      disabled={props.disabled}
     >
       {props.icon}
-      {props.label}
+      {props.hideLabel ? null : props.label}
     </Button>
   );
 }

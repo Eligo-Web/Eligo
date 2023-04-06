@@ -2,12 +2,12 @@ import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { server } from "../ServerUrl";
 import { EditPopupContext } from "../containers/InAppContainer";
 import "../styles/newpoll.css";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField, { SelectField } from "./InputField";
 import { closePopup } from "./Overlay";
-import { server } from "../ServerUrl";
 
 export function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();

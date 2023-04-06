@@ -58,7 +58,7 @@ export default function Overlay(props) {
   }
 
   useEffect(() => {
-    if (props.vote || props.closedPoll || props.activePoll) return;
+    if (props.vote || props.poll) return;
     const overlay = document.getElementById(props.id + "-popup");
     const buttonRow = overlay.querySelector(".button-row");
     const deleteBtns = overlay.querySelector(".delete-popup");
@@ -84,8 +84,8 @@ export default function Overlay(props) {
       <div className="overlay pop-up" style={{ zIndex: 4 }}>
         <div className="pop-up-header">
           <Row className="pop-up-title large-title">
-            {props.title + (props.activePoll ? " - Save Error" : "") 
-            || "Overlay Title"}
+            {props.title + (props.activePoll ? " - Save Error" : "") ||
+              "Overlay Title"}
           </Row>
           <Button
             variant="transparent"
@@ -144,7 +144,7 @@ export default function Overlay(props) {
             childProps={props.joinSessionProps}
             control={childState}
           />
-        ) : props.closedPoll || props.activePoll ? (
+        ) : props.poll ? (
           <ClosedPoll
             sectionId={props.childContent.sectionId}
             weekNum={props.childContent.weekNum}

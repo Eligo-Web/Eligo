@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import { server } from "../ServerUrl";
 import waitingCourseImg from "../assets/empty-course-state.png";
 import AccessDenied from "../components/AccessDenied";
 import { EmptyCourseView, LoadingCourseView } from "../components/BlankStates";
@@ -21,7 +22,6 @@ import Overlay, { openPopup } from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
 import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
-import { server } from "../ServerUrl";
 
 export function pause(interval = 200) {
   return new Promise((res) => setTimeout(res, interval));
@@ -31,7 +31,7 @@ function CourseView() {
   const location = useLocation();
   const navigate = useNavigate();
   const authorized = location.state && location.state.permission;
-  const [buttonLabels, setLabels] = useState(window.innerWidth > 900);
+  const [hideLabels, setHideLabels] = useState(window.innerWidth < 650);
   const [refresh, setRefresh] = useState(false);
   const [base, setBase] = useContext(ClickerContext);
   const [editPopup, setEditPopup] = useContext(EditPopupContext);
@@ -91,11 +91,7 @@ function CourseView() {
   }, [editPopup]);
 
   window.onresize = function () {
-    if (window.innerWidth < 650) {
-      setLabels(false);
-    } else if (!buttonLabels) {
-      setLabels(true);
-    }
+    setHideLabels(window.innerWidth < 650);
   };
 
   function toMap(object) {
@@ -359,9 +355,7 @@ function CourseView() {
     useEffect(() => {
       const container = document.querySelector(".semester-container");
       async function loadContent() {
-        const sessionList = await populateSessionCards(
-          "INSTRUCTOR"
-        );
+        const sessionList = await populateSessionCards("INSTRUCTOR");
         await pause(250);
         container.style.opacity = 0;
         await pause(100);
@@ -392,7 +386,8 @@ function CourseView() {
         <div className="courses-bottom-row bottom-0 gap-3">
           <div className="d-flex flex-row gap-3">
             <IconButton
-              label={buttonLabels ? "View Roster" : null}
+              label="View Roster"
+              hideLabel={hideLabels}
               icon={<IconList size="1.6em" />}
               variant="outline"
               onClick={() => handleViewRoster()}

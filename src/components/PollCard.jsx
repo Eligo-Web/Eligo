@@ -1,8 +1,6 @@
 import "../styles/buttons.css";
 import "../styles/text.css";
 
-import { openPopup } from "./Overlay";
-
 /**
  *
  * @param {{title: string}} props

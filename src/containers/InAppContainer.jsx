@@ -10,10 +10,12 @@ import SignIn from "../pages/SignIn";
 
 export const ClickerContext = createContext(null);
 export const EditPopupContext = createContext(null);
+export const NewPollContext = createContext(null);
 
 function InAppContainer() {
   const [base, setBase] = useState(null);
   const [editPopup, setEditPopup] = useState(null);
+  const [pollWinInfo, setPollWinInfo] = useState(null);
 
   return (
     <ClickerContext.Provider value={[base, setBase]}>
@@ -22,8 +24,15 @@ function InAppContainer() {
           <Route path="/" element={<Navigate to="/signin" />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/overview" element={<Overview />} />
-          <Route path="/session" element={<SessionView />} />
           <Route path="/class" element={<CourseView />} />
+          <Route
+            path="/session"
+            element={
+              <NewPollContext.Provider value={[pollWinInfo, setPollWinInfo]}>
+                <SessionView />
+              </NewPollContext.Provider>
+            }
+          />
           <Route path="/newpoll" element={<InstructorPoll />} />
           <Route path="/roster" element={<Roster />} />
           <Route path="*" element={<PageNotFound />} />

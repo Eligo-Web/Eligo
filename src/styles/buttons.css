@@ -162,6 +162,13 @@
   color: #0c1622bf;
 }
 
+.btn-outline:disabled {
+  background-color: #10283d0f;
+  border-color: #3f4c5b;
+  opacity: 0.9;
+  color: #334152;
+}
+
 .btn-transparent:hover {
   border-width: 0;
 }
@@ -263,6 +270,7 @@
   mix-blend-mode: hard-light;
   align-items: center;
   padding: 0.7rem 1.2rem;
+  overflow: overlay;
 }
 
 .edit-button,
@@ -473,7 +481,7 @@
 @media screen and (max-height: 32rem) {
   .empty-state-img {
     height: 0;
-  }  
+  }
 }
 
 @media screen and (max-width: 24rem) {

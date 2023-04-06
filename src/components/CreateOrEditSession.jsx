@@ -6,11 +6,11 @@ import {
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
+import { server } from "../ServerUrl";
 import { EditPopupContext } from "../containers/InAppContainer";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay";
-import { server } from "../ServerUrl";
 
 export function CreateSession(props) {
   return (
@@ -214,6 +214,7 @@ function CreateOrEditSession(props) {
               ? props.session.latitude || props.session.longitude
               : null
           }
+          onKeyPress={handleKeyPresses}
           disabled={props.editMode}
         />
         <div className="location-switch-info d-grid">

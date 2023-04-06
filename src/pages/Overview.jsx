@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
+import { server } from "../ServerUrl";
 import AccessDenied from "../components/AccessDenied";
 import { EmptyOverview, LoadingOverview } from "../components/BlankStates";
 import { FloatingButton } from "../components/Buttons";
@@ -14,7 +15,6 @@ import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
 import "../styles/overlay.css";
 import { pause } from "./CourseView";
-import { server } from "../ServerUrl";
 
 function OverView() {
   const location = useLocation();

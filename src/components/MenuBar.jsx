@@ -39,7 +39,9 @@ function MenuBar(props) {
         <IoIosMenu size="2.3em" alt="Button to open menu overlay" />
       </Button>
       <Row className="menu-bar-items">
-        <Col className="large-title menu-bar-title">{props.title || "-Untitled-"}</Col>
+        <Col className="large-title menu-bar-title">
+          {props.title || "-Untitled-"}
+        </Col>
         {props.showDescription ? (
           <Col
             className="large-title menu-bar-subtitle"
@@ -47,7 +49,10 @@ function MenuBar(props) {
           >
             <div
               className="copy-success"
-              style={{ opacity: copied ? "100%" : 0, width: copied ? "10rem" : 0 }}
+              style={{
+                opacity: copied ? "100%" : 0,
+                width: copied ? "10rem" : 0,
+              }}
             >
               Copied!
               <IconCheck
