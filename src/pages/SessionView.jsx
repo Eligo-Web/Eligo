@@ -11,6 +11,7 @@ import waitingSessionImg from "../assets/empty-session-state.png";
 import AccessDenied from "../components/AccessDenied";
 import {
   EmptySessionView,
+  InstructorScreenAlert,
   LoadingSessionView,
 } from "../components/BlankStates";
 import { BackButton, FloatingButton, IconButton } from "../components/Buttons";
@@ -313,6 +314,7 @@ function SessionView() {
     return (
       <div>
         <title>{location.state.sessionName} | Eligo</title>
+        <InstructorScreenAlert/>
         <BackButton
           label={location.state.courseName}
           onClick={() => navigateBack()}
@@ -492,6 +494,7 @@ function SessionView() {
     setRefresh({ created: true });
     // communicate with window
     newPopup.props = {
+      permission: location.state.permission,
       defaultName: pollName,
       semester: location.state.semester,
       sectionId: location.state.sectionId,

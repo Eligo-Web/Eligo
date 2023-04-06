@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { server } from "../ServerUrl";
 import waitingCourseImg from "../assets/empty-course-state.png";
 import AccessDenied from "../components/AccessDenied";
-import { EmptyCourseView, LoadingCourseView } from "../components/BlankStates";
+import { EmptyCourseView, InstructorScreenAlert, LoadingCourseView } from "../components/BlankStates";
 import {
   BackButton,
   FloatingButton,
@@ -368,6 +368,7 @@ function CourseView() {
     return (
       <div className="d-flex flex-column ">
         <title>{location.state.courseName} | Eligo</title>
+        <InstructorScreenAlert/>
         {backButton}
         <Overlay
           title="Create Session"

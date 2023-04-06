@@ -33,6 +33,20 @@ svg {
   top: 8rem;
 }
 
+.screen-alert-wrapper {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  background: var(--body-bg);
+  transition: 0.1s ease-in-out;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+}
+
 .roster-header {
   display: flex;
   position: relative;
@@ -229,6 +243,13 @@ svg {
   align-items: center;
   position: fixed;
   z-index: 5;
+}
+
+@media screen and (max-width: 30rem) {
+  .screen-alert-wrapper {
+    opacity: 100% !important;
+    pointer-events: all !important;
+  }
 }
 
 /* =============== Scroll Bar =============== */

@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import { useLocation, useNavigate } from "react-router-dom";
 import { server } from "../ServerUrl";
 import AccessDenied from "../components/AccessDenied";
-import { EmptyOverview, LoadingOverview } from "../components/BlankStates";
+import { EmptyOverview, InstructorScreenAlert, LoadingOverview } from "../components/BlankStates";
 import { FloatingButton } from "../components/Buttons";
 import Card from "../components/Card";
 import * as clicker from "../components/ClickerBase";
@@ -208,6 +208,7 @@ function OverView() {
 
     return (
       <div>
+        <InstructorScreenAlert/>
         <Overlay
           title="New Class"
           id="Create Class"
