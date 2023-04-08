@@ -22,7 +22,7 @@ export function openPopup(id) {
     overlay.querySelector(".overlay-bg").style.opacity = 1;
     overlay.querySelector(".pop-up").style.opacity = 1;
     const form = overlay.querySelector(".form-control");
-    if (form) overlay.querySelector(".form-control").focus();
+    if (form) pause().then(() => form.focus());
     overlay.style.maxHeight = "100vh";
   }
 }

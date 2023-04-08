@@ -210,26 +210,26 @@ function SessionView() {
           <Menu hideJoin />
           <MenuBar title={location.state.sessionName} />
           {pollOpen ? votePopup : null}
-          <div className="img-container" style={{ minHeight: 0 }}>
+          <div className="img-container" style={{ padding: "3rem 0" }}>
             {/* illustration to be changed */}
             <img src={waitingSessionImg} className="waiting-state-img" />
-          </div>
-          <div className="vote-container-student" id="vote-container">
-            <div className="blank-state-msg">
-              {pollOpen
-                ? "There's a poll waiting - join below!"
-                : "Your instructor has no open polls right now."}
+            <div className="vote-container-student" id="vote-container">
+              <Button
+                variant="blank-state"
+                className="large-title"
+                onClick={() => {
+                  if (!pollOpen) window.location.reload();
+                  else openPopup("Vote");
+                }}
+              >
+                {pollOpen ? "Vote" : "Refresh"}
+              </Button>
+              <div className="blank-state-msg">
+                {pollOpen
+                  ? "There's a poll waiting - join below!"
+                  : "Your instructor has no open polls right now."}
+              </div>
             </div>
-            <Button
-              variant="blank-state"
-              className="large-title"
-              onClick={() => {
-                if (!pollOpen) window.location.reload();
-                else openPopup("Vote");
-              }}
-            >
-              {pollOpen ? "Vote" : "Refresh"}
-            </Button>
           </div>
         </div>
       </div>
@@ -314,7 +314,7 @@ function SessionView() {
     return (
       <div>
         <title>{location.state.sessionName} | Eligo</title>
-        <InstructorScreenAlert/>
+        <InstructorScreenAlert />
         <BackButton
           label={location.state.courseName}
           onClick={() => navigateBack()}

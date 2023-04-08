@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import emptyCourseImg from "../assets/empty-course-state.png";
@@ -132,19 +132,28 @@ export function EmptySessionView(props) {
 }
 
 export function InstructorScreenAlert() {
+  const navigate = useNavigate();
   return (
-    <div className="screen-alert-wrapper p-5">
-      <div className="card-subtitle d-grid gap-3">
-        Hmm... It seems we can't display everything 
-        on your screen. This can occur if you are on a 
-        mobile device. To improve your experience, try 
-        one of the following:
+    <div className="screen-alert-wrapper">
+      <div className="card-subtitle screen-alert-text m-auto">
+        Hmm... It seems we can't display everything on your screen. This can
+        occur if you are on a mobile device. To improve your experience, try one
+        of the following:
         <div>
           <li>Rotate your screen</li>
           <li>Enlarge the current window</li>
           <li>Join from a desktop device</li>
         </div>
       </div>
+      <center className="m-auto">
+        <Button
+          variant="sign-in large-title"
+          className="large-title"
+          onClick={() => navigate("/signin")}
+        >
+          Home
+        </Button>
+      </center>
     </div>
-  )
+  );
 }

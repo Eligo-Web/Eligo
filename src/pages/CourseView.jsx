@@ -8,7 +8,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { server } from "../ServerUrl";
 import waitingCourseImg from "../assets/empty-course-state.png";
 import AccessDenied from "../components/AccessDenied";
-import { EmptyCourseView, InstructorScreenAlert, LoadingCourseView } from "../components/BlankStates";
+import {
+  EmptyCourseView,
+  InstructorScreenAlert,
+  LoadingCourseView,
+} from "../components/BlankStates";
 import {
   BackButton,
   FloatingButton,
@@ -248,7 +252,6 @@ function CourseView() {
       sessionName: "",
       weekNum: "",
     });
-    let container;
 
     async function checkSession() {
       await axios
@@ -259,7 +262,6 @@ function CourseView() {
             if (session.activeSession.students.includes(location.state.email)) {
               setJoining(session.activeSession.name);
               document.querySelector(".img-container").style.opacity = 1;
-              container.style.opacity = 1;
               await pause(1000);
               navigate("/session", {
                 state: {
@@ -278,7 +280,6 @@ function CourseView() {
             }
             setSessionOpen(true);
             document.querySelector(".img-container").style.opacity = 1;
-            container.style.opacity = 1;
             openPopup("Join Session");
             setProps({
               name: location.state.name,
@@ -295,11 +296,9 @@ function CourseView() {
           }
         });
       document.querySelector(".img-container").style.opacity = 1;
-      container.style.opacity = 1;
     }
 
     useEffect(() => {
-      container = document.getElementById("session-container");
       checkSession();
     }, []);
 
@@ -313,34 +312,28 @@ function CourseView() {
         />
         {backButton}
         <div className="card-wrapper-student">
-          <div className="img-container" style={{ minHeight: 0 }}>
+          <div className="img-container" style={{ padding: "3rem 0" }}>
             <img src={waitingCourseImg} className="waiting-state-img" />
-          </div>
-          <div id="session-container" className="session-container">
-            <div className="card-title d-flex justify-content-center align-items-center gap-5">
-              <div className="session-waiting">
-                {joining ? null : (
-                  <Button
-                    variant="blank-state"
-                    className="large-title"
-                    onClick={() => {
-                      sessionOpen
-                        ? openPopup("Join Session")
-                        : window.location.reload();
-                    }}
-                  >
-                    {sessionOpen ? "Join Session" : "Refresh"}
-                  </Button>
-                )}
-                <div className="blank-state-msg">
-                  {joining
-                    ? `Please wait. Joining "${joining}"...`
-                    : sessionOpen
-                    ? "Your instructor has started a session!"
-                    : "Hmm... It seems your instructor has not started a session yet."}
-                </div>
-              </div>
+            <div className="blank-state-msg m-1">
+              {joining
+                ? `Please wait. Joining "${joining}"...`
+                : sessionOpen
+                ? "Your instructor has started a session!"
+                : "Hmm... It seems your instructor has not started a session yet."}
             </div>
+            {joining ? null : (
+              <Button
+                variant="blank-state"
+                className="large-title"
+                onClick={() => {
+                  sessionOpen
+                    ? openPopup("Join Session")
+                    : window.location.reload();
+                }}
+              >
+                {sessionOpen ? "Join Session" : "Refresh"}
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -349,7 +342,6 @@ function CourseView() {
 
   function instructorContent() {
     const [cards, setCards] = useState(<LoadingCourseView />);
-    const [editOverlays, setEditOverlays] = useState(null);
     const [fullHistory, setFullHistory] = useState(false);
 
     useEffect(() => {
@@ -368,7 +360,7 @@ function CourseView() {
     return (
       <div className="d-flex flex-column ">
         <title>{location.state.courseName} | Eligo</title>
-        <InstructorScreenAlert/>
+        <InstructorScreenAlert />
         {backButton}
         <Overlay
           title="Create Session"

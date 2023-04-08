@@ -5,8 +5,7 @@
   justify-content: center;
   transition: 0.4s cubic-bezier(0, 0, 0.4, 1);
   mix-blend-mode: luminosity;
-  height: 90%;
-  margin: 0 auto -5rem auto;
+  height: 95%;
   opacity: 0;
   gap: 2rem;
 }
@@ -16,12 +15,10 @@
   flex-shrink: 0;
   object-fit: cover;
   overflow: hidden;
-  max-width: 75%;
+  max-width: 80%;
   max-height: 75%;
   vertical-align: bottom;
   opacity: 75%;
-  padding-top: 1rem;
-  aspect-ratio: calc();
 }
 
 .eligo-logo {

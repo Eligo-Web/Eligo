@@ -197,6 +197,7 @@
   margin: 3rem;
   align-items: center;
   flex-direction: column;
+  width: 100%;
   display: flex;
   transition: 0.1s ease-in-out;
 }

@@ -440,7 +440,6 @@
     padding: 1rem 2rem;
     flex-direction: row;
     height: fit-content;
-    min-width: 90%;
     border-radius: 2rem;
     font-size: 2.4rem;
     gap: 2rem;
@@ -473,12 +472,13 @@
     display: none;
   }
   .img-container {
-    gap: 0 !important;
+    gap: 0.5rem !important;
   }
 }
 
-@media screen and (max-height: 32rem) {
-  .empty-state-img {
+@media screen and (max-height: 35rem) {
+  .empty-state-img,
+  .waiting-state-img {
     height: 0;
   }
 }
@@ -487,7 +487,9 @@
   .btn-blank-state {
     font-size: 1.8rem !important;
   }
-  .btn-sign-in {
+  .btn-sign-in,
+  .btn-sign-in:hover,
+  .btn-sign-in:focus {
     min-width: 15rem !important;
   }
   .sign-in-title {
