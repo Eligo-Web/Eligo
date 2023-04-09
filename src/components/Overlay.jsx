@@ -16,14 +16,17 @@ export function openPopup(id) {
     nameField.value = new Date().toDateString();
   }
   if (overlay) {
+    overlay.style.maxHeight = "100vh";
     overlay.style.overflow = "visible";
     document.body.style.overflowY = "hidden";
-    overlay.querySelector(".overlay-bg").style.pointerEvents = "all";
-    overlay.querySelector(".overlay-bg").style.opacity = 1;
     overlay.querySelector(".pop-up").style.opacity = 1;
+    const bg = overlay.querySelector(".overlay-bg");
     const form = overlay.querySelector(".form-control");
-    if (form) pause().then(() => form.focus());
-    overlay.style.maxHeight = "100vh";
+    if (bg) bg.style.opacity = 1;
+    pause(350).then(() => {
+      if (bg) bg.style.pointerEvents = "all";
+      if (form) form.focus();
+    });
   }
 }
 

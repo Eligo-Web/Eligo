@@ -69,7 +69,7 @@ function CreateOrEditClass(props) {
     const overlay = document.getElementById(popupName);
     if (!overlay) return;
     const isOpen = !!overlay.offsetParent.style.maxHeight;
-    if (isOpen && !props.overrideInit) {
+    if (isOpen && (!props.overrideInit || props.control)) {
       clearContents(props.editMode);
     }
   }, [props.control]);
