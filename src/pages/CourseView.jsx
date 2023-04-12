@@ -120,7 +120,7 @@ function CourseView() {
     return `Week of ${date1} - ${date2}`;
   }
 
-  function handleViewSession(sessionId, session) {
+  function handleViewSession(sessionId, session, weekNum) {
     navigate("/session", {
       state: {
         name: location.state.name,
@@ -134,7 +134,7 @@ function CourseView() {
         sessionPasscode: session.passcode,
         classPasscode: location.state.classPasscode,
         semester: location.state.semester,
-        weekNum: getWeekNumber(),
+        weekNum: weekNum,
         clickerId: location.state.clickerId,
       },
     });
@@ -204,7 +204,7 @@ function CourseView() {
             title={session.name}
             active={session.active}
             onEdit={() => setEditPopup(popup)}
-            onClick={() => handleViewSession(id, session)}
+            onClick={() => handleViewSession(id, session, weekNum)}
           />
         );
       }

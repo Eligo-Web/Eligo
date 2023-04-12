@@ -29,9 +29,9 @@ export function EditClass(props) {
   return (
     <CreateOrEditClass
       popupType="Edit Class"
-      name={content.name} //     from axios get
-      section={content.section} //  from axios get
-      sisId={content.SISId} //    from axios get
+      name={content.name} //         from axios get
+      section={content.section} //   from axios get
+      sisId={content.SISId} //       from axios get
       semester={content.semester} // from axios get
       sectionId={content.sectionId}
       refresh={props.refresh}
