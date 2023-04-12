@@ -179,12 +179,14 @@ export default function InstructorPoll() {
           }
         }
         percentString += "%";
-        clicker.setScreen(window.props.base, 2, percentString);
-        await pause();
+        if (!stopTime) {
+          clicker.setScreen(window.props.base, 2, percentString);
+          await pause();
+        }
       }
     }, 50);
     return () => clearInterval(interval);
-  }, [window.props, chartRef]);
+  }, [window.props, chartRef, stopTime]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
