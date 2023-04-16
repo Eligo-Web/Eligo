@@ -56,7 +56,10 @@ class StudentDao {
     if (student.clickerId) {
       return student;
     } else {
-      throw new ApiError(404, `No clicker id found for user with email ${email}`);
+      throw new ApiError(
+        404,
+        `No clicker id found for user with email ${email}`
+      );
     }
   }
 
