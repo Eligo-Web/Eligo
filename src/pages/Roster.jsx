@@ -6,11 +6,11 @@ import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
 import { pause } from "./CourseView";
 
-function encodeEmail(str) {
+export function encodeEmail(str) {
   return str.replace(/[.]/g, "$");
 }
 
-function decodeEmail(str) {
+export function decodeEmail(str) {
   return str.replace(/[$]/g, ".");
 }
 

@@ -27,6 +27,7 @@ import {
   NewPollContext,
 } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
+import { encodeEmail, decodeEmail } from "./Roster";
 
 function SessionView() {
   const location = useLocation();
@@ -266,10 +267,19 @@ function SessionView() {
           `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/`
         )
         .then((res) => {
-          let emails = [];
-          res.data.data.students.forEach((student) => {
-            emails.push(student);
-          });
+          let emails = Object.keys(res.data.data.students);
+          for (let i = 0; i < emails.length; i++) {
+            emails[i] = decodeEmail(emails[i]);
+          }
+          let latitudes = Object.values(res.data.data.students).map(
+            (student) => student.latitude
+          );
+          let longitudes = Object.values(res.data.data.students).map(
+            (student) => student.longitude
+          );
+          let distances = Object.values(res.data.data.students).map(
+            (student) => student.distance
+          );
           const csv = Papa.unparse({
             fields: [
               "Course Name",
@@ -279,6 +289,9 @@ function SessionView() {
               "Number of Polls",
               "Number of Students",
               "Student Emails",
+              "Latitude",
+              "Longitude",
+              "Distance to Instructor",
             ],
             data: [
               [
@@ -287,15 +300,27 @@ function SessionView() {
                 res.data.data.passcode,
                 res.data.data.date,
                 res.data.data.numPolls,
-                res.data.data.students.length,
+                emails.length,
                 emails[0],
+                latitudes[0],
+                longitudes[0],
+                distances[0],
               ],
             ].concat(
               res.data.data.students.length < 2
                 ? []
-                : emails.slice(1).map((email) => {
-                    return ["", "", "", "", "", "", email];
-                  })
+                : emails.slice(1).map((email, index) => [
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    email,
+                    latitudes[index + 1],
+                    longitudes[index + 1],
+                    distances[index + 1],
+                  ])
             ),
           });
           const blob = new Blob([csv], { type: "text/csv" });
