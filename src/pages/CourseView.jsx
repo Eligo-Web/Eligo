@@ -26,7 +26,7 @@ import Overlay, { openPopup } from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
 import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
-import { encodeEmail, decodeEmail } from "./Roster";
+import { encodeEmail } from "./Roster";
 
 export function pause(interval = 200) {
   return new Promise((res) => setTimeout(res, interval));
@@ -260,7 +260,9 @@ function CourseView() {
         .then(async (res) => {
           const session = res.data.data;
           if (session) {
-            if (session.activeSession.students[encodeEmail(location.state.email)]) {
+            if (
+              session.activeSession.students[encodeEmail(location.state.email)]
+            ) {
               setJoining(session.activeSession.name);
               document.querySelector(".img-container").style.opacity = 1;
               await pause(1000);

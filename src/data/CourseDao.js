@@ -122,7 +122,16 @@ class CourseDao {
     return course.sessions.get(weekNum).get(sessionId);
   }
 
-  async addStudentToSession(sectionId, weekNum, sessionId, email, passcode, latitude, longitude, distance) {
+  async addStudentToSession(
+    sectionId,
+    weekNum,
+    sessionId,
+    email,
+    passcode,
+    latitude,
+    longitude,
+    distance
+  ) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);

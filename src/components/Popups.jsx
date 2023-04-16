@@ -151,7 +151,7 @@ export function JoinSession(props) {
       );
       const button = document.getElementById("join-session-button");
       let buttonText;
-      if (button) { 
+      if (button) {
         buttonText = button.childNodes[0];
         buttonText.data = "Joining...";
       }

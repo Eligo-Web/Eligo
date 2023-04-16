@@ -27,7 +27,7 @@ import {
   NewPollContext,
 } from "../containers/InAppContainer";
 import { pause } from "./CourseView";
-import { encodeEmail, decodeEmail } from "./Roster";
+import { decodeEmail } from "./Roster";
 
 function SessionView() {
   const location = useLocation();
@@ -309,18 +309,20 @@ function SessionView() {
             ].concat(
               res.data.data.students.length < 2
                 ? []
-                : emails.slice(1).map((email, index) => [
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    email,
-                    latitudes[index + 1],
-                    longitudes[index + 1],
-                    distances[index + 1],
-                  ])
+                : emails
+                    .slice(1)
+                    .map((email, index) => [
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      email,
+                      latitudes[index + 1],
+                      longitudes[index + 1],
+                      distances[index + 1],
+                    ])
             ),
           });
           const blob = new Blob([csv], { type: "text/csv" });
