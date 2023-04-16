@@ -391,11 +391,18 @@ export function ClosedPoll(props) {
 
   async function downloadPollDataDetailed() {
     let emails = [];
+    let clickerIds = [];
     let timestamps = [];
     let responses = [];
     for (const email in pollInfo.responses) {
       for (const timestamp in pollInfo.responses[email].answers) {
-        emails.push(email);
+        if (email.includes("@")) {
+          emails.push(email);
+          clickerIds.push("N/A");
+        } else {
+          emails.push("N/A");
+          clickerIds.push(email);
+        }
         timestamps.push(timestamp);
         responses.push(
           Object.values(pollInfo.responses[email].answers[timestamp])
@@ -404,9 +411,10 @@ export function ClosedPoll(props) {
     }
 
     const csv = Papa.unparse({
-      fields: ["Email/Clicker ID", "Response", "Timestamp"],
+      fields: ["Email", "Clicker ID", "Response", "Timestamp"],
       data: emails.map((email, index) => [
         email,
+        clickerIds[index],
         responses[index],
         timestamps[index],
       ]),
@@ -420,11 +428,25 @@ export function ClosedPoll(props) {
   }
 
   async function downloadPollDataFinal() {
+    let emails = [];
+    let clickerIds = [];
+    let finalAnswers = [];
+    for (const email in pollInfo.responses) {
+      if (email.includes("@")) {
+        emails.push(email);
+        clickerIds.push("N/A");
+      } else {
+        emails.push("N/A");
+        clickerIds.push(email);
+      }
+      finalAnswers.push(pollInfo.responses[email].finalAnswer);
+    }
     const csv = Papa.unparse({
-      fields: ["Email", "Final Response"],
-      data: Object.keys(pollInfo.responses).map((email) => [
+      fields: ["Email", "ClickerId", "Final Response"],
+      data: emails.map((email, index) => [
         email,
-        Object.values(pollInfo.responses[email].finalAnswer),
+        clickerIds[index],
+        finalAnswers[index],
       ]),
     });
     const blob = new Blob([csv], { type: "text/csv" });

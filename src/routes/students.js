@@ -55,6 +55,26 @@ Student.get(
   }
 );
 
+Student.get("/email/:semester/:sectionId/:email",
+  async (req, res, next) => {
+    const email = req.params.email;
+    try {
+      const student = await studentDao.readEmailByClickerIdInCourse(
+        semester,
+        sectionId,
+        email
+      );
+      res.json({
+        status: 200,
+        message: `Student found`,
+        data: student,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 Student.post("/", async (req, res, next) => {
   try {
     const student = await studentDao.create(req.body);

@@ -48,6 +48,18 @@ class StudentDao {
     );
   }
 
+  async readEmailByClickerIdInCourse(semester, sectionId, email) {
+    const student = await Student.find({ email: email });
+    if (!student) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    if (student.clickerId) {
+      return student;
+    } else {
+      throw new ApiError(404, `No clicker id found for user with email ${email}`);
+    }
+  }
+
   async create(student) {
     const newStudent = new Student(student);
     await newStudent.save();
