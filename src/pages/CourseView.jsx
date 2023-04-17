@@ -214,7 +214,6 @@ function CourseView() {
           {weekSessions.reverse()}
         </Container>
       );
-      if (sessionList.length > 2 && !fullHistory) break;
     }
 
     if (!sessionList.length) {
@@ -342,7 +341,6 @@ function CourseView() {
 
   function instructorContent() {
     const [cards, setCards] = useState(<LoadingCourseView />);
-    const [fullHistory, setFullHistory] = useState(false);
 
     useEffect(() => {
       const container = document.querySelector(".semester-container");

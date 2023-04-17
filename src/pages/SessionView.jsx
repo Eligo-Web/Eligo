@@ -368,7 +368,7 @@ function SessionView() {
                   )
                 }
                 style={{ maxWidth: "max-content" }}
-                onClick={() => createPoll()}
+                onClick={() => openPolling()}
               />
             ) : null}
           </div>
@@ -421,7 +421,9 @@ function SessionView() {
             title={poll.name}
             key={pollId}
             id={pollId}
-            onClick={() => setEditPopup(newPopup)}
+            onClick={() => {
+              if (popup) popup.focus();
+            }}
           />
         );
       } else {
@@ -460,21 +462,11 @@ function SessionView() {
     return cardContainer;
   }
 
-  async function createPoll() {
-    const newPollId = `poll-${Date.now()}`;
+  async function openPolling() {
     if (popup) {
       popup.focus();
       return;
     }
-    if (base) {
-      await clicker.startPoll(base);
-      await pause();
-      await clicker.setScreen(base, 1, " A  B  C  D  E");
-      await pause();
-      await clicker.setScreen(base, 2, " 0  0  0  0  0%");
-      await pause();
-    }
-
     const newPopup = window.open(
       "/newpoll",
       "New Poll",
@@ -482,36 +474,25 @@ function SessionView() {
        menubar=no, scrollbars=0, width=250, \
        height=100, top=110, left=1040"
     );
-    let pollName = "";
-    await axios
-      .post(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${newPollId}`
-      )
-      .then((res) => {
-        pollName = res.data.data.name;
-      });
+    setPollWinInfo(newPopup);
     setPopup(newPopup);
-    setRefresh({ created: true });
     // communicate with window
     newPopup.props = {
       permission: location.state.permission,
-      defaultName: pollName,
       semester: location.state.semester,
       sectionId: location.state.sectionId,
       weekNum: location.state.weekNum,
-      sessionId: location.state.sessionId,
-      pollId: newPollId,
-      base: base ? base : null,
+      sessionId: location.state.sessionId
     };
   }
 
-  async function waitForPoll(popup, pollId) {
-    while (!popup.closed) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-    setPopup(null);
+  window.refreshPolls = () => setRefresh(!refresh);
+  window.resetPopup = () => {
     setPollWinInfo(null);
-    window.focus();
+    setPopup(null);
+  }
+
+  window.saveClosed = async (popup, pollId) => {
     if (base) {
       await clicker.stopPoll(base);
       await pause();
@@ -524,15 +505,11 @@ function SessionView() {
       `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`
     );
     if (!popup.props || popup.props.sessionId === location.state.sessionId) {
-      setRefresh({ closed: true });
+      setRefresh(!refresh);
     }
+    setPollWinInfo(null);
+    setPopup(null);
   }
-
-  window.savePoll = () => {
-    if (popup) {
-      waitForPoll(popup, popup.props.pollId);
-    }
-  };
 
   return !authorized ? (
     <AccessDenied />

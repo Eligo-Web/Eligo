@@ -5,6 +5,7 @@ import {
   IconDownload,
   IconMaximize,
   IconMinimize,
+  IconPlayerPlayFilled,
   IconPlayerStopFilled,
   IconUser,
 } from "@tabler/icons-react";
@@ -15,7 +16,7 @@ import Papa from "papaparse";
 import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { server } from "../ServerUrl";
-import { EditPopupContext } from "../containers/InAppContainer";
+import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView.jsx";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
@@ -24,6 +25,7 @@ import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
 
 export default function InstructorPoll() {
+  const [base, setBase] = useContext(ClickerContext);
   const [minimized, setMinimized] = useState(false);
   const [showChart, setShowChart] = useState(false);
   const [numResponses, setNumResponses] = useState(0);
@@ -32,7 +34,9 @@ export default function InstructorPoll() {
     window.props ? window.props.pollName : ""
   );
   const [chartRef, setChartRef] = useState({});
-  const [stopTime, setStopTime] = useState(false);
+  const [running, setRunning] = useState(false);
+  const [justOpened, setJustOpened] = useState(true);
+  const [currPollId, setCurrPollId] = useState(null);
   const [prevResponse, setPrevResponse] = useState("");
   const [prevClickerId, setPrevClickerId] = useState("");
   const [axiosMutex, setAxiosMutex] = useState(new Mutex());
@@ -42,6 +46,7 @@ export default function InstructorPoll() {
   let fullHeight = winHeight;
   let fullWidth = winWidth;
   document.title = "New Poll" + (minimized ? " (mini)" : "");
+  console.log("reloaded");
 
   let data = {
     labels: ["A", "B", "C", "D", "E"],
@@ -98,7 +103,7 @@ export default function InstructorPoll() {
         });
       if (email) {
         await axios.patch(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`,
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}`,
           {
             email: email,
             timestamp: Date.now().toString(),
@@ -107,7 +112,7 @@ export default function InstructorPoll() {
         );
       } else {
         await axios.patch(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/unknownClicker`,
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}/unknownClicker`,
           {
             clickerId: prevClickerId,
             timestamp: Date.now().toString(),
@@ -131,14 +136,6 @@ export default function InstructorPoll() {
   }
 
   useEffect(() => {
-    if (window.props) {
-      const inputField = document.querySelector(".form-control");
-      inputField.value = window.props.defaultName;
-      setPollName(window.props.defaultName);
-    }
-  }, [window.props]);
-
-  useEffect(() => {
     if (numResponses) {
       const icon = document.querySelector(".responses");
       icon.style.right = 0;
@@ -147,7 +144,7 @@ export default function InstructorPoll() {
   }, [numResponses]);
 
   useEffect(() => {
-    if (!window.props) {
+    if (!window.props || !currPollId || !running) {
       return;
     }
     const interval = setInterval(async () => {
@@ -155,7 +152,7 @@ export default function InstructorPoll() {
       let numUpdate = 0;
       await axios
         .get(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}`
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}`
         )
         .then((res) => {
           pollUpdate = Object.values(res.data.data.liveResults);
@@ -179,14 +176,14 @@ export default function InstructorPoll() {
           }
         }
         percentString += "%";
-        if (!stopTime) {
+        if (running) {
           clicker.setScreen(window.props.base, 2, percentString);
           await pause();
         }
       }
     }, 50);
     return () => clearInterval(interval);
-  }, [window.props, chartRef, stopTime]);
+  }, [window.props, chartRef, running]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
@@ -195,9 +192,31 @@ export default function InstructorPoll() {
     window.resizeTo(fullWidth, fullHeight);
   }
 
-  async function deactivatePoll() {
-    if (!window.props) window.close();
-    const base = window.props ? window.props.base : null;
+  async function createPoll() {
+    const newPollId = `poll-${Date.now()}`;
+    console.log("poll", newPollId, "created");
+    if (base) {
+      await clicker.startPoll(base);
+      await pause();
+      await clicker.setScreen(base, 1, " A  B  C  D  E");
+      await pause();
+      await clicker.setScreen(base, 2, " 0  0  0  0  0%");
+      await pause();
+    }
+    await axios
+      .post(
+        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${newPollId}`
+      ).then((res) => {
+        setPollName(res.data.data.name);
+      });
+    setCurrPollId(newPollId);
+    if (window.opener.refreshPolls) {
+      window.opener.refreshPolls();
+    }
+  }
+
+  async function closePoll() {
+    console.log("poll", currPollId, "ended");
     if (base && base.opened) {
       await clicker.stopPoll(base);
       await pause();
@@ -207,11 +226,14 @@ export default function InstructorPoll() {
       await pause();
     }
     await axios.put(
-      `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.pollId}/close`,
+      `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}/close`,
       {
         name: pollName,
       }
-    );
+    ).then(() => {
+      window.opener.refreshPolls();
+      setCurrPollId(null);
+    });
   }
 
   window.onload = function () {
@@ -224,8 +246,11 @@ export default function InstructorPoll() {
     // window.resizeTo(fullWidth, fullHeight);
   };
 
-  window.onpagehide = function () {
-    window.opener.savePoll();
+  window.onpagehide = async function () {
+    if (currPollId && running) {
+      window.opener.saveClosed(window, currPollId);
+    }
+    window.opener.resetPopup();
     window.close();
   };
 
@@ -233,13 +258,18 @@ export default function InstructorPoll() {
     if (document.querySelector(".newpoll-pop-up")) {
       resizeToContent();
     }
-  }, [minimized, showChart]);
+  }, [minimized, justOpened, showChart]);
 
   useEffect(() => {
-    if (stopTime) {
-      deactivatePoll("save");
+    if (justOpened && !running) return;
+    if (!running && currPollId) {
+      closePoll();
+    } else {
+      setPollName(null);
+      setJustOpened(false);
+      createPoll();
     }
-  }, [stopTime]);
+  }, [running]);
 
   return (
     <div className="newpoll-wrapper" id="New Poll">
@@ -251,9 +281,8 @@ export default function InstructorPoll() {
               {numResponses}
             </div>
             <Stopwatch
-              stopTime={stopTime}
-              setStopTime={setStopTime}
-              autostart
+              running={running}
+              setRunning={setRunning}
             />
             {showChart ? (
               <IconChartBarOff
@@ -287,14 +316,16 @@ export default function InstructorPoll() {
           </div>
           <div
             className="input-group"
-            style={{ display: minimized ? "none" : "flex" }}
+            style={{ display: minimized || justOpened ? "none" : "flex" }}
           >
             <InputField
               label="Poll Name"
               input="ex: Question 1"
+              value={pollName}
               onChange={(e) => {
                 setPollName(e.target.value);
               }}
+              disabled={!running}
             />
           </div>
           <div
@@ -314,10 +345,9 @@ export default function InstructorPoll() {
           >
             <PrimaryButton
               variant="primary"
-              label="Save"
+              label="Save & Close"
               onClick={async () => {
-                setStopTime(true);
-                await deactivatePoll();
+                if (currPollId) await closePoll();
                 window.close();
               }}
             />
@@ -349,6 +379,7 @@ export function ClosedPoll(props) {
       },
     ],
   };
+  getPollInfo();
 
   const chart = PollChart(thisPollData, setChartRef);
 
@@ -369,10 +400,6 @@ export function ClosedPoll(props) {
       props.setRefresh(!props.refresh);
     }
   }
-
-  useEffect(() => {
-    getPollInfo();
-  }, []);
 
   useEffect(() => {
     if (pollInfo) {
@@ -477,6 +504,7 @@ export function ClosedPoll(props) {
             </div>
             <div className="poll-info">
               <Stopwatch
+                closed
                 id={props.pollId}
                 time={Math.floor(
                   (pollInfo.endTimestamp - pollInfo.startTimestamp) / 1000
@@ -527,70 +555,75 @@ export function ClosedPoll(props) {
             />
           </div>
         </div>
-      ) : null}
+      ) : (
+        <center className="d-grid w-100 card-subtitle">
+          Loading...
+        </center>
+      )}
     </div>
   );
 }
 
 function Stopwatch(props) {
-  const [time, setTime] = useState(props.autostart ? 0 : props.time);
-  const [running, setRunning] = useState(props.autostart);
-
-  useEffect(() => {
-    if (props.stopTime) {
-      stopTime();
-    }
-  }, [props.stopTime]);
-
-  useEffect(() => {
-    if (!props.autostart) renderStop();
-  }, []);
+  const [time, setTime] = useState(props.closed ? props.time : 0);
 
   function stopTime() {
-    if (props.setStopTime) {
-      props.setStopTime(true);
-    }
-    setRunning(false);
+    if (!props.running) return;
+    props.setRunning(false);
     renderStop();
+  }
+  
+  function startTime() {
+    if (props.running) return;
+    setTime(0);
+    props.setRunning(true);
+    renderStart();
+  }
+
+  function renderStart() {
+    let overlay = document.getElementById(props.id + "-popup");
+    if (!props.id || !overlay) overlay = document;
+    const stopwatch = overlay.querySelector(".stopwatch");
+    if (stopwatch) {
+      stopwatch.style.color = "#650000";
+      pause(100).then(() => {
+        stopwatch.style.backgroundColor = "#fbb8abd7";
+      })
+    }
   }
 
   function renderStop() {
-    let overlay = document;
-    if (props.id) overlay = document.getElementById(props.id + "-popup");
-    const btn = overlay.querySelector(".stop-button");
-    const watch = overlay.querySelector(".stopwatch");
-    const timeText = overlay.querySelector(".min-sec");
-    if (btn && watch && timeText) {
-      btn.style.opacity = 0;
-      btn.style.width = 0;
-      btn.style.marginRight = 0;
-      watch.style.gap = 0;
-      watch.style.backgroundColor = "#c2d3f3";
-      watch.style.color = "#1b2543";
-      timeText.style.width = "fit-content";
+    let overlay = document.getElementById(props.id + "-popup");
+    if (!props.id || !overlay) overlay = document;
+    const stopwatch = overlay.querySelector(".stopwatch");
+    if (stopwatch) {
+      stopwatch.style.backgroundColor = "#c2d3f3";
+      pause(100).then(() => {
+        stopwatch.style.color = "#1b2543";
+      })
     }
   }
 
   useEffect(() => {
     let interval;
-    if (running) {
+    if (props.running) {
       if (time >= 3600) {
-        setRunning(false);
+        props.setRunning(false);
       }
       interval = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
-    } else if (!running) {
+    } else if (!props.running) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [running]);
+  }, [props.running]);
 
   return (
-    <div className={`stopwatch${props.autostart ? "" : " stopped"}`}>
-      {props.autostart ? null : (
+    <div className={`stopwatch${props.closed ? " stopped" : ""}`}>
+      {props.closed ? (
         <IconClockHour3 stroke="0.14rem" style={{ marginRight: "0.6rem" }} />
-      )}
+      ) : null}
       <div className="min-sec">
         {isNaN(time) || time < 0 ? (
           "ERROR"
@@ -601,11 +634,18 @@ function Stopwatch(props) {
           </div>
         )}
       </div>
-      <div className="stopwatch-buttons">
+      <div className="stopwatch-buttons" style={{display: props.closed ? "none" : "flex"}}>
         <IconPlayerStopFilled
           className="stop-button"
           preserveAspectRatio="none"
           onClick={() => stopTime()}
+          style={{ display: props.running ? "block" : "none" }}
+        />
+        <IconPlayerPlayFilled
+          className="start-button"
+          preserveAspectRatio="none"
+          onClick={() => startTime()}
+          style={{ display: !props.running ? "block" : "none" }}
         />
       </div>
     </div>

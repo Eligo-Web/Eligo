@@ -68,8 +68,8 @@
   width: fit-content;
   font-weight: 600;
   font-size: 1.1rem;
-  color: #650000;
-  background-color: #fbb8abd7;
+  background-color: #c2d3f3;
+  color: #1b2543;
   padding: 0.5rem 1.3rem;
   border-radius: 10rem;
   transition: 0.2s ease-in-out;
@@ -81,19 +81,6 @@
   display: flex;
   align-items: center;
 }
-
-/* const btn = overlay.querySelector(".stop-button");
-    const watch = overlay.querySelector(".stopwatch");
-    const timeText = overlay.querySelector(".min-sec");
-    if (btn && watch && timeText) {
-      btn.style.opacity = 0;
-      btn.style.width = 0;
-      btn.style.marginRight = 0;
-      watch.style.gap = 0;
-      watch.style.backgroundColor = "#c2d3f3";
-      watch.style.color = "#1b2543";
-      timeText.style.width = "fit-content";
-    } */
 
 .stopped {
   gap: 0;
@@ -145,6 +132,7 @@
   width: 0;
 }
 
+.start-button,
 .stop-button {
   cursor: pointer;
   position: relative;
@@ -153,7 +141,7 @@
 }
 
 .min-sec {
-  width: 4rem;
+  width: fit-content;
   transition: 0.1s ease-in-out;
 }
 

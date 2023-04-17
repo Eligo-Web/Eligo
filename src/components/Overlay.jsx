@@ -9,7 +9,8 @@ import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { ClosedPoll } from "./InstructorPoll";
 import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
 
-export function openPopup(id) {
+export async function openPopup(id) {
+  await pause(100);
   const overlay = document.getElementById(id + "-popup");
   if (id === "Create Session") {
     const nameField = overlay.querySelector(".session-name-input");
