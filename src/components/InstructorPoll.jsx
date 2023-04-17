@@ -206,7 +206,8 @@ export default function InstructorPoll() {
     await axios
       .post(
         `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${newPollId}`
-      ).then((res) => {
+      )
+      .then((res) => {
         setPollName(res.data.data.name);
       });
     setCurrPollId(newPollId);
@@ -225,15 +226,17 @@ export default function InstructorPoll() {
       await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
       await pause();
     }
-    await axios.put(
-      `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}/close`,
-      {
-        name: pollName,
-      }
-    ).then(() => {
-      window.opener.refreshPolls();
-      setCurrPollId(null);
-    });
+    await axios
+      .put(
+        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}/close`,
+        {
+          name: pollName,
+        }
+      )
+      .then(() => {
+        window.opener.refreshPolls();
+        setCurrPollId(null);
+      });
   }
 
   window.onload = function () {
@@ -280,10 +283,7 @@ export default function InstructorPoll() {
               <IconUser stroke="0.14rem" style={{ margin: "-0.3rem" }} />
               {numResponses}
             </div>
-            <Stopwatch
-              running={running}
-              setRunning={setRunning}
-            />
+            <Stopwatch running={running} setRunning={setRunning} />
             {showChart ? (
               <IconChartBarOff
                 className="data-chart"
@@ -556,9 +556,7 @@ export function ClosedPoll(props) {
           </div>
         </div>
       ) : (
-        <center className="d-grid w-100 card-subtitle">
-          Loading...
-        </center>
+        <center className="d-grid w-100 card-subtitle">Loading...</center>
       )}
     </div>
   );
@@ -572,7 +570,7 @@ function Stopwatch(props) {
     props.setRunning(false);
     renderStop();
   }
-  
+
   function startTime() {
     if (props.running) return;
     setTime(0);
@@ -588,7 +586,7 @@ function Stopwatch(props) {
       stopwatch.style.color = "#650000";
       pause(100).then(() => {
         stopwatch.style.backgroundColor = "#fbb8abd7";
-      })
+      });
     }
   }
 
@@ -600,7 +598,7 @@ function Stopwatch(props) {
       stopwatch.style.backgroundColor = "#c2d3f3";
       pause(100).then(() => {
         stopwatch.style.color = "#1b2543";
-      })
+      });
     }
   }
 
@@ -634,7 +632,10 @@ function Stopwatch(props) {
           </div>
         )}
       </div>
-      <div className="stopwatch-buttons" style={{display: props.closed ? "none" : "flex"}}>
+      <div
+        className="stopwatch-buttons"
+        style={{ display: props.closed ? "none" : "flex" }}
+      >
         <IconPlayerStopFilled
           className="stop-button"
           preserveAspectRatio="none"

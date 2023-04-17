@@ -509,7 +509,7 @@ function SessionView() {
       semester: location.state.semester,
       sectionId: location.state.sectionId,
       weekNum: location.state.weekNum,
-      sessionId: location.state.sessionId
+      sessionId: location.state.sessionId,
     };
   }
 
@@ -517,7 +517,7 @@ function SessionView() {
   window.resetPopup = () => {
     setPollWinInfo(null);
     setPopup(null);
-  }
+  };
 
   window.saveClosed = async (popup, pollId) => {
     if (base) {
@@ -536,7 +536,7 @@ function SessionView() {
     }
     setPollWinInfo(null);
     setPopup(null);
-  }
+  };
 
   return !authorized ? (
     <AccessDenied />
