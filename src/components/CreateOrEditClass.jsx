@@ -9,7 +9,7 @@ import { PrimaryButton } from "./Buttons.jsx";
 import InputField, { SelectField } from "./InputField";
 import { closePopup } from "./Overlay";
 
-export function toSectionId(str) {
+function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
 }
 

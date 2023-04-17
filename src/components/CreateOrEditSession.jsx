@@ -57,7 +57,7 @@ function CreateOrEditSession(props) {
     );
     if (!overlay) return;
     const isOpen = !!overlay.offsetParent.style.maxHeight;
-    if (isOpen && !props.overrideInit) {
+    if (isOpen && (!props.overrideInit || props.control)) {
       clearContents();
     }
   }, [props.control]);
@@ -143,7 +143,7 @@ function CreateOrEditSession(props) {
       }
     );
     props.setRefresh(!props.refresh);
-    clearContents();
+    clearContents(true); // save
   }
 
   async function handleDelete() {
@@ -154,15 +154,17 @@ function CreateOrEditSession(props) {
     clearContents();
   }
 
-  function clearContents() {
+  function clearContents(save = false) {
     const overlay = document.getElementById(
       props.editMode ? editId : props.id + "-popup"
     );
     if (props.editMode) props.setMarkDelete(false);
     const nameField = overlay.querySelector(".session-name-input");
     const locationSwitch = document.getElementById("location-switch");
-    nameField.value = props.editMode ? props.session.name : "";
-    locationSwitch.checked = false;
+    if (!save) {
+      nameField.value = props.editMode ? props.session.name : "";
+      locationSwitch.checked = false;
+    }
     setLocError(false);
     setSessionName(props.editMode ? props.session.name : "");
     if (props.editMode) {

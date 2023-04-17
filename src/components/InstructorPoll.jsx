@@ -46,7 +46,6 @@ export default function InstructorPoll() {
   let fullHeight = winHeight;
   let fullWidth = winWidth;
   document.title = "New Poll" + (minimized ? " (mini)" : "");
-  console.log("reloaded");
 
   let data = {
     labels: ["A", "B", "C", "D", "E"],
@@ -320,8 +319,8 @@ export default function InstructorPoll() {
           >
             <InputField
               label="Poll Name"
-              input="ex: Question 1"
-              value={pollName}
+              input="Loading..."
+              value={pollName || ""}
               onChange={(e) => {
                 setPollName(e.target.value);
               }}
@@ -331,8 +330,8 @@ export default function InstructorPoll() {
           <div
             style={{
               position: "relative",
-              height: showChart ? "fit-content" : 0,
-              marginTop: showChart ? 0 : "-1rem",
+              height: showChart && !justOpened ? "fit-content" : 0,
+              marginTop: showChart && !justOpened ? 0 : "-1rem",
               width: "100%",
               overflow: "hidden",
             }}
@@ -341,7 +340,7 @@ export default function InstructorPoll() {
           </div>
           <div
             className="button-row"
-            style={{ display: minimized ? "none" : "flex" }}
+            style={{ display: minimized || justOpened ? "none" : "flex" }}
           >
             <PrimaryButton
               variant="primary"
@@ -500,7 +499,11 @@ export function ClosedPoll(props) {
             }}
           >
             <div className="input-group">
-              <InputField label="Poll Name" value={pollInfo.name} disabled />
+              <InputField
+                label="Poll Name"
+                value={pollInfo.name || ""}
+                disabled
+              />
             </div>
             <div className="poll-info">
               <Stopwatch
