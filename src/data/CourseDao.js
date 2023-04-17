@@ -114,7 +114,7 @@ class CourseDao {
       passcode: passcode,
       latitude: latitude,
       longitude: longitude,
-      students: [],
+      students: {},
       polls: {},
     });
     course.markModified("sessions");
@@ -122,7 +122,16 @@ class CourseDao {
     return course.sessions.get(weekNum).get(sessionId);
   }
 
-  async addStudentToSession(sectionId, weekNum, sessionId, email, passcode) {
+  async addStudentToSession(
+    sectionId,
+    weekNum,
+    sessionId,
+    email,
+    passcode,
+    latitude,
+    longitude,
+    distance
+  ) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
@@ -138,7 +147,11 @@ class CourseDao {
     if (session.passcode !== passcode) {
       throw new ApiError(401, `Incorrect passcode`);
     }
-    session.students.push(email);
+    session.students[encodeEmail(email)] = {
+      latitude: latitude,
+      longitude: longitude,
+      distance: distance,
+    };
     course.markModified("sessions");
     await course.save();
     return session;

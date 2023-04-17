@@ -125,24 +125,20 @@ export function JoinSession(props) {
   async function checkLocation() {
     let lat = 0;
     let long = 0;
+    let distance = 0;
     let present = true;
-    let thisError;
+    let thisError = false;
     if (props.session.latitude && props.session.longitude) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           lat = position.coords.latitude;
           long = position.coords.longitude;
-          let distance = getKmDistanceFromCoords(
+          distance = getKmDistanceFromCoords(
             lat,
             long,
             props.session.latitude,
             props.session.longitude
           );
-          if (distance > 0.1) {
-            setInvalidLoc(true);
-            setLocError(false);
-            present = false;
-          }
         },
         (error) => {
           thisError = error.PERMISSION_DENIED;
@@ -155,27 +151,36 @@ export function JoinSession(props) {
       );
       const button = document.getElementById("join-session-button");
       let buttonText;
-      if (button) buttonText = button.childNodes[0];
-      buttonText.data = "Joining...";
+      if (button) {
+        buttonText = button.childNodes[0];
+        buttonText.data = "Joining...";
+      }
       while (lat === 0 && long === 0 && !thisError) {
         await new Promise((r) => setTimeout(r, 100));
       }
-      buttonText.data = "Join";
+      if (button) {
+        buttonText.data = "Join";
+      }
     }
-    return present;
+    return { present, lat, long, distance };
   }
 
   async function joinSession() {
-    console.log("here");
+    const { present, lat, long, distance } = await checkLocation();
     if (!checkPasscode()) {
       return;
-    } else if (!(await checkLocation())) {
+    } else if (!present) {
       return;
     }
     let valid = true;
     await axios
       .post(
-        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.email}/${passcode}`
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.email}/${passcode}`,
+        {
+          latitude: lat,
+          longitude: long,
+          distance: distance,
+        }
       )
       .then((res) => {
         if (res.data.status === 200) {
@@ -238,7 +243,7 @@ export function JoinSession(props) {
       </div>
       <div className="button-row">
         <PrimaryButton
-          id="join-session-button"
+          id="join-session"
           variant="primary"
           label="Join"
           onClick={() => joinSession()}

@@ -182,13 +182,19 @@ Course.post(
     const sessionId = req.params.sessionId;
     const email = req.params.email;
     const passcode = req.params.passcode;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
+    const distance = req.body.distance;
     try {
       let session = await courseDao.addStudentToSession(
         sectionId,
         weekNum,
         sessionId,
         email,
-        passcode
+        passcode,
+        latitude,
+        longitude,
+        distance
       );
       res.json({
         status: 200,
