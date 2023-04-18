@@ -69,8 +69,6 @@ function SignIn() {
           clientId={import.meta.env.VITE_CLIENT_ID}
           redirectUri="http://localhost:5173/signin"
           scope="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
-          isPopup={false}
-          isCrossOrigin={true}
           onSuccess={(response) => {
             handleSignin(response, "STUDENT");
           }}
@@ -98,7 +96,6 @@ function SignIn() {
           clientId={import.meta.env.VITE_CLIENT_ID}
           redirectUri="http://localhost:5173/signin"
           scope="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
-          isPopup={false}
           onSuccess={(response) => {
             handleSignin(response, "INSTRUCTOR");
           }}
