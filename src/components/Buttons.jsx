@@ -17,6 +17,7 @@ export function PrimaryButton(props) {
       variant={props.variant || "primary"}
       onClick={props.onClick}
       id={props.id + "-button"}
+      disabled={props.disabled}
     >
       {props.label || "Label"}
     </Button>

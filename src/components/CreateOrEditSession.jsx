@@ -11,11 +11,12 @@ import { EditPopupContext } from "../containers/InAppContainer";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay";
+import { pause } from "../pages/CourseView";
 
 export function CreateSession(props) {
   return (
     <CreateOrEditSession
-      id="create-session-popup"
+      id="create-session"
       sectionId={props.sectionId}
       refresh={props.refresh}
       setRefresh={props.setRefresh}
@@ -33,6 +34,7 @@ export function EditSession(props) {
       sectionId={props.sectionId}
       refresh={props.refresh}
       setRefresh={props.setRefresh}
+      markDelete={props.markDelete}
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
@@ -56,6 +58,7 @@ function CreateOrEditSession(props) {
       props.editMode ? editId : props.id + "-popup"
     );
     if (!overlay) return;
+    console.log(overlay, overlay.offsetParent);
     const isOpen = !!overlay.offsetParent.style.maxHeight;
     if (isOpen && (!props.overrideInit || props.control)) {
       clearContents();
@@ -154,11 +157,14 @@ function CreateOrEditSession(props) {
     clearContents();
   }
 
-  function clearContents(save = false) {
+  async function clearContents(save = false) {
     const overlay = document.getElementById(
       props.editMode ? editId : props.id + "-popup"
     );
-    if (props.editMode) props.setMarkDelete(false);
+    if (props.editMode && props.markDelete) {
+      props.setMarkDelete(false);
+      await pause(300);
+    }
     const nameField = overlay.querySelector(".session-name-input");
     const locationSwitch = document.getElementById("location-switch");
     if (!save) {

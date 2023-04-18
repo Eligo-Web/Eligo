@@ -386,7 +386,7 @@ function SessionView() {
             </div>
             {location.state.sessionActive ? (
               <IconButton
-                label={popup ? "Return to Poll" : "Create Poll"}
+                label={popup ? "Return to Popup" : "Start Polls"}
                 icon={
                   popup ? (
                     <IconArrowUpRight size="1.7em" />
@@ -433,11 +433,11 @@ function SessionView() {
           key={pollId}
           id={pollId}
           title="Poll Details"
-          pollId={pollId}
           childContent={location.state}
           refresh={refresh}
           setRefresh={setRefresh}
           activePoll={poll.active}
+          pollInfo={poll}
           poll
         />
       );

@@ -8,6 +8,7 @@ import "../styles/newpoll.css";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField, { SelectField } from "./InputField";
 import { closePopup } from "./Overlay";
+import { pause } from "../pages/CourseView";
 
 function toSectionId(str) {
   return str.replace(/\s/g, "").toLowerCase();
@@ -36,6 +37,7 @@ export function EditClass(props) {
       sectionId={content.sectionId}
       refresh={props.refresh}
       setRefresh={props.setRefresh}
+      markDelete={props.markDelete}
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
@@ -70,7 +72,7 @@ function CreateOrEditClass(props) {
     if (!overlay) return;
     const isOpen = !!overlay.offsetParent.style.maxHeight;
     if (isOpen && (!props.overrideInit || props.control)) {
-      clearContents(props.editMode);
+      clearContents();
     }
   }, [props.control]);
 
@@ -83,7 +85,7 @@ function CreateOrEditClass(props) {
   const handleKeyPresses = (event) => {
     switch (event.key) {
       case "Escape":
-        clearContents(props.editMode);
+        clearContents();
         break;
       case "Enter":
         props.editMode ? putCourse() : postCourse();
@@ -96,26 +98,29 @@ function CreateOrEditClass(props) {
     deleteCourse();
   }
 
-  function clearContents(editMode) {
+  async function clearContents() {
     const overlay = document.getElementById(popupName);
     const nameField = overlay.querySelector(".name-input");
     const sectionField = overlay.querySelector(".section-input");
     const sisIdField = overlay.querySelector(".sis-id-input");
     const semesterField = overlay.querySelector(".semester-input");
 
-    nameField.value = editMode ? props.name : "";
-    sectionField.value = editMode ? props.section : "";
-    sisIdField.value = editMode ? props.sisId : "";
+    nameField.value = props.editMode ? props.name : "";
+    sectionField.value = props.editMode ? props.section : "";
+    sisIdField.value = props.editMode ? props.sisId : "";
     setName(nameField.value);
     setSection(sectionField.value);
     setSISId(sisIdField.value);
-    if (editMode) {
+    if (props.editMode) {
       semesterField.value = props.semester;
       setSemester(semesterField.value);
     }
 
     setShowError(false);
-    if (props.editMode) props.setMarkDelete(false);
+    if (props.editMode && props.markDelete) {
+      props.setMarkDelete(false);
+      await pause(300);
+    }
     nameField.className = "name-input form-control";
     sectionField.className = "section-input form-control";
     sisIdField.className = "sis-id-input form-control";
@@ -206,7 +211,7 @@ function CreateOrEditClass(props) {
       newSection: section,
       newSemester: semester,
     });
-    clearContents(props.editMode);
+    clearContents();
     setRefresh(!refresh);
   }
 
@@ -222,7 +227,7 @@ function CreateOrEditClass(props) {
       sisId === props.sisId &&
       semester === props.semester
     ) {
-      clearContents(props.editMode);
+      clearContents();
       return;
     }
 
@@ -368,7 +373,7 @@ function CreateOrEditClass(props) {
           id={"discard-edit-" + props.sectionId}
           variant="secondary"
           label="Discard"
-          onClick={() => clearContents(props.editMode)}
+          onClick={() => clearContents()}
         />
         <PrimaryButton
           id={popupName}

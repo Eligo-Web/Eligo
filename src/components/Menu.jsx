@@ -47,6 +47,7 @@ function Menu(props) {
             variant="outline btn-secondary"
             onClick={async () => {
               closeMenu();
+              await pause(100);
               loadBase();
             }}
           />

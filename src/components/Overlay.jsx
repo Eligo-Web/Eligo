@@ -10,36 +10,39 @@ import { ClosedPoll } from "./InstructorPoll";
 import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
 
 export async function openPopup(id) {
-  await pause(100);
   const overlay = document.getElementById(id + "-popup");
-  if (id === "Create Session") {
-    const nameField = overlay.querySelector(".session-name-input");
-    nameField.value = new Date().toDateString();
-  }
   if (overlay) {
+    if (id === "Create Session") {
+      const nameField = overlay.querySelector(".session-name-input");
+      nameField.value = new Date().toDateString();
+    }
+    const overlayBG = overlay.querySelector(".overlay-bg");
+    const overlayBody = overlay.querySelector(".pop-up");
+    const form = overlay.querySelector(".form-control");
     overlay.style.maxHeight = "100vh";
     overlay.style.overflow = "visible";
     document.body.style.overflowY = "hidden";
-    overlay.querySelector(".pop-up").style.opacity = 1;
-    const bg = overlay.querySelector(".overlay-bg");
-    const form = overlay.querySelector(".form-control");
-    if (bg) bg.style.opacity = 1;
-    pause(350).then(() => {
-      if (bg) bg.style.pointerEvents = "all";
+    overlayBody.style.opacity = 1;
+    if (overlayBG) overlayBG.style.opacity = 1;
+    pause(400).then(() => {
+      if (overlayBG) overlayBG.style.pointerEvents = "all";
       if (form) form.focus();
     });
   }
 }
 
 export async function closePopup(id, setPopup) {
+  await pause(150);
   const overlay = document.getElementById(id + "-popup");
   if (overlay) {
-    overlay.style.maxHeight = 0;
+    const overlayBody = overlay.querySelector(".pop-up");
+    const overlayBG = overlay.querySelector(".overlay-bg");
+    overlayBG.style.pointerEvents = "none";
+    overlay.style.maxHeight = "0";
     document.body.style.overflowY = "overlay";
     overlay.style.overflow = "hidden";
-    overlay.querySelector(".overlay-bg").style.opacity = 0;
-    overlay.querySelector(".pop-up").style.opacity = 0;
-    overlay.querySelector(".overlay-bg").style.pointerEvents = "none";
+    overlayBG.style.opacity = 0;
+    overlayBody.style.opacity = 0;
   }
   await pause();
   if (setPopup) setPopup(null);
@@ -57,8 +60,9 @@ export default function Overlay(props) {
 
   function close() {
     if (!props.warning) setChildState(!childState);
-    closePopup(props.id, setPopup);
-    setMarkDelete(false);
+    if (!(props.editClass || props.editSession)) {
+      closePopup(props.id, setPopup);
+    }
   }
 
   useEffect(() => {
@@ -109,6 +113,7 @@ export default function Overlay(props) {
             childContent={props.childContent}
             refresh={props.refresh}
             setRefresh={props.setRefresh}
+            markDelete={markDelete}
             setMarkDelete={setMarkDelete}
             confirmDelete={confirmDelete}
             control={childState}
@@ -138,6 +143,7 @@ export default function Overlay(props) {
             sectionId={props.sectionId}
             refresh={props.refresh}
             setRefresh={props.setRefresh}
+            markDelete={markDelete}
             setMarkDelete={setMarkDelete}
             confirmDelete={confirmDelete}
             control={childState}
@@ -153,7 +159,7 @@ export default function Overlay(props) {
             sectionId={props.childContent.sectionId}
             weekNum={props.childContent.weekNum}
             sessionId={props.childContent.sessionId}
-            pollId={props.pollId}
+            pollInfo={props.pollInfo}
             refresh={props.refresh}
             setRefresh={props.setRefresh}
             unresolved={props.activePoll}

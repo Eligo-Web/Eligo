@@ -210,6 +210,7 @@ export default function InstructorPoll() {
         setPollName(res.data.data.name);
       });
     setCurrPollId(newPollId);
+    if (justOpened) setJustOpened(false);
     if (window.opener.refreshPolls) {
       window.opener.refreshPolls();
     }
@@ -267,8 +268,6 @@ export default function InstructorPoll() {
     if (!running && currPollId) {
       closePoll();
     } else {
-      setPollName(null);
-      setJustOpened(false);
       createPoll();
     }
   }, [running]);
@@ -315,16 +314,16 @@ export default function InstructorPoll() {
           </div>
           <div
             className="input-group"
-            style={{ display: minimized || justOpened ? "none" : "flex" }}
+            style={{ display: minimized ? "none" : "flex" }}
           >
             <InputField
               label="Poll Name"
-              input="Loading..."
+              input={justOpened ? "ex: Question 1" : "Saving..."}
               value={pollName || ""}
               onChange={(e) => {
                 setPollName(e.target.value);
               }}
-              disabled={!running}
+              disabled={!running || justOpened}
             />
           </div>
           <div
@@ -340,7 +339,7 @@ export default function InstructorPoll() {
           </div>
           <div
             className="button-row"
-            style={{ display: minimized || justOpened ? "none" : "flex" }}
+            style={{ display: minimized ? "none" : "flex" }}
           >
             <PrimaryButton
               variant="primary"
@@ -358,7 +357,7 @@ export default function InstructorPoll() {
 }
 
 export function ClosedPoll(props) {
-  const [pollInfo, setPollInfo] = useState(null);
+  const [pollInfo, setPollInfo] = useState(props.pollInfo);
   const [chartRef, setChartRef] = useState(null);
   const [editPopup, setEditPopup] = useContext(EditPopupContext);
   const thisPollData = {
@@ -378,17 +377,8 @@ export function ClosedPoll(props) {
       },
     ],
   };
-  getPollInfo();
 
   const chart = PollChart(thisPollData, setChartRef);
-
-  async function getPollInfo() {
-    await axios
-      .get(
-        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
-      )
-      .then((res) => setPollInfo(res.data.data));
-  }
 
   async function deletePoll() {
     await axios.delete(
@@ -488,7 +478,7 @@ export function ClosedPoll(props) {
       {pollInfo ? (
         <div
           className="pop-up-content align-items-center"
-          id={`${props.pollId}-popup`}
+          id={`${pollInfo.pollId}-popup`}
           style={{ padding: "0 1rem" }}
         >
           <div
@@ -508,7 +498,7 @@ export function ClosedPoll(props) {
             <div className="poll-info">
               <Stopwatch
                 closed
-                id={props.pollId}
+                id={pollInfo.pollId}
                 time={Math.floor(
                   (pollInfo.endTimestamp - pollInfo.startTimestamp) / 1000
                 )}
