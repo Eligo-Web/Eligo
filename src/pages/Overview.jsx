@@ -211,7 +211,7 @@ function OverView() {
     }, [editPopup]);
 
     return (
-      <div>
+      <div style={{height: "100%"}}>
         <InstructorScreenAlert />
         <Overlay
           title="New Class"

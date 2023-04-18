@@ -52,7 +52,7 @@ export function EmptyOverview(props) {
     fadeIn();
   }, []);
   return (
-    <div className="d-flex" style={{ paddingTop: "4rem" }}>
+    <div className="d-flex fill-centered">
       <div className="img-container">
         <img
           className="empty-state-img"

@@ -58,7 +58,6 @@ function CreateOrEditSession(props) {
       props.editMode ? editId : props.id + "-popup"
     );
     if (!overlay) return;
-    console.log(overlay, overlay.offsetParent);
     const isOpen = !!overlay.offsetParent.style.maxHeight;
     if (isOpen && (!props.overrideInit || props.control)) {
       clearContents();
