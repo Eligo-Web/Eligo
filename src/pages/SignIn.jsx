@@ -1,6 +1,7 @@
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import OAuth2Login from "react-simple-oauth2-login";
 import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import instructorIcon from "../assets/instructor-button.png";
@@ -9,8 +10,20 @@ import studentIcon from "../assets/student-button.png";
 function SignIn() {
   const navigate = useNavigate();
 
-  async function handleSignin(name, email, role) {
+  async function handleSignin(response, role) {
+    let email = "";
+    let name = "";
     let user = {};
+
+    await axios
+      .get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${response.access_token}`
+      )
+      .then((res) => {
+        email = res.data.email;
+        name = res.data.given_name + " " + res.data.family_name;
+      });
+
     await axios
       .get(`${server}/${role.toLowerCase()}/${email}`)
       .then(async (res) => {
@@ -50,34 +63,63 @@ function SignIn() {
         ligo
       </div>
       <div className="sign-in-content">
-        <Button
-          variant="sign-in"
-          className="large-title"
-          onClick={() =>
-            handleSignin("Student Name", "student@jhu.edu", "STUDENT")
-          }
-        >
-          <img
-            src={studentIcon}
-            className="sign-in-icon"
-            alt="Student sign in button illustration"
-          />
-          Student
-        </Button>
-        <Button
-          variant="sign-in"
-          className="large-title"
-          onClick={() =>
-            handleSignin("Instructor Name", "instructor@jhu.edu", "INSTRUCTOR")
-          }
-        >
-          <img
-            src={instructorIcon}
-            className="sign-in-icon"
-            alt="Instructor sign in button illustration"
-          />
-          Instructor
-        </Button>
+        <OAuth2Login
+          authorizationUrl="https://accounts.google.com/o/oauth2/v2/auth"
+          responseType="token"
+          clientId={import.meta.env.VITE_CLIENT_ID}
+          redirectUri="http://localhost:5173/signin"
+          scope="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+          isPopup={false}
+          isCrossOrigin={true}
+          onSuccess={(response) => {
+            handleSignin(response, "STUDENT");
+          }}
+          onFailure={(response) => {
+            console.log(response);
+          }}
+          render={({ onClick }) => (
+            <Button
+              variant="sign-in"
+              className="large-title"
+              onClick={onClick}
+            >
+              <img
+                src={studentIcon}
+                className="sign-in-icon"
+                alt="Student sign in button illustration"
+              />
+              Student
+            </Button>
+          )}
+        />
+        <OAuth2Login
+          authorizationUrl="https://accounts.google.com/o/oauth2/v2/auth"
+          responseType="token"
+          clientId={import.meta.env.VITE_CLIENT_ID}
+          redirectUri="http://localhost:5173/signin"
+          scope="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+          isPopup={false}
+          onSuccess={(response) => {
+            handleSignin(response, "INSTRUCTOR");
+          }}
+          onFailure={(response) => {
+            console.log(response);
+          }}
+          render={({ onClick }) => (
+            <Button
+              variant="sign-in"
+              className="large-title"
+              onClick={onClick}
+            >
+              <img
+                src={instructorIcon}
+                className="sign-in-icon"
+                alt="Instructor sign in button illustration"
+              />
+              Instructor
+            </Button>
+          )}
+        />
       </div>
     </div>
   );

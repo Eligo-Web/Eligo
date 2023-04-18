@@ -33,6 +33,7 @@
     "react-icons": "^4.7.1",
     "react-new-window": "^1.0.1",
     "react-router-dom": "^6.8.2",
+    "react-simple-oauth2-login": "^0.5.4",
     "typescript": "^5.0.2"
   },
   "devDependencies": {
