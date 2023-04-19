@@ -9,6 +9,7 @@ body {
     #6a86ce 100%
   );
   background: var(--body-bg);
+  overflow-y: overlay;
   min-height: 70vh;
 }
 

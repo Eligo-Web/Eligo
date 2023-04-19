@@ -19,6 +19,7 @@ import "../styles/text.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { openPopup } from "./Overlay";
+import { EditPopupContext } from "../containers/InAppContainer";
 
 function Menu(props) {
   const location = useLocation();
@@ -26,12 +27,12 @@ function Menu(props) {
   const [clickerId, setClickerId] = useState(location.state.clickerId || "");
   const [showError, setShowError] = useState(false);
   const [base, setBase] = useContext(ClickerContext);
+  const [popup, setPopup] = useContext(EditPopupContext);
   const [baseButton, setBaseButton] = useState(null);
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
     getLabel = "Create Class";
-  }
-  if (props.leaveAction) {
+  } else if (props.leaveAction) {
     getLabel = "Leave Class";
   }
 
@@ -47,7 +48,7 @@ function Menu(props) {
             variant="outline btn-secondary"
             onClick={async () => {
               closeMenu();
-              await pause(100);
+              await pause(150);
               loadBase();
             }}
           />
@@ -66,13 +67,16 @@ function Menu(props) {
     }
   }
 
-  function closeMenu(overlay) {
-    const menu = document.getElementById("side-menu");
-    menu.querySelector(".overlay-bg").style.pointerEvents = "none";
-    menu.querySelector(".overlay-bg").style.opacity = 0;
-    menu.querySelector(".menu").style.transform = "translate(-18rem,0)";
-    document.body.style.overflowY = "overlay";
-    if (overlay) openPopup(overlay);
+  function closeMenu() {
+    const menuContainer = document.getElementById("side-menu");
+    const menuBG = menuContainer.querySelector(".overlay-bg");
+    const menu = menuContainer.querySelector(".menu");
+    menuBG.style.pointerEvents = "none";
+    menuBG.style.opacity = 0;
+    menuBG.style.transition = "0.5s cubic-bezier(0.7, 0, 0.5, 1)";
+    menu.style.transition = "0.5s cubic-bezier(0.7, 0, 0.5, 1)";
+    menu.style.transform = "translate(-18rem,0)";
+    pause(10).then(() => document.body.style.overflowY = "overlay");
   }
 
   async function handleSignOut() {
@@ -208,7 +212,12 @@ function Menu(props) {
             <IconButton
               label={getLabel}
               icon={<IoMdAddCircleOutline size="1.7em" />}
-              onClick={() => closeMenu(getLabel)}
+              onClick={() => {
+                closeMenu();
+                pause(200).then(() => {
+                  if(props.popup) setPopup(props.popup);
+                })
+              }}
             />
           )}
           {props.leaveAction ? (
@@ -216,7 +225,7 @@ function Menu(props) {
               label="Leave Class"
               variant="outline justify-content-center"
               onClick={() => {
-                closeMenu(getLabel);
+                closeMenu();
                 leaveClass();
               }}
             />

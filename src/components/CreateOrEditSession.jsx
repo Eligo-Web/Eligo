@@ -38,7 +38,6 @@ export function EditSession(props) {
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
-      overrideInit={props.overrideInit}
       editMode
     />
   );
@@ -51,16 +50,17 @@ function CreateOrEditSession(props) {
   const [locError, setLocError] = useState(false);
   const [popup, setPopup] = useContext(EditPopupContext);
   const timeStamp = props.id.replace("session-", "");
-  const editId = `edit-${props.id}-popup`;
+  const popupId = `content-${props.id}-popup`;
+  const reset = true;
 
   useEffect(() => {
     const overlay = document.getElementById(
-      props.editMode ? editId : props.id + "-popup"
+      popupId
     );
     if (!overlay) return;
-    const isOpen = !!overlay.offsetParent.style.maxHeight;
-    if (isOpen && (!props.overrideInit || props.control)) {
-      clearContents();
+    const isOpen = !!overlay.parentNode.isOpen;
+    if (isOpen && props.control) {
+      clearContents(reset);
     }
   }, [props.control]);
 
@@ -73,7 +73,7 @@ function CreateOrEditSession(props) {
   const handleKeyPresses = (event) => {
     switch (event.key) {
       case "Escape":
-        clearContents();
+        clearContents(reset);
         break;
       case "Enter":
         props.editMode ? handleEdit() : createSession();
@@ -130,7 +130,7 @@ function CreateOrEditSession(props) {
         longitude: longitude,
       });
       props.setRefresh(!props.refresh);
-      clearContents();
+      clearContents(reset);
     }
     if (buttonText) {
       buttonText.data = "Create";
@@ -145,7 +145,7 @@ function CreateOrEditSession(props) {
       }
     );
     props.setRefresh(!props.refresh);
-    clearContents(true); // save
+    clearContents(reset);
   }
 
   async function handleDelete() {
@@ -156,9 +156,9 @@ function CreateOrEditSession(props) {
     clearContents();
   }
 
-  async function clearContents(save = false) {
+  async function clearContents(reset = false) {
     const overlay = document.getElementById(
-      props.editMode ? editId : props.id + "-popup"
+      popupId
     );
     if (props.editMode && props.markDelete) {
       props.setMarkDelete(false);
@@ -166,23 +166,19 @@ function CreateOrEditSession(props) {
     }
     const nameField = overlay.querySelector(".session-name-input");
     const locationSwitch = document.getElementById("location-switch");
-    if (!save) {
+    if (reset) {
       nameField.value = props.editMode ? props.session.name : "";
-      locationSwitch.checked = false;
+      if (!props.editMode) locationSwitch.checked = false;
     }
     setLocError(false);
     setSessionName(props.editMode ? props.session.name : "");
-    if (props.editMode) {
-      closePopup(props.id, setPopup);
-    } else {
-      closePopup("Create Session");
-    }
+    closePopup(props.id, setPopup);
   }
 
   return (
     <div
       className="pop-up-content"
-      id={props.editMode ? editId : props.id + "-popup"}
+      id={popupId}
     >
       <InputField
         class="session-name-input"

@@ -74,12 +74,13 @@ export function FloatingButton(props) {
       await pause(1000);
       const btn = document.querySelector(".connect-base-btn");
       if (btn && !props.base) {
-        btn.style.pointerEvents = "all";
         const label = btn.querySelector(".connect-btn-label");
         btn.style.opacity = 0.5;
         if (label) label.style.width = "20rem";
         await pause(50);
         btn.style.opacity = 1;
+        await pause(100);
+        btn.style.pointerEvents = "all";
       }
     }
   }, [props.base]);
@@ -94,11 +95,11 @@ export function FloatingButton(props) {
     if (event) event.stopPropagation();
     const btn = document.querySelector(".connect-base-btn");
     if (btn) {
+      btn.style.pointerEvents = "none";
       const label = btn.querySelector(".connect-btn-label");
       if (label) label.style.width = 0;
       await pause();
       btn.style.opacity = 0;
-      btn.style.pointerEvents = "none";
     }
     if (saveState) {
       sessionStorage.setItem("dismissBasePrompt", "true");

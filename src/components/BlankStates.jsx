@@ -139,11 +139,11 @@ export function InstructorScreenAlert() {
         Hmm... It seems we can't display everything on your screen. This can
         occur if you are on a mobile device. To improve your experience, try one
         of the following:
-        <div>
+        <ul>
           <li>Rotate your screen</li>
           <li>Enlarge the current window</li>
           <li>Join from a desktop device</li>
-        </div>
+        </ul>
       </div>
       <center className="m-auto">
         <Button

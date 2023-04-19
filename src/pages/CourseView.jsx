@@ -363,14 +363,6 @@ function CourseView() {
         <title>{location.state.courseName} | Eligo</title>
         <InstructorScreenAlert />
         {backButton}
-        <Overlay
-          title="Create Session"
-          id="Create Session"
-          sectionId={location.state.sectionId}
-          refresh={refresh}
-          setRefresh={setRefresh}
-          createSession
-        />
         {editPopup}
         <FloatingButton base={base} onClick={() => loadBase()} />
         <div className="card-wrapper">
@@ -391,7 +383,17 @@ function CourseView() {
           <IconButton
             label="Create Session"
             icon={<IoMdAddCircleOutline size="1.7em" />}
-            onClick={() => openPopup("Create Session")}
+            onClick={() => setEditPopup(
+              <Overlay
+                key="create-session"
+                title="Create Session"
+                id="create-session"
+                sectionId={location.state.sectionId}
+                refresh={refresh}
+                setRefresh={setRefresh}
+                createSession
+              />
+            )}
             style={{ maxWidth: "max-content" }}
           />
         </div>

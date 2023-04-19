@@ -86,7 +86,7 @@ export function JoinSession(props) {
 
   useEffect(() => {
     const overlay = document.getElementById("join-session-popup");
-    if (overlay.offsetParent.style.maxHeight) {
+    if (overlay.parentNode.isOpen) {
       clearContents();
     }
   }, [control]);
@@ -270,14 +270,14 @@ export function JoinClass(props) {
   };
 
   useEffect(() => {
-    const overlay = document.getElementById("join-class-popup");
-    if (overlay.offsetParent.style.maxHeight) {
+    const overlay = document.getElementById("content-join-class-popup");
+    if (overlay.parentNode.isOpen) {
       clearContents();
     }
   }, [props.control]);
 
   function checkPasscode() {
-    const overlay = document.getElementById("join-class-popup");
+    const overlay = document.getElementById("content-join-class-popup");
     const passcodeField = overlay.querySelector(".passcode-input");
     let valid = true;
 
@@ -295,7 +295,7 @@ export function JoinClass(props) {
   }
 
   function clearContents() {
-    const overlay = document.getElementById("join-class-popup");
+    const overlay = document.getElementById("content-join-class-popup");
     const passcodeField = overlay.querySelector(".passcode-input");
     passcodeField.className = "passcode-input form-control";
     overlay.querySelector(".empty-code").style.display = "none";
@@ -303,7 +303,7 @@ export function JoinClass(props) {
     setInvalidError(false);
     setDupeError(false);
     setPasscode("");
-    closePopup("Join Class");
+    closePopup("join-class");
   }
 
   async function joinClass() {
@@ -347,7 +347,7 @@ export function JoinClass(props) {
   }
 
   return (
-    <div className="pop-up-content" id="join-class-popup">
+    <div className="pop-up-content" id="content-join-class-popup">
       <InputField
         class="passcode-input"
         label="Course Code"

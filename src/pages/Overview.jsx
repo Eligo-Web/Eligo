@@ -175,10 +175,10 @@ function OverView() {
     }, [refresh]);
 
     return (
-      <div style={{ marginBottom: "5rem" }}>
+      <div className="d-flex fill-centered">
         <Overlay
           title="Join Class"
-          id="Join Class"
+          id="join-class"
           refresh={refresh}
           setRefresh={setRefresh}
           state={location.state}
@@ -213,13 +213,6 @@ function OverView() {
     return (
       <div style={{height: "100%"}}>
         <InstructorScreenAlert />
-        <Overlay
-          title="New Class"
-          id="Create Class"
-          refresh={refresh}
-          setRefresh={setRefresh}
-          createClass
-        />
         {editPopup}
         {cards ? null : <EmptyOverview />}
         <div className="semester-container">{cards}</div>
@@ -236,7 +229,18 @@ function OverView() {
         <FloatingButton base={base} onClick={() => loadBase()} bottom />
       )}
       <div className="overview-wrapper">
-        <Menu />
+        <Menu popup={
+          location.state.permission === "STUDENT" ?
+          null : 
+        <Overlay
+          key="create-class"
+          title="New Class"
+          id="create-class"
+          refresh={refresh}
+          setRefresh={setRefresh}
+          createClass
+        />
+        }/>
         <MenuBar
           title="Your Courses"
           description={location.state.email}

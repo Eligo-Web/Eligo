@@ -15,10 +15,14 @@ function MenuBar(props) {
 
   function openMenu() {
     document.body.style.overflowY = "hidden";
-    const menu = document.getElementById("side-menu");
-    menu.querySelector(".overlay-bg").style.pointerEvents = "all";
-    menu.querySelector(".overlay-bg").style.opacity = 1;
-    menu.querySelector(".menu").style.transform = "translate(18rem,0)";
+    const menuContainer = document.getElementById("side-menu");
+    const menuBG = menuContainer.querySelector(".overlay-bg");
+    const menu = menuContainer.querySelector(".menu");
+    menuBG.style.pointerEvents = "all";
+    menuBG.style.opacity = 1;
+    menuBG.style.transition = "0.5s cubic-bezier(0.5, 0.05, 0, 1)"
+    menu.style.transition = "0.5s cubic-bezier(0.5, 0.05, 0, 1)"
+    menu.style.transform = "translate(18rem,0)";
   }
 
   function copyDescription() {

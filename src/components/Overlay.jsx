@@ -10,8 +10,11 @@ import { ClosedPoll } from "./InstructorPoll";
 import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
 
 export async function openPopup(id) {
+  document.body.style.overflowY = "hidden";
   const overlay = document.getElementById(id + "-popup");
   if (overlay) {
+    overlay.style.display = "flex";
+    await pause(50);
     if (id === "Create Session") {
       const nameField = overlay.querySelector(".session-name-input");
       nameField.value = new Date().toDateString();
@@ -21,30 +24,33 @@ export async function openPopup(id) {
     const form = overlay.querySelector(".form-control");
     overlay.style.maxHeight = "100vh";
     overlay.style.overflow = "visible";
-    document.body.style.overflowY = "hidden";
     overlayBody.style.opacity = 1;
-    if (overlayBG) overlayBG.style.opacity = 1;
+    overlayBody.style.transform = "scale(1)";
+    overlayBody.isOpen = true;
+    overlayBG.style.opacity = 1;
     pause(400).then(() => {
-      if (overlayBG) overlayBG.style.pointerEvents = "all";
+      overlayBG.style.pointerEvents = "all";
       if (form) form.focus();
     });
   }
 }
 
 export async function closePopup(id, setPopup) {
-  await pause(150);
   const overlay = document.getElementById(id + "-popup");
   if (overlay) {
     const overlayBody = overlay.querySelector(".pop-up");
     const overlayBG = overlay.querySelector(".overlay-bg");
     overlayBG.style.pointerEvents = "none";
-    overlay.style.maxHeight = "0";
-    document.body.style.overflowY = "overlay";
+    overlay.style.maxHeight = "60vh";
     overlay.style.overflow = "hidden";
     overlayBG.style.opacity = 0;
     overlayBody.style.opacity = 0;
+    overlayBody.style.transform = "scale(0.9)";
+    overlayBody.isOpen = false;
+    document.body.style.overflowY = "overlay";
+    await pause();
+    overlay.style.display = "none";
   }
-  await pause();
   if (setPopup) setPopup(null);
 }
 
@@ -60,7 +66,7 @@ export default function Overlay(props) {
 
   function close() {
     if (!props.warning) setChildState(!childState);
-    if (!(props.editClass || props.editSession)) {
+    if (!popup) {
       closePopup(props.id, setPopup);
     }
   }
@@ -117,7 +123,6 @@ export default function Overlay(props) {
             setMarkDelete={setMarkDelete}
             confirmDelete={confirmDelete}
             control={childState}
-            overrideInit
           />
         ) : props.joinClass ? (
           <JoinClass
@@ -147,7 +152,6 @@ export default function Overlay(props) {
             setMarkDelete={setMarkDelete}
             confirmDelete={confirmDelete}
             control={childState}
-            overrideInit
           />
         ) : props.joinSession ? (
           <JoinSession

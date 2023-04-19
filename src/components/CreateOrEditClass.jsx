@@ -41,7 +41,6 @@ export function EditClass(props) {
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
-      overrideInit={props.overrideInit}
       editMode
     />
   );
@@ -59,7 +58,7 @@ function CreateOrEditClass(props) {
   const location = useLocation();
   const popupName = props.editMode
     ? toSectionId(props.name + props.section + props.semester)
-    : "Create Class";
+    : "create-class";
   let valid = true;
 
   useEffect(() => {
@@ -70,8 +69,8 @@ function CreateOrEditClass(props) {
   useEffect(() => {
     const overlay = document.getElementById(popupName);
     if (!overlay) return;
-    const isOpen = !!overlay.offsetParent.style.maxHeight;
-    if (isOpen && (!props.overrideInit || props.control)) {
+    const isOpen = !!overlay.parentNode.isOpen;
+    if (isOpen && props.control) {
       clearContents();
     }
   }, [props.control]);

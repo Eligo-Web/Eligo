@@ -379,19 +379,29 @@
   opacity: 100%;
 }
 
+.form-check-label {
+  cursor: pointer;
+}
+
+.location-switch {
+  transition: 0.1s ease-in-out;
+}
+
 .location-switch-info::before {
   content: "When enabled, students' location will be used to ensure attendance.";
   position: absolute;
-  background-color: #e6f2fc;
+  background: #e6f2fc;
+  overflow: hidden;
   font-size: 0.9rem;
-  max-width: 17rem;
+  width: 17rem;
   color: #00060d;
   border-radius: 1rem 1rem 1rem 0.2rem;
-  transform: translate(1.1rem, -3.3rem);
-  transition: 0.1s ease-in-out;
+  transform: translate(0.8rem, -4.5rem);
   box-shadow: 0 0.5rem 1rem #05204128;
+  transition: 0.1s ease-in-out;
   padding: 0.5rem 1rem;
   pointer-events: none;
+  bottom: 2.2rem;
   opacity: 0;
 }
 
