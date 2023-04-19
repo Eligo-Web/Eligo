@@ -156,7 +156,7 @@ function CreateOrEditSession(props) {
 
   async function clearContents(reset = false) {
     const overlay = document.getElementById(popupId);
-    if (props.editMode && props.markDelete) {
+    if (props.editMode && props.markDelete && reset) {
       props.setMarkDelete(false);
       await pause(300);
     }
@@ -172,7 +172,7 @@ function CreateOrEditSession(props) {
   }
 
   return (
-    <div className="pop-up-content" id={popupId}>
+    <div className="pop-up-content" id={popupId} onKeyDown={handleKeyPresses}>
       <InputField
         class="session-name-input"
         label="Session Name"
@@ -181,7 +181,6 @@ function CreateOrEditSession(props) {
         }
         input={`Default: ${new Date().toDateString()}`}
         onChange={(e) => setSessionName(e.target.value)}
-        onKeyDown={handleKeyPresses}
       />
       {props.editMode ? (
         <div className="input-group">
@@ -210,7 +209,6 @@ function CreateOrEditSession(props) {
               ? props.session.latitude || props.session.longitude
               : null
           }
-          onKeyPress={handleKeyPresses}
           disabled={props.editMode}
         />
         <div className="location-switch-info d-grid">

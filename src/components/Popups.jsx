@@ -208,7 +208,11 @@ export function JoinSession(props) {
   }
 
   return (
-    <div className="pop-up-content" id="join-session-popup">
+    <div
+      className="pop-up-content"
+      id="join-session-popup"
+      onKeyDown={handleKeyPresses}
+    >
       <InputField
         class="passcode-input"
         label="Passcode"
@@ -216,7 +220,6 @@ export function JoinSession(props) {
         onChange={(e) => {
           setPasscode(e.target.value);
         }}
-        onKeyDown={handleKeyPresses}
         errors={{ "empty-code": "Required" }}
         type="password"
       />
@@ -347,7 +350,11 @@ export function JoinClass(props) {
   }
 
   return (
-    <div className="pop-up-content" id="content-join-class-popup">
+    <div
+      className="pop-up-content"
+      id="content-join-class-popup"
+      onKeyDown={handleKeyPresses}
+    >
       <InputField
         class="passcode-input"
         label="Course Code"
@@ -355,7 +362,6 @@ export function JoinClass(props) {
         onChange={(e) => setPasscode(e.target.value)}
         errors={{ "empty-code": "Required" }}
         style={{ textTransform: "uppercase" }}
-        onKeyDown={handleKeyPresses}
       />
       <div
         className="error-banner"

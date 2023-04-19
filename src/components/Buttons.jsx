@@ -31,7 +31,7 @@ export function IconButton(props) {
   return (
     <Button
       id={props.label + "-icon-button"}
-      title={props.label}
+      title={props.title}
       variant={props.variant || "icon"}
       className={props.className}
       onClick={props.onClick}

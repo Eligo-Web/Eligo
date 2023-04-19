@@ -303,7 +303,7 @@ function CreateOrEditClass(props) {
   }
 
   return (
-    <div className="pop-up-content" id={popupName}>
+    <div className="pop-up-content" id={popupName} onKeyDown={handleKeyPresses}>
       <div className="input-group">
         <InputField
           class="name-input"
@@ -311,7 +311,6 @@ function CreateOrEditClass(props) {
           input="ex: Intermediate Programming"
           default={props.name || ""}
           onChange={(e) => setName(e.target.value)}
-          onKeyDown={handleKeyPresses}
           errors={{
             "empty-name": "Required",
             "invalid-name": "Name contains invalid characters",
@@ -324,7 +323,6 @@ function CreateOrEditClass(props) {
           input="ex: EN.601.220"
           default={props.sisId || ""}
           onChange={(e) => setSISId(e.target.value.toUpperCase())}
-          onKeyDown={handleKeyPresses}
           errors={{ "invalid-sis-id": "Invalid format" }}
           style={{ textTransform: "uppercase" }}
         />
@@ -337,7 +335,6 @@ function CreateOrEditClass(props) {
           input="1, 2, ..."
           default={props.section || ""}
           onChange={(e) => setSection(e.target.value)}
-          onKeyDown={handleKeyPresses}
           errors={{
             "empty-section": "Required",
             "invalid-section": "Invalid section",
@@ -349,7 +346,6 @@ function CreateOrEditClass(props) {
           input="ex: Spring 2023"
           default={props.semester}
           onChange={(e) => setSemester(e.target.value)}
-          onKeyDown={handleKeyPresses}
         />
       </div>
       <div

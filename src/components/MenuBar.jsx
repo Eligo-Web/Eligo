@@ -75,7 +75,8 @@ function MenuBar(props) {
                   <IconCopy size="1.5em" alt="Copy passcode" />
                 ) : null
               }
-              label={props.description || "None"}
+              label={props.description}
+              title={"Class code: " + (props.description || "Not provided")}
               variant="transparent"
             />
           </Col>

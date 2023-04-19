@@ -274,11 +274,29 @@
 
 .edit-button,
 .session-edit-button {
+  border-radius: 0.6rem;
+  transition: 0.1s ease;
   position: absolute;
   padding: 0.5rem;
   bottom: 0.5rem;
   right: 0.5rem;
   z-index: 5;
+}
+
+.session-edit-button {
+  display: flex;
+  bottom: 0;
+  right: 0.1rem;
+  position: relative;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6rem;
+  height: 2.4rem;
+  width: auto;
+}
+
+.edit-button:hover,
+.session-edit-button:hover {
+  background: #1029464b;
 }
 
 .connect-base-btn {
@@ -408,14 +426,6 @@
 .location-switch-info:hover::before {
   pointer-events: all;
   opacity: 100%;
-}
-
-.session-edit-button {
-  display: flex;
-  bottom: 0;
-  right: 0;
-  position: relative;
-  padding: 0.7rem;
 }
 
 .sign-in-content {

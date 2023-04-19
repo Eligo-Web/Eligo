@@ -208,6 +208,7 @@ function Menu(props) {
           {baseButton}
           {props.hideCreate || props.hideJoin || props.leaveAction ? null : (
             <IconButton
+              title={getLabel}
               label={getLabel}
               icon={<IoMdAddCircleOutline size="1.7em" />}
               onClick={() => {
