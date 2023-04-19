@@ -126,6 +126,7 @@
 
 .copy-success {
   line-height: normal;
+  transition: 0.25s cubic-bezier(0.67, 0, 0.33, 1);
   max-width: max-content;
   overflow: hidden;
   font-weight: 600;

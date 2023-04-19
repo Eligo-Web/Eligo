@@ -12,6 +12,13 @@ import "../styles/text.css";
 
 function MenuBar(props) {
   const [copied, setCopied] = useState(false);
+  let ariaLabel;
+  if (props.courseView) {
+    ariaLabel = "Class code: ";
+  } else if (props.sessionView) {
+    ariaLabel = "session code: ";
+  }
+  ariaLabel += props.description;
 
   function openMenu() {
     document.body.style.overflowY = "hidden";
@@ -48,14 +55,14 @@ function MenuBar(props) {
         </Col>
         {props.showDescription ? (
           <Col
-            className="large-title menu-bar-subtitle"
+            className="large-title menu-bar-subtitle gap-2"
             onClick={() => copyDescription()}
           >
             <div
               className="copy-success"
               style={{
                 opacity: copied ? "100%" : 0,
-                width: copied ? "10rem" : 0,
+                width: copied ? "8.8rem" : 0,
               }}
             >
               Copied!
@@ -67,7 +74,8 @@ function MenuBar(props) {
             </div>
             <IconButton
               style={{
-                padding: "1rem",
+                borderRadius: "1rem",
+                padding: "0.7rem 1rem",
                 cursor: props.clickable ? "pointer" : "default",
               }}
               icon={
@@ -76,8 +84,8 @@ function MenuBar(props) {
                 ) : null
               }
               label={props.description}
-              title={"Class code: " + (props.description || "Not provided")}
-              variant="transparent"
+              ariaLabel={ariaLabel}
+              variant="transparent hover-hint"
             />
           </Col>
         ) : null}

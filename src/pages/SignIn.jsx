@@ -39,6 +39,7 @@ function SignIn() {
               role: role,
             })
             .then((res) => {
+              console.log(res.data.message);
               user = res.data.data;
             });
         }

@@ -415,6 +415,7 @@ function CourseView() {
         title={location.state.courseName}
         description={location.state.classPasscode}
         showDescription={location.state.permission !== "STUDENT"}
+        courseView
         clickable
       />
       {location.state.permission === "STUDENT"

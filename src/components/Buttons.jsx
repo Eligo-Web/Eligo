@@ -30,16 +30,16 @@ export function PrimaryButton(props) {
 export function IconButton(props) {
   return (
     <Button
-      id={props.label + "-icon-button"}
-      title={props.title}
+      id={props.label ? `${props.label}-icon-button` : "No Label"}
+      aria-label={props.ariaLabel || props.label || "Not provided"}
       variant={props.variant || "icon"}
       className={props.className}
       onClick={props.onClick}
       style={props.style}
       disabled={props.disabled}
     >
-      {props.icon}
-      {props.hideLabel ? null : props.label}
+      <div className="button-icon">{props.icon}</div>
+      {props.hideLabel ? null : props.label || "No Label"}
     </Button>
   );
 }
@@ -143,9 +143,10 @@ export function FloatingButton(props) {
           <IconCalculator size="1.4em" />
           <div className="connect-btn-label">{label}</div>
           <IconX
-            size="1.5em"
+            size="2.3em"
             stroke="0.14rem"
-            style={{ marginLeft: "0.7rem" }}
+            className="absolute-hint position-relative p-2"
+            style={{ right: 0, margin: "-0.3rem -0.6rem -0.3rem 1rem" }}
             onClick={(event) => dismiss(event, true)}
           />
         </div>

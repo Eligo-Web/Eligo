@@ -355,8 +355,9 @@ function SessionView() {
           <MenuBar
             title={location.state.sessionName}
             description={location.state.sessionPasscode}
-            clickable
             showDescription
+            sessionView
+            clickable
           />
           {polls ? null : (
             <EmptySessionView open={location.state.sessionActive} />

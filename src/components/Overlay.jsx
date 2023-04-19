@@ -1,6 +1,6 @@
+import { IconX } from "@tabler/icons-react";
 import { useContext, useEffect, useState } from "react";
 import { Button, Row } from "react-bootstrap";
-import { IoIosClose } from "react-icons/io";
 import { EditPopupContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView";
 import "../styles/overlay.css";
@@ -102,10 +102,10 @@ export default function Overlay(props) {
               "Overlay Title"}
           </Row>
           <Button
-            variant="transparent"
+            variant="transparent absolute-hint"
             aria-label={`Close Overlay ${props.title}`}
           >
-            <IoIosClose size={"2.5em"} onClick={() => close()} />
+            <IconX size={"1.7em"} color="black" onClick={() => close()} />
           </Button>
         </div>
         {props.createClass ? (
