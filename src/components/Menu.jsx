@@ -11,15 +11,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import * as clicker from "../components/ClickerBase";
-import { ClickerContext } from "../containers/InAppContainer";
+import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
 import "../styles/text.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
-import { openPopup } from "./Overlay";
-import { EditPopupContext } from "../containers/InAppContainer";
 
 function Menu(props) {
   const location = useLocation();
@@ -76,7 +74,7 @@ function Menu(props) {
     menuBG.style.transition = "0.5s cubic-bezier(0.7, 0, 0.5, 1)";
     menu.style.transition = "0.5s cubic-bezier(0.7, 0, 0.5, 1)";
     menu.style.transform = "translate(-18rem,0)";
-    pause(10).then(() => document.body.style.overflowY = "overlay");
+    pause(10).then(() => (document.body.style.overflowY = "overlay"));
   }
 
   async function handleSignOut() {
@@ -215,8 +213,8 @@ function Menu(props) {
               onClick={() => {
                 closeMenu();
                 pause(200).then(() => {
-                  if(props.popup) setPopup(props.popup);
-                })
+                  if (props.popup) setPopup(props.popup);
+                });
               }}
             />
           )}

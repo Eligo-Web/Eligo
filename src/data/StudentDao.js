@@ -48,21 +48,6 @@ class StudentDao {
     );
   }
 
-  async readEmailByClickerIdInCourse(semester, sectionId, email) {
-    const student = await Student.find({ email: email });
-    if (!student) {
-      throw new ApiError(404, `User with email ${email} not found`);
-    }
-    if (student.clickerId) {
-      return student;
-    } else {
-      throw new ApiError(
-        404,
-        `No clicker id found for user with email ${email}`
-      );
-    }
-  }
-
   async create(student) {
     const newStudent = new Student(student);
     await newStudent.save();
@@ -105,6 +90,17 @@ class StudentDao {
       student.history.set(newSemester, []);
     }
     student.history.get(newSemester).push(newSectionId);
+    await student.save();
+    return student;
+  }
+
+  async updateLastLogin(email, token) {
+    const student = await Student.findOne({ email: email.toLowerCase() });
+    if (!student) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    student.lastLogin = new Date();
+    student.token = token;
     await student.save();
     return student;
   }

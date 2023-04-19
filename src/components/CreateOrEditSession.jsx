@@ -8,10 +8,10 @@ import { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import { server } from "../ServerUrl";
 import { EditPopupContext } from "../containers/InAppContainer";
+import { pause } from "../pages/CourseView";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { closePopup } from "./Overlay";
-import { pause } from "../pages/CourseView";
 
 export function CreateSession(props) {
   return (
@@ -54,9 +54,7 @@ function CreateOrEditSession(props) {
   const reset = true;
 
   useEffect(() => {
-    const overlay = document.getElementById(
-      popupId
-    );
+    const overlay = document.getElementById(popupId);
     if (!overlay) return;
     const isOpen = !!overlay.parentNode.isOpen;
     if (isOpen && props.control) {
@@ -157,9 +155,7 @@ function CreateOrEditSession(props) {
   }
 
   async function clearContents(reset = false) {
-    const overlay = document.getElementById(
-      popupId
-    );
+    const overlay = document.getElementById(popupId);
     if (props.editMode && props.markDelete) {
       props.setMarkDelete(false);
       await pause(300);
@@ -176,10 +172,7 @@ function CreateOrEditSession(props) {
   }
 
   return (
-    <div
-      className="pop-up-content"
-      id={popupId}
-    >
+    <div className="pop-up-content" id={popupId}>
       <InputField
         class="session-name-input"
         label="Session Name"

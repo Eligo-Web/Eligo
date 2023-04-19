@@ -211,7 +211,7 @@ function OverView() {
     }, [editPopup]);
 
     return (
-      <div style={{height: "100%"}}>
+      <div style={{ height: "100%" }}>
         <InstructorScreenAlert />
         {editPopup}
         {cards ? null : <EmptyOverview />}
@@ -229,18 +229,20 @@ function OverView() {
         <FloatingButton base={base} onClick={() => loadBase()} bottom />
       )}
       <div className="overview-wrapper">
-        <Menu popup={
-          location.state.permission === "STUDENT" ?
-          null : 
-        <Overlay
-          key="create-class"
-          title="New Class"
-          id="create-class"
-          refresh={refresh}
-          setRefresh={setRefresh}
-          createClass
+        <Menu
+          popup={
+            location.state.permission === "STUDENT" ? null : (
+              <Overlay
+                key="create-class"
+                title="New Class"
+                id="create-class"
+                refresh={refresh}
+                setRefresh={setRefresh}
+                createClass
+              />
+            )
+          }
         />
-        }/>
         <MenuBar
           title="Your Courses"
           description={location.state.email}

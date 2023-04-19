@@ -25,7 +25,9 @@ function SignIn() {
       });
 
     await axios
-      .get(`${server}/${role.toLowerCase()}/${email}`)
+      .get(`${server}/${role.toLowerCase()}/${email}`, {
+        token: response.access_token,
+      })
       .then(async (res) => {
         if (res.data.status === 200) {
           user = res.data.data;
@@ -76,11 +78,7 @@ function SignIn() {
             console.log(response);
           }}
           render={({ onClick }) => (
-            <Button
-              variant="sign-in"
-              className="large-title"
-              onClick={onClick}
-            >
+            <Button variant="sign-in" className="large-title" onClick={onClick}>
               <img
                 src={studentIcon}
                 className="sign-in-icon"
@@ -103,11 +101,7 @@ function SignIn() {
             console.log(response);
           }}
           render={({ onClick }) => (
-            <Button
-              variant="sign-in"
-              className="large-title"
-              onClick={onClick}
-            >
+            <Button variant="sign-in" className="large-title" onClick={onClick}>
               <img
                 src={instructorIcon}
                 className="sign-in-icon"

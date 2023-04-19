@@ -20,8 +20,8 @@ function MenuBar(props) {
     const menu = menuContainer.querySelector(".menu");
     menuBG.style.pointerEvents = "all";
     menuBG.style.opacity = 1;
-    menuBG.style.transition = "0.5s cubic-bezier(0.5, 0.05, 0, 1)"
-    menu.style.transition = "0.5s cubic-bezier(0.5, 0.05, 0, 1)"
+    menuBG.style.transition = "0.5s cubic-bezier(0.5, 0.05, 0, 1)";
+    menu.style.transition = "0.5s cubic-bezier(0.5, 0.05, 0, 1)";
     menu.style.transform = "translate(18rem,0)";
   }
 
