@@ -56,11 +56,19 @@ function CreateOrEditClass(props) {
   const [showError, setShowError] = useState(false);
   const [refresh, setRefresh] = [props.refresh, props.setRefresh];
   const [popup, setPopup] = useContext(EditPopupContext);
-  const validCharset = /^[ -~]+$/;
+  const validCharset = /^[a-zA-Z0-9\s\p{P}\p{S}]+$/u;
   const location = useLocation();
   const popupName = props.editMode
     ? toSectionId(props.name + props.section + props.semester)
     : "create-class";
+  const [defaultNamePH, defaultsisIdPH, defaultSectionPH] = [
+    "ex: Intermediate Programming",
+    "ex: EN.601.220",
+    "1, 2, ...",
+  ];
+  const [nameInputPH, setNameInputPH] = useState(defaultNamePH);
+  const [sisIDInputPH, setSisIDInputPH] = useState(defaultsisIdPH);
+  const [sectionInputPH, setSectionInputPH] = useState(defaultSectionPH);
   let valid = true;
 
   useEffect(() => {
@@ -125,11 +133,9 @@ function CreateOrEditClass(props) {
     nameField.className = "name-input form-control";
     sectionField.className = "section-input form-control";
     sisIdField.className = "sis-id-input form-control";
-    overlay.querySelector(".empty-name").style.display = "none";
-    overlay.querySelector(".invalid-name").style.display = "none";
-    overlay.querySelector(".empty-section").style.display = "none";
-    overlay.querySelector(".invalid-section").style.display = "none";
-    overlay.querySelector(".invalid-sis-id").style.display = "none";
+    setNameInputPH(defaultNamePH);
+    setSisIDInputPH(defaultsisIdPH);
+    setSectionInputPH(defaultSectionPH);
     closePopup(popupName, setPopup);
   }
 
@@ -141,44 +147,38 @@ function CreateOrEditClass(props) {
     valid = true;
 
     if (!name) {
+      setNameInputPH("• Required");
       nameField.className += " field-error";
-      overlay.querySelector(".empty-name").style.display = "block";
-      overlay.querySelector(".invalid-name").style.display = "none";
       valid = false;
     } else if (!validCharset.test(name + section + semester)) {
+      setNameInputPH("• Invalid characters");
       nameField.className += " field-error";
-      overlay.querySelector(".empty-name").style.display = "none";
-      overlay.querySelector(".invalid-name").style.display = "block";
       valid = false;
     } else {
+      setNameInputPH(defaultNamePH);
       nameField.className = "name-input form-control";
-      overlay.querySelector(".empty-name").style.display = "none";
-      overlay.querySelector(".invalid-name").style.display = "none";
     }
 
     if (!section) {
+      setSectionInputPH("• Required");
       sectionField.className += " field-error";
-      overlay.querySelector(".empty-section").style.display = "block";
-      overlay.querySelector(".invalid-section").style.display = "none";
       valid = false;
     } else if (isNaN(section) || section < 1) {
-      overlay.querySelector(".empty-section").style.display = "none";
-      overlay.querySelector(".invalid-section").style.display = "block";
+      setSectionInputPH("• Invalid section");
       sectionField.className += " field-error";
       valid = false;
     } else {
       sectionField.className = "section-input form-control";
-      overlay.querySelector(".empty-section").style.display = "none";
-      overlay.querySelector(".invalid-section").style.display = "none";
     }
 
     if (sisId && !/^[A-Z]{2}\.\d{3}\.\d{3}$/.test(sisId)) {
+      sisIdField.value = "";
+      setSisIDInputPH("• Invalid format");
       sisIdField.className += " field-error";
-      overlay.querySelector(".invalid-sis-id").style.display = "block";
       valid = false;
     } else {
+      setSisIDInputPH(defaultsisIdPH);
       sisIdField.className = "sis-id-input form-control";
-      overlay.querySelector(".invalid-sis-id").style.display = "none";
     }
     return valid;
   }
@@ -313,15 +313,17 @@ function CreateOrEditClass(props) {
     await axios.delete(
       `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`,
       {
-        token: location.state.token,
+        headers: { token: location.state.token },
       }
     );
     for (let student in students) {
       await axios.delete(
         `${server}/student/${student}/${props.semester}/${oldSectionId}`,
         {
-          token: location.state.token,
-          requester: location.state.email,
+          headers: {
+            token: location.state.token,
+            requester: location.state.email,
+          },
         }
       );
     }
@@ -335,22 +337,17 @@ function CreateOrEditClass(props) {
         <InputField
           class="name-input"
           label="Class Name"
-          input="ex: Intermediate Programming"
+          input={nameInputPH}
           default={props.name || ""}
           onChange={(e) => setName(e.target.value)}
-          errors={{
-            "empty-name": "Required",
-            "invalid-name": "Name contains invalid characters",
-          }}
         />
         <InputField
           small
           class="sis-id-input"
           label="Course ID (opt.)"
-          input="ex: EN.601.220"
+          input={sisIDInputPH}
           default={props.sisId || ""}
           onChange={(e) => setSISId(e.target.value.toUpperCase())}
-          errors={{ "invalid-sis-id": "Invalid format" }}
           style={{ textTransform: "uppercase" }}
         />
       </div>
@@ -359,13 +356,9 @@ function CreateOrEditClass(props) {
           small
           class="section-input"
           label="Section No."
-          input="1, 2, ..."
+          input={sectionInputPH}
           default={props.section || ""}
           onChange={(e) => setSection(e.target.value)}
-          errors={{
-            "empty-section": "Required",
-            "invalid-section": "Invalid section",
-          }}
         />
         <SelectField
           class="semester-input"

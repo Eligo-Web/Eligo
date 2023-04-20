@@ -47,6 +47,8 @@ export function ConfirmDelete(props) {
 
 export function JoinSession(props) {
   const [passcode, setPasscode] = useState("");
+  const defaultPasscodePH = "Ex: 1234";
+  const [passcodeInputPH, setpasscodeInputPH] = useState(defaultPasscodePH);
   const [invalidErr, setInvalidErr] = useState(false);
   const [invalidLoc, setInvalidLoc] = useState(false);
   const [locErr, setLocError] = useState(false);
@@ -98,14 +100,14 @@ export function JoinSession(props) {
 
     if (!passcode) {
       passcodeField.className += " field-error";
-      overlay.querySelector(".empty-code").style.display = "block";
+      setpasscodeInputPH("• Required");
       setInvalidErr(false);
       setInvalidLoc(false);
       setLocError(false);
       valid = false;
     } else {
       passcodeField.className = "passcode-input form-control";
-      overlay.querySelector(".empty-code").style.display = "none";
+      setpasscodeInputPH(defaultPasscodePH);
     }
     return valid;
   }
@@ -114,8 +116,8 @@ export function JoinSession(props) {
     const overlay = document.getElementById("join-session-popup");
     const passcodeField = overlay.querySelector(".passcode-input");
     passcodeField.className = "passcode-input form-control";
-    overlay.querySelector(".empty-code").style.display = "none";
     passcodeField.value = "";
+    setpasscodeInputPH(defaultPasscodePH);
     setPasscode("");
     setInvalidErr(false);
     setInvalidLoc(false);
@@ -144,6 +146,7 @@ export function JoinSession(props) {
           thisError = error.PERMISSION_DENIED;
           if (thisError) {
             setLocError(true);
+            setInvalidLoc(false);
             setInvalidErr(false);
             present = false;
           }
@@ -170,6 +173,9 @@ export function JoinSession(props) {
     if (!checkPasscode()) {
       return;
     } else if (!present) {
+      setInvalidLoc(true);
+      setLocError(false);
+      setInvalidErr(false);
       return;
     }
     let valid = true;
@@ -218,31 +224,21 @@ export function JoinSession(props) {
       <InputField
         class="passcode-input"
         label="Passcode"
-        input="Ex: 1234"
+        input={passcodeInputPH}
         onChange={(e) => {
           setPasscode(e.target.value);
         }}
-        errors={{ "empty-code": "Required" }}
         type="password"
       />
-      <div
-        className="error-banner"
-        style={{ display: invalidErr ? "flex" : "none" }}
-      >
+      <div className="error-banner" style={{ opacity: invalidErr }}>
         <IconAlertTriangleFilled />
         Failed to join session. Passcode is invalid!
       </div>
-      <div
-        className="error-banner"
-        style={{ display: invalidLoc ? "flex" : "none" }}
-      >
+      <div className="error-banner" style={{ opacity: invalidLoc }}>
         <IconAlertTriangleFilled />
         Permission denied: Failed to join, out of range.
       </div>
-      <div
-        className="error-banner"
-        style={{ display: locErr ? "flex" : "none" }}
-      >
+      <div className="error-banner" style={{ opacity: locErr }}>
         <IconAlertTriangleFilled />
         Location permission denied! Cannot join session.
       </div>
@@ -313,7 +309,6 @@ export function JoinClass(props) {
 
   async function joinClass() {
     if (!checkPasscode()) {
-      setDupeError(false);
       return;
     }
     await axios
@@ -374,14 +369,14 @@ export function JoinClass(props) {
       />
       <div
         className="error-banner"
-        style={{ display: dupeError ? "flex" : "none" }}
+        style={{ display: dupeError ? "block" : "none" }}
       >
         <IconAlertTriangleFilled />
         You have already joined this course!
       </div>
       <div
         className="error-banner"
-        style={{ display: invalidError ? "flex" : "none" }}
+        style={{ display: invalidError ? "block" : "none" }}
       >
         <IconAlertTriangleFilled />
         Course with given passcode not found!

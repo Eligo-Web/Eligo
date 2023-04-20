@@ -404,8 +404,7 @@ export function ClosedPoll(props) {
     await axios.delete(
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
       {
-        token: props.token,
-        email: props.email,
+        headers: { token: props.token, email: props.email },
       }
     );
     closePopup(props.pollId, setEditPopup);

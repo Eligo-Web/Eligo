@@ -160,8 +160,7 @@ function CreateOrEditSession(props) {
     await axios.delete(
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
       {
-        token: props.token,
-        email: props.email,
+        headers: { token: props.token, email: props.email },
       }
     );
     props.setRefresh(!props.refresh);

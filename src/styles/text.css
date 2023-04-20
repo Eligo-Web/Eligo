@@ -200,7 +200,7 @@ svg {
 
 .form-control::placeholder {
   font-weight: 600;
-  color: #00060d !important;
+  color: #00060d;
   opacity: 55%;
 }
 

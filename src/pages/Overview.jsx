@@ -186,17 +186,15 @@ function OverView() {
       loadContent();
     }, [refresh]);
 
+    useEffect(() => {
+      if (editPopup) {
+        openPopup(editPopup.key);
+      }
+    }, [editPopup]);
+
     return (
-      <div className="d-flex fill-centered">
-        <Overlay
-          title="Join Class"
-          id="join-class"
-          refresh={refresh}
-          setRefresh={setRefresh}
-          state={location.state}
-          token={location.state.token}
-          joinClass
-        />
+      <div className={cards ? "" : "d-flex fill-centered"}>
+        {editPopup}
         {cards ? null : <EmptyOverview student />}
         <div className="semester-container">{cards}</div>
       </div>
@@ -244,7 +242,18 @@ function OverView() {
       <div className="overview-wrapper">
         <Menu
           popup={
-            location.state.permission === "STUDENT" ? null : (
+            location.state.permission === "STUDENT" ? (
+              <Overlay
+                key="join-class"
+                title="Join Class"
+                id="join-class"
+                refresh={refresh}
+                setRefresh={setRefresh}
+                state={location.state}
+                token={location.state.token}
+                joinClass
+              />
+            ) : (
               <Overlay
                 key="create-class"
                 title="New Class"

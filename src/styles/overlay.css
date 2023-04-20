@@ -201,18 +201,18 @@ select {
   cursor: pointer;
 }
 
-.field-error {
+.field-error,
+.field-error:focus {
   background-color: #fbd6d6;
   border-color: #db1c0698;
-}
-
-.field-error::placeholder {
-  opacity: 100%;
   color: #600000 !important;
 }
 
+.field-error::placeholder,
+.field-error:hover::placeholder,
 .field-error:focus::placeholder {
-  color: #00060daa !important;
+  color: #600000 !important;
+  opacity: 100% !important;
 }
 
 @media screen and (max-width: 35rem) {

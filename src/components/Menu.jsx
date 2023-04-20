@@ -102,9 +102,10 @@ function Menu(props) {
       await axios.delete(
         `${server}/student/${location.state.email}/clickerId`,
         {
-          token: location.state.token,
+          headers: { token: location.state.token },
         }
       );
+      location.state.clickerId = "";
     }
     setShowError(false);
   }
@@ -131,18 +132,20 @@ function Menu(props) {
   }, []);
 
   async function leaveClass() {
-    await axios.delete(
-      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`,
-      {
-        token: location.state.token,
-      }
-    );
-    await axios.delete(
-      `${server}/course/${location.state.sectionId}/${location.state.email}`,
-      {
-        token: location.state.token,
-      }
-    );
+    await axios
+      .delete(
+        `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`,
+        {
+          headers: { token: location.state.token },
+        }
+      );
+    await axios
+      .delete(
+        `${server}/course/${location.state.sectionId}/${location.state.email}`,
+        {
+          headers: { token: location.state.token },
+        }
+      );
     navigate("/overview", {
       state: {
         name: location.state.name,
