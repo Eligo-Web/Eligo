@@ -222,7 +222,6 @@ Student.delete("/:email/clickerId", async (req, res, next) => {
   const email = req.params.email;
   const token = req.headers.token;
   try {
-    const student = await studentDao.deleteClickerId(email);
     if (token !== student.token) {
       res.json({
         status: 401,
@@ -230,6 +229,7 @@ Student.delete("/:email/clickerId", async (req, res, next) => {
         data: null,
       });
     } else {
+      const student = await studentDao.deleteClickerId(email);
       res.json({
         status: 200,
         message: `Student's clickerId with email ${email} deleted`,
