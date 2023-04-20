@@ -21,6 +21,7 @@ export function CreateSession(props) {
       refresh={props.refresh}
       setRefresh={props.setRefresh}
       control={props.control}
+      token={props.token}
     />
   );
 }
@@ -38,6 +39,7 @@ export function EditSession(props) {
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
+      token={props.token}
       editMode
     />
   );
@@ -97,7 +99,11 @@ function CreateOrEditSession(props) {
       buttonText.data = "Creating...";
     }
     await axios.put(
-      `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`
+      `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`,
+      {
+        token: props.token,
+        email: props.email,
+      }
     );
     let latitude = 0;
     let longitude = 0;
@@ -126,6 +132,8 @@ function CreateOrEditSession(props) {
         weekNum: getWeekNumber(),
         latitude: latitude,
         longitude: longitude,
+        token: props.token,
+        email: props.email,
       });
       props.setRefresh(!props.refresh);
       clearContents(reset);
@@ -140,6 +148,8 @@ function CreateOrEditSession(props) {
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
       {
         name: sessionName ? sessionName : new Date().toDateString(),
+        token: props.token,
+        email: props.email,
       }
     );
     props.setRefresh(!props.refresh);
@@ -148,7 +158,11 @@ function CreateOrEditSession(props) {
 
   async function handleDelete() {
     await axios.delete(
-      `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`
+      `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
+      {
+        token: props.token,
+        email: props.email,
+      }
     );
     props.setRefresh(!props.refresh);
     clearContents();

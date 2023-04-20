@@ -95,7 +95,13 @@ function SessionView() {
   async function checkActiveSession() {
     await axios
       .get(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`,
+        {
+          headers: {
+            token: location.state.token,
+            email: location.state.email,
+          },
+        }
       )
       .then((res) => {
         if (!res.data.data.active) {
@@ -106,10 +112,18 @@ function SessionView() {
 
   async function closeSession() {
     await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`,
+      {
+        token: location.state.token,
+        email: location.state.email,
+      }
     );
     await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`,
+      {
+        token: location.state.token,
+        email: location.state.email,
+      }
     );
     navigateBack();
   }
@@ -129,6 +143,7 @@ function SessionView() {
         permission: location.state.permission,
         email: location.state.email,
         clickerId: location.state.clickerId,
+        token: location.state.token,
       },
     });
   }
@@ -141,7 +156,13 @@ function SessionView() {
     async function checkActivePoll() {
       await axios
         .get(
-          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`
+          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`,
+          {
+            headers: {
+              token: location.state.token,
+              email: location.state.email,
+            },
+          }
         )
         .then(async (res) => {
           if (res.data.data) {
@@ -187,6 +208,7 @@ function SessionView() {
               />
             }
             key="vote-popup"
+            token={location.state.token}
             vote
           />
         );
@@ -264,7 +286,13 @@ function SessionView() {
     async function downloadSessionData() {
       await axios
         .get(
-          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/`
+          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`,
+          {
+            headers: {
+              token: location.state.token,
+              email: location.state.email,
+            },
+          }
         )
         .then((res) => {
           let emails = Object.keys(res.data.data.students);
@@ -412,7 +440,13 @@ function SessionView() {
 
     await axios
       .get(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`,
+        {
+          headers: {
+            token: location.state.token,
+            email: location.state.email,
+          },
+        }
       )
       .then((res) => {
         if (res.data.status === 200) {
@@ -425,7 +459,11 @@ function SessionView() {
       if (poll.active && poll.endTimestamp < 0 && !popup) {
         await axios
           .put(
-            `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`
+            `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`,
+            {
+              token: location.state.token,
+              email: location.state.email,
+            }
           )
           .then((res) => (poll = res.data.data));
       }
@@ -439,6 +477,8 @@ function SessionView() {
           setRefresh={setRefresh}
           activePoll={poll.active}
           pollInfo={poll}
+          email={location.state.email}
+          token={location.state.token}
           poll
         />
       );
@@ -511,6 +551,7 @@ function SessionView() {
       sectionId: location.state.sectionId,
       weekNum: location.state.weekNum,
       sessionId: location.state.sessionId,
+      token: location.state.token,
     };
   }
 
@@ -530,7 +571,11 @@ function SessionView() {
       await pause();
     }
     await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`,
+      {
+        token: location.state.token,
+        email: location.state.email,
+      }
     );
     if (!popup.props || popup.props.sessionId === location.state.sessionId) {
       setRefresh(!refresh);

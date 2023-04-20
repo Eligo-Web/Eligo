@@ -93,10 +93,18 @@ function Menu(props) {
         return;
       }
       await axios.patch(
-        `${server}/student/${location.state.email}/${clickerId}`
+        `${server}/student/${location.state.email}/${clickerId}`,
+        {
+          token: location.state.token,
+        }
       );
     } else {
-      await axios.delete(`${server}/student/${location.state.email}/clickerId`);
+      await axios.delete(
+        `${server}/student/${location.state.email}/clickerId`,
+        {
+          token: location.state.token,
+        }
+      );
     }
     setShowError(false);
   }
@@ -105,7 +113,12 @@ function Menu(props) {
     async function getClickerId() {
       let newClickerId;
       await axios
-        .get(`${server}/student/${location.state.email}`)
+        .get(`${server}/student/${location.state.email}`, {
+          headers: {
+            token: location.state.token,
+            requester: location.state.email,
+          },
+        })
         .then((res) => {
           newClickerId = res.data.data.clickerId;
         });
@@ -119,10 +132,16 @@ function Menu(props) {
 
   async function leaveClass() {
     await axios.delete(
-      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`
+      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`,
+      {
+        token: location.state.token,
+      }
     );
     await axios.delete(
-      `${server}/course/${location.state.sectionId}/${location.state.email}`
+      `${server}/course/${location.state.sectionId}/${location.state.email}`,
+      {
+        token: location.state.token,
+      }
     );
     navigate("/overview", {
       state: {
@@ -130,6 +149,7 @@ function Menu(props) {
         permission: location.state.permission,
         email: location.state.email,
         clickerId: location.state.clickerId,
+        token: location.state.token,
       },
     });
   }
@@ -158,6 +178,7 @@ function Menu(props) {
                     permission: location.state.permission,
                     email: location.state.email,
                     clickerId: location.state.clickerId,
+                    token: location.state.token,
                   },
                 });
               }}

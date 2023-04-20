@@ -13,30 +13,33 @@ function SignIn() {
   async function handleSignin(response, role) {
     let email = "";
     let name = "";
+    let token = response.access_token;
     let user = {};
-
     await axios
       .get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${response.access_token}`
+        `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`
       )
       .then((res) => {
         email = res.data.email;
         name = res.data.given_name + " " + res.data.family_name;
       });
-
     await axios
       .get(`${server}/${role.toLowerCase()}/${email}`, {
-        token: response.access_token,
+        headers: {
+          token: token,
+          requester: email,
+        },
       })
       .then(async (res) => {
         if (res.data.status === 200) {
           user = res.data.data;
-        } else {
+        } else if (res.data.status === 404) {
           await axios
             .post(`${server}/${role.toLowerCase()}`, {
               name: name,
               email: email,
               role: role,
+              token: token,
             })
             .then((res) => {
               console.log(res.data.message);
@@ -51,6 +54,7 @@ function SignIn() {
         name: user.name,
         history: user.history,
         clickerId: user.clickerId,
+        token: user.token,
       },
     });
   }
@@ -76,7 +80,7 @@ function SignIn() {
             handleSignin(response, "STUDENT");
           }}
           onFailure={(response) => {
-            console.log(response);
+            navigate("/overview");
           }}
           render={({ onClick }) => (
             <Button variant="sign-in" className="large-title" onClick={onClick}>
@@ -99,7 +103,7 @@ function SignIn() {
             handleSignin(response, "INSTRUCTOR");
           }}
           onFailure={(response) => {
-            console.log(response);
+            navigate("/overview");
           }}
           render={({ onClick }) => (
             <Button variant="sign-in" className="large-title" onClick={onClick}>

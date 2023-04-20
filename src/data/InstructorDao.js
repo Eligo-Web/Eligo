@@ -78,6 +78,17 @@ class InstructorDao {
     return instructor;
   }
 
+  async updateLastLogin(email, token) {
+    const instructor = await Instructor.findOne({ email: email.toLowerCase() });
+    if (!instructor) {
+      throw new ApiError(404, `User with email ${email} not found`);
+    }
+    instructor.lastLogin = new Date();
+    instructor.token = token;
+    await instructor.save();
+    return instructor;
+  }
+
   async deleteFromHistory(email, semester, sectionId) {
     const instructor = await Instructor.findOne({ email: email.toLowerCase() });
     if (!instructor) {

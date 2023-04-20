@@ -1,13 +1,12 @@
-import axios from "axios";
 import express from "express";
 import StudentDao from "../data/StudentDao.js";
-import { decodeEmail } from "./courses.js";
+import { decodeEmail, validateToken } from "./courses.js";
 
 const Student = express.Router();
 export const studentDao = new StudentDao();
 
 Student.get("/", async (req, res, next) => {
-  const token = req.body.token;
+  const token = req.headers.token;
   try {
     if (token !== process.env.API_KEY) {
       res.json({
@@ -30,26 +29,18 @@ Student.get("/", async (req, res, next) => {
 
 Student.get("/:email", async (req, res, next) => {
   const email = req.params.email;
-  let checkEmail = "";
-  const token = req.body.token;
+  const token = req.headers.token;
+  const requester = req.headers.requester;
   try {
-    if (token) {
-      await axios
-        .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`
-        )
-        .then((res) => {
-          checkEmail = res.data.email;
-        });
-    }
-    const student = await studentDao.readByEmail(email);
-    if (email !== checkEmail) {
+    const valid = await validateToken(token, requester);
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
+      const student = await studentDao.readByEmail(email);
       await studentDao.updateLastLogin(email, token);
       res.json({
         status: 200,
@@ -68,20 +59,11 @@ Student.get(
     const semester = req.params.semester;
     const sectionId = req.params.sectionId;
     const clickerId = req.params.clickerId;
-    let checkEmail = "";
-    const email = req.body.email;
-    const token = req.body.token;
+    const email = req.headers.email;
+    const token = req.headers.token;
     try {
-      if (token) {
-        await axios
-          .get(
-            `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`
-          )
-          .then((res) => {
-            checkEmail = res.data.email;
-          });
-      }
-      if (email !== checkEmail) {
+      const valid = await validateToken(token, email);
+      if (!token || !valid) {
         res.json({
           status: 401,
           message: `Unauthorized Request`,
@@ -106,13 +88,24 @@ Student.get(
 );
 
 Student.post("/", async (req, res, next) => {
+  const token = req.body.token;
+  const email = req.body.email;
   try {
-    const student = await studentDao.create(req.body);
-    res.json({
-      status: 201,
-      message: "Student created",
-      data: req.body,
-    });
+    const valid = await validateToken(token, email);
+    if (!token || !valid) {
+      res.json({
+        status: 401,
+        message: `Unauthorized Request`,
+        data: null,
+      });
+    } else {
+      const student = await studentDao.create(req.body);
+      res.json({
+        status: 201,
+        message: "Student created",
+        data: req.body,
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -122,13 +115,22 @@ Student.put("/:email", async (req, res, next) => {
   const email = req.params.email;
   const sectionId = req.body.sectionId;
   const semester = req.body.semester;
+  const token = req.body.token;
   try {
     const student = await studentDao.addToHistory(email, sectionId, semester);
-    res.json({
-      status: 200,
-      message: `Student updated`,
-      data: student,
-    });
+    if (token !== student.token) {
+      res.json({
+        status: 401,
+        message: `Unauthorized Request`,
+        data: null,
+      });
+    } else {
+      res.json({
+        status: 200,
+        message: `Student updated`,
+        data: student,
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -140,19 +142,30 @@ Student.put("/:email/:semester/:sectionId", async (req, res, next) => {
   const newSemester = req.body.newSemester;
   const oldSectionId = req.params.sectionId;
   const newSectionId = req.body.newSectionId;
+  const token = req.body.token;
+  const requester = req.body.requester;
   try {
-    const student = await studentDao.updateHistory(
-      email,
-      oldSemester,
-      newSemester,
-      oldSectionId,
-      newSectionId
-    );
-    res.json({
-      status: 200,
-      message: `Student updated`,
-      data: student,
-    });
+    const valid = await validateToken(token, requester);
+    if (!token || !valid) {
+      res.json({
+        status: 401,
+        message: `Unauthorized Request`,
+        data: null,
+      });
+    } else {
+      const student = await studentDao.updateHistory(
+        email,
+        oldSemester,
+        newSemester,
+        oldSectionId,
+        newSectionId
+      );
+      res.json({
+        status: 200,
+        message: `Student updated`,
+        data: student,
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -161,13 +174,22 @@ Student.put("/:email/:semester/:sectionId", async (req, res, next) => {
 Student.patch("/:email/:clickerId", async (req, res, next) => {
   const email = req.params.email;
   const clickerId = req.params.clickerId;
+  const token = req.body.token;
   try {
     const student = await studentDao.updateClickerId(email, clickerId);
-    res.json({
-      status: 200,
-      message: `Student updated`,
-      data: student,
-    });
+    if (token !== student.token) {
+      res.json({
+        status: 401,
+        message: `Unauthorized Request`,
+        data: null,
+      });
+    } else {
+      res.json({
+        status: 200,
+        message: `Student updated`,
+        data: student,
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -175,13 +197,22 @@ Student.patch("/:email/:clickerId", async (req, res, next) => {
 
 Student.delete("/:email", async (req, res, next) => {
   const email = req.params.email;
+  const token = req.body.token;
   try {
     const student = await studentDao.deleteByEmail(email);
-    res.json({
-      status: 200,
-      message: `Student with email ${email} deleted`,
-      data: student,
-    });
+    if (token !== student.token) {
+      res.json({
+        status: 401,
+        message: `Unauthorized Request`,
+        data: null,
+      });
+    } else {
+      res.json({
+        status: 200,
+        message: `Student with email ${email} deleted`,
+        data: student,
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -189,13 +220,22 @@ Student.delete("/:email", async (req, res, next) => {
 
 Student.delete("/:email/clickerId", async (req, res, next) => {
   const email = req.params.email;
+  const token = req.body.token;
   try {
     const student = await studentDao.deleteClickerId(email);
-    res.json({
-      status: 200,
-      message: `Student's clickerId with email ${email} deleted`,
-      data: student,
-    });
+    if (token !== student.token) {
+      res.json({
+        status: 401,
+        message: `Unauthorized Request`,
+        data: null,
+      });
+    } else {
+      res.json({
+        status: 200,
+        message: `Student's clickerId with email ${email} deleted`,
+        data: student,
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -205,17 +245,28 @@ Student.delete("/:email/:semester/:sectionId", async (req, res, next) => {
   const email = decodeEmail(req.params.email);
   const semester = req.params.semester;
   const sectionId = req.params.sectionId;
+  const token = req.body.token;
+  const requester = req.body.requester;
   try {
-    const student = await studentDao.deleteFromHistory(
-      email,
-      semester,
-      sectionId
-    );
-    res.json({
-      status: 200,
-      message: `Student with email ${email} deleted`,
-      data: student,
-    });
+    const valid = await validateToken(token, requester);
+    if (!token || !valid) {
+      res.json({
+        status: 401,
+        message: `Unauthorized Request`,
+        data: null,
+      });
+    } else {
+      const student = await studentDao.deleteFromHistory(
+        email,
+        semester,
+        sectionId
+      );
+      res.json({
+        status: 200,
+        message: `Student with email ${email} deleted`,
+        data: student,
+      });
+    }
   } catch (err) {
     next(err);
   }

@@ -86,6 +86,7 @@ function OverView() {
         classPasscode: passcode,
         semester: semester,
         clickerId: location.state.clickerId,
+        token: location.state.token,
       },
     });
   }
@@ -93,7 +94,12 @@ function OverView() {
   async function populateCourseCards(role) {
     let history;
     await axios
-      .get(`${server}/${role.toLowerCase()}/${location.state.email}`)
+      .get(`${server}/${role.toLowerCase()}/${location.state.email}`, {
+        headers: {
+          token: location.state.token,
+          requester: location.state.email,
+        },
+      })
       .then((res) => {
         history = res.data.data.history;
       });
@@ -108,7 +114,12 @@ function OverView() {
       const courseList = [];
       for (let i in history[semester]) {
         await axios
-          .get(`${server}/course/${history[semester][i]}`)
+          .get(`${server}/course/${history[semester][i]}`, {
+            headers: {
+              token: location.state.token,
+              email: location.state.email,
+            },
+          })
           .then((res) => {
             const course = res.data.data;
             const popup = (
@@ -119,6 +130,7 @@ function OverView() {
                 childContent={course}
                 refresh={refresh}
                 setRefresh={setRefresh}
+                token={location.state.token}
                 editClass
               />
             );
@@ -182,6 +194,7 @@ function OverView() {
           refresh={refresh}
           setRefresh={setRefresh}
           state={location.state}
+          token={location.state.token}
           joinClass
         />
         {cards ? null : <EmptyOverview student />}
@@ -238,6 +251,7 @@ function OverView() {
                 id="create-class"
                 refresh={refresh}
                 setRefresh={setRefresh}
+                token={location.state.token}
                 createClass
               />
             )

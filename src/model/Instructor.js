@@ -23,6 +23,15 @@ const InstructorSchema = new mongoose.Schema({
     required: true,
     default: {},
   },
+  token: {
+    type: String,
+    required: true,
+  },
+  lastLogin: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 });
 
 const Instructor = mongoose.model("Instructor", InstructorSchema);

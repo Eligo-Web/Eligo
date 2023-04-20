@@ -26,6 +26,15 @@ const StudentSchema = new mongoose.Schema({
   clickerId: {
     type: String,
   },
+  token: {
+    type: String,
+    required: true,
+  },
+  lastLogin: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 });
 
 const Student = mongoose.model("Student", StudentSchema);
