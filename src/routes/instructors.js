@@ -143,7 +143,7 @@ Instructor.put("/:email/:semester/:sectionId", async (req, res, next) => {
 
 Instructor.delete("/:email", async (req, res, next) => {
   const email = req.params.email;
-  const token = req.body.token;
+  const token = req.headers.token;
   try {
     const instructor = await instructorDao.deleteByEmail(email);
     if (!token || instructor.token !== token) {
@@ -168,7 +168,7 @@ Instructor.delete("/:email/:semester/:sectionId", async (req, res, next) => {
   const email = req.params.email;
   const semester = req.params.semester;
   const sectionId = req.params.sectionId;
-  const token = req.body.token;
+  const token = req.headers.token;
   try {
     const instructor = await instructorDao.deleteFromHistory(
       email,

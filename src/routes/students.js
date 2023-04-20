@@ -197,7 +197,7 @@ Student.patch("/:email/:clickerId", async (req, res, next) => {
 
 Student.delete("/:email", async (req, res, next) => {
   const email = req.params.email;
-  const token = req.body.token;
+  const token = req.headers.token;
   try {
     const student = await studentDao.deleteByEmail(email);
     if (token !== student.token) {
@@ -220,7 +220,7 @@ Student.delete("/:email", async (req, res, next) => {
 
 Student.delete("/:email/clickerId", async (req, res, next) => {
   const email = req.params.email;
-  const token = req.body.token;
+  const token = req.headers.token;
   try {
     const student = await studentDao.deleteClickerId(email);
     if (token !== student.token) {
@@ -245,8 +245,8 @@ Student.delete("/:email/:semester/:sectionId", async (req, res, next) => {
   const email = decodeEmail(req.params.email);
   const semester = req.params.semester;
   const sectionId = req.params.sectionId;
-  const token = req.body.token;
-  const requester = req.body.requester;
+  const token = req.headers.token;
+  const requester = req.headers.requester;
   try {
     const valid = await validateToken(token, requester);
     if (!token || !valid) {

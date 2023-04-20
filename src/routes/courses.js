@@ -714,8 +714,8 @@ Course.put("/:sectionId/:email", async (req, res, next) => {
 
 Course.delete("/:sectionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
-  const token = req.body.token;
-  const email = req.body.email;
+  const token = req.headers.token;
+  const email = req.headers.email;
   try {
     const valid = await validateToken(token, email);
     if (!token || !valid) {
@@ -740,7 +740,7 @@ Course.delete("/:sectionId", async (req, res, next) => {
 Course.delete("/:sectionId/:email", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const email = req.params.email;
-  const token = req.body.token;
+  const token = req.headers.token;
   try {
     const valid = await validateToken(token, email);
     if (!token || !valid) {
@@ -766,8 +766,8 @@ Course.delete("/:sectionId/:weekNum/:sessionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   const weekNum = req.params.weekNum;
   const sessionId = req.params.sessionId;
-  const token = req.body.token;
-  const email = req.body.email;
+  const token = req.headers.token;
+  const email = req.headers.email;
   try {
     const valid = await validateToken(token, email);
     if (!token || !valid) {
@@ -800,8 +800,8 @@ Course.delete(
     const weekNum = req.params.weekNum;
     const sessionId = req.params.sessionId;
     const pollId = req.params.pollId;
-    const token = req.body.token;
-    const email = req.body.email;
+    const token = req.headers.token;
+    const email = req.headers.email;
     try {
       const valid = await validateToken(token, email);
       if (!token || !valid) {
