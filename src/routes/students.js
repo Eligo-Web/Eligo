@@ -7,8 +7,10 @@ export const studentDao = new StudentDao();
 
 Student.get("/", async (req, res, next) => {
   const token = req.headers.token;
+  console.log(token)
+  console.log(process.env.API_KEY)
   try {
-    if (token !== process.env.API_KEY) {
+    if (!token || token !== process.env.API_KEY) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
@@ -41,7 +43,6 @@ Student.get("/:email", async (req, res, next) => {
       });
     } else {
       const student = await studentDao.readByEmail(email);
-      await studentDao.updateLastLogin(email, token);
       res.json({
         status: 200,
         message: `Student found`,
@@ -116,15 +117,16 @@ Student.put("/:email", async (req, res, next) => {
   const sectionId = req.body.sectionId;
   const semester = req.body.semester;
   const token = req.body.token;
+  const valid = await validateToken(token, email);
   try {
-    const student = await studentDao.addToHistory(email, sectionId, semester);
-    if (token !== student.token) {
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
+      const student = await studentDao.addToHistory(email, sectionId, semester);
       res.json({
         status: 200,
         message: `Student updated`,
@@ -176,14 +178,15 @@ Student.patch("/:email/:clickerId", async (req, res, next) => {
   const clickerId = req.params.clickerId;
   const token = req.body.token;
   try {
-    const student = await studentDao.updateClickerId(email, clickerId);
-    if (token !== student.token) {
+    const valid = await validateToken(token, email);
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
+      const student = await studentDao.updateClickerId(email, clickerId);
       res.json({
         status: 200,
         message: `Student updated`,
@@ -199,14 +202,15 @@ Student.delete("/:email", async (req, res, next) => {
   const email = req.params.email;
   const token = req.headers.token;
   try {
-    const student = await studentDao.deleteByEmail(email);
-    if (token !== student.token) {
+    const valid = await validateToken(token, email);
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
+      const student = await studentDao.deleteByEmail(email);
       res.json({
         status: 200,
         message: `Student with email ${email} deleted`,
@@ -222,15 +226,15 @@ Student.delete("/:email/clickerId", async (req, res, next) => {
   const email = req.params.email;
   const token = req.headers.token;
   try {
-    let student = await studentDao.readByEmail(email);
-    if (token !== student.token) {
+    const valid = await validateToken(token, email);
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
-      student = await studentDao.deleteClickerId(email);
+      const student = await studentDao.deleteClickerId(email);
       res.json({
         status: 200,
         message: `Student's clickerId with email ${email} deleted`,

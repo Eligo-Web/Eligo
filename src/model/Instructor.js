@@ -23,11 +23,7 @@ const InstructorSchema = new mongoose.Schema({
     required: true,
     default: {},
   },
-  token: {
-    type: String,
-    required: true,
-  },
-  lastLogin: {
+  dateJoined: {
     type: Date,
     required: true,
     default: Date.now,

@@ -41,7 +41,6 @@ Instructor.get("/:email", async (req, res, next) => {
       });
     } else {
       const instructor = await instructorDao.readByEmail(email);
-      await instructorDao.updateLastLogin(email, token);
       res.json({
         status: 200,
         message: `Instructor found`,
@@ -84,19 +83,20 @@ Instructor.put("/:email", async (req, res, next) => {
   const newSemester = req.body.newSemester;
   const sectionId = toSectionId(newCourse + newSection + newSemester);
   const token = req.body.token;
+  const valid = await validateToken(token, email);
   try {
-    const instructor = await instructorDao.addToHistory(
-      email,
-      newSemester,
-      sectionId
-    );
-    if (!token || instructor.token !== token) {
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
+      const instructor = await instructorDao.addToHistory(
+        email,
+        newSemester,
+        sectionId
+      );
       res.json({
         status: 200,
         message: `Instructor updated`,
@@ -115,21 +115,22 @@ Instructor.put("/:email/:semester/:sectionId", async (req, res, next) => {
   const oldSectionId = req.params.sectionId;
   const newSectionId = req.body.newSectionId;
   const token = req.body.token;
+  const valid = await validateToken(token, email);
   try {
-    const instructor = await instructorDao.updateHistory(
-      email,
-      oldSemester,
-      newSemester,
-      oldSectionId,
-      newSectionId
-    );
-    if (!token || instructor.token !== token) {
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
+      const instructor = await instructorDao.updateHistory(
+        email,
+        oldSemester,
+        newSemester,
+        oldSectionId,
+        newSectionId
+      );
       res.json({
         status: 200,
         message: `Instructor updated`,
@@ -144,15 +145,16 @@ Instructor.put("/:email/:semester/:sectionId", async (req, res, next) => {
 Instructor.delete("/:email", async (req, res, next) => {
   const email = req.params.email;
   const token = req.headers.token;
+  const valid = await validateToken(token, email);
   try {
-    const instructor = await instructorDao.deleteByEmail(email);
-    if (!token || instructor.token !== token) {
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
+      const instructor = await instructorDao.deleteByEmail(email);
       res.json({
         status: 200,
         message: `Instructor deleted`,
@@ -169,19 +171,20 @@ Instructor.delete("/:email/:semester/:sectionId", async (req, res, next) => {
   const semester = req.params.semester;
   const sectionId = req.params.sectionId;
   const token = req.headers.token;
+  const valid = await validateToken(token, email);
   try {
-    const instructor = await instructorDao.deleteFromHistory(
-      email,
-      semester,
-      sectionId
-    );
-    if (!token || instructor.token !== token) {
+    if (!token || !valid) {
       res.json({
         status: 401,
         message: `Unauthorized Request`,
         data: null,
       });
     } else {
+      const instructor = await instructorDao.deleteFromHistory(
+        email,
+        semester,
+        sectionId
+      );
       res.json({
         status: 200,
         message: `Instructor updated`,

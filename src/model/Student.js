@@ -26,11 +26,7 @@ const StudentSchema = new mongoose.Schema({
   clickerId: {
     type: String,
   },
-  token: {
-    type: String,
-    required: true,
-  },
-  lastLogin: {
+  dateJoined: {
     type: Date,
     required: true,
     default: Date.now,

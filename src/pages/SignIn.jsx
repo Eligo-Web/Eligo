@@ -42,7 +42,6 @@ function SignIn() {
               token: token,
             })
             .then((res) => {
-              console.log(res.data.message);
               user = res.data.data;
             });
         }
@@ -54,7 +53,7 @@ function SignIn() {
         name: user.name,
         history: user.history,
         clickerId: user.clickerId,
-        token: user.token,
+        token: token,
       },
     });
   }
