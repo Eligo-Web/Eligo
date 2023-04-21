@@ -338,7 +338,6 @@ function CreateOrEditClass(props) {
         }
       );
     }
-    closePopup(popupName, setPopup);
     setRefresh(!refresh);
   }
 

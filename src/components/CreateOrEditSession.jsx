@@ -165,7 +165,7 @@ function CreateOrEditSession(props) {
       }
     );
     props.setRefresh(!props.refresh);
-    clearContents();
+    closePopup(props.id, setPopup);
   }
 
   async function handleSaveCreate(event, element = null) {
@@ -255,7 +255,7 @@ function CreateOrEditSession(props) {
         <PrimaryButton
           variant="secondary"
           label="Cancel"
-          onClick={() => clearContents()}
+          onClick={() => clearContents(reset)}
         />
         <PrimaryButton
           variant="primary"

@@ -446,11 +446,12 @@
 .location-switch-info::before {
   content: "When enabled, students' location will be used to ensure attendance.";
   position: absolute;
-  background: #e6f2fc;
+  background: #16232e;
   overflow: hidden;
   font-size: 0.9rem;
+  font-weight: 400;
   width: 17rem;
-  color: #00060d;
+  color: #f2f8ff;
   border-radius: 1rem 1rem 1rem 0.2rem;
   transform: translate(0.8rem, -4.5rem);
   box-shadow: 0 0.5rem 1rem #05204128;

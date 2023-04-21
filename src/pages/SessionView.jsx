@@ -533,6 +533,7 @@ function SessionView() {
       popup.focus();
       return;
     }
+    console.log(base);
     const newPopup = window.open(
       "/newpoll",
       "New Poll",
@@ -550,6 +551,7 @@ function SessionView() {
       weekNum: location.state.weekNum,
       sessionId: location.state.sessionId,
       token: location.state.token,
+      base: base,
     };
   }
 

@@ -64,8 +64,9 @@ export default function Overlay(props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [popup, setPopup] = useContext(EditPopupContext);
 
-  function close() {
+  async function close() {
     if (!props.warning) setChildState(!childState);
+    if (props.editClass || props.editSession || props.createClass || props.createSession) return;
     closePopup(props.id, setPopup);
   }
 

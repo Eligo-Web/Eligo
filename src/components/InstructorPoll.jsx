@@ -16,7 +16,7 @@ import Papa from "papaparse";
 import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { server } from "../ServerUrl";
-import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
+import { EditPopupContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView.jsx";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
@@ -25,7 +25,6 @@ import InputField from "./InputField";
 import { closePopup } from "./Overlay.jsx";
 
 export default function InstructorPoll() {
-  const [base, setBase] = useContext(ClickerContext);
   const [minimized, setMinimized] = useState(false);
   const [showChart, setShowChart] = useState(false);
   const [numResponses, setNumResponses] = useState(0);
@@ -209,12 +208,12 @@ export default function InstructorPoll() {
 
   async function createPoll() {
     const newPollId = `poll-${Date.now()}`;
-    if (base) {
-      await clicker.startPoll(base);
+    if (window.props.base) {
+      await clicker.startPoll(window.props.base);
       await pause();
-      await clicker.setScreen(base, 1, " A  B  C  D  E");
+      await clicker.setScreen(window.props.base, 1, " A  B  C  D  E");
       await pause();
-      await clicker.setScreen(base, 2, " 0  0  0  0  0%");
+      await clicker.setScreen(window.props.base, 2, " 0  0  0  0  0%");
       await pause();
     }
     await axios
@@ -236,12 +235,12 @@ export default function InstructorPoll() {
   }
 
   async function closePoll() {
-    if (base && base.opened) {
-      await clicker.stopPoll(base);
+    if (window.props.base && window.props.base.opened) {
+      await clicker.stopPoll(window.props.base);
       await pause();
-      await clicker.setScreen(base, 1, "Poll Ended");
+      await clicker.setScreen(window.props.base, 1, "Poll Ended");
       await pause();
-      await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
+      await clicker.setScreen(window.props.base, 2, new Date().toLocaleTimeString());
       await pause();
     }
     await axios
