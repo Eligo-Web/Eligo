@@ -132,20 +132,18 @@ function Menu(props) {
   }, []);
 
   async function leaveClass() {
-    await axios
-      .delete(
-        `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`,
-        {
-          headers: { token: location.state.token },
-        }
-      );
-    await axios
-      .delete(
-        `${server}/course/${location.state.sectionId}/${location.state.email}`,
-        {
-          headers: { token: location.state.token },
-        }
-      );
+    await axios.delete(
+      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`,
+      {
+        headers: { token: location.state.token },
+      }
+    );
+    await axios.delete(
+      `${server}/course/${location.state.sectionId}/${location.state.email}`,
+      {
+        headers: { token: location.state.token },
+      }
+    );
     navigate("/overview", {
       state: {
         name: location.state.name,
@@ -199,7 +197,7 @@ function Menu(props) {
           </Container>
         </Container>
         <Container className="d-flex flex-column p-3 gap-2 align-items-center">
-          {location.state.permission === "STUDENT" ? (
+          {location.state.permission === "STUDENT" && (
             <center style={{ padding: "1rem 0" }}>
               <InputField
                 class="clicker-id-input"
@@ -228,7 +226,7 @@ function Menu(props) {
                 Clicker ID must contain 8 digits.
               </div>
             </center>
-          ) : null}
+          )}
           {baseButton}
           {props.hideCreate || props.hideJoin || props.leaveAction ? null : (
             <IconButton
@@ -243,7 +241,7 @@ function Menu(props) {
               }}
             />
           )}
-          {props.leaveAction ? (
+          {props.leaveAction && (
             <PrimaryButton
               label="Leave Class"
               variant="outline justify-content-center"
@@ -252,7 +250,7 @@ function Menu(props) {
                 leaveClass();
               }}
             />
-          ) : null}
+          )}
           <IconButton
             label="Sign Out"
             variant="sign-out"

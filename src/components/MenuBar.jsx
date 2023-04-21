@@ -53,25 +53,27 @@ function MenuBar(props) {
         <Col className="large-title menu-bar-title">
           {props.title || "-Untitled-"}
         </Col>
-        {props.showDescription ? (
+        {props.showDescription && (
           <Col
             className="large-title menu-bar-subtitle gap-2"
             onClick={() => copyDescription()}
           >
-            <div
-              className="copy-success"
-              style={{
-                opacity: copied ? "100%" : 0,
-                width: copied ? "8.8rem" : 0,
-              }}
-            >
-              Copied!
-              <IconCheck
-                stroke="0.16rem"
-                style={{ flexShrink: 0 }}
-                alt="Icon indicator of successful copy"
-              />
-            </div>
+            {props.clickable && (
+              <div
+                className="copy-success"
+                style={{
+                  opacity: copied ? "100%" : 0,
+                  width: copied ? "8.8rem" : 0,
+                }}
+              >
+                Copied!
+                <IconCheck
+                  stroke="0.16rem"
+                  style={{ flexShrink: 0 }}
+                  alt="Icon indicator of successful copy"
+                />
+              </div>
+            )}
             <IconButton
               style={{
                 borderRadius: "1rem",
@@ -79,16 +81,14 @@ function MenuBar(props) {
                 cursor: props.clickable ? "pointer" : "default",
               }}
               icon={
-                props.clickable ? (
-                  <IconCopy size="1.5em" alt="Copy passcode" />
-                ) : null
+                props.clickable && <IconCopy size="1.5em" alt="Copy passcode" />
               }
               label={props.description}
               ariaLabel={ariaLabel}
-              variant="transparent hover-hint"
+              variant={`transparent ${props.clickable && "hover-hint"}`}
             />
           </Col>
-        ) : null}
+        )}
       </Row>
     </Container>
   );

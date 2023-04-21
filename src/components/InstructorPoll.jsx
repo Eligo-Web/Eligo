@@ -497,7 +497,7 @@ export function ClosedPoll(props) {
   }
 
   return (
-    <div className="newpoll-pop-up-content">
+    <div className={`${props.pollId}-pop-up-content`}>
       {pollInfo ? (
         <div
           className="pop-up-content align-items-center"
@@ -634,10 +634,10 @@ function Stopwatch(props) {
   }, [props.running]);
 
   return (
-    <div className={`stopwatch${props.closed ? " stopped" : ""}`}>
-      {props.closed ? (
+    <div className={`stopwatch ${props.closed ? "stopped" : ""}`}>
+      {props.closed && (
         <IconClockHour3 stroke="0.14rem" style={{ marginRight: "0.6rem" }} />
-      ) : null}
+      )}
       <div className="min-sec">
         {isNaN(time) || time < 0 ? (
           "ERROR"

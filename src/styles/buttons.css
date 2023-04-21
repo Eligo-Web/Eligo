@@ -153,8 +153,8 @@
   transition: 0.1s ease;
   position: absolute;
   border-radius: 10rem;
-  padding: 0.3rem;
-  right: 0.9rem;
+  padding: 0.2rem 1rem;
+  right: 1rem;
 }
 
 .absolute-hint:hover,
@@ -162,12 +162,9 @@
   background: #000e1e1f;
 }
 
-.absolute-hint:active {
-  background: #000e1e33;
-}
-
+.absolute-hint:active,
 .hover-hint:active {
-  background: transparent;
+  background: #000e1e33;
 }
 
 .btn-outline,
@@ -309,6 +306,7 @@
   bottom: 0.5rem;
   right: 0.5rem;
   z-index: 5;
+  opacity: 75%;
 }
 
 .session-edit-button {
@@ -324,12 +322,13 @@
 
 .edit-button:hover,
 .session-edit-button:hover {
-  background: #1029464b;
+  background: #10294650;
 }
 
 .edit-button:active,
 .session-edit-button:active {
-  background: #071f3a5c;
+  opacity: 100%;
+  background: #071f3a5f;
 }
 
 .connect-base-btn {
@@ -352,14 +351,20 @@
 }
 
 .connect-base-btn:hover,
-.connect-base-btn:focus,
-.connect-base-btn:active {
+.connect-base-btn:focus {
   box-shadow: 0 0.6rem 1.2rem #05204116;
-  border-color: #ffffff5d;
+  background-color: #ffeed6;
+  border-color: #ffffffde;
 }
 
 .connect-base-btn:active {
   border-color: #5f2d029c;
+}
+
+.connect-base-btn .absolute-hint {
+  right: 0;
+  margin: -0.4rem -0.7rem -0.4rem 1rem;
+  padding: 0.45rem;
 }
 
 .connect-base-tooltip,

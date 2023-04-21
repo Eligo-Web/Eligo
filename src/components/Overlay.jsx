@@ -28,10 +28,10 @@ export async function openPopup(id) {
     overlayBody.style.transform = "scale(1)";
     overlayBody.isOpen = true;
     overlayBG.style.opacity = 1;
-    pause(400).then(() => {
-      overlayBG.style.pointerEvents = "all";
-      if (form) form.focus();
-    });
+    await pause(100);
+    overlayBG.style.pointerEvents = "all";
+    await pause();
+    if (form) form.focus();
   }
 }
 
@@ -72,7 +72,7 @@ export default function Overlay(props) {
   }
 
   useEffect(() => {
-    if (props.vote || props.poll) return;
+    if (!props.editClass && !props.editSession) return;
     const overlay = document.getElementById(props.id + "-popup");
     const buttonRow = overlay.querySelector(".button-row");
     const deleteBtns = overlay.querySelector(".delete-popup");
@@ -98,8 +98,7 @@ export default function Overlay(props) {
       <div className="overlay pop-up" style={{ zIndex: 4 }}>
         <div className="pop-up-header">
           <Row className="pop-up-title large-title">
-            {props.title + (props.activePoll ? " - Save Error" : "") ||
-              "Overlay Title"}
+            {props.title || "Overlay Title"}
           </Row>
           <Button
             variant="transparent absolute-hint"
@@ -166,6 +165,7 @@ export default function Overlay(props) {
           />
         ) : props.poll ? (
           <ClosedPoll
+            pollId={props.id}
             sectionId={props.childContent.sectionId}
             weekNum={props.childContent.weekNum}
             sessionId={props.childContent.sessionId}
@@ -179,11 +179,13 @@ export default function Overlay(props) {
         ) : (
           props.content || <Default />
         )}
-        <ConfirmDelete
-          id={props.id || "no-id"}
-          cancelClick={() => setMarkDelete(false)}
-          deleteClick={() => setConfirmDelete(true)}
-        />
+        {(props.editClass || props.editSession) && (
+          <ConfirmDelete
+            id={props.id || "no-id"}
+            cancelClick={() => setMarkDelete(false)}
+            deleteClick={() => setConfirmDelete(true)}
+          />
+        )}
       </div>
       <div className="overlay-bg" onClick={close} />
     </div>

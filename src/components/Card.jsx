@@ -16,14 +16,14 @@ function Card(props) {
           <p className="card-subtitle">{props.instructor}</p>
         </div>
         <p className="card-id">{props.sisId}</p>
-        {props.editable ? (
+        {props.editable && (
           <IconPencil
             id="edit-button"
             className="edit-button"
             size={"2.7em"}
             onClick={handleEdit}
           />
-        ) : null}
+        )}
       </div>
     </div>
   );

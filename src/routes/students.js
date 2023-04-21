@@ -7,8 +7,8 @@ export const studentDao = new StudentDao();
 
 Student.get("/", async (req, res, next) => {
   const token = req.headers.token;
-  console.log(token)
-  console.log(process.env.API_KEY)
+  console.log(token);
+  console.log(process.env.API_KEY);
   try {
     if (!token || token !== process.env.API_KEY) {
       res.json({

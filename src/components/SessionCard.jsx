@@ -26,7 +26,7 @@ function SessionCard(props) {
             {props.title || "-Untitled-"}
           </Col>
           <Col className="card-title session-card-subtitle">
-            {label}
+            <span style={{ opacity: "75%" }}>{label}</span>
             <IconPencil
               id="edit-button"
               className="session-edit-button"

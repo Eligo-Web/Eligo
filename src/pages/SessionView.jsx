@@ -232,7 +232,7 @@ function SessionView() {
         <div className="card-wrapper-student">
           <Menu hideJoin />
           <MenuBar title={location.state.sessionName} />
-          {pollOpen ? votePopup : null}
+          {pollOpen && votePopup}
           <div className="img-container" style={{ padding: "3rem 0" }}>
             {/* illustration to be changed */}
             <img src={waitingSessionImg} className="waiting-state-img" />
@@ -375,9 +375,9 @@ function SessionView() {
           onClick={() => navigateBack()}
         />
         {editPopup}
-        {location.state.sessionActive ? (
+        {location.state.sessionActive && (
           <FloatingButton base={base} onClick={() => loadBase()} />
-        ) : null}
+        )}
         <div className="card-wrapper">
           <Menu hideCreate />
           <MenuBar
@@ -387,13 +387,11 @@ function SessionView() {
             sessionView
             clickable
           />
-          {polls ? null : (
-            <EmptySessionView open={location.state.sessionActive} />
-          )}
+          {!polls && <EmptySessionView open={location.state.sessionActive} />}
           <div className="poll-container">{polls}</div>
           <div className="courses-bottom-row bottom-0 gap-3">
             <div className="d-flex flex-row gap-3">
-              {location.state.sessionActive ? (
+              {location.state.sessionActive && (
                 <IconButton
                   label="Close Session"
                   hideLabel={hideLabels}
@@ -403,7 +401,7 @@ function SessionView() {
                   onClick={() => closeSession()}
                   disabled={!!popup}
                 />
-              ) : null}
+              )}
               <IconButton
                 label="Download Session Data"
                 hideLabel={hideLabels}
@@ -413,7 +411,7 @@ function SessionView() {
                 onClick={() => downloadSessionData()}
               />
             </div>
-            {location.state.sessionActive ? (
+            {location.state.sessionActive && (
               <IconButton
                 label={popup ? "Return to Popup" : "Start Polls"}
                 icon={
@@ -426,7 +424,7 @@ function SessionView() {
                 style={{ maxWidth: "max-content" }}
                 onClick={() => openPolling()}
               />
-            ) : null}
+            )}
           </div>
         </div>
       </div>

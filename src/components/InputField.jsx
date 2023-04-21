@@ -31,10 +31,10 @@ export default function InputField(props) {
     <div className={props.small ? "input-field-small" : "input-field"}>
       <div
         className="input-field-label"
-        style={{ justifyContent: props.center ? "center" : "" }}
+        style={{ justifyContent: props.center ? "center" : "unset" }}
       >
         {props.label || "Title Text"}
-        {props.disabled ? <IconLock size="1em" stroke="0.15rem" /> : null}
+        {props.disabled && <IconLock size="1em" stroke="0.15rem" />}
       </div>
       <div className="d-flex flex-row align-content-center">
         <Form.Control
@@ -49,14 +49,14 @@ export default function InputField(props) {
           type={props.type}
           style={props.style}
         />
-        {props.save ? (
+        {props.save && (
           <PrimaryButton
             label="Save"
             variant="clicker-save"
             style={{ padding: "0 1rem", margin: "auto" }}
             onClick={props.onClick}
           />
-        ) : null}
+        )}
       </div>
       {renderErrors()}
     </div>

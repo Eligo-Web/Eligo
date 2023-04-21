@@ -97,7 +97,10 @@ function CreateOrEditClass(props) {
         clearContents();
         break;
       case "Enter":
-        props.editMode ? putCourse() : postCourse();
+        const button = document.getElementById(
+          "save-" + props.sectionId + "-button"
+        );
+        handleSaveCreate(null, button);
         break;
     }
   };
@@ -181,6 +184,15 @@ function CreateOrEditClass(props) {
       sisIdField.className = "sis-id-input form-control";
     }
     return valid;
+  }
+
+  async function handleSaveCreate(event, element = null) {
+    const button = event ? event.target : element;
+    const loadMsg = props.editMode ? "Saving..." : "Creating...";
+    const original = button.childNodes[0].data;
+    button.childNodes[0].data = loadMsg;
+    props.editMode ? await putCourse() : await postCourse();
+    button.childNodes[0].data = original;
   }
 
   async function postCourse() {
@@ -376,14 +388,14 @@ function CreateOrEditClass(props) {
         Warning: This course already exists!
       </div>
       <div className="button-row">
-        {props.editMode ? (
+        {props.editMode && (
           <PrimaryButton
             id={"delete-" + props.sectionId}
             variant="delete"
             label="Delete"
             onClick={() => props.setMarkDelete(true)}
           />
-        ) : null}
+        )}
         <PrimaryButton
           id={"discard-edit-" + props.sectionId}
           variant="secondary"
@@ -391,10 +403,10 @@ function CreateOrEditClass(props) {
           onClick={() => clearContents()}
         />
         <PrimaryButton
-          id={popupName}
+          id={"save-" + props.sectionId}
           variant="primary"
           label={props.editMode ? "Save" : "Create"}
-          onClick={() => (props.editMode ? putCourse() : postCourse())}
+          onClick={(event) => handleSaveCreate(event)}
         />
       </div>
     </div>

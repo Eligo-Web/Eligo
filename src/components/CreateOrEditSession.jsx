@@ -195,7 +195,7 @@ function CreateOrEditSession(props) {
         input={`Default: ${new Date().toDateString()}`}
         onChange={(e) => setSessionName(e.target.value)}
       />
-      {props.editMode ? (
+      {props.editMode && (
         <div className="input-group">
           <InputField
             label="Date Created"
@@ -209,18 +209,17 @@ function CreateOrEditSession(props) {
             disabled
           />
         </div>
-      ) : null}
+      )}
       <div className="flex-row input-field align-items-center gap-2">
-        {props.editMode ? <IconLock size="1em" stroke="0.15rem" /> : null}
+        {props.editMode && <IconLock size="1em" stroke="0.15rem" />}
         <Form.Switch
           type="switch"
           id="location-switch"
           label="Require Attendance"
           className="location-switch input-field"
           checked={
-            props.editMode
-              ? props.session.latitude || props.session.longitude
-              : null
+            props.editMode &&
+            (props.session.latitude || props.session.longitude)
           }
           disabled={props.editMode}
         />
@@ -236,13 +235,13 @@ function CreateOrEditSession(props) {
         Location permission denied!
       </div>
       <div className="button-row">
-        {props.editMode ? (
+        {props.editMode && (
           <PrimaryButton
             variant="delete"
             label="Delete"
             onClick={() => props.setMarkDelete(true)}
           />
-        ) : null}
+        )}
         <PrimaryButton
           variant="secondary"
           label="Cancel"

@@ -38,9 +38,20 @@ export function IconButton(props) {
       style={props.style}
       disabled={props.disabled}
     >
-      <div className="button-icon">{props.icon}</div>
+      {props.icon && <div className="button-icon">{props.icon}</div>}
       {props.hideLabel ? null : props.label || "No Label"}
     </Button>
+  );
+}
+
+export function Tooltip(props) {
+  return (
+    <div
+      className={`tooltip ${props.className}`}
+      style={{ transform: `translate(${props.X},${props.Y})` }}
+    >
+      {props.label}
+    </div>
   );
 }
 
@@ -145,8 +156,8 @@ export function FloatingButton(props) {
           <IconX
             size="2.3em"
             stroke="0.14rem"
-            className="absolute-hint position-relative p-2"
-            style={{ right: 0, margin: "-0.3rem -0.6rem -0.3rem 1rem" }}
+            className="absolute-hint position-relative"
+            style={{ right: 0, margin: "-0.5rem -0.8rem -0.5rem 1rem" }}
             onClick={(event) => dismiss(event, true)}
           />
         </div>
