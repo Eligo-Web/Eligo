@@ -76,10 +76,7 @@ function CreateOrEditSession(props) {
         clearContents(reset);
         break;
       case "Enter":
-        const button = document.getElementById(
-          "save-" + props.id + "-button"
-        );
-        console.log(button);
+        const button = document.getElementById("save-" + props.id + "-button");
         handleSaveCreate(null, button);
         break;
     }
