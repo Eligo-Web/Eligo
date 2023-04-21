@@ -63,7 +63,7 @@ function CreateOrEditClass(props) {
     : "create-class";
   const [defaultNamePH, defaultsisIdPH, defaultSectionPH] = [
     "ex: Intermediate Programming",
-    "ex: EN.601.220",
+    "EN.601.220",
     "1, 2, ...",
   ];
   const [nameInputPH, setNameInputPH] = useState(defaultNamePH);
@@ -167,7 +167,7 @@ function CreateOrEditClass(props) {
       sectionField.className += " field-error";
       valid = false;
     } else if (isNaN(section) || section < 1) {
-      setSectionInputPH("• Invalid section");
+      setSectionInputPH("• Invalid");
       sectionField.className += " field-error";
       valid = false;
     } else {
@@ -175,8 +175,7 @@ function CreateOrEditClass(props) {
     }
 
     if (sisId && !/^[A-Z]{2}\.\d{3}\.\d{3}$/.test(sisId)) {
-      sisIdField.value = "";
-      setSisIDInputPH("• Invalid format");
+      setSisIDInputPH("XX.000.000");
       sisIdField.className += " field-error";
       valid = false;
     } else {

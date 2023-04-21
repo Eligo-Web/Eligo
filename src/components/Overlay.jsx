@@ -66,9 +66,7 @@ export default function Overlay(props) {
 
   function close() {
     if (!props.warning) setChildState(!childState);
-    if (!popup) {
-      closePopup(props.id, setPopup);
-    }
+    closePopup(props.id, setPopup);
   }
 
   useEffect(() => {

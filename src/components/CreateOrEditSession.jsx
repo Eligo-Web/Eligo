@@ -76,7 +76,11 @@ function CreateOrEditSession(props) {
         clearContents(reset);
         break;
       case "Enter":
-        props.editMode ? handleEdit() : createSession();
+        const button = document.getElementById(
+          "save-" + props.id + "-button"
+        );
+        console.log(button);
+        handleSaveCreate(null, button);
         break;
     }
   };
@@ -167,6 +171,15 @@ function CreateOrEditSession(props) {
     clearContents();
   }
 
+  async function handleSaveCreate(event, element = null) {
+    const button = event ? event.target : element;
+    const loadMsg = props.editMode ? "Saving..." : "Creating...";
+    const original = button.childNodes[0].data;
+    button.childNodes[0].data = loadMsg;
+    props.editMode ? await handleEdit() : await createSession();
+    button.childNodes[0].data = original;
+  }
+
   async function clearContents(reset = false) {
     const overlay = document.getElementById(popupId);
     if (props.editMode && props.markDelete && reset) {
@@ -249,9 +262,9 @@ function CreateOrEditSession(props) {
         />
         <PrimaryButton
           variant="primary"
-          id={props.editMode ? "save-session" : "create-session"}
+          id={"save-" + props.id}
           label={props.editMode ? "Save" : "Create"}
-          onClick={() => (props.editMode ? handleEdit() : createSession())}
+          onClick={(event) => handleSaveCreate(event)}
         />
       </div>
     </div>
