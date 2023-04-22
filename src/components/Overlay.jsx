@@ -160,7 +160,6 @@ export default function Overlay(props) {
           <JoinSession
             childProps={props.joinSessionProps}
             control={childState}
-            token={props.token}
           />
         ) : props.poll ? (
           <ClosedPoll

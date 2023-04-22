@@ -35,7 +35,7 @@ export default function InstructorPoll() {
   const [chartRef, setChartRef] = useState({});
   const [running, setRunning] = useState(false);
   const [justOpened, setJustOpened] = useState(true);
-  const [currPollId, setCurrPollId] = useState(null);
+  const [currPollId, setCurrPollId] = useState("");
   const [prevResponse, setPrevResponse] = useState("");
   const [prevClickerId, setPrevClickerId] = useState("");
   const [axiosMutex, setAxiosMutex] = useState(new Mutex());
@@ -85,7 +85,7 @@ export default function InstructorPoll() {
 
   useEffect(() => {
     let email = "";
-    if (!window.props || !prevResponse || !prevClickerId) {
+    if (!window.props || !prevResponse || !prevClickerId || !currPollId) {
       return;
     }
     (async () => {
@@ -133,7 +133,7 @@ export default function InstructorPoll() {
       }
       axiosMutex.release();
     })();
-  }, [prevResponse, prevClickerId]);
+  }, [prevResponse, prevClickerId, currPollId]);
 
   if (window.props && window.props.base) {
     window.props.base.oninputreport = async ({ device, reportId, data }) => {
@@ -152,7 +152,24 @@ export default function InstructorPoll() {
   }, [numResponses]);
 
   useEffect(() => {
-    if (!window.props || !currPollId || !running) {
+    if (!running && !justOpened) {
+      baseEndPoll();
+    }
+  }, [running, justOpened]);
+  
+  async function baseEndPoll() {
+    if (window.props.base && window.props.base.opened) {
+      await clicker.stopPoll(window.props.base);
+      await pause();
+      await clicker.setScreen(window.props.base, 1, "Poll Ended");
+      await pause();
+      await clicker.setScreen(window.props.base, 2, new Date().toLocaleTimeString());
+      await pause();
+    }
+  }
+
+  useEffect(() => {
+    if (!window.props || !currPollId || prevResponse || prevClickerId || !pollData.every((item) => item === 0)) {
       return;
     }
     const interval = setInterval(async () => {
@@ -190,14 +207,15 @@ export default function InstructorPoll() {
           }
         }
         percentString += "%";
-        if (running) {
-          clicker.setScreen(window.props.base, 2, percentString);
-          await pause();
-        }
+        console.log(new Date().getSeconds(), prevResponse);
+        clicker.setScreen(window.props.base, 2, percentString);
+        await pause();
       }
     }, 50);
-    return () => clearInterval(interval);
-  }, [window.props, chartRef, running]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [window.props && currPollId && pollData && numResponses && prevClickerId && prevResponse]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
@@ -227,6 +245,10 @@ export default function InstructorPoll() {
       .then((res) => {
         setPollName(res.data.data.name);
       });
+    setPollData([0, 0, 0, 0, 0]);
+    setNumResponses(0);
+    setPrevClickerId("");
+    setPrevResponse("");
     setCurrPollId(newPollId);
     if (justOpened) setJustOpened(false);
     if (window.opener.refreshPolls) {
@@ -235,27 +257,20 @@ export default function InstructorPoll() {
   }
 
   async function closePoll() {
-    if (window.props.base && window.props.base.opened) {
-      await clicker.stopPoll(window.props.base);
-      await pause();
-      await clicker.setScreen(window.props.base, 1, "Poll Ended");
-      await pause();
-      await clicker.setScreen(window.props.base, 2, new Date().toLocaleTimeString());
-      await pause();
-    }
     await axios
-      .put(
-        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}/close`,
-        {
-          name: pollName,
-          token: window.props.token,
-          email: window.props.email,
+    .put(
+      `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}/close`,
+      {
+        name: pollName,
+        token: window.props.token,
+        email: window.props.email,
         }
       )
       .then(() => {
         window.opener.refreshPolls();
-        setCurrPollId(null);
+        setCurrPollId("");
       });
+    await baseEndPoll();
   }
 
   window.onload = function () {
@@ -264,9 +279,7 @@ export default function InstructorPoll() {
     }
   };
 
-  window.onresize = function () {
-    // window.resizeTo(fullWidth, fullHeight);
-  };
+  window.onresize = () => resizeToContent();
 
   window.onpagehide = async function () {
     if (currPollId && running) {

@@ -69,6 +69,9 @@ export async function initialize(device) {
   } catch (error) {
     console.log(error);
   }
+  await setScreen(device, 1, "i>clicker Base");
+  await pause();
+  await setScreen(device, 2, "Connected!");
   return device;
 }
 
@@ -79,10 +82,6 @@ export async function startPoll(device) {
   ];
   const commandPollType = new Uint8Array([0x01, 0x19, 0x66, 0x0a, 0x01]);
   const commandB = new Uint8Array([0x01, 0x11]);
-
-  device.oninputreport = (event) => {
-    console.log(event);
-  };
 
   try {
     await device.sendReport(0, commandA[0]);

@@ -190,6 +190,7 @@ export function JoinSession(props) {
         }
       )
       .then((res) => {
+        console.log(res);
         if (res.data.status === 200) {
           clearContents();
           navigate("/session", {
@@ -230,15 +231,15 @@ export function JoinSession(props) {
         }}
         type="password"
       />
-      <div className="error-banner" style={{ opacity: invalidErr }}>
+      <div className="error-banner" style={{ display: invalidErr ? "flex" : "none" }}>
         <IconAlertTriangleFilled />
         Failed to join session. Passcode is invalid!
       </div>
-      <div className="error-banner" style={{ opacity: invalidLoc }}>
+      <div className="error-banner" style={{ display: invalidLoc ? "flex" : "none" }}>
         <IconAlertTriangleFilled />
         Permission denied: Failed to join, out of range.
       </div>
-      <div className="error-banner" style={{ opacity: locErr }}>
+      <div className="error-banner" style={{ display: locErr ? "flex" : "none" }}>
         <IconAlertTriangleFilled />
         Location permission denied! Cannot join session.
       </div>
@@ -398,10 +399,11 @@ export function JoinClass(props) {
 }
 
 export function Poll(props) {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(null);
   const [voteButtons, setVoteButtons] = useState(null);
 
   useEffect(() => {
+    if (voteButtons) return;
     setVoteButtons({
       A: document.getElementById("A-button"),
       B: document.getElementById("B-button"),
@@ -412,6 +414,8 @@ export function Poll(props) {
   }, []);
 
   async function makeSelection(choice) {
+    setSelected(choice);
+    console.log("sending response"+choice);
     await axios.patch(
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
       {
@@ -420,14 +424,18 @@ export function Poll(props) {
         response: choice,
         token: props.token,
       }
-    );
-
-    if (selected !== "") {
-      voteButtons[selected].className = "card btn btn-vote";
-    }
-    setSelected(choice);
-    voteButtons[choice].className += " btn-active";
+    ).then(() => console.log("sent"));
   }
+
+  useEffect(() => {
+    if (selected && voteButtons) {
+      for (let btn in voteButtons) {
+        if (btn === selected) continue;
+        voteButtons[btn].className = "card btn btn-vote";
+      }
+      voteButtons[selected].className += " btn-active";
+    }
+  }, [selected]);
 
   return (
     <div className="vote-btn-container" id={props.pollId}>

@@ -227,7 +227,7 @@ function Menu(props) {
               </div>
             </center>
           )}
-          {baseButton}
+          {!base && baseButton}
           {props.hideCreate || props.hideJoin || props.leaveAction ? null : (
             <IconButton
               title={getLabel}

@@ -205,6 +205,7 @@ function SessionView() {
                 sessionId={location.state.sessionId}
                 pollId={pollId}
                 email={location.state.email}
+                token={location.state.token}
               />
             }
             key="vote-popup"

@@ -137,7 +137,7 @@ function CreateOrEditSession(props) {
         email: props.email,
       });
       props.setRefresh(!props.refresh);
-      clearContents(reset);
+      clearContents();
     }
     if (buttonText) {
       buttonText.data = "Create";

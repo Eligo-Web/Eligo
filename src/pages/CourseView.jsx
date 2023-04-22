@@ -265,6 +265,7 @@ function CourseView() {
       session: "",
       sessionName: "",
       weekNum: "",
+      token: "",
     });
 
     async function checkSession() {
@@ -317,6 +318,7 @@ function CourseView() {
               sessionName: session.activeSession.name,
               weekNum: getWeekNumber(),
               clickerId: location.state.clickerId,
+              token: location.state.token,
             });
           }
         });
@@ -333,7 +335,6 @@ function CourseView() {
           title="Join Session"
           id="Join Session"
           joinSessionProps={props}
-          token={location.state.token}
           joinSession
         />
         {backButton}
