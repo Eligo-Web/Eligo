@@ -169,7 +169,8 @@ export default function InstructorPoll() {
   }
 
   useEffect(() => {
-    if (!window.props || !currPollId || prevResponse || prevClickerId || !pollData.every((item) => item === 0)) {
+    console.log("poll running: ", running);
+    if (!window.props || !running || !currPollId) {
       return;
     }
     const interval = setInterval(async () => {
@@ -207,15 +208,15 @@ export default function InstructorPoll() {
           }
         }
         percentString += "%";
-        console.log(new Date().getSeconds(), prevResponse);
+        console.log(new Date().getSeconds());
         clicker.setScreen(window.props.base, 2, percentString);
         await pause();
       }
-    }, 50);
+    }, 250);
     return () => {
       clearInterval(interval);
     };
-  }, [window.props && currPollId && pollData && numResponses && prevClickerId && prevResponse]);
+  }, [window.props, running, currPollId]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
@@ -245,11 +246,15 @@ export default function InstructorPoll() {
       .then((res) => {
         setPollName(res.data.data.name);
       });
+    setCurrPollId(newPollId);
     setPollData([0, 0, 0, 0, 0]);
     setNumResponses(0);
-    setPrevClickerId("");
     setPrevResponse("");
-    setCurrPollId(newPollId);
+    setPrevClickerId("");
+    while (numResponses != 0 || prevResponse !== "" || prevClickerId !== "" || !pollData.every((x) => x === 0) || currPollId !== newPollId) {
+      await pause();
+    }
+    console.log("poll created");
     if (justOpened) setJustOpened(false);
     if (window.opener.refreshPolls) {
       window.opener.refreshPolls();
@@ -268,7 +273,6 @@ export default function InstructorPoll() {
       )
       .then(() => {
         window.opener.refreshPolls();
-        setCurrPollId("");
       });
     await baseEndPoll();
   }
@@ -298,6 +302,7 @@ export default function InstructorPoll() {
   useEffect(() => {
     if (justOpened && !running) return;
     if (!running && currPollId) {
+      console.log("closing poll")
       closePoll();
     } else {
       createPoll();
