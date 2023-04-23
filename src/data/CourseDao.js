@@ -389,7 +389,7 @@ class CourseDao {
     }
     const week = course.sessions.get(weekNum);
     const length = course.sessions.size;
-    const keys = course.session.keys();
+    const keys = Array.from(course.sessions.keys());
     const prevKey = length > 1 ? keys[length - 2] : null;
     if (!week) {
       throw new ApiError(404, `Week ${weekNum} not found`);
