@@ -157,7 +157,7 @@ class CourseDao {
     return session;
   }
 
-  async addPollToSession(sectionId, weekNum, sessionId, pollId) {
+  async addPollToSession(sectionId, weekNum, sessionId, pollId, startTimestamp) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
@@ -178,7 +178,7 @@ class CourseDao {
     session.numPolls++;
     session.polls[pollId] = {};
     session.polls[pollId].name = `Poll ${session.numPolls}`;
-    session.polls[pollId].startTimestamp = Date.now();
+    session.polls[pollId].startTimestamp = startTimestamp;
     session.polls[pollId].endTimestamp = -1;
     session.polls[pollId].responses = new Map();
     session.polls[pollId].numResponses = 0;
@@ -388,12 +388,22 @@ class CourseDao {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
     }
     const week = course.sessions.get(weekNum);
+    const length = course.sessions.size;
+    const keys = course.session.keys();
+    const prevKey = length > 1 ? keys[length - 2] : null;
     if (!week) {
       throw new ApiError(404, `Week ${weekNum} not found`);
     }
     for (const sessionId of week.keys()) {
       if (week.get(sessionId).active) {
         week.get(sessionId).active = false;
+      }
+    }
+    if (prevKey) {
+      for (const sessionId of course.sessions.get(prevKey).keys()) {
+        if (course.sessions.get(prevKey).get(sessionId).active) {
+          course.sessions.get(prevKey).get(sessionId).active = false;
+        }
       }
     }
     course.markModified("sessions");
@@ -436,7 +446,7 @@ class CourseDao {
     return session.polls[pollId];
   }
 
-  async closeAllPolls(sectionId, weekNum, sessionId) {
+  async closeAllPolls(sectionId, weekNum, sessionId, endTimestamp) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
@@ -452,6 +462,7 @@ class CourseDao {
     for (const pollId of Object.keys(session.polls)) {
       if (session.polls[pollId].active) {
         session.polls[pollId].active = false;
+        session.polls[pollId].endTimestamp = endTimestamp;
       }
     }
     course.markModified("sessions");

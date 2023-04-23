@@ -248,6 +248,7 @@ export default function InstructorPoll() {
         {
           token: window.props.token,
           email: window.props.email,
+          startTimestamp: Date.now(),
         }
       )
       .then((res) => {

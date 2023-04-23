@@ -347,6 +347,7 @@ Course.post(
     const pollId = req.params.pollId;
     const token = req.body.token;
     const email = req.body.email;
+    const startTimestamp = req.body.startTimestamp;
     try {
       const valid = await validateToken(token, email);
       if (!token || !valid) {
@@ -360,7 +361,8 @@ Course.post(
           sectionId,
           weekNum,
           sessionId,
-          pollId
+          pollId, 
+          startTimestamp
         );
         res.json({
           status: 200,
@@ -480,6 +482,7 @@ Course.put(
     const sessionId = req.params.sessionId;
     const token = req.body.token;
     const email = req.body.email;
+    const endTimestamp = req.body.endTimestamp;
     try {
       const valid = await validateToken(token, email);
       if (!token || !valid) {
@@ -492,7 +495,8 @@ Course.put(
         let session = await courseDao.closeAllPolls(
           sectionId,
           weekNum,
-          sessionId
+          sessionId,
+          endTimestamp
         );
         res.json({
           status: 200,
