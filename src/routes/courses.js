@@ -416,6 +416,7 @@ Course.put(
     const time = req.body.time || 0;
     const token = req.body.token;
     const email = req.body.email;
+    const endTimestamp = req.body.endTimestamp;
     try {
       const valid = await validateToken(token, email);
       if (!token || !valid) {
@@ -431,7 +432,7 @@ Course.put(
           sessionId,
           pollId,
           name,
-          time
+          endTimestamp
         );
         res.json({
           status: 200,

@@ -462,6 +462,7 @@ function SessionView() {
             {
               token: location.state.token,
               email: location.state.email,
+              endTimestamp: Date.now(),
             }
           )
           .then((res) => (poll = res.data.data));
@@ -579,6 +580,7 @@ function SessionView() {
       {
         token: location.state.token,
         email: location.state.email,
+        endTimestamp: Date.now(),
       }
     );
     if (!popup.props || popup.props.sessionId === location.state.sessionId) {

@@ -401,7 +401,14 @@ class CourseDao {
     return course;
   }
 
-  async closeActivePoll(sectionId, weekNum, sessionId, pollId, name) {
+  async closeActivePoll(
+    sectionId,
+    weekNum,
+    sessionId,
+    pollId,
+    name,
+    endTimestamp
+  ) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);
@@ -419,7 +426,7 @@ class CourseDao {
     }
     session.polls[pollId].active = false;
     if (session.polls[pollId].endTimestamp < 0) {
-      session.polls[pollId].endTimestamp = Date.now();
+      session.polls[pollId].endTimestamp = endTimestamp;
     }
     if (name && name !== "") {
       session.polls[pollId].name = name;

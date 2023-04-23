@@ -273,6 +273,7 @@ export default function InstructorPoll() {
           name: pollName,
           token: window.props.token,
           email: window.props.email,
+          endTimestamp: Date.now(),
         }
       )
       .then(() => {
@@ -553,7 +554,7 @@ export function ClosedPoll(props) {
                 {pollInfo.numResponses}
               </div>
               <div className="responses closed" style={{ marginLeft: "auto" }}>
-                {new Date(pollInfo.startTimestamp).toLocaleString()}
+                {new Date(pollInfo.endTimestamp).toLocaleString()}
               </div>
             </div>
           </div>
