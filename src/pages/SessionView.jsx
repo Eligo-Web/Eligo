@@ -535,7 +535,6 @@ function SessionView() {
       popup.focus();
       return;
     }
-    console.log(base);
     const newPopup = window.open(
       "/newpoll",
       "New Poll",

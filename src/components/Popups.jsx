@@ -190,7 +190,6 @@ export function JoinSession(props) {
         }
       )
       .then((res) => {
-        console.log(res);
         if (res.data.status === 200) {
           clearContents();
           navigate("/session", {
@@ -424,7 +423,6 @@ export function Poll(props) {
 
   async function makeSelection(choice) {
     setSelected(choice);
-    console.log("sending response" + choice);
     await axios
       .patch(
         `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
@@ -435,7 +433,6 @@ export function Poll(props) {
           token: props.token,
         }
       )
-      .then(() => console.log("sent"));
   }
 
   useEffect(() => {
