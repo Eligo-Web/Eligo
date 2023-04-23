@@ -10,6 +10,7 @@
 }
 
 .btn-primary,
+.btn-primary:disabled,
 .btn-primary-red,
 .btn-secondary,
 .btn-delete,
@@ -42,9 +43,14 @@
 }
 
 .btn-primary,
+.btn-primary:disabled,
 .btn-icon {
   background-color: #b1e9a3;
   color: #003c0a;
+}
+
+.btn-primary:disabled {
+  opacity: 80%;
 }
 
 .btn-primary:hover,

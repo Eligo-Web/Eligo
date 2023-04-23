@@ -134,14 +134,29 @@
 }
 
 .start-button,
-.stop-button {
+.stop-button,
+.stopwatch-loading {
   cursor: pointer;
   position: relative;
   margin-right: -0.1rem;
   transition: 0.1s ease-in-out;
 }
 
+.stopwatch-loading {
+  animation: spin-animation 0.5s infinite;
+}
+
+@keyframes spin-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
 .min-sec {
+  min-width: 3.5rem;
   width: fit-content;
   transition: 0.1s ease-in-out;
 }

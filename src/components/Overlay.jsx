@@ -66,7 +66,13 @@ export default function Overlay(props) {
 
   async function close() {
     if (!props.warning) setChildState(!childState);
-    if (props.editClass || props.editSession || props.createClass || props.createSession) return;
+    if (
+      props.editClass ||
+      props.editSession ||
+      props.createClass ||
+      props.createSession
+    )
+      return;
     closePopup(props.id, setPopup);
   }
 

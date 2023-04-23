@@ -231,15 +231,24 @@ export function JoinSession(props) {
         }}
         type="password"
       />
-      <div className="error-banner" style={{ display: invalidErr ? "flex" : "none" }}>
+      <div
+        className="error-banner"
+        style={{ display: invalidErr ? "flex" : "none" }}
+      >
         <IconAlertTriangleFilled />
         Failed to join session. Passcode is invalid!
       </div>
-      <div className="error-banner" style={{ display: invalidLoc ? "flex" : "none" }}>
+      <div
+        className="error-banner"
+        style={{ display: invalidLoc ? "flex" : "none" }}
+      >
         <IconAlertTriangleFilled />
         Permission denied: Failed to join, out of range.
       </div>
-      <div className="error-banner" style={{ display: locErr ? "flex" : "none" }}>
+      <div
+        className="error-banner"
+        style={{ display: locErr ? "flex" : "none" }}
+      >
         <IconAlertTriangleFilled />
         Location permission denied! Cannot join session.
       </div>
@@ -415,16 +424,18 @@ export function Poll(props) {
 
   async function makeSelection(choice) {
     setSelected(choice);
-    console.log("sending response"+choice);
-    await axios.patch(
-      `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
-      {
-        email: props.email,
-        timestamp: Date.now().toString(),
-        response: choice,
-        token: props.token,
-      }
-    ).then(() => console.log("sent"));
+    console.log("sending response" + choice);
+    await axios
+      .patch(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
+        {
+          email: props.email,
+          timestamp: Date.now().toString(),
+          response: choice,
+          token: props.token,
+        }
+      )
+      .then(() => console.log("sent"));
   }
 
   useEffect(() => {

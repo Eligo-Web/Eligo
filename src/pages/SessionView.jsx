@@ -551,6 +551,9 @@ function SessionView() {
       sectionId: location.state.sectionId,
       weekNum: location.state.weekNum,
       sessionId: location.state.sessionId,
+      currPollId: "",
+      prevResponse: "",
+      prevClickerId: "",
       token: location.state.token,
       base: base,
     };

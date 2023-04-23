@@ -3,6 +3,7 @@ import {
   IconChartBarOff,
   IconClockHour3,
   IconDownload,
+  IconLoader2,
   IconMaximize,
   IconMinimize,
   IconPlayerPlayFilled,
@@ -35,7 +36,6 @@ export default function InstructorPoll() {
   const [chartRef, setChartRef] = useState({});
   const [running, setRunning] = useState(false);
   const [justOpened, setJustOpened] = useState(true);
-  const [currPollId, setCurrPollId] = useState("");
   const [prevResponse, setPrevResponse] = useState("");
   const [prevClickerId, setPrevClickerId] = useState("");
   const [axiosMutex, setAxiosMutex] = useState(new Mutex());
@@ -85,7 +85,12 @@ export default function InstructorPoll() {
 
   useEffect(() => {
     let email = "";
-    if (!window.props || !prevResponse || !prevClickerId || !currPollId) {
+    if (
+      !window.props ||
+      !prevResponse ||
+      !prevClickerId ||
+      !window.props.currPollId
+    ) {
       return;
     }
     (async () => {
@@ -107,7 +112,7 @@ export default function InstructorPoll() {
         });
       if (email) {
         await axios.patch(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}`,
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}`,
           {
             email: email,
             timestamp: Date.now().toString(),
@@ -118,7 +123,7 @@ export default function InstructorPoll() {
         );
       } else {
         await axios.patch(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}/unknownClicker`,
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}/unknownClicker`,
           {
             clickerId: prevClickerId,
             timestamp: Date.now().toString(),
@@ -133,7 +138,7 @@ export default function InstructorPoll() {
       }
       axiosMutex.release();
     })();
-  }, [prevResponse, prevClickerId, currPollId]);
+  }, [prevResponse, prevClickerId, window.props.currPollId]);
 
   if (window.props && window.props.base) {
     window.props.base.oninputreport = async ({ device, reportId, data }) => {
@@ -156,21 +161,24 @@ export default function InstructorPoll() {
       baseEndPoll();
     }
   }, [running, justOpened]);
-  
+
   async function baseEndPoll() {
     if (window.props.base && window.props.base.opened) {
       await clicker.stopPoll(window.props.base);
       await pause();
       await clicker.setScreen(window.props.base, 1, "Poll Ended");
-      await pause();
-      await clicker.setScreen(window.props.base, 2, new Date().toLocaleTimeString());
+      await pause(100);
+      await clicker.setScreen(
+        window.props.base,
+        2,
+        new Date().toLocaleTimeString()
+      );
       await pause();
     }
   }
 
   useEffect(() => {
-    console.log("poll running: ", running);
-    if (!window.props || !running || !currPollId) {
+    if (!window.props || !running || !window.props.currPollId) {
       return;
     }
     const interval = setInterval(async () => {
@@ -178,7 +186,7 @@ export default function InstructorPoll() {
       let numUpdate = 0;
       await axios
         .get(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}`,
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}`,
           {
             headers: {
               token: window.props.token,
@@ -208,7 +216,6 @@ export default function InstructorPoll() {
           }
         }
         percentString += "%";
-        console.log(new Date().getSeconds());
         clicker.setScreen(window.props.base, 2, percentString);
         await pause();
       }
@@ -216,7 +223,7 @@ export default function InstructorPoll() {
     return () => {
       clearInterval(interval);
     };
-  }, [window.props, running, currPollId]);
+  }, [window.props, running, window.props.currPollId]);
 
   function resizeToContent() {
     const content = document.querySelector(".newpoll-pop-up");
@@ -231,7 +238,7 @@ export default function InstructorPoll() {
       await clicker.startPoll(window.props.base);
       await pause();
       await clicker.setScreen(window.props.base, 1, " A  B  C  D  E");
-      await pause();
+      await pause(100);
       await clicker.setScreen(window.props.base, 2, " 0  0  0  0  0%");
       await pause();
     }
@@ -246,15 +253,11 @@ export default function InstructorPoll() {
       .then((res) => {
         setPollName(res.data.data.name);
       });
-    setCurrPollId(newPollId);
-    setPollData([0, 0, 0, 0, 0]);
-    setNumResponses(0);
+    window.props.currPollId = newPollId;
+    // setPollData([0, 0, 0, 0, 0]);
+    // setNumResponses(0);
     setPrevResponse("");
     setPrevClickerId("");
-    while (numResponses != 0 || prevResponse !== "" || prevClickerId !== "" || !pollData.every((x) => x === 0) || currPollId !== newPollId) {
-      await pause();
-    }
-    console.log("poll created");
     if (justOpened) setJustOpened(false);
     if (window.opener.refreshPolls) {
       window.opener.refreshPolls();
@@ -262,16 +265,18 @@ export default function InstructorPoll() {
   }
 
   async function closePoll() {
+    console.log("refreshing");
     await axios
-    .put(
-      `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${currPollId}/close`,
-      {
-        name: pollName,
-        token: window.props.token,
-        email: window.props.email,
+      .put(
+        `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}/close`,
+        {
+          name: pollName,
+          token: window.props.token,
+          email: window.props.email,
         }
       )
       .then(() => {
+        window.props.currPollId = "";
         window.opener.refreshPolls();
       });
     await baseEndPoll();
@@ -286,8 +291,8 @@ export default function InstructorPoll() {
   window.onresize = () => resizeToContent();
 
   window.onpagehide = async function () {
-    if (currPollId && running) {
-      window.opener.saveClosed(window, currPollId);
+    if (window.props.currPollId && running) {
+      window.opener.saveClosed(window, window.props.currPollId);
     }
     window.opener.resetPopup();
     window.close();
@@ -301,11 +306,10 @@ export default function InstructorPoll() {
 
   useEffect(() => {
     if (justOpened && !running) return;
-    if (!running && currPollId) {
-      console.log("closing poll")
-      closePoll();
-    } else {
+    if (running) {
       createPoll();
+    } else {
+      closePoll();
     }
   }, [running]);
 
@@ -360,7 +364,7 @@ export default function InstructorPoll() {
               onChange={(e) => {
                 setPollName(e.target.value);
               }}
-              disabled={!running || justOpened}
+              disabled={!running || justOpened || !window.props.currPollId}
             />
           </div>
           <div
@@ -382,9 +386,10 @@ export default function InstructorPoll() {
               variant="primary"
               label="Save & Close"
               onClick={async () => {
-                if (currPollId) await closePoll();
+                if (window.props.currPollId) await closePoll();
                 window.close();
               }}
+              disabled={running && !window.props.currPollId}
             />
           </div>
         </div>
@@ -598,6 +603,17 @@ export function ClosedPoll(props) {
 function Stopwatch(props) {
   const [time, setTime] = useState(props.closed ? props.time : 0);
 
+  if (props.closed) {
+    window.props = {};
+    window.props.currPollId = "";
+  }
+
+  useEffect(() => {
+    if (window.props.currPollId) {
+      renderStart();
+    }
+  }, [window.props.currPollId]);
+
   function stopTime() {
     if (!props.running) return;
     props.setRunning(false);
@@ -608,7 +624,6 @@ function Stopwatch(props) {
     if (props.running) return;
     setTime(0);
     props.setRunning(true);
-    renderStart();
   }
 
   function renderStart() {
@@ -637,18 +652,18 @@ function Stopwatch(props) {
 
   useEffect(() => {
     let interval;
-    if (props.running) {
+    if (props.running && window.props.currPollId) {
       if (time >= 3600) {
         props.setRunning(false);
       }
       interval = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
-    } else if (!props.running) {
+    } else {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [props.running]);
+  }, [props.running, window.props.currPollId]);
 
   return (
     <div className={`stopwatch ${props.closed ? "stopped" : ""}`}>
@@ -671,15 +686,24 @@ function Stopwatch(props) {
       >
         <IconPlayerStopFilled
           className="stop-button"
-          preserveAspectRatio="none"
           onClick={() => stopTime()}
-          style={{ display: props.running ? "block" : "none" }}
+          style={{
+            display:
+              props.running && window.props.currPollId ? "block" : "none",
+          }}
         />
         <IconPlayerPlayFilled
           className="start-button"
-          preserveAspectRatio="none"
           onClick={() => startTime()}
           style={{ display: !props.running ? "block" : "none" }}
+        />
+        <IconLoader2
+          className="stopwatch-loading"
+          stroke="0.15rem"
+          style={{
+            display:
+              props.running && !window.props.currPollId ? "block" : "none",
+          }}
         />
       </div>
     </div>
