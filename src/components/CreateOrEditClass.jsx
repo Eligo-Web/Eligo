@@ -267,14 +267,14 @@ function CreateOrEditClass(props) {
       .then((res) => {
         checkDupe = res.data;
       });
-
-    if (checkDupe.status === 200 && sisId === props.sisId) {
+    
+    if (checkDupe.status === 200 && checkDupe.data.sectionId !== oldSectionId) {
       container.style.pointerEvents = "all";
       setShowError(true);
       setSaving(false);
       return;
     }
-
+    
     await axios
       .put(`${server}/course/${oldSectionId}`, {
         name: name,

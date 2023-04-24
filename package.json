@@ -12,15 +12,11 @@
     "@tabler/icons-react": "^2.7.0",
     "async-mutex": "^0.4.0",
     "axios": "^1.3.4",
-    "bcryptjs-react": "^2.4.6",
-    "bootstrap": "^5.2.3",
     "chart.js": "^4.2.1",
     "concurrently": "^7.6.0",
     "cors": "^2.8.5",
-    "datastructures-js": "^12.0.0",
     "depcheck": "^1.4.3",
     "express": "^4.18.2",
-    "global": "^4.4.0",
     "helmet": "^6.0.1",
     "mongoose": "^7.0.0",
     "papaparse": "^5.4.1",
@@ -31,7 +27,6 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
-    "react-new-window": "^1.0.1",
     "react-router-dom": "^6.8.2",
     "react-simple-oauth2-login": "^0.5.4",
     "typescript": "^5.0.2"
@@ -40,7 +35,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
-    "dotenv-cli": "^7.0.0",
+    "dotenv-cli": "^7.2.1",
     "nodemon": "^2.0.21",
     "vite": "^4.1.0"
   }
