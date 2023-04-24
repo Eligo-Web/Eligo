@@ -18,13 +18,12 @@ import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { server } from "../ServerUrl";
 import { EditPopupContext } from "../containers/InAppContainer";
-import { pause } from "../pages/CourseView.jsx";
 import "../styles/animations.css";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import * as clicker from "./ClickerBase";
 import InputField from "./InputField";
-import { closePopup } from "./Overlay.jsx";
+import pause, { closePopup } from "./Utils";
 
 export default function InstructorPoll() {
   const [minimized, setMinimized] = useState(false);

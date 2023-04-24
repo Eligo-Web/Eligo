@@ -12,12 +12,12 @@ import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import * as clicker from "../components/ClickerBase";
 import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
-import { pause } from "../pages/CourseView";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
 import "../styles/text.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
+import pause from "./Utils";
 
 function Menu(props) {
   const location = useLocation();

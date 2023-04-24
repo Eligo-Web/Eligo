@@ -1,4 +1,5 @@
-import { pause } from "../pages/CourseView.jsx";
+import pause from "./Utils";
+
 export async function getDevice() {
   if (!navigator.hid) return;
   let device;

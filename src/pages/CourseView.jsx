@@ -22,15 +22,12 @@ import {
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
-import Overlay, { openPopup } from "../components/Overlay";
+import Overlay from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
+import pause, { openPopup } from "../components/Utils";
 import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
 import { encodeEmail } from "./Roster";
-
-export function pause(interval = 200) {
-  return new Promise((res) => setTimeout(res, interval));
-}
 
 function CourseView() {
   const location = useLocation();

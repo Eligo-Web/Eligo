@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import emptyCourseImg from "../assets/empty-course-state.png";
 import emptyOverviewImg from "../assets/empty-overview-state.png";
 import emptySessionImg from "../assets/empty-session-state.png";
-import { pause } from "../pages/CourseView";
 import "../styles/images.css";
 import Card from "./Card";
 import PollCard from "./PollCard";
 import SessionCard from "./SessionCard";
+import pause from "./Utils";
 
 export function PageNotFound() {
   const navigate = useNavigate();

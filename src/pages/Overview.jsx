@@ -14,11 +14,11 @@ import Card from "../components/Card";
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
-import Overlay, { openPopup } from "../components/Overlay";
+import Overlay from "../components/Overlay";
+import pause, { openPopup } from "../components/Utils";
 import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
 import "../styles/overlay.css";
-import { pause } from "./CourseView";
 
 function OverView() {
   const location = useLocation();

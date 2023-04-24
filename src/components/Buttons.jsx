@@ -6,8 +6,8 @@ import {
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import { pause } from "../pages/CourseView";
 import "../styles/animations.css";
+import pause from "./Utils";
 
 /**
  * @param {{variant: string, label: string, onClick: function}} props

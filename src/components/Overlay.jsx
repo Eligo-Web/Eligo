@@ -2,57 +2,11 @@ import { IconX } from "@tabler/icons-react";
 import { useContext, useEffect, useState } from "react";
 import { Button, Row } from "react-bootstrap";
 import { EditPopupContext } from "../containers/InAppContainer";
-import { pause } from "../pages/CourseView";
 import "../styles/overlay.css";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { ClosedPoll } from "./InstructorPoll";
 import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
-
-export async function openPopup(id) {
-  document.body.style.overflowY = "hidden";
-  const overlay = document.getElementById(id + "-popup");
-  if (overlay) {
-    overlay.style.display = "flex";
-    await pause(50);
-    if (id === "Create Session") {
-      const nameField = overlay.querySelector(".session-name-input");
-      nameField.value = new Date().toDateString();
-    }
-    const overlayBG = overlay.querySelector(".overlay-bg");
-    const overlayBody = overlay.querySelector(".pop-up");
-    const form = overlay.querySelector(".form-control");
-    overlay.style.maxHeight = "100vh";
-    overlay.style.overflow = "visible";
-    overlayBody.style.opacity = 1;
-    overlayBody.style.transform = "scale(1)";
-    overlayBody.isOpen = true;
-    overlayBG.style.opacity = 1;
-    await pause(100);
-    overlayBG.style.pointerEvents = "all";
-    await pause();
-    if (form) form.focus();
-  }
-}
-
-export async function closePopup(id, setPopup) {
-  const overlay = document.getElementById(id + "-popup");
-  if (overlay) {
-    const overlayBody = overlay.querySelector(".pop-up");
-    const overlayBG = overlay.querySelector(".overlay-bg");
-    overlayBG.style.pointerEvents = "none";
-    overlay.style.maxHeight = "60vh";
-    overlay.style.overflow = "hidden";
-    overlayBG.style.opacity = 0;
-    overlayBody.style.opacity = 0;
-    overlayBody.style.transform = "scale(0.9)";
-    overlayBody.isOpen = false;
-    document.body.style.overflowY = "overlay";
-    await pause();
-    overlay.style.display = "none";
-  }
-  if (setPopup) setPopup(null);
-}
 
 /**
  *

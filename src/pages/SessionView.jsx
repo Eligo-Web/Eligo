@@ -18,15 +18,15 @@ import { BackButton, FloatingButton, IconButton } from "../components/Buttons";
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
-import Overlay, { closePopup, openPopup } from "../components/Overlay";
+import Overlay from "../components/Overlay";
 import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
+import pause, { closePopup, openPopup } from "../components/Utils";
 import {
   ClickerContext,
   EditPopupContext,
   NewPollContext,
 } from "../containers/InAppContainer";
-import { pause } from "./CourseView";
 import { decodeEmail } from "./Roster";
 
 function SessionView() {

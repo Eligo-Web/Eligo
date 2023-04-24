@@ -8,10 +8,9 @@ import { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import { server } from "../ServerUrl";
 import { EditPopupContext } from "../containers/InAppContainer";
-import { pause } from "../pages/CourseView";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
-import { closePopup } from "./Overlay";
+import pause, { closePopup } from "./Utils";
 
 export function CreateSession(props) {
   return (

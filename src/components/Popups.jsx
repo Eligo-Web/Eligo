@@ -6,7 +6,7 @@ import { server } from "../ServerUrl";
 import "../styles/newpoll.css";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import InputField from "./InputField";
-import { closePopup } from "./Overlay";
+import { closePopup } from "./Utils";
 
 export function Default() {
   return (

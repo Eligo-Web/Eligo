@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BackButton } from "../components/Buttons";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
-import { pause } from "./CourseView";
+import pause from "../components/Utils";
 
 export function encodeEmail(str) {
   return str.replace(/[.]/g, "$");
