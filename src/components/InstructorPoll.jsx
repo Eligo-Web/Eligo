@@ -255,8 +255,6 @@ export default function InstructorPoll() {
         setPollName(res.data.data.name);
       });
     window.props.currPollId = newPollId;
-    // setPollData([0, 0, 0, 0, 0]);
-    // setNumResponses(0);
     setPrevResponse("");
     setPrevClickerId("");
     if (justOpened) setJustOpened(false);
@@ -284,12 +282,10 @@ export default function InstructorPoll() {
   }
 
   window.onload = function () {
-    if (window.parent["name"] === "New Poll") {
+    if (window["name"] === "New Poll") {
       resizeToContent();
     }
   };
-
-  window.onresize = () => resizeToContent();
 
   window.onpagehide = async function () {
     if (window.props.currPollId && running) {
