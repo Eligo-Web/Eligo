@@ -21,13 +21,12 @@ import MenuBar from "../components/MenuBar";
 import Overlay from "../components/Overlay";
 import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
-import pause, { closePopup, openPopup } from "../components/Utils";
+import pause, { closePopup, decodeEmail, openPopup } from "../components/Utils";
 import {
   ClickerContext,
   EditPopupContext,
   NewPollContext,
 } from "../containers/InAppContainer";
-import { decodeEmail } from "../components/Utils";
 
 function SessionView() {
   const location = useLocation();

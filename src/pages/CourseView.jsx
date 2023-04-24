@@ -23,11 +23,13 @@ import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
 import Overlay from "../components/Overlay";
 import SessionCard from "../components/SessionCard";
-import pause, { openPopup } from "../components/Utils";
+import pause, {
+  displayMessage,
+  encodeEmail,
+  openPopup,
+} from "../components/Utils";
 import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
-import { encodeEmail } from "../components/Utils";
-import { displayMessage } from "../components/Utils";
 
 function CourseView() {
   const location = useLocation();

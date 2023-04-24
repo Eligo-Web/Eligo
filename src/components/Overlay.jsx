@@ -7,6 +7,7 @@ import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { ClosedPoll } from "./InstructorPoll";
 import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
+import { closePopup } from "./Utils";
 
 /**
  *

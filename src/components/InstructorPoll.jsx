@@ -462,8 +462,8 @@ export function ClosedPoll(props) {
           emails.push(email);
           await axios
             .get(`${server}/student/${email}`, {
-              headers: { 
-                token: props.token, 
+              headers: {
+                token: props.token,
                 requester: props.email,
               },
             })
