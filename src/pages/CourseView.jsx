@@ -17,7 +17,6 @@ import {
   BackButton,
   FloatingButton,
   IconButton,
-  displayMessage,
 } from "../components/Buttons.jsx";
 import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
@@ -27,7 +26,8 @@ import SessionCard from "../components/SessionCard";
 import pause, { openPopup } from "../components/Utils";
 import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
 import "../styles/cards.css";
-import { encodeEmail } from "./Roster";
+import { encodeEmail } from "../components/Utils";
+import { displayMessage } from "../components/Utils";
 
 function CourseView() {
   const location = useLocation();

@@ -4,6 +4,25 @@ export default function pause(interval = 200) {
   return new Promise((res) => setTimeout(res, interval));
 }
 
+export function encodeEmail(str) {
+  return str.replace(/[.]/g, "$");
+}
+
+export function decodeEmail(str) {
+  return str.replace(/[$]/g, ".");
+}
+
+export async function displayMessage(msg) {
+  msg.style.pointerEvents = "all";
+  msg.style.opacity = 1;
+  msg.style.width = "30rem";
+  await pause(2500);
+  msg.style.width = 0;
+  await pause(50);
+  msg.style.opacity = 0;
+  msg.style.pointerEvents = "none";
+}
+
 export async function openPopup(id) {
   document.body.style.overflowY = "hidden";
   const overlay = document.getElementById(id + "-popup");

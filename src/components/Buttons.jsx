@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import "../styles/animations.css";
-import pause from "./Utils";
+import pause, { displayMessage } from "./Utils";
 
 /**
  * @param {{variant: string, label: string, onClick: function}} props
@@ -59,17 +59,6 @@ export function Tooltip(props) {
       {props.label}
     </div>
   );
-}
-
-export async function displayMessage(msg) {
-  msg.style.pointerEvents = "all";
-  msg.style.opacity = 1;
-  msg.style.width = "30rem";
-  await pause(2500);
-  msg.style.width = 0;
-  await pause(50);
-  msg.style.opacity = 0;
-  msg.style.pointerEvents = "none";
 }
 
 export function FloatingButton(props) {

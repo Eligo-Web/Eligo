@@ -4,15 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BackButton } from "../components/Buttons";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
-import pause from "../components/Utils";
-
-export function encodeEmail(str) {
-  return str.replace(/[.]/g, "$");
-}
-
-export function decodeEmail(str) {
-  return str.replace(/[$]/g, ".");
-}
+import pause, { decodeEmail } from "../components/Utils";
 
 function Roster() {
   const location = useLocation();

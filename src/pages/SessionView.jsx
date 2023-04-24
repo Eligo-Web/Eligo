@@ -27,7 +27,7 @@ import {
   EditPopupContext,
   NewPollContext,
 } from "../containers/InAppContainer";
-import { decodeEmail } from "./Roster";
+import { decodeEmail } from "../components/Utils";
 
 function SessionView() {
   const location = useLocation();
