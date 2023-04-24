@@ -92,12 +92,6 @@ function CreateOrEditSession(props) {
   async function createSession() {
     const sessionId = `session-${Date.now()}`;
     const locationSwitch = document.getElementById("location-switch");
-    const button = document.getElementById("create-session-button");
-    let buttonText;
-    if (button) {
-      buttonText = button.childNodes[0];
-      buttonText.data = "Creating...";
-    }
     await axios.put(
       `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`,
       {
@@ -137,9 +131,8 @@ function CreateOrEditSession(props) {
       });
       props.setRefresh(!props.refresh);
       closePopup(props.id, setPopup);
-    }
-    if (buttonText) {
-      buttonText.data = "Create";
+    } else {
+      setSaving(false);
     }
   }
 

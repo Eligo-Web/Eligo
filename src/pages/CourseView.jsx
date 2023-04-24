@@ -385,7 +385,6 @@ function CourseView() {
 
     return (
       <div className="d-flex flex-column ">
-        <title>{location.state.courseName} | Eligo</title>
         <InstructorScreenAlert />
         {backButton}
         {editPopup}
@@ -433,6 +432,7 @@ function CourseView() {
     <AccessDenied />
   ) : (
     <div>
+      <title>{location.state.courseName} | Eligo</title>
       <Menu
         leaveAction={location.state.permission === "STUDENT"}
         hideCreate={location.state.permission === "INSTRUCTOR"}

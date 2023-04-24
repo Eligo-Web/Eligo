@@ -192,6 +192,7 @@ function CreateOrEditClass(props) {
   async function postCourse() {
     if (!paramsValid()) {
       setShowError(false);
+      setSaving(false);
       return;
     }
     let response;
@@ -210,6 +211,7 @@ function CreateOrEditClass(props) {
       });
     if (response.status === 409) {
       setShowError(true);
+      setSaving(false);
       return;
     } else {
       setShowError(false);
@@ -227,6 +229,7 @@ function CreateOrEditClass(props) {
   async function putCourse() {
     if (!paramsValid()) {
       setShowError(false);
+      setSaving(false);
       return;
     }
 
@@ -260,6 +263,7 @@ function CreateOrEditClass(props) {
 
     if (checkDupe.status === 200 && sisId === props.sisId) {
       setShowError(true);
+      setSaving(false);
       return;
     }
 
@@ -311,8 +315,10 @@ function CreateOrEditClass(props) {
     let students = [];
     await axios
       .delete(`${server}/course/${oldSectionId}`, {
-        token: location.state.token,
-        email: location.state.email,
+        headers: {
+          token: location.state.token,
+          email: location.state.email,
+        },
       })
       .then((res) => {
         students = res.data.data.students;
@@ -401,7 +407,7 @@ function CreateOrEditClass(props) {
           variant="primary"
           label={props.editMode ? "Save" : "Create"}
           onClick={handleSaveCreate}
-          style={{ maxHeight: "100%" }}
+          style={{ minHeight: "100%" }}
           loading={saving}
         />
       </div>

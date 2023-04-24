@@ -22,7 +22,7 @@ export function PrimaryButton(props) {
       style={props.style}
     >
       {props.loading ? (
-        <div className="loading-ellipse"/>
+        <div className="loading-ellipse" />
       ) : (
         props.label || "Label"
       )}

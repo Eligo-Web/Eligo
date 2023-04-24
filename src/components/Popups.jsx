@@ -52,6 +52,7 @@ export function JoinSession(props) {
   const [invalidErr, setInvalidErr] = useState(false);
   const [invalidLoc, setInvalidLoc] = useState(false);
   const [locErr, setLocError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const control = props.control;
   props = props.childProps;
@@ -169,13 +170,16 @@ export function JoinSession(props) {
   }
 
   async function joinSession() {
+    setLoading(true);
     const { present, lat, long, distance } = await checkLocation();
     if (!checkPasscode()) {
+      setLoading(false);
       return;
     } else if (!present) {
       setInvalidLoc(true);
       setLocError(false);
       setInvalidErr(false);
+      setLoading(false);
       return;
     }
     let valid = true;
@@ -212,7 +216,11 @@ export function JoinSession(props) {
           valid = false;
         }
       });
-    if (valid) closePopup("Join Session");
+    if (valid) {
+      closePopup("Join Session");
+    } else {
+      setLoading(false);
+    }
   }
 
   return (
@@ -257,6 +265,7 @@ export function JoinSession(props) {
           variant="primary"
           label="Join"
           onClick={() => joinSession()}
+          loading={loading}
         />
       </div>
     </div>
@@ -267,6 +276,7 @@ export function JoinClass(props) {
   const [passcode, setPasscode] = useState("");
   const [dupeError, setDupeError] = useState(false);
   const [invalidError, setInvalidError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleKeyPresses = (event) => {
     switch (event.key) {
@@ -317,7 +327,9 @@ export function JoinClass(props) {
   }
 
   async function joinClass() {
+    setLoading(true);
     if (!checkPasscode()) {
+      setLoading(false);
       return;
     }
     await axios
@@ -331,6 +343,7 @@ export function JoinClass(props) {
         if (res.data.status === 404) {
           setDupeError(false);
           setInvalidError(true);
+          setLoading(false);
           return;
         }
         if (res.data.status === 200) {
@@ -346,6 +359,7 @@ export function JoinClass(props) {
               if (res.data.status === 409) {
                 setInvalidError(false);
                 setDupeError(true);
+                setLoading(false);
                 return;
               }
               props.setRefresh(!props.refresh);
@@ -400,6 +414,7 @@ export function JoinClass(props) {
           variant="primary"
           label="Join"
           onClick={() => joinClass()}
+          loading={loading}
         />
       </div>
     </div>
