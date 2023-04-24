@@ -71,7 +71,7 @@ export function JoinSession(props) {
         Math.sin(dLong / 2) *
         Math.sin(dLong / 2);
     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    let d = R * c; // Distance in km
+    let d = R * c * 1000; // Distance in m
     return d;
   }
 
@@ -126,7 +126,7 @@ export function JoinSession(props) {
     let lat = 0;
     let long = 0;
     let distance = 0;
-    let present = true;
+    let enabled = true;
     let thisError = false;
     if (props.session.latitude && props.session.longitude) {
       navigator.geolocation.getCurrentPosition(
@@ -145,7 +145,7 @@ export function JoinSession(props) {
           if (thisError) {
             setLocError(true);
             setInvalidErr(false);
-            present = false;
+            enabled = false;
           }
         }
       );
@@ -162,13 +162,13 @@ export function JoinSession(props) {
         buttonText.data = "Join";
       }
     }
-    return { lat, long, distance };
+    return { lat, long, distance, enabled };
   }
 
   async function joinSession() {
     setLoading(true);
-    const { lat, long, distance } = await checkLocation();
-    if (!checkPasscode()) {
+    const { lat, long, distance, enabled } = await checkLocation();
+    if (!checkPasscode() || !enabled) {
       setLoading(false);
       return;
     }

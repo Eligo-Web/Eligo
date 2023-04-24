@@ -232,6 +232,7 @@ function SessionView() {
 
     return (
       <div>
+        <title>{location.state.courseName} | Eligo</title>
         <BackButton label="Overview" onClick={() => navigateOverview()} />
         <div className="card-wrapper-student">
           <Menu hideJoin />
@@ -323,7 +324,7 @@ function SessionView() {
               "Student Emails",
               "Latitude",
               "Longitude",
-              "Distance to Instructor",
+              "Distance to Instructor (meters)",
             ],
             data: [
               [
