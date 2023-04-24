@@ -50,7 +50,6 @@ export function JoinSession(props) {
   const defaultPasscodePH = "Ex: 1234";
   const [passcodeInputPH, setpasscodeInputPH] = useState(defaultPasscodePH);
   const [invalidErr, setInvalidErr] = useState(false);
-  const [invalidLoc, setInvalidLoc] = useState(false);
   const [locErr, setLocError] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -103,7 +102,6 @@ export function JoinSession(props) {
       passcodeField.className += " field-error";
       setpasscodeInputPH("• Required");
       setInvalidErr(false);
-      setInvalidLoc(false);
       setLocError(false);
       valid = false;
     } else {
@@ -121,7 +119,6 @@ export function JoinSession(props) {
     setpasscodeInputPH(defaultPasscodePH);
     setPasscode("");
     setInvalidErr(false);
-    setInvalidLoc(false);
     setLocError(false);
   }
 
@@ -147,7 +144,6 @@ export function JoinSession(props) {
           thisError = error.PERMISSION_DENIED;
           if (thisError) {
             setLocError(true);
-            setInvalidLoc(false);
             setInvalidErr(false);
             present = false;
           }
@@ -166,19 +162,13 @@ export function JoinSession(props) {
         buttonText.data = "Join";
       }
     }
-    return { present, lat, long, distance };
+    return { lat, long, distance };
   }
 
   async function joinSession() {
     setLoading(true);
-    const { present, lat, long, distance } = await checkLocation();
+    const { lat, long, distance } = await checkLocation();
     if (!checkPasscode()) {
-      setLoading(false);
-      return;
-    } else if (!present) {
-      setInvalidLoc(true);
-      setLocError(false);
-      setInvalidErr(false);
       setLoading(false);
       return;
     }
@@ -244,13 +234,6 @@ export function JoinSession(props) {
       >
         <IconAlertTriangleFilled />
         Failed to join session. Passcode is invalid!
-      </div>
-      <div
-        className="error-banner"
-        style={{ display: invalidLoc ? "flex" : "none" }}
-      >
-        <IconAlertTriangleFilled />
-        Permission denied: Failed to join, out of range.
       </div>
       <div
         className="error-banner"
