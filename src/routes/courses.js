@@ -361,7 +361,7 @@ Course.post(
           sectionId,
           weekNum,
           sessionId,
-          pollId, 
+          pollId,
           startTimestamp
         );
         res.json({

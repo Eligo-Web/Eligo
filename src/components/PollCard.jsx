@@ -18,6 +18,7 @@ function PollCard(props) {
       className={"card poll-card clickable" + inactive}
       onClick={props.onClick}
       id={props.id}
+      title={props.title}
     >
       <p className="card-title poll-card-title">{props.title}</p>
     </div>

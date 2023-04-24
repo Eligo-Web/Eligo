@@ -55,6 +55,7 @@ function CreateOrEditClass(props) {
   const [semester, setSemester] = useState(props.semester || "");
   const [showError, setShowError] = useState(false);
   const [refresh, setRefresh] = [props.refresh, props.setRefresh];
+  const [saving, setSaving] = useState(false);
   const [popup, setPopup] = useContext(EditPopupContext);
   const validCharset = /^[a-zA-Z0-9\s\p{P}\p{S}]+$/u;
   const location = useLocation();
@@ -97,10 +98,7 @@ function CreateOrEditClass(props) {
         clearContents();
         break;
       case "Enter":
-        const button = document.getElementById(
-          "save-" + props.sectionId + "-button"
-        );
-        handleSaveCreate(null, button);
+        handleSaveCreate();
         break;
     }
   };
@@ -171,6 +169,7 @@ function CreateOrEditClass(props) {
       sectionField.className += " field-error";
       valid = false;
     } else {
+      setSectionInputPH(defaultSectionPH);
       sectionField.className = "section-input form-control";
     }
 
@@ -185,13 +184,9 @@ function CreateOrEditClass(props) {
     return valid;
   }
 
-  async function handleSaveCreate(event, element = null) {
-    const button = event ? event.target : element;
-    const loadMsg = props.editMode ? "Saving..." : "Creating...";
-    const original = button.childNodes[0].data;
-    button.childNodes[0].data = loadMsg;
+  async function handleSaveCreate() {
+    setSaving(true);
     props.editMode ? await putCourse() : await postCourse();
-    button.childNodes[0].data = original;
   }
 
   async function postCourse() {
@@ -241,7 +236,8 @@ function CreateOrEditClass(props) {
       sisId === props.sisId &&
       semester === props.semester
     ) {
-      clearContents();
+      closePopup(popupName, setPopup);
+      setSaving(false);
       return;
     }
 
@@ -404,7 +400,9 @@ function CreateOrEditClass(props) {
           id={"save-" + props.sectionId}
           variant="primary"
           label={props.editMode ? "Save" : "Create"}
-          onClick={(event) => handleSaveCreate(event)}
+          onClick={handleSaveCreate}
+          style={{ maxHeight: "100%" }}
+          loading={saving}
         />
       </div>
     </div>

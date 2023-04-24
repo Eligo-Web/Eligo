@@ -50,17 +50,17 @@ function CreateOrEditSession(props) {
     props.editMode ? props.session.name : ""
   );
   const [locError, setLocError] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [popup, setPopup] = useContext(EditPopupContext);
   const timeStamp = props.id.replace("session-", "");
   const popupId = `content-${props.id}-popup`;
-  const reset = true;
 
   useEffect(() => {
     const overlay = document.getElementById(popupId);
     if (!overlay) return;
     const isOpen = !!overlay.parentNode.isOpen;
     if (isOpen && props.control) {
-      clearContents(reset);
+      clearContents();
     }
   }, [props.control]);
 
@@ -73,11 +73,10 @@ function CreateOrEditSession(props) {
   const handleKeyPresses = (event) => {
     switch (event.key) {
       case "Escape":
-        clearContents(reset);
+        clearContents();
         break;
       case "Enter":
-        const button = document.getElementById("save-" + props.id + "-button");
-        handleSaveCreate(null, button);
+        handleSaveCreate();
         break;
     }
   };
@@ -137,7 +136,7 @@ function CreateOrEditSession(props) {
         email: props.email,
       });
       props.setRefresh(!props.refresh);
-      clearContents();
+      closePopup(props.id, setPopup);
     }
     if (buttonText) {
       buttonText.data = "Create";
@@ -145,6 +144,11 @@ function CreateOrEditSession(props) {
   }
 
   async function handleEdit() {
+    if (sessionName === props.session.name) {
+      closePopup(props.id, setPopup);
+      setSaving(false);
+      return;
+    }
     await axios.patch(
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
       {
@@ -154,7 +158,7 @@ function CreateOrEditSession(props) {
       }
     );
     props.setRefresh(!props.refresh);
-    clearContents(reset);
+    closePopup(props.id, setPopup);
   }
 
   async function handleDelete() {
@@ -168,27 +172,21 @@ function CreateOrEditSession(props) {
     closePopup(props.id, setPopup);
   }
 
-  async function handleSaveCreate(event, element = null) {
-    const button = event ? event.target : element;
-    const loadMsg = props.editMode ? "Saving..." : "Creating...";
-    const original = button.childNodes[0].data;
-    button.childNodes[0].data = loadMsg;
+  async function handleSaveCreate() {
+    setSaving(true);
     props.editMode ? await handleEdit() : await createSession();
-    button.childNodes[0].data = original;
   }
 
-  async function clearContents(reset = false) {
+  async function clearContents() {
     const overlay = document.getElementById(popupId);
-    if (props.editMode && props.markDelete && reset) {
+    if (props.editMode && props.markDelete) {
       props.setMarkDelete(false);
       await pause(300);
     }
     const nameField = overlay.querySelector(".session-name-input");
     const locationSwitch = document.getElementById("location-switch");
-    if (reset) {
-      nameField.value = props.editMode ? props.session.name : "";
-      if (!props.editMode) locationSwitch.checked = false;
-    }
+    nameField.value = props.editMode ? props.session.name : "";
+    if (!props.editMode) locationSwitch.checked = false;
     setLocError(false);
     setSessionName(props.editMode ? props.session.name : "");
     closePopup(props.id, setPopup);
@@ -255,13 +253,15 @@ function CreateOrEditSession(props) {
         <PrimaryButton
           variant="secondary"
           label="Cancel"
-          onClick={() => clearContents(reset)}
+          onClick={() => clearContents()}
         />
         <PrimaryButton
           variant="primary"
           id={"save-" + props.id}
           label={props.editMode ? "Save" : "Create"}
-          onClick={(event) => handleSaveCreate(event)}
+          onClick={handleSaveCreate}
+          style={{ maxHeight: "100%" }}
+          loading={saving}
         />
       </div>
     </div>

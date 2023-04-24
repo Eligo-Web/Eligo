@@ -7,6 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { pause } from "../pages/CourseView";
+import "../styles/animations.css";
 
 /**
  * @param {{variant: string, label: string, onClick: function}} props
@@ -17,9 +18,14 @@ export function PrimaryButton(props) {
       variant={props.variant || "primary"}
       onClick={props.onClick}
       id={props.id + "-button"}
-      disabled={props.disabled}
+      disabled={props.disabled || props.loading}
+      style={props.style}
     >
-      {props.label || "Label"}
+      {props.loading ? (
+        <div className="loading-ellipse"/>
+      ) : (
+        props.label || "Label"
+      )}
     </Button>
   );
 }

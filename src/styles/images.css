@@ -5,7 +5,7 @@
   justify-content: center;
   transition: 0.4s cubic-bezier(0, 0, 0.4, 1);
   mix-blend-mode: luminosity;
-  height: 95%;
+  height: 90%;
   opacity: 0;
   gap: 2rem;
 }

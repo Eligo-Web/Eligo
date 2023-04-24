@@ -157,7 +157,13 @@ class CourseDao {
     return session;
   }
 
-  async addPollToSession(sectionId, weekNum, sessionId, pollId, startTimestamp) {
+  async addPollToSession(
+    sectionId,
+    weekNum,
+    sessionId,
+    pollId,
+    startTimestamp
+  ) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
       throw new ApiError(404, `Course with section id ${sectionId} not found`);

@@ -107,6 +107,9 @@ function SessionView() {
         if (!res.data.data.active) {
           navigateBack();
         }
+      })
+      .catch(() => {
+        navigateBack();
       });
   }
 

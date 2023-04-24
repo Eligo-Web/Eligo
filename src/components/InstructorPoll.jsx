@@ -20,6 +20,7 @@ import { server } from "../ServerUrl";
 import { EditPopupContext } from "../containers/InAppContainer";
 import { pause } from "../pages/CourseView.jsx";
 import "../styles/newpoll.css";
+import "../styles/animations.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import * as clicker from "./ClickerBase";
 import InputField from "./InputField";
@@ -700,7 +701,7 @@ function Stopwatch(props) {
           style={{ display: !props.running ? "block" : "none" }}
         />
         <IconLoader2
-          className="stopwatch-loading"
+          className="icon-loading"
           stroke="0.15rem"
           style={{
             display:

@@ -423,16 +423,15 @@ export function Poll(props) {
 
   async function makeSelection(choice) {
     setSelected(choice);
-    await axios
-      .patch(
-        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
-        {
-          email: props.email,
-          timestamp: Date.now().toString(),
-          response: choice,
-          token: props.token,
-        }
-      )
+    await axios.patch(
+      `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
+      {
+        email: props.email,
+        timestamp: Date.now().toString(),
+        response: choice,
+        token: props.token,
+      }
+    );
   }
 
   useEffect(() => {
