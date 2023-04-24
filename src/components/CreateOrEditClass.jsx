@@ -189,7 +189,10 @@ function CreateOrEditClass(props) {
   }
 
   async function postCourse() {
+    const container = document.querySelector(".semester-container");
+    container.style.pointerEvents = "none";
     if (!paramsValid()) {
+      container.style.pointerEvents = "all";
       setShowError(false);
       setSaving(false);
       return;
@@ -209,6 +212,7 @@ function CreateOrEditClass(props) {
         response = res.data;
       });
     if (response.status === 409) {
+      container.style.pointerEvents = "all";
       setShowError(true);
       setSaving(false);
       return;
@@ -226,7 +230,10 @@ function CreateOrEditClass(props) {
   }
 
   async function putCourse() {
+    const container = document.querySelector(".semester-container");
+    container.style.pointerEvents = "none";
     if (!paramsValid()) {
+      container.style.pointerEvents = "all";
       setShowError(false);
       setSaving(false);
       return;
@@ -238,6 +245,7 @@ function CreateOrEditClass(props) {
       sisId === props.sisId &&
       semester === props.semester
     ) {
+      container.style.pointerEvents = "all";
       closePopup(popupName, setPopup);
       setSaving(false);
       return;
@@ -261,6 +269,7 @@ function CreateOrEditClass(props) {
       });
 
     if (checkDupe.status === 200 && sisId === props.sisId) {
+      container.style.pointerEvents = "all";
       setShowError(true);
       setSaving(false);
       return;
@@ -308,6 +317,8 @@ function CreateOrEditClass(props) {
   }
 
   async function deleteCourse() {
+    const container = document.querySelector(".semester-container");
+    container.style.pointerEvents = "none";
     const oldSectionId = toSectionId(
       props.name + props.section + props.semester
     );

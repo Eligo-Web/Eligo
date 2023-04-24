@@ -149,10 +149,9 @@ export function FloatingButton(props) {
           <IconCalculator size="1.4em" />
           <div className="connect-btn-label">{label}</div>
           <IconX
-            size="2.3em"
+            size="2.2em"
             stroke="0.14rem"
             className="absolute-hint position-relative"
-            style={{ right: 0, margin: "-0.5rem -0.8rem -0.5rem 1rem" }}
             onClick={(event) => dismiss(event, true)}
           />
         </div>

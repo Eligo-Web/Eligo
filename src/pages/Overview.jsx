@@ -211,6 +211,7 @@ function OverView() {
         await pause(100);
         setCards(semesterList);
         container.style.opacity = 1;
+        container.style.pointerEvents = "all";
       }
       loadContent();
     }, [refresh]);
