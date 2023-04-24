@@ -266,7 +266,6 @@ export default function InstructorPoll() {
   }
 
   async function closePoll() {
-    console.log("refreshing");
     await axios
       .put(
         `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}/close`,
@@ -461,7 +460,20 @@ export function ClosedPoll(props) {
       for (const timestamp in pollInfo.responses[email].answers) {
         if (email.includes("@")) {
           emails.push(email);
-          clickerIds.push("N/A");
+          await axios
+            .get(`${server}/student/${email}`, {
+              headers: { 
+                token: props.token, 
+                requester: props.email,
+              },
+            })
+            .then((res) => {
+              if (res.data.data.clickerId) {
+                clickerIds.push(res.data.data.clickerId);
+              } else {
+                clickerIds.push("N/A");
+              }
+            });
         } else {
           emails.push("N/A");
           clickerIds.push(email);
