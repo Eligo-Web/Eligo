@@ -81,7 +81,7 @@ Instructor.put("/:email", async (req, res, next) => {
   const newCourse = req.body.newCourse;
   const newSection = req.body.newSection;
   const newSemester = req.body.newSemester;
-  const sectionId = toSectionId(newCourse + newSection + newSemester);
+  const sectionId = toSectionId(newCourse, newSection, newSemester);
   const token = req.body.token;
   const valid = await validateToken(token, email);
   try {

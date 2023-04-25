@@ -5,8 +5,9 @@ import CourseDao from "../data/CourseDao.js";
 const Course = express.Router();
 export const courseDao = new CourseDao();
 
-export function toSectionId(str) {
-  return str.replace(/\s/g, "").toLowerCase();
+export function toSectionId(name, section, semester) {
+  const idStr = `${name}~${section}~${semester}`;
+  return idStr.replace(/\s/g, "").toLowerCase();
 }
 
 export function encodeEmail(str) {
@@ -629,7 +630,9 @@ Course.patch(
 
 Course.post("/", async (req, res, next) => {
   let sectionId = toSectionId(
-    req.body.name + req.body.section + req.body.semester
+    req.body.name,
+    req.body.section,
+    req.body.semester
   );
   req.body.sectionId = sectionId;
   const token = req.body.token;
@@ -662,7 +665,7 @@ Course.put("/:sectionId", async (req, res, next) => {
   const semester = req.body.semester;
   const newSisId = req.body.SISId;
   const passcode = req.body.passcode;
-  const newSectionId = toSectionId(name + section + semester);
+  const newSectionId = toSectionId(name, section, semester);
   const token = req.body.token;
   const email = req.body.email;
   try {

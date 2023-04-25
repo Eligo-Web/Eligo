@@ -180,6 +180,27 @@ svg {
   overflow: hidden;
 }
 
+.floating-banner {
+  bottom: 100%;
+  display: flex;
+  position: fixed;
+  pointer-events: none;
+  padding: 0.6rem 1.2rem;
+  background-color: #a3c2ea;
+  transition: 0.1s ease-in-out;
+  box-shadow: 0 0.5rem 2rem rgba(5, 32, 65, 0.15);
+  border-radius: 5rem;
+  margin: 1rem 0;
+}
+
+.banner-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: -0.5rem 0;
+  width: 100%;
+  height: 0;
+}
+
 .loading {
   --mask: linear-gradient(to top, transparent, #ffffffbb, #ffffffbb);
   mask-image: var(--mask);

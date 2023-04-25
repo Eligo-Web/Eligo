@@ -9,8 +9,9 @@ import { PrimaryButton } from "./Buttons.jsx";
 import InputField, { SelectField } from "./InputField";
 import pause, { closePopup } from "./Utils";
 
-function toSectionId(str) {
-  return str.replace(/\s/g, "").toLowerCase();
+function toSectionId(name, section, semester) {
+  const idStr = `${name}~${section}~${semester}`;
+  return idStr.replace(/\s/g, "").toLowerCase();
 }
 
 export function CreateClass(props) {
@@ -56,10 +57,10 @@ function CreateOrEditClass(props) {
   const [refresh, setRefresh] = [props.refresh, props.setRefresh];
   const [saving, setSaving] = useState(false);
   const [popup, setPopup] = useContext(EditPopupContext);
-  const validCharset = /^[a-zA-Z0-9\s\p{P}\p{S}]+$/u;
+  const validCharset = /^[^~]*$/;
   const location = useLocation();
   const popupName = props.editMode
-    ? toSectionId(props.name + props.section + props.semester)
+    ? toSectionId(props.name, props.section, props.semester)
     : "create-class";
   const [defaultNamePH, defaultsisIdPH, defaultSectionPH] = [
     "ex: Intermediate Programming",
@@ -136,6 +137,7 @@ function CreateOrEditClass(props) {
     setNameInputPH(defaultNamePH);
     setSisIDInputPH(defaultsisIdPH);
     setSectionInputPH(defaultSectionPH);
+    await pause(50);
     closePopup(popupName, setPopup);
   }
 
@@ -150,7 +152,7 @@ function CreateOrEditClass(props) {
       setNameInputPH("• Required");
       nameField.className += " field-error";
       valid = false;
-    } else if (!validCharset.test(name + section + semester)) {
+    } else if (!validCharset.test(name)) {
       setNameInputPH("• Invalid characters");
       nameField.className += " field-error";
       valid = false;
@@ -251,10 +253,8 @@ function CreateOrEditClass(props) {
       return;
     }
 
-    const oldSectionId = toSectionId(
-      props.name + props.section + props.semester
-    );
-    const sectionId = toSectionId(name + section + semester);
+    const oldSectionId = toSectionId(props.name, props.section, props.semester);
+    const sectionId = toSectionId(name, section, semester);
     let checkDupe;
     let course;
 
@@ -268,13 +268,14 @@ function CreateOrEditClass(props) {
         checkDupe = res.data;
       });
     
-    if (checkDupe.status === 200 && checkDupe.data.sectionId !== oldSectionId) {
+    const sameClass = checkDupe.data.sectionId === oldSectionId;
+    if (checkDupe.status === 200 && !sameClass) {
       container.style.pointerEvents = "all";
       setShowError(true);
       setSaving(false);
       return;
     }
-    
+
     await axios
       .put(`${server}/course/${oldSectionId}`, {
         name: name,
@@ -319,9 +320,7 @@ function CreateOrEditClass(props) {
   async function deleteCourse() {
     const container = document.querySelector(".semester-container");
     container.style.pointerEvents = "none";
-    const oldSectionId = toSectionId(
-      props.name + props.section + props.semester
-    );
+    const oldSectionId = toSectionId(props.name, props.section, props.semester);
     let students = [];
     await axios
       .delete(`${server}/course/${oldSectionId}`, {
@@ -390,12 +389,14 @@ function CreateOrEditClass(props) {
           onChange={(e) => setSemester(e.target.value)}
         />
       </div>
-      <div
-        className="error-banner"
-        style={{ display: showError ? "flex" : "none" }}
-      >
-        <IconAlertTriangleFilled />
-        Warning: This course already exists!
+      <div className="banner-wrapper">
+        <div
+          className="error-banner floating-banner"
+          style={{ opacity: showError ? 1 : 0 }}
+        >
+          <IconAlertTriangleFilled />
+          Warning: This course already exists!
+        </div>
       </div>
       <div className="button-row">
         {props.editMode && (

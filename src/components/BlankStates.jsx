@@ -61,7 +61,7 @@ export function EmptyOverview(props) {
         />
         <center className="blank-state-msg p-2">
           {props.student
-            ? "You jave not joined a class yet. Join one and it will appear here."
+            ? "You have not joined a class yet. Join one and it will appear here."
             : "You have no classes yet. As you create them, they will appear here."}
         </center>
       </div>

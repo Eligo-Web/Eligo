@@ -26,8 +26,9 @@ export default function Overlay(props) {
       props.editSession ||
       props.createClass ||
       props.createSession
-    )
+    ) {
       return;
+    }
     closePopup(props.id, setPopup);
   }
 
