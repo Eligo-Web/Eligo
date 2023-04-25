@@ -288,20 +288,21 @@ svg {
 .tooltip,
 .err-tooltip {
   z-index: 1;
-  background: #6d241c;
+  transition: 0.1s ease;
+  background: #81332b;
   position: absolute;
   display: flex;
   color: white;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem 1rem;
+  padding: 0.3rem 0.8rem;
   font-family: inherit;
   min-width: max-content;
 }
 
 .err-tooltip {
-  left: 80%;
-  bottom: 20%;
+  left: calc(100% - 3rem);
+  bottom: 30%;
   border-radius: 1rem 1rem 1rem 0.2rem;
 }
 

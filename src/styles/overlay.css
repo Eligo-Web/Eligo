@@ -130,6 +130,7 @@
 
 .input-field,
 .input-field-small {
+  z-index: 1;
   flex: 2.3;
   position: relative;
   display: flex;
@@ -158,6 +159,10 @@
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 0.4rem;
+}
+
+.input-error {
+  mix-blend-mode: normal;
 }
 
 .form-control,
@@ -203,17 +208,22 @@ select {
   cursor: pointer;
 }
 
+#name-input,
+#section-input {
+  z-index: 2;
+}
+
 .field-error,
 .field-error:focus {
-  background-color: #fbd6d6;
-  border-color: #db1c0698;
+  background-color: #ffe6e9;
+  border-color: #e8321e98;
   color: #600000 !important;
 }
 
 .field-error::placeholder,
 .field-error:hover::placeholder,
 .field-error:focus::placeholder {
-  color: #600000 !important;
+  color: #6000009e !important;
   opacity: 100% !important;
 }
 

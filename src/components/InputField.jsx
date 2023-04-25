@@ -29,7 +29,7 @@ export default function InputField(props) {
   }
 
   return (
-    <div className={props.small ? "input-field-small" : "input-field"}>
+    <div className={props.small ? "input-field-small" : "input-field"} id={props.class}>
       <div
         className="input-field-label"
         style={{ justifyContent: props.center ? "center" : "unset" }}
