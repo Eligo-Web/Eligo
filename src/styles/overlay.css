@@ -131,6 +131,7 @@
 .input-field,
 .input-field-small {
   flex: 2.3;
+  position: relative;
   display: flex;
   flex-direction: column;
   margin: 0 0.5rem;
@@ -168,6 +169,7 @@
 .form-check-input:focus,
 .form-check-input:checked {
   flex: 1;
+  z-index: 1;
   display: flex;
   padding: 0.3rem 1rem;
   mix-blend-mode: hard-light;

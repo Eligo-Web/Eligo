@@ -2,6 +2,7 @@ import { IconLock } from "@tabler/icons-react";
 import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import { PrimaryButton } from "./Buttons";
+import { Tooltip } from "./Buttons";
 
 export default function InputField(props) {
   useEffect(() => {
@@ -59,6 +60,7 @@ export default function InputField(props) {
         )}
       </div>
       {renderErrors()}
+      {props.errorState && <Tooltip className="err-tooltip" label={props.errorState}/>}
     </div>
   );
 }

@@ -67,9 +67,9 @@ function CreateOrEditClass(props) {
     "EN.601.220",
     "1, 2, ...",
   ];
-  const [nameInputPH, setNameInputPH] = useState(defaultNamePH);
-  const [sisIDInputPH, setSisIDInputPH] = useState(defaultsisIdPH);
-  const [sectionInputPH, setSectionInputPH] = useState(defaultSectionPH);
+  const [nameInputErr, setNameInputErr] = useState("");
+  const [sisIDInputErr, setSisIDInputErr] = useState("");
+  const [sectionInputErr, setSectionInputErr] = useState("");
   let valid = true;
 
   useEffect(() => {
@@ -134,9 +134,12 @@ function CreateOrEditClass(props) {
     nameField.className = "name-input form-control";
     sectionField.className = "section-input form-control";
     sisIdField.className = "sis-id-input form-control";
-    setNameInputPH(defaultNamePH);
-    setSisIDInputPH(defaultsisIdPH);
-    setSectionInputPH(defaultSectionPH);
+    nameField.parentNode.parentNode.className = "input-field";
+    sectionField.parentNode.parentNode.className = "input-field-small";
+    sisIdField.parentNode.parentNode.className = "input-field-small";
+    setNameInputErr("");
+    setSisIDInputErr("");
+    setSectionInputErr("");
     await pause(50);
     closePopup(popupName, setPopup);
   }
@@ -149,37 +152,45 @@ function CreateOrEditClass(props) {
     valid = true;
 
     if (!name) {
-      setNameInputPH("• Required");
+      setNameInputErr("• Required");
+      nameField.parentNode.parentNode.className += " input-error";
       nameField.className += " field-error";
       valid = false;
     } else if (!validCharset.test(name)) {
-      setNameInputPH("• Invalid characters");
+      setNameInputErr("• Invalid characters");
+      nameField.parentNode.parentNode.className += " input-error";
       nameField.className += " field-error";
       valid = false;
     } else {
-      setNameInputPH(defaultNamePH);
+      setNameInputErr("");
+      nameField.parentNode.parentNode.className = "input-field";
       nameField.className = "name-input form-control";
     }
 
     if (!section) {
-      setSectionInputPH("• Required");
+      setSectionInputErr("• Required");
+      sectionField.parentNode.parentNode.className += " input-error";
       sectionField.className += " field-error";
       valid = false;
     } else if (isNaN(section) || section < 1) {
-      setSectionInputPH("• Invalid");
+      setSectionInputErr("• Invalid");
+      sectionField.parentNode.parentNode.className += " input-error";
       sectionField.className += " field-error";
       valid = false;
     } else {
-      setSectionInputPH(defaultSectionPH);
+      setSectionInputErr("");
+      sectionField.parentNode.parentNode.className = "input-field-small";
       sectionField.className = "section-input form-control";
     }
 
     if (sisId && !/^[A-Z]{2}\.\d{3}\.\d{3}$/.test(sisId)) {
-      setSisIDInputPH("XX.000.000");
+      setSisIDInputErr("• Invalid");
+      sisIdField.parentNode.parentNode.className += " input-error";
       sisIdField.className += " field-error";
       valid = false;
     } else {
-      setSisIDInputPH(defaultsisIdPH);
+      setSisIDInputErr("");
+      sisIdField.parentNode.parentNode.className = "input-field-small";
       sisIdField.className = "sis-id-input form-control";
     }
     return valid;
@@ -267,9 +278,8 @@ function CreateOrEditClass(props) {
       .then((res) => {
         checkDupe = res.data;
       });
-    
-    const sameClass = checkDupe.data.sectionId === oldSectionId;
-    if (checkDupe.status === 200 && !sameClass) {
+  
+    if (checkDupe.status === 200 && checkDupe.data.sectionId === oldSectionId) {
       container.style.pointerEvents = "all";
       setShowError(true);
       setSaving(false);
@@ -358,18 +368,20 @@ function CreateOrEditClass(props) {
         <InputField
           class="name-input"
           label="Class Name"
-          input={nameInputPH}
+          input="ex: Intermediate Programming"
           default={props.name || ""}
           onChange={(e) => setName(e.target.value)}
+          errorState={nameInputErr}
         />
         <InputField
           small
           class="sis-id-input"
           label="Course ID (opt.)"
-          input={sisIDInputPH}
+          input="EN.601.220"
           default={props.sisId || ""}
           onChange={(e) => setSISId(e.target.value.toUpperCase())}
           style={{ textTransform: "uppercase" }}
+          errorState={sisIDInputErr}
         />
       </div>
       <div className="input-group">
@@ -377,9 +389,10 @@ function CreateOrEditClass(props) {
           small
           class="section-input"
           label="Section No."
-          input={sectionInputPH}
+          input="1, 2, ..."
           default={props.section || ""}
           onChange={(e) => setSection(e.target.value)}
+          errorState={sectionInputErr}
         />
         <SelectField
           class="semester-input"

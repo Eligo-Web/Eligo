@@ -256,7 +256,8 @@ svg {
   gap: 0.5rem;
 }
 
-.btn:hover .tooltip {
+.btn:hover .tooltip,
+.input-error:hover .err-tooltip {
   opacity: 100%;
 }
 
@@ -284,15 +285,24 @@ svg {
   border-radius: 0.2rem 1rem 1rem 1rem;
 }
 
-.tooltip {
-  background: #425276;
-  position: fixed;
+.tooltip,
+.err-tooltip {
+  z-index: 1;
+  background: #6d241c;
+  position: absolute;
   display: flex;
   color: white;
   align-items: center;
   justify-content: center;
   padding: 0.6rem 1rem;
   font-family: inherit;
+  min-width: max-content;
+}
+
+.err-tooltip {
+  left: 80%;
+  bottom: 20%;
+  border-radius: 1rem 1rem 1rem 0.2rem;
 }
 
 .large-title {
