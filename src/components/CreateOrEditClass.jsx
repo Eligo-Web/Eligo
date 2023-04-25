@@ -279,7 +279,7 @@ function CreateOrEditClass(props) {
         checkDupe = res.data;
       });
   
-    if (checkDupe.status === 200 && checkDupe.data.sectionId === oldSectionId) {
+    if (checkDupe.status === 200 && checkDupe.data.sectionId !== oldSectionId) {
       container.style.pointerEvents = "all";
       setShowError(true);
       setSaving(false);
