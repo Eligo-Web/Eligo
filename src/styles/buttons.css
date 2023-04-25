@@ -460,12 +460,12 @@
   width: 20rem;
   color: #f2f8ff;
   border-radius: 1rem 1rem 1rem 0.2rem;
-  transform: translate(0.8rem, -4.5rem);
   box-shadow: 0 0.5rem 1rem #05204128;
   transition: 0.1s ease-in-out;
   padding: 0.5rem 1rem;
   pointer-events: none;
-  bottom: 2.2rem;
+  bottom: 0.8rem;
+  left: 54%;
   opacity: 0;
 }
 
