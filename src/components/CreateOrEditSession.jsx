@@ -227,12 +227,14 @@ function CreateOrEditSession(props) {
           <IconInfoCircle size="1.1em" stroke="0.14rem" />
         </div>
       </div>
-      <div
-        className="error-banner"
-        style={{ display: locError ? "flex" : "none" }}
-      >
-        <IconAlertTriangleFilled />
-        Location permission denied!
+      <div className="banner-wrapper">
+        <div
+          className="error-banner floating-banner"
+          style={{ opacity: locError ? 1 : 0, pointerEvents: locError ? "all" : "none" }}
+        >
+          <IconAlertTriangleFilled />
+          Location permission denied!
+        </div>
       </div>
       <div className="button-row">
         {props.editMode && (

@@ -208,7 +208,11 @@ select {
   cursor: pointer;
 }
 
-#name-input,
+#name-input {
+  z-index: 3;
+}
+
+#sis-id-input,
 #section-input {
   z-index: 2;
 }

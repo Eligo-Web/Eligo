@@ -288,6 +288,7 @@ svg {
 .tooltip,
 .err-tooltip {
   z-index: 1;
+  pointer-events: none;
   transition: 0.1s ease;
   background: #81332b;
   position: absolute;
@@ -295,15 +296,16 @@ svg {
   color: white;
   align-items: center;
   justify-content: center;
-  padding: 0.3rem 0.8rem;
+  padding: 0.5rem 1rem;
   font-family: inherit;
   min-width: max-content;
 }
 
 .err-tooltip {
-  left: calc(100% - 3rem);
+  left: calc(100% - 1.5rem);
   bottom: 30%;
   border-radius: 1rem 1rem 1rem 0.2rem;
+  box-shadow: 0 0.5rem 1rem #05204128;
 }
 
 .large-title {

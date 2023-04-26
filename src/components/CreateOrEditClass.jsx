@@ -152,12 +152,12 @@ function CreateOrEditClass(props) {
     valid = true;
 
     if (!name) {
-      setNameInputErr("• Required");
+      setNameInputErr("• Required field");
       nameField.parentNode.parentNode.className += " input-error";
       nameField.className += " field-error";
       valid = false;
     } else if (!validCharset.test(name)) {
-      setNameInputErr("• Invalid characters");
+      setNameInputErr("• Invalid characters: ~");
       nameField.parentNode.parentNode.className += " input-error";
       nameField.className += " field-error";
       valid = false;
@@ -168,12 +168,12 @@ function CreateOrEditClass(props) {
     }
 
     if (!section) {
-      setSectionInputErr("• Required");
+      setSectionInputErr("• Required field");
       sectionField.parentNode.parentNode.className += " input-error";
       sectionField.className += " field-error";
       valid = false;
     } else if (isNaN(section) || section < 1) {
-      setSectionInputErr("• Invalid");
+      setSectionInputErr("• Invalid section");
       sectionField.parentNode.parentNode.className += " input-error";
       sectionField.className += " field-error";
       valid = false;
@@ -184,7 +184,7 @@ function CreateOrEditClass(props) {
     }
 
     if (sisId && !/^[A-Z]{2}\.\d{3}\.\d{3}$/.test(sisId)) {
-      setSisIDInputErr("• Invalid");
+      setSisIDInputErr("• Invalid format");
       sisIdField.parentNode.parentNode.className += " input-error";
       sisIdField.className += " field-error";
       valid = false;
@@ -377,7 +377,7 @@ function CreateOrEditClass(props) {
           small
           class="sis-id-input"
           label="Course ID (opt.)"
-          input="EN.601.220"
+          input="EN.601..."
           default={props.sisId || ""}
           onChange={(e) => setSISId(e.target.value.toUpperCase())}
           style={{ textTransform: "uppercase" }}
@@ -405,7 +405,7 @@ function CreateOrEditClass(props) {
       <div className="banner-wrapper">
         <div
           className="error-banner floating-banner"
-          style={{ opacity: showError ? 1 : 0 }}
+          style={{ opacity: showError ? 1 : 0, pointerEvents: showError ? "all" : "none" }}
         >
           <IconAlertTriangleFilled />
           Warning: This course already exists!
