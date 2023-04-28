@@ -1,4 +1,3 @@
-import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -7,6 +6,7 @@ import { EditPopupContext } from "../containers/InAppContainer";
 import "../styles/newpoll.css";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField, { SelectField } from "./InputField";
+import { FloatError } from "./Popups";
 import pause, { closePopup } from "./Utils";
 
 function toSectionId(name, section, semester) {
@@ -62,11 +62,6 @@ function CreateOrEditClass(props) {
   const popupName = props.editMode
     ? toSectionId(props.name, props.section, props.semester)
     : "create-class";
-  const [defaultNamePH, defaultsisIdPH, defaultSectionPH] = [
-    "ex: Intermediate Programming",
-    "EN.601.220",
-    "1, 2, ...",
-  ];
   const [nameInputErr, setNameInputErr] = useState("");
   const [sisIDInputErr, setSisIDInputErr] = useState("");
   const [sectionInputErr, setSectionInputErr] = useState("");
@@ -278,7 +273,7 @@ function CreateOrEditClass(props) {
       .then((res) => {
         checkDupe = res.data;
       });
-  
+
     if (checkDupe.status === 200 && checkDupe.data.sectionId !== oldSectionId) {
       container.style.pointerEvents = "all";
       setShowError(true);
@@ -363,7 +358,11 @@ function CreateOrEditClass(props) {
   }
 
   return (
-    <div className="pop-up-content" id={popupName} onKeyDown={handleKeyPresses}>
+    <div
+      className="pop-up-content course-width"
+      id={popupName}
+      onKeyDown={handleKeyPresses}
+    >
       <div className="input-group">
         <InputField
           class="name-input"
@@ -377,7 +376,7 @@ function CreateOrEditClass(props) {
           small
           class="sis-id-input"
           label="Course ID (opt.)"
-          input="EN.601..."
+          input="AB.123.456"
           default={props.sisId || ""}
           onChange={(e) => setSISId(e.target.value.toUpperCase())}
           style={{ textTransform: "uppercase" }}
@@ -402,15 +401,7 @@ function CreateOrEditClass(props) {
           onChange={(e) => setSemester(e.target.value)}
         />
       </div>
-      <div className="banner-wrapper">
-        <div
-          className="error-banner floating-banner"
-          style={{ opacity: showError ? 1 : 0, pointerEvents: showError ? "all" : "none" }}
-        >
-          <IconAlertTriangleFilled />
-          Warning: This course already exists!
-        </div>
-      </div>
+      <FloatError msg={showError && "Warning: This course already exists!"} />
       <div className="button-row">
         {props.editMode && (
           <PrimaryButton

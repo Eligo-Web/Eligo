@@ -517,6 +517,14 @@
     height: 11rem !important;
     font-size: 7rem !important;
   }
+
+  .err-tooltip {
+    right: 1.5rem;
+    top: 90% !important;
+    left: unset !important;
+    bottom: unset !important;
+    border-radius: 1rem 0.2rem 1rem 1rem !important;
+  }
 }
 
 @media screen and (max-height: 40rem) {

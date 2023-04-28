@@ -1,8 +1,9 @@
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { server } from "../ServerUrl";
+import { EditPopupContext } from "../containers/InAppContainer";
 import "../styles/newpoll.css";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import InputField from "./InputField";
@@ -15,6 +16,23 @@ export function Default() {
       <div className="button-row">
         <PrimaryButton variant="secondary" label="Cancel" />
         <PrimaryButton variant="primary" label="Submit" />
+      </div>
+    </div>
+  );
+}
+
+export function FloatError(props) {
+  return (
+    <div className="banner-wrapper">
+      <div
+        className="error-banner floating-banner"
+        style={{
+          opacity: props.msg ? 1 : 0,
+          pointerEvents: props.msg ? "all" : "none",
+        }}
+      >
+        <IconAlertTriangleFilled />
+        {props.msg || ""}
       </div>
     </div>
   );
@@ -47,11 +65,10 @@ export function ConfirmDelete(props) {
 
 export function JoinSession(props) {
   const [passcode, setPasscode] = useState("");
-  const defaultPasscodePH = "Ex: 1234";
-  const [passcodeInputPH, setpasscodeInputPH] = useState(defaultPasscodePH);
-  const [invalidErr, setInvalidErr] = useState(false);
-  const [locErr, setLocError] = useState(false);
+  const [passInputError, setpassInputError] = useState("");
+  const [showError, setShowError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useContext(EditPopupContext);
   const navigate = useNavigate();
   const control = props.control;
   props = props.childProps;
@@ -87,8 +104,10 @@ export function JoinSession(props) {
   };
 
   useEffect(() => {
-    const overlay = document.getElementById("join-session-popup");
-    if (overlay.parentNode.isOpen) {
+    const overlay = document.getElementById("content-join-session-popup");
+    if (!overlay) return;
+    const isOpen = !!overlay.parentNode.isOpen;
+    if (isOpen && control) {
       clearContents();
     }
   }, [control]);
@@ -100,13 +119,14 @@ export function JoinSession(props) {
 
     if (!passcode) {
       passcodeField.className += " field-error";
-      setpasscodeInputPH("• Required");
-      setInvalidErr(false);
-      setLocError(false);
+      passcodeField.parentNode.parentNode.className += " input-error";
+      setpassInputError("• Passcode required");
+      setShowError("");
       valid = false;
     } else {
       passcodeField.className = "passcode-input form-control";
-      setpasscodeInputPH(defaultPasscodePH);
+      passcodeField.parentNode.parentNode.className = "input-field";
+      setpassInputError("");
     }
     return valid;
   }
@@ -115,11 +135,12 @@ export function JoinSession(props) {
     const overlay = document.getElementById("join-session-popup");
     const passcodeField = overlay.querySelector(".passcode-input");
     passcodeField.className = "passcode-input form-control";
+    passcodeField.parentNode.parentNode.className = "input-field";
     passcodeField.value = "";
-    setpasscodeInputPH(defaultPasscodePH);
+    setpassInputError("");
     setPasscode("");
-    setInvalidErr(false);
-    setLocError(false);
+    setShowError("");
+    closePopup("join-session", setPopup);
   }
 
   async function checkLocation() {
@@ -143,8 +164,7 @@ export function JoinSession(props) {
         (error) => {
           thisError = error.PERMISSION_DENIED;
           if (thisError) {
-            setLocError(true);
-            setInvalidErr(false);
+            setShowError("Location permission denied! Cannot join session.");
             enabled = false;
           }
         }
@@ -202,12 +222,12 @@ export function JoinSession(props) {
             },
           });
         } else if (res.data.status === 401) {
-          setInvalidErr(true);
+          setShowError("Failed to join session. Passcode is invalid!");
           valid = false;
         }
       });
     if (valid) {
-      closePopup("Join Session");
+      closePopup("join-session", setPopup);
     } else {
       setLoading(false);
     }
@@ -215,33 +235,21 @@ export function JoinSession(props) {
 
   return (
     <div
-      className="pop-up-content"
-      id="join-session-popup"
+      className="pop-up-content join-ss-width"
+      id="content-join-session-popup"
       onKeyDown={handleKeyPresses}
     >
       <InputField
         class="passcode-input"
         label="Passcode"
-        input={passcodeInputPH}
+        input="Ex: 1234"
         onChange={(e) => {
           setPasscode(e.target.value);
         }}
+        errorState={passInputError}
         type="password"
       />
-      <div
-        className="error-banner"
-        style={{ display: invalidErr ? "flex" : "none" }}
-      >
-        <IconAlertTriangleFilled />
-        Failed to join session. Passcode is invalid!
-      </div>
-      <div
-        className="error-banner"
-        style={{ display: locErr ? "flex" : "none" }}
-      >
-        <IconAlertTriangleFilled />
-        Location permission denied! Cannot join session.
-      </div>
+      <FloatError msg={showError} />
       <div className="button-row">
         <PrimaryButton
           id="join-session"
@@ -257,8 +265,8 @@ export function JoinSession(props) {
 
 export function JoinClass(props) {
   const [passcode, setPasscode] = useState("");
-  const [dupeError, setDupeError] = useState(false);
-  const [invalidError, setInvalidError] = useState(false);
+  const [showError, setShowError] = useState("");
+  const [passFieldError, setPassFieldError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleKeyPresses = (event) => {
@@ -286,13 +294,14 @@ export function JoinClass(props) {
 
     if (!passcode) {
       passcodeField.className += " field-error";
-      overlay.querySelector(".empty-code").style.display = "block";
-      setInvalidError(false);
-      setDupeError(false);
+      passcodeField.parentNode.parentNode.className += " input-error";
+      setPassFieldError("• Passcode required");
+      setShowError("");
       valid = false;
     } else {
       passcodeField.className = "passcode-input form-control";
-      overlay.querySelector(".empty-code").style.display = "none";
+      passcodeField.parentNode.parentNode.className = "input-field";
+      setPassFieldError("");
     }
     return valid;
   }
@@ -301,10 +310,9 @@ export function JoinClass(props) {
     const overlay = document.getElementById("content-join-class-popup");
     const passcodeField = overlay.querySelector(".passcode-input");
     passcodeField.className = "passcode-input form-control";
-    overlay.querySelector(".empty-code").style.display = "none";
+    passcodeField.parentNode.parentNode.className = "input-field";
     passcodeField.value = "";
-    setInvalidError(false);
-    setDupeError(false);
+    setShowError("");
     setPasscode("");
     closePopup("join-class");
   }
@@ -324,8 +332,7 @@ export function JoinClass(props) {
       })
       .then(async (res) => {
         if (res.data.status === 404) {
-          setDupeError(false);
-          setInvalidError(true);
+          setShowError("Course with given passcode not found!");
           setLoading(false);
           return;
         }
@@ -340,8 +347,7 @@ export function JoinClass(props) {
             })
             .then((res) => {
               if (res.data.status === 409) {
-                setInvalidError(false);
-                setDupeError(true);
+                setShowError("You have already joined this course!");
                 setLoading(false);
                 return;
               }
@@ -361,7 +367,7 @@ export function JoinClass(props) {
 
   return (
     <div
-      className="pop-up-content"
+      className="pop-up-content join-class-width"
       id="content-join-class-popup"
       onKeyDown={handleKeyPresses}
     >
@@ -370,23 +376,10 @@ export function JoinClass(props) {
         label="Course Code"
         input="ex: A1B2C3"
         onChange={(e) => setPasscode(e.target.value)}
-        errors={{ "empty-code": "Required" }}
         style={{ textTransform: "uppercase" }}
+        errorState={passFieldError}
       />
-      <div
-        className="error-banner"
-        style={{ display: dupeError ? "block" : "none" }}
-      >
-        <IconAlertTriangleFilled />
-        You have already joined this course!
-      </div>
-      <div
-        className="error-banner"
-        style={{ display: invalidError ? "block" : "none" }}
-      >
-        <IconAlertTriangleFilled />
-        Course with given passcode not found!
-      </div>
+      <FloatError msg={showError} />
       <div className="button-row">
         <PrimaryButton
           variant="secondary"

@@ -56,7 +56,7 @@ export function Tooltip(props) {
       className={`tooltip ${props.className}`}
       style={{ transform: `translate(${props.X},${props.Y})` }}
     >
-      {props.label}
+      {props.txt}
     </div>
   );
 }

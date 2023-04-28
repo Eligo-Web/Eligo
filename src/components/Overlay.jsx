@@ -21,15 +21,7 @@ export default function Overlay(props) {
 
   async function close() {
     if (!props.warning) setChildState(!childState);
-    if (
-      props.editClass ||
-      props.editSession ||
-      props.createClass ||
-      props.createSession
-    ) {
-      return;
-    }
-    closePopup(props.id, setPopup);
+    if (props.vote || props.poll) closePopup(props.id, setPopup);
   }
 
   useEffect(() => {

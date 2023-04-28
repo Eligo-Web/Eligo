@@ -67,7 +67,7 @@
   margin: 1rem;
   gap: 1rem;
 
-  max-width: fit-content;
+  max-width: 100%;
   max-height: fit-content;
   height: auto;
   opacity: 0;
@@ -104,8 +104,22 @@
 .pop-up-content {
   display: flex;
   flex-direction: column;
-  min-width: 30rem;
+  max-width: 100%;
+  width: 35rem;
   gap: 1rem;
+}
+
+.join-ss-width,
+.join-class-width {
+  width: 30rem !important;
+}
+
+.session-width {
+  width: 32rem !important;
+}
+
+.course-width {
+  width: 35rem !important;
 }
 
 .pop-up-title {
@@ -222,6 +236,22 @@ select {
   background-color: #ffe6e9;
   border-color: #e8321e98;
   color: #600000 !important;
+  padding-right: 2.1rem;
+}
+
+.input-error:hover .input-error-icon {
+  color: #d59999eb;
+}
+
+.input-error-icon {
+  position: absolute;
+  transition: 0.1s ease;
+  z-index: 1;
+  right: 0.6rem;
+  bottom: 0.58rem;
+  color: #a33a3aeb;
+  padding-left: 0.3rem;
+  width: 1.7rem;
 }
 
 .field-error::placeholder,

@@ -302,8 +302,8 @@ svg {
 }
 
 .err-tooltip {
-  left: calc(100% - 1.5rem);
-  bottom: 30%;
+  bottom: 28%;
+  left: calc(100% - 1.15rem);
   border-radius: 1rem 1rem 1rem 0.2rem;
   box-shadow: 0 0.5rem 1rem #05204128;
 }

@@ -1,8 +1,7 @@
-import { IconLock } from "@tabler/icons-react";
+import { IconAlertCircle, IconLock } from "@tabler/icons-react";
 import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import { PrimaryButton } from "./Buttons";
-import { Tooltip } from "./Buttons";
+import { PrimaryButton, Tooltip } from "./Buttons";
 
 export default function InputField(props) {
   useEffect(() => {
@@ -11,25 +10,11 @@ export default function InputField(props) {
     if (thisField) thisField.value = props.default;
   }, [props.default]);
 
-  function renderErrors() {
-    const errors = [];
-    let key = 0;
-    for (let item in props.errors) {
-      errors.push(
-        <div
-          key={key++}
-          className={`error-banner ${item}`}
-          style={{ fontSize: "1rem", alignSelf: "flex-start", display: "none" }}
-        >
-          • {props.errors[item]}
-        </div>
-      );
-    }
-    return errors;
-  }
-
   return (
-    <div className={props.small ? "input-field-small" : "input-field"} id={props.class}>
+    <div
+      className={props.small ? "input-field-small" : "input-field"}
+      id={props.class}
+    >
       <div
         className="input-field-label"
         style={{ justifyContent: props.center ? "center" : "unset" }}
@@ -58,9 +43,17 @@ export default function InputField(props) {
             onClick={props.onClick}
           />
         )}
+        {props.errorState && (
+          <IconAlertCircle
+            className="input-error-icon"
+            size="1.2em"
+            stroke="0.15rem"
+          />
+        )}
       </div>
-      {renderErrors()}
-      {props.errorState && <Tooltip className="err-tooltip" label={props.errorState}/>}
+      {props.errorState && (
+        <Tooltip className="err-tooltip" txt={props.errorState} />
+      )}
     </div>
   );
 }

@@ -1,8 +1,4 @@
-import {
-  IconAlertTriangleFilled,
-  IconInfoCircle,
-  IconLock,
-} from "@tabler/icons-react";
+import { IconInfoCircle, IconLock } from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
@@ -10,6 +6,7 @@ import { server } from "../ServerUrl";
 import { EditPopupContext } from "../containers/InAppContainer";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
+import { FloatError } from "./Popups";
 import pause, { closePopup } from "./Utils";
 
 export function CreateSession(props) {
@@ -185,7 +182,11 @@ function CreateOrEditSession(props) {
   }
 
   return (
-    <div className="pop-up-content" id={popupId} onKeyDown={handleKeyPresses}>
+    <div
+      className="pop-up-content session-width"
+      id={popupId}
+      onKeyDown={handleKeyPresses}
+    >
       <InputField
         class="session-name-input"
         label="Session Name"
@@ -227,15 +228,7 @@ function CreateOrEditSession(props) {
           <IconInfoCircle size="1.1em" stroke="0.14rem" />
         </div>
       </div>
-      <div className="banner-wrapper">
-        <div
-          className="error-banner floating-banner"
-          style={{ opacity: locError ? 1 : 0, pointerEvents: locError ? "all" : "none" }}
-        >
-          <IconAlertTriangleFilled />
-          Location permission denied!
-        </div>
-      </div>
+      <FloatError msg={locError && "Location permission denied!"} />
       <div className="button-row">
         {props.editMode && (
           <PrimaryButton

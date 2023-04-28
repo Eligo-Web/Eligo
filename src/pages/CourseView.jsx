@@ -305,8 +305,7 @@ function CourseView() {
             }
             setSessionOpen(true);
             document.querySelector(".img-container").style.opacity = 1;
-            openPopup("Join Session");
-            setProps({
+            const thisProps = {
               name: location.state.name,
               permission: location.state.permission,
               email: location.state.email,
@@ -318,7 +317,17 @@ function CourseView() {
               weekNum: getWeekNumber(),
               clickerId: location.state.clickerId,
               token: location.state.token,
-            });
+            };
+            setEditPopup(
+              <Overlay
+                key="join-session"
+                title="Join Session"
+                id="join-session"
+                joinSessionProps={thisProps}
+                joinSession
+              />
+            );
+            setProps(thisProps);
           }
         });
       document.querySelector(".img-container").style.opacity = 1;
@@ -330,12 +339,7 @@ function CourseView() {
 
     return (
       <div className="d-flex flex-column ">
-        <Overlay
-          title="Join Session"
-          id="Join Session"
-          joinSessionProps={props}
-          joinSession
-        />
+        {editPopup}
         {backButton}
         <div className="card-wrapper-student">
           <div className="img-container" style={{ padding: "3rem 0" }}>
@@ -353,7 +357,15 @@ function CourseView() {
                 className="large-title"
                 onClick={() => {
                   sessionOpen
-                    ? openPopup("Join Session")
+                    ? setEditPopup(
+                        <Overlay
+                          key="join-session"
+                          title="Join Session"
+                          id="join-session"
+                          joinSessionProps={props}
+                          joinSession
+                        />
+                      )
                     : window.location.reload();
                 }}
               >
