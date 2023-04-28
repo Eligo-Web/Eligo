@@ -198,6 +198,7 @@ function SessionView() {
       if (pollOpen && pollId) {
         setVotePopup(
           <Overlay
+            key="vote-popup"
             title="Vote"
             id="Vote"
             content={
@@ -210,7 +211,6 @@ function SessionView() {
                 token={location.state.token}
               />
             }
-            key="vote-popup"
             token={location.state.token}
             vote
           />

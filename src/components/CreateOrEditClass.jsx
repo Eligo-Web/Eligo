@@ -135,7 +135,7 @@ function CreateOrEditClass(props) {
     setNameInputErr("");
     setSisIDInputErr("");
     setSectionInputErr("");
-    await pause(50);
+    await pause(100);
     closePopup(popupName, setPopup);
   }
 
@@ -376,7 +376,7 @@ function CreateOrEditClass(props) {
           small
           class="sis-id-input"
           label="Course ID (opt.)"
-          input="AB.123.456"
+          input="ex: AB.123.456"
           default={props.sisId || ""}
           onChange={(e) => setSISId(e.target.value.toUpperCase())}
           style={{ textTransform: "uppercase" }}

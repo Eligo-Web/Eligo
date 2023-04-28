@@ -259,6 +259,7 @@ svg {
 .btn:hover .tooltip,
 .input-error:hover .err-tooltip {
   opacity: 100%;
+  pointer-events: all;
 }
 
 .tooltip-TR {

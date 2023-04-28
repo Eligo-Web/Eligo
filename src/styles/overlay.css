@@ -111,7 +111,7 @@
 
 .join-ss-width,
 .join-class-width {
-  width: 30rem !important;
+  width: 27rem !important;
 }
 
 .session-width {
@@ -259,6 +259,10 @@ select {
 .field-error:focus::placeholder {
   color: #6000009e !important;
   opacity: 100% !important;
+}
+
+::placeholder {
+  text-transform: none;
 }
 
 @media screen and (max-width: 35rem) {

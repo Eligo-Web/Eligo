@@ -7,7 +7,7 @@ import { EditPopupContext } from "../containers/InAppContainer";
 import "../styles/newpoll.css";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import InputField from "./InputField";
-import { closePopup } from "./Utils";
+import pause, { closePopup } from "./Utils";
 
 export function Default() {
   return (
@@ -22,6 +22,13 @@ export function Default() {
 }
 
 export function FloatError(props) {
+  const [prevMsg, setPrev] = useState("");
+
+  useEffect(() => {
+    // visually preserve state when clearing message
+    if (props.msg) setPrev(props.msg);
+  });
+
   return (
     <div className="banner-wrapper">
       <div
@@ -32,7 +39,7 @@ export function FloatError(props) {
         }}
       >
         <IconAlertTriangleFilled />
-        {props.msg || ""}
+        {props.msg || prevMsg || ""}
       </div>
     </div>
   );
@@ -140,7 +147,9 @@ export function JoinSession(props) {
     setpassInputError("");
     setPasscode("");
     setShowError("");
-    closePopup("join-session", setPopup);
+    pause(100).then(() => {
+      closePopup("join-session", setPopup);
+    });
   }
 
   async function checkLocation() {
@@ -164,7 +173,7 @@ export function JoinSession(props) {
         (error) => {
           thisError = error.PERMISSION_DENIED;
           if (thisError) {
-            setShowError("Location permission denied! Cannot join session.");
+            setShowError("Location denied! Cannot join session.");
             enabled = false;
           }
         }
@@ -222,7 +231,7 @@ export function JoinSession(props) {
             },
           });
         } else if (res.data.status === 401) {
-          setShowError("Failed to join session. Passcode is invalid!");
+          setShowError("Failed to join session. Invalid passcode!");
           valid = false;
         }
       });
@@ -242,7 +251,7 @@ export function JoinSession(props) {
       <InputField
         class="passcode-input"
         label="Passcode"
-        input="Ex: 1234"
+        input="ex: 1234"
         onChange={(e) => {
           setPasscode(e.target.value);
         }}
@@ -302,6 +311,7 @@ export function JoinClass(props) {
       passcodeField.className = "passcode-input form-control";
       passcodeField.parentNode.parentNode.className = "input-field";
       setPassFieldError("");
+      setShowError("");
     }
     return valid;
   }
@@ -312,9 +322,12 @@ export function JoinClass(props) {
     passcodeField.className = "passcode-input form-control";
     passcodeField.parentNode.parentNode.className = "input-field";
     passcodeField.value = "";
+    setPassFieldError("")
     setShowError("");
     setPasscode("");
-    closePopup("join-class");
+    pause(100).then(() => {
+      closePopup("join-class");
+    });
   }
 
   async function joinClass() {

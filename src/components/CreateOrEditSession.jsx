@@ -178,6 +178,7 @@ function CreateOrEditSession(props) {
     if (!props.editMode) locationSwitch.checked = false;
     setLocError(false);
     setSessionName(props.editMode ? props.session.name : "");
+    await pause(100);
     closePopup(props.id, setPopup);
   }
 
