@@ -3,3 +3,5 @@ Eligo is a web application primarily used for in-class polls. Students can go to
 1. Provide an intuitive and simple web user interface to students and instructors during class polls as well as enabling students to participate using physical iClickers
 2. Deliver detailed analytics of students’ responses to instructors
 3. Provide high-performance, meaningful live charts during polls to instructors and to students, upon instructor’s permission
+
+Eligo is available [here](https://eligo.cs.jhu.edu/signin)!
