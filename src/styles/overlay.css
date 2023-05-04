@@ -177,6 +177,7 @@
 
 .input-error {
   mix-blend-mode: normal;
+  color: #213d67;
 }
 
 .form-control,

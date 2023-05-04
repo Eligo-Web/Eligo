@@ -450,6 +450,15 @@
   transition: 0.1s ease-in-out;
 }
 
+.location-switch-info {
+  transition: 0.1s ease;
+  position: relative;
+}
+
+.location-switch-info:hover {
+  color: #22384fb4;
+}
+
 .location-switch-info::before {
   content: "When enabled, students must enable location services to join the session. You can access their location by downloading the session data.";
   position: absolute;
@@ -464,8 +473,8 @@
   transition: 0.1s ease-in-out;
   padding: 0.5rem 1rem;
   pointer-events: none;
-  bottom: 0.8rem;
-  left: 54%;
+  bottom: 0.65rem;
+  left: 65%;
   opacity: 0;
 }
 
