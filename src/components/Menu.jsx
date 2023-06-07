@@ -109,17 +109,10 @@ function Menu(props) {
         return;
       }
       await axios.patch(
-        `${server}/student/${location.state.email}/${clickerId}`,
-        {
-          token: location.state.token,
-        }
-      );
+        `${server}/student/${location.state.email}/${clickerId}`);
     } else {
       await axios.delete(
-        `${server}/student/${location.state.email}/clickerId`,
-        {
-          headers: { token: location.state.token },
-        }
+        `${server}/student/${location.state.email}/clickerId`
       );
       location.state.clickerId = "";
     }
@@ -130,12 +123,7 @@ function Menu(props) {
     async function getClickerId() {
       let newClickerId;
       await axios
-        .get(`${server}/student/${location.state.email}`, {
-          headers: {
-            token: location.state.token,
-            requester: location.state.email,
-          },
-        })
+        .get(`${server}/student/${location.state.email}`)
         .then((res) => {
           newClickerId = res.data.data.clickerId;
         });
@@ -149,16 +137,9 @@ function Menu(props) {
 
   async function leaveClass() {
     await axios.delete(
-      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`,
-      {
-        headers: { token: location.state.token },
-      }
-    );
+      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`);
     await axios.delete(
-      `${server}/course/${location.state.sectionId}/${location.state.email}`,
-      {
-        headers: { token: location.state.token },
-      }
+      `${server}/course/${location.state.sectionId}/${location.state.email}`
     );
     navigate("/overview", {
       state: {
@@ -166,7 +147,6 @@ function Menu(props) {
         permission: location.state.permission,
         email: location.state.email,
         clickerId: location.state.clickerId,
-        token: location.state.token,
       },
     });
   }
@@ -195,7 +175,6 @@ function Menu(props) {
                     permission: location.state.permission,
                     email: location.state.email,
                     clickerId: location.state.clickerId,
-                    token: location.state.token,
                   },
                 });
               }}

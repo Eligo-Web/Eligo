@@ -113,13 +113,7 @@ export default function InstructorPoll() {
       await axiosMutex.acquire();
       await axios
         .get(
-          `${server}/student/clicker/${window.props.semester}/${window.props.sectionId}/${prevClickerId}`,
-          {
-            headers: {
-              token: window.props.token,
-              email: window.props.email,
-            },
-          }
+          `${server}/student/clicker/${window.props.semester}/${window.props.sectionId}/${prevClickerId}`
         )
         .then((res) => {
           if (res.data.data) {
@@ -133,7 +127,6 @@ export default function InstructorPoll() {
             email: email,
             timestamp: Date.now().toString(),
             response: prevResponse,
-            token: window.props.token,
             requester: window.props.email,
           }
         );
@@ -144,7 +137,6 @@ export default function InstructorPoll() {
             clickerId: prevClickerId,
             timestamp: Date.now().toString(),
             response: prevResponse,
-            token: window.props.token,
             requester: window.props.email,
           }
         );
@@ -202,13 +194,7 @@ export default function InstructorPoll() {
       let numUpdate = 0;
       await axios
         .get(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}`,
-          {
-            headers: {
-              token: window.props.token,
-              email: window.props.email,
-            },
-          }
+          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}`
         )
         .then((res) => {
           pollUpdate = Object.values(res.data.data.liveResults);
@@ -262,7 +248,6 @@ export default function InstructorPoll() {
       .post(
         `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${newPollId}`,
         {
-          token: window.props.token,
           email: window.props.email,
           startTimestamp: Date.now(),
         }
@@ -285,7 +270,6 @@ export default function InstructorPoll() {
         `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}/close`,
         {
           name: pollName,
-          token: window.props.token,
           email: window.props.email,
           endTimestamp: Date.now(),
         }
@@ -437,10 +421,7 @@ export function ClosedPoll(props) {
 
   async function deletePoll() {
     await axios.delete(
-      `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
-      {
-        headers: { token: props.token, email: props.email },
-      }
+      `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
     );
     closePopup(props.pollId, setEditPopup);
     if (props.setRefresh) {
@@ -473,12 +454,7 @@ export function ClosedPoll(props) {
         if (email.includes("@")) {
           emails.push(email);
           await axios
-            .get(`${server}/student/${email}`, {
-              headers: {
-                token: props.token,
-                requester: props.email,
-              },
-            })
+            .get(`${server}/student/${email}`)
             .then((res) => {
               if (res.data.data.clickerId) {
                 clickerIds.push(res.data.data.clickerId);

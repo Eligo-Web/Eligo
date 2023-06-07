@@ -37,7 +37,6 @@ export function CreateClass(props) {
       refresh={props.refresh}
       setRefresh={props.setRefresh}
       control={props.control}
-      token={props.token}
     />
   );
 }
@@ -58,7 +57,6 @@ export function EditClass(props) {
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
-      token={props.token}
       editMode
     />
   );
@@ -230,7 +228,6 @@ function CreateOrEditClass(props) {
         semester: semester,
         SISId: sisId,
         passcode: Math.random().toString(36).slice(-8).toUpperCase(),
-        token: location.state.token,
       })
       .then((res) => {
         response = res.data;
@@ -247,7 +244,6 @@ function CreateOrEditClass(props) {
       newCourse: name,
       newSection: section,
       newSemester: semester,
-      token: location.state.token,
     });
     clearContents();
     setRefresh(!refresh);
@@ -281,11 +277,7 @@ function CreateOrEditClass(props) {
     let course;
 
     await axios
-      .get(`${server}/course/${sectionId}`, {
-        headers: {
-          token: location.state.token,
-        },
-      })
+      .get(`${server}/course/${sectionId}`)
       .then((res) => {
         checkDupe = res.data;
       });
@@ -304,7 +296,6 @@ function CreateOrEditClass(props) {
         semester: semester,
         SISId: sisId,
         sectionId: sectionId,
-        token: location.state.token,
         email: location.state.email,
       })
       .then((res) => {
@@ -320,7 +311,6 @@ function CreateOrEditClass(props) {
       {
         newSectionId: sectionId,
         newSemester: semester,
-        token: location.state.token,
       }
     );
     for (let student in course.students) {
@@ -330,7 +320,6 @@ function CreateOrEditClass(props) {
           newSectionId: sectionId,
           newSemester: semester,
           requester: location.state.email,
-          token: location.state.token,
         }
       );
     }
@@ -344,30 +333,15 @@ function CreateOrEditClass(props) {
     const oldSectionId = toSectionId(props.name, props.section, props.semester);
     let students = [];
     await axios
-      .delete(`${server}/course/${oldSectionId}`, {
-        headers: {
-          token: location.state.token,
-          email: location.state.email,
-        },
-      })
+      .delete(`${server}/course/${oldSectionId}`)
       .then((res) => {
         students = res.data.data.students;
       });
     await axios.delete(
-      `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`,
-      {
-        headers: { token: location.state.token },
-      }
-    );
+      `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`);
     for (let student in students) {
       await axios.delete(
-        `${server}/student/${student}/${props.semester}/${oldSectionId}`,
-        {
-          headers: {
-            token: location.state.token,
-            requester: location.state.email,
-          },
-        }
+        `${server}/student/${student}/${props.semester}/${oldSectionId}`
       );
     }
     setRefresh(!refresh);

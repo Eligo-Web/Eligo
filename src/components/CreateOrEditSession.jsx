@@ -33,7 +33,6 @@ export function CreateSession(props) {
       refresh={props.refresh}
       setRefresh={props.setRefresh}
       control={props.control}
-      token={props.token}
     />
   );
 }
@@ -51,7 +50,6 @@ export function EditSession(props) {
       setMarkDelete={props.setMarkDelete}
       confirmDelete={props.confirmDelete}
       control={props.control}
-      token={props.token}
       editMode
     />
   );
@@ -107,7 +105,6 @@ function CreateOrEditSession(props) {
     await axios.put(
       `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`,
       {
-        token: props.token,
         email: props.email,
       }
     );
@@ -138,7 +135,6 @@ function CreateOrEditSession(props) {
         weekNum: getWeekNumber(),
         latitude: latitude,
         longitude: longitude,
-        token: props.token,
         email: props.email,
       });
       props.setRefresh(!props.refresh);
@@ -158,7 +154,6 @@ function CreateOrEditSession(props) {
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
       {
         name: sessionName ? sessionName : new Date().toDateString(),
-        token: props.token,
         email: props.email,
       }
     );
@@ -168,10 +163,7 @@ function CreateOrEditSession(props) {
 
   async function handleDelete() {
     await axios.delete(
-      `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
-      {
-        headers: { token: props.token, email: props.email },
-      }
+      `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`
     );
     props.setRefresh(!props.refresh);
     closePopup(props.id, setPopup);

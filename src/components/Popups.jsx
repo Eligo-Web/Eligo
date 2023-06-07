@@ -225,7 +225,6 @@ export function JoinSession(props) {
           latitude: lat,
           longitude: long,
           distance: distance,
-          token: props.token,
         }
       )
       .then((res) => {
@@ -243,7 +242,6 @@ export function JoinSession(props) {
               weekNum: props.weekNum,
               courseName: props.courseName,
               clickerId: props.clickerId,
-              token: props.token,
             },
           });
         } else if (res.data.status === 401) {
@@ -353,12 +351,7 @@ export function JoinClass(props) {
       return;
     }
     await axios
-      .get(`${server}/course/student/${passcode.toUpperCase()}`, {
-        headers: {
-          token: props.token,
-          email: props.email,
-        },
-      })
+      .get(`${server}/course/student/${passcode.toUpperCase()}`)
       .then(async (res) => {
         if (res.data.status === 404) {
           setShowError("Course with given passcode not found!");
@@ -372,7 +365,6 @@ export function JoinClass(props) {
             .put(`${server}/student/${props.email}`, {
               sectionId: sectionId,
               semester: semester,
-              token: props.token,
             })
             .then((res) => {
               if (res.data.status === 409) {
@@ -387,7 +379,6 @@ export function JoinClass(props) {
             `${server}/course/${res.data.data.sectionId}/${props.email}`,
             {
               name: props.name,
-              token: props.token,
             }
           );
         }
@@ -449,7 +440,6 @@ export function Poll(props) {
         email: props.email,
         timestamp: Date.now().toString(),
         response: choice,
-        token: props.token,
       }
     );
   }

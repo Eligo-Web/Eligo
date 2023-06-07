@@ -81,7 +81,6 @@ export default function Overlay(props) {
             refresh={props.refresh}
             setRefresh={props.setRefresh}
             control={childState}
-            token={props.token}
           />
         ) : props.editClass ? (
           <EditClass
@@ -92,7 +91,6 @@ export default function Overlay(props) {
             setMarkDelete={setMarkDelete}
             confirmDelete={confirmDelete}
             control={childState}
-            token={props.token}
           />
         ) : props.joinClass ? (
           <JoinClass
@@ -102,7 +100,6 @@ export default function Overlay(props) {
             refresh={props.refresh}
             setRefresh={props.setRefresh}
             control={childState}
-            token={props.token}
           />
         ) : props.createSession ? (
           <CreateSession
@@ -110,7 +107,6 @@ export default function Overlay(props) {
             refresh={props.refresh}
             setRefresh={props.setRefresh}
             control={childState}
-            token={props.token}
           />
         ) : props.editSession ? (
           <EditSession
@@ -124,7 +120,6 @@ export default function Overlay(props) {
             setMarkDelete={setMarkDelete}
             confirmDelete={confirmDelete}
             control={childState}
-            token={props.token}
           />
         ) : props.joinSession ? (
           <JoinSession
@@ -142,7 +137,6 @@ export default function Overlay(props) {
             setRefresh={props.setRefresh}
             unresolved={props.activePoll}
             email={props.email}
-            token={props.token}
           />
         ) : (
           props.content || <Default />

@@ -35,7 +35,6 @@ function SignIn() {
         name: user.name,
         history: user.history,
         clickerId: user.clickerId,
-        token: token,
       },
     });
   }

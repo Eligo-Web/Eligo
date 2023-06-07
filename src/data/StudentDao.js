@@ -110,17 +110,6 @@ class StudentDao {
     return student;
   }
 
-  async updateLastLogin(email, token) {
-    const student = await Student.findOne({ email: email.toLowerCase() });
-    if (!student) {
-      throw new ApiError(404, `User with email ${email} not found`);
-    }
-    student.lastLogin = new Date();
-    student.token = token;
-    await student.save();
-    return student;
-  }
-
   async updateClickerId(email, clickerId) {
     const student = await Student.findOne({ email: email.toLowerCase() });
     if (!student) {
