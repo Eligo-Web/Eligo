@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/eligo-logo.svg";
 import instructorIcon from "../assets/instructor-button.png";
 import studentIcon from "../assets/student-button.png";
+import { server } from "../ServerUrl";
 
 function SignIn() {
   const navigate = useNavigate();
