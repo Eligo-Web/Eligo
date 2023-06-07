@@ -49,28 +49,46 @@ Instructor.get("/signin", async (req, res, next) => {
 });
 
 Instructor.post("/assert", async (req, res, next) => {
-  sp.post_assert(
-    idp,
-    { request_body: req.body },
-    function (err, saml_response) {
-      if (err != null) {
-        return res.json({
-          status: 500,
-          message: `Error: ${err}`,
-          data: null,
-        });
-      }
-      /* probably not right but for now */
-      const email = saml_response.user.attributes.email;
-      const name = saml_response.user.attributes.name;
-      const role = saml_response.user.attributes.role;
-      res.json({
-        status: 200,
-        message: `User ${email} authenticated`,
-        data: { email, name, role },
+  sp.post_assert(idp, {}, function (err, saml_response) {
+    if (err != null) {
+      return res.json({
+        status: 500,
+        message: `Error: ${err}`,
+        data: null,
       });
     }
-  );
+
+    /* probably not right but for now */
+    const email = saml_response.user.attributes.email;
+    const name = saml_response.user.attributes.name;
+    const role = saml_response.user.attributes.role;
+    /* probably not right but for now */
+
+    if (role !== "instructor") {
+      return res.json({
+        status: 401,
+        message: `Unauthorized`,
+        data: null,
+      });
+    }
+    let instructor = instructorDao.readByEmail(email);
+    if (instructor === null) {
+      instructor = instructorDao.create({
+        email: email,
+        name: name,
+        role: role.toUpperCase(),
+      });
+    }
+    return res.json({
+      status: 200,
+      message: `Instructor found`,
+      data: {
+        email: instructor.email,
+        name: instructor.name,
+        role: instructor.role,
+      },
+    });
+  });
 });
 
 Instructor.get("/:email", async (req, res, next) => {

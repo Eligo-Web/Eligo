@@ -14,8 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import axios from "axios";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import instructorIcon from "../assets/instructor-button.png";
 import studentIcon from "../assets/student-button.png";
@@ -24,17 +26,33 @@ function SignIn() {
   const navigate = useNavigate();
 
   async function handleSignin(role) {
-    if (role === "STUDENT") {
-    } else if (role === "INSTRUCTOR") {
-    }
-    navigate("/overview", {
-      state: {
-        permission: user.role,
-        email: user.email,
-        name: user.name,
-        history: user.history,
-        clickerId: user.clickerId,
-      },
+    await axios.get(`${server}/${role.toLowerCase()}/signin`).then((res) => {
+      if (res.data.status === 500) {
+        navigate("/overview", {
+          state: {
+            permission: undefined,
+          },
+        });
+      }
+    });
+    await axios.post(`${server}/student/assert`).then((res) => {
+      if (res.data.status === 200) {
+        navigate("/overview", {
+          state: {
+            permission: role,
+            email: res.data.email,
+            name: res.data.name,
+            history: res.data.history,
+            clickerId: res.data.clickerId,
+          },
+        });
+      } else {
+        navigate("/overview", {
+          state: {
+            permission: undefined,
+          },
+        });
+      }
     });
   }
   return (
