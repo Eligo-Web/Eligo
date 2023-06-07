@@ -17,6 +17,7 @@
 import express from "express";
 import InstructorDao from "../data/InstructorDao.js";
 import { toSectionId, validateToken } from "./courses.js";
+import { sp, idp } from "../data/Auth.js";
 
 const Instructor = express.Router();
 export const instructorDao = new InstructorDao();
@@ -41,6 +42,41 @@ Instructor.get("/", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+Instructor.get("/signin", async (req, res, next) => {
+  sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {
+    if (err != null) {
+      return res.json({
+        status: 500,
+        message: `Error: ${err}`,
+        data: null,
+      });
+    }
+    res.redirect(login_url);
+  });
+});
+
+Instructor.post("/assert", async (req, res, next) => {
+  sp.post_assert(idp, { request_body: req.body }, function (err, saml_response) {
+    if (err != null) {
+      return res.json({
+        status: 500,
+        message: `Error: ${err}`,
+        data: null,
+      });
+    }
+    /* probably not right but for now */
+    const email = saml_response.user.attributes.email;
+    const name = saml_response.user.attributes.name;
+    const role = saml_response.user.attributes.role;
+    const token = saml_response.user.attributes.token;
+    res.json({
+      status: 200,
+      message: `User ${email} authenticated`,
+      data: { email, name, role, token },
+    });
+  });
 });
 
 Instructor.get("/:email", async (req, res, next) => {

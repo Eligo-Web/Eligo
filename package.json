@@ -29,6 +29,7 @@
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.8.2",
     "react-simple-oauth2-login": "^0.5.4",
+    "saml2-js": "^4.0.2",
     "typescript": "^5.0.2"
   },
   "devDependencies": {

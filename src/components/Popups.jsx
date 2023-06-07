@@ -338,7 +338,7 @@ export function JoinClass(props) {
     passcodeField.className = "passcode-input form-control";
     passcodeField.parentNode.parentNode.className = "input-field";
     passcodeField.value = "";
-    setPassFieldError("")
+    setPassFieldError("");
     setShowError("");
     setPasscode("");
     pause(100).then(() => {
