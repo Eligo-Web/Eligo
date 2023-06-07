@@ -276,11 +276,9 @@ function CreateOrEditClass(props) {
     let checkDupe;
     let course;
 
-    await axios
-      .get(`${server}/course/${sectionId}`)
-      .then((res) => {
-        checkDupe = res.data;
-      });
+    await axios.get(`${server}/course/${sectionId}`).then((res) => {
+      checkDupe = res.data;
+    });
 
     if (checkDupe.status === 200 && checkDupe.data.sectionId !== oldSectionId) {
       container.style.pointerEvents = "all";
@@ -332,13 +330,12 @@ function CreateOrEditClass(props) {
     container.style.pointerEvents = "none";
     const oldSectionId = toSectionId(props.name, props.section, props.semester);
     let students = [];
-    await axios
-      .delete(`${server}/course/${oldSectionId}`)
-      .then((res) => {
-        students = res.data.data.students;
-      });
+    await axios.delete(`${server}/course/${oldSectionId}`).then((res) => {
+      students = res.data.data.students;
+    });
     await axios.delete(
-      `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`);
+      `${server}/instructor/${location.state.email}/${props.semester}/${oldSectionId}`
+    );
     for (let student in students) {
       await axios.delete(
         `${server}/student/${student}/${props.semester}/${oldSectionId}`

@@ -453,15 +453,13 @@ export function ClosedPoll(props) {
       for (const timestamp in pollInfo.responses[email].answers) {
         if (email.includes("@")) {
           emails.push(email);
-          await axios
-            .get(`${server}/student/${email}`)
-            .then((res) => {
-              if (res.data.data.clickerId) {
-                clickerIds.push(res.data.data.clickerId);
-              } else {
-                clickerIds.push("N/A");
-              }
-            });
+          await axios.get(`${server}/student/${email}`).then((res) => {
+            if (res.data.data.clickerId) {
+              clickerIds.push(res.data.data.clickerId);
+            } else {
+              clickerIds.push("N/A");
+            }
+          });
         } else {
           emails.push("N/A");
           clickerIds.push(email);

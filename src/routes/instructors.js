@@ -15,9 +15,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import express from "express";
+import { idp, sp } from "../data/Auth.js";
 import InstructorDao from "../data/InstructorDao.js";
 import { toSectionId } from "./courses.js";
-import { sp, idp } from "../data/Auth.js";
 
 const Instructor = express.Router();
 export const instructorDao = new InstructorDao();
@@ -25,11 +25,11 @@ export const instructorDao = new InstructorDao();
 Instructor.get("/", async (req, res, next) => {
   const instructors = await instructorDao.readAll(req.query);
   try {
-      res.json({
-        status: 200,
-        message: `${instructors.length} instructors found`,
-        data: instructors,
-      });
+    res.json({
+      status: 200,
+      message: `${instructors.length} instructors found`,
+      data: instructors,
+    });
   } catch (err) {
     next(err);
   }
@@ -49,35 +49,39 @@ Instructor.get("/signin", async (req, res, next) => {
 });
 
 Instructor.post("/assert", async (req, res, next) => {
-  sp.post_assert(idp, { request_body: req.body }, function (err, saml_response) {
-    if (err != null) {
-      return res.json({
-        status: 500,
-        message: `Error: ${err}`,
-        data: null,
+  sp.post_assert(
+    idp,
+    { request_body: req.body },
+    function (err, saml_response) {
+      if (err != null) {
+        return res.json({
+          status: 500,
+          message: `Error: ${err}`,
+          data: null,
+        });
+      }
+      /* probably not right but for now */
+      const email = saml_response.user.attributes.email;
+      const name = saml_response.user.attributes.name;
+      const role = saml_response.user.attributes.role;
+      res.json({
+        status: 200,
+        message: `User ${email} authenticated`,
+        data: { email, name, role },
       });
     }
-    /* probably not right but for now */
-    const email = saml_response.user.attributes.email;
-    const name = saml_response.user.attributes.name;
-    const role = saml_response.user.attributes.role;
-    res.json({
-      status: 200,
-      message: `User ${email} authenticated`,
-      data: { email, name, role },
-    });
-  });
+  );
 });
 
 Instructor.get("/:email", async (req, res, next) => {
   const email = req.params.email;
   try {
-      const instructor = await instructorDao.readByEmail(email);
-      res.json({
-        status: 200,
-        message: `Instructor found`,
-        data: instructor,
-      });
+    const instructor = await instructorDao.readByEmail(email);
+    res.json({
+      status: 200,
+      message: `Instructor found`,
+      data: instructor,
+    });
   } catch (err) {
     next(err);
   }
@@ -85,12 +89,12 @@ Instructor.get("/:email", async (req, res, next) => {
 
 Instructor.post("/", async (req, res, next) => {
   try {
-      const instructor = await instructorDao.create(req.body);
-      res.json({
-        status: 201,
-        message: "Instructor created",
-        data: req.body,
-      });
+    const instructor = await instructorDao.create(req.body);
+    res.json({
+      status: 201,
+      message: "Instructor created",
+      data: req.body,
+    });
   } catch (err) {
     next(err);
   }
@@ -103,16 +107,16 @@ Instructor.put("/:email", async (req, res, next) => {
   const newSemester = req.body.newSemester;
   const sectionId = toSectionId(newCourse, newSection, newSemester);
   try {
-      const instructor = await instructorDao.addToHistory(
-        email,
-        newSemester,
-        sectionId
-      );
-      res.json({
-        status: 200,
-        message: `Instructor updated`,
-        data: instructor,
-      });
+    const instructor = await instructorDao.addToHistory(
+      email,
+      newSemester,
+      sectionId
+    );
+    res.json({
+      status: 200,
+      message: `Instructor updated`,
+      data: instructor,
+    });
   } catch (err) {
     next(err);
   }
@@ -125,18 +129,18 @@ Instructor.put("/:email/:semester/:sectionId", async (req, res, next) => {
   const oldSectionId = req.params.sectionId;
   const newSectionId = req.body.newSectionId;
   try {
-      const instructor = await instructorDao.updateHistory(
-        email,
-        oldSemester,
-        newSemester,
-        oldSectionId,
-        newSectionId
-      );
-      res.json({
-        status: 200,
-        message: `Instructor updated`,
-        data: instructor,
-      });
+    const instructor = await instructorDao.updateHistory(
+      email,
+      oldSemester,
+      newSemester,
+      oldSectionId,
+      newSectionId
+    );
+    res.json({
+      status: 200,
+      message: `Instructor updated`,
+      data: instructor,
+    });
   } catch (err) {
     next(err);
   }
@@ -145,12 +149,12 @@ Instructor.put("/:email/:semester/:sectionId", async (req, res, next) => {
 Instructor.delete("/:email", async (req, res, next) => {
   const email = req.params.email;
   try {
-      const instructor = await instructorDao.deleteByEmail(email);
-      res.json({
-        status: 200,
-        message: `Instructor deleted`,
-        data: instructor,
-      });
+    const instructor = await instructorDao.deleteByEmail(email);
+    res.json({
+      status: 200,
+      message: `Instructor deleted`,
+      data: instructor,
+    });
   } catch (err) {
     next(err);
   }
@@ -161,16 +165,16 @@ Instructor.delete("/:email/:semester/:sectionId", async (req, res, next) => {
   const semester = req.params.semester;
   const sectionId = req.params.sectionId;
   try {
-      const instructor = await instructorDao.deleteFromHistory(
-        email,
-        semester,
-        sectionId
-      );
-      res.json({
-        status: 200,
-        message: `Instructor updated`,
-        data: instructor,
-      });
+    const instructor = await instructorDao.deleteFromHistory(
+      email,
+      semester,
+      sectionId
+    );
+    res.json({
+      status: 200,
+      message: `Instructor updated`,
+      data: instructor,
+    });
   } catch (err) {
     next(err);
   }

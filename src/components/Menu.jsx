@@ -109,11 +109,10 @@ function Menu(props) {
         return;
       }
       await axios.patch(
-        `${server}/student/${location.state.email}/${clickerId}`);
-    } else {
-      await axios.delete(
-        `${server}/student/${location.state.email}/clickerId`
+        `${server}/student/${location.state.email}/${clickerId}`
       );
+    } else {
+      await axios.delete(`${server}/student/${location.state.email}/clickerId`);
       location.state.clickerId = "";
     }
     setShowError(false);
@@ -137,7 +136,8 @@ function Menu(props) {
 
   async function leaveClass() {
     await axios.delete(
-      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`);
+      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`
+    );
     await axios.delete(
       `${server}/course/${location.state.sectionId}/${location.state.email}`
     );

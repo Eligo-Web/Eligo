@@ -15,9 +15,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import express from "express";
+import { idp, sp } from "../data/Auth.js";
 import StudentDao from "../data/StudentDao.js";
 import { decodeEmail } from "./courses.js";
-import { sp, idp } from "../data/Auth.js";
 
 const Student = express.Router();
 export const studentDao = new StudentDao();
@@ -25,11 +25,11 @@ export const studentDao = new StudentDao();
 Student.get("/", async (req, res, next) => {
   try {
     const students = await studentDao.readAll(req.query);
-      res.json({
-        status: 200,
-        message: `${students.length} students found`,
-        data: students,
-      });
+    res.json({
+      status: 200,
+      message: `${students.length} students found`,
+      data: students,
+    });
   } catch (err) {
     next(err);
   }
@@ -38,12 +38,12 @@ Student.get("/", async (req, res, next) => {
 Student.get("/:email", async (req, res, next) => {
   const email = req.params.email;
   try {
-      const student = await studentDao.readByEmail(email);
-      res.json({
-        status: 200,
-        message: `Student found`,
-        data: student,
-      });
+    const student = await studentDao.readByEmail(email);
+    res.json({
+      status: 200,
+      message: `Student found`,
+      data: student,
+    });
   } catch (err) {
     next(err);
   }
@@ -63,24 +63,28 @@ Student.get("/signin", async (req, res, next) => {
 });
 
 Student.post("/assert", async (req, res, next) => {
-  sp.post_assert(idp, { request_body: req.body }, function (err, saml_response) {
-    if (err != null) {
-      return res.json({
-        status: 500,
-        message: `Error: ${err}`,
-        data: null,
+  sp.post_assert(
+    idp,
+    { request_body: req.body },
+    function (err, saml_response) {
+      if (err != null) {
+        return res.json({
+          status: 500,
+          message: `Error: ${err}`,
+          data: null,
+        });
+      }
+      /* probably not right but for now */
+      const email = saml_response.user.attributes.email;
+      const name = saml_response.user.attributes.name;
+      const role = saml_response.user.attributes.role;
+      res.json({
+        status: 200,
+        message: `User ${email} authenticated`,
+        data: { email, name, role },
       });
     }
-    /* probably not right but for now */
-    const email = saml_response.user.attributes.email;
-    const name = saml_response.user.attributes.name;
-    const role = saml_response.user.attributes.role;
-    res.json({
-      status: 200,
-      message: `User ${email} authenticated`,
-      data: { email, name, role },
-    });
-  });
+  );
 });
 
 Student.get(
@@ -91,15 +95,15 @@ Student.get(
     const clickerId = req.params.clickerId;
     try {
       const student = await studentDao.readByClickerIdInCourse(
-          semester,
-          sectionId,
-          clickerId
-        );
-        res.json({
-          status: 200,
-          message: `Student found`,
-          data: student,
-        });
+        semester,
+        sectionId,
+        clickerId
+      );
+      res.json({
+        status: 200,
+        message: `Student found`,
+        data: student,
+      });
     } catch (err) {
       next(err);
     }
@@ -109,11 +113,11 @@ Student.get(
 Student.post("/", async (req, res, next) => {
   try {
     const student = await studentDao.create(req.body);
-      res.json({
-        status: 201,
-        message: "Student created",
-        data: req.body,
-      });
+    res.json({
+      status: 201,
+      message: "Student created",
+      data: req.body,
+    });
   } catch (err) {
     next(err);
   }
@@ -125,11 +129,11 @@ Student.put("/:email", async (req, res, next) => {
   const semester = req.body.semester;
   try {
     const student = await studentDao.addToHistory(email, sectionId, semester);
-      res.json({
-        status: 200,
-        message: `Student updated`,
-        data: student,
-      });
+    res.json({
+      status: 200,
+      message: `Student updated`,
+      data: student,
+    });
   } catch (err) {
     next(err);
   }
@@ -143,17 +147,17 @@ Student.put("/:email/:semester/:sectionId", async (req, res, next) => {
   const newSectionId = req.body.newSectionId;
   try {
     const student = await studentDao.updateHistory(
-        email,
-        oldSemester,
-        newSemester,
-        oldSectionId,
-        newSectionId
-      );
-      res.json({
-        status: 200,
-        message: `Student updated`,
-        data: student,
-      });
+      email,
+      oldSemester,
+      newSemester,
+      oldSectionId,
+      newSectionId
+    );
+    res.json({
+      status: 200,
+      message: `Student updated`,
+      data: student,
+    });
   } catch (err) {
     next(err);
   }
@@ -163,13 +167,12 @@ Student.patch("/:email/:clickerId", async (req, res, next) => {
   const email = req.params.email;
   const clickerId = req.params.clickerId;
   try {
-    
-      const student = await studentDao.updateClickerId(email, clickerId);
-      res.json({
-        status: 200,
-        message: `Student updated`,
-        data: student,
-      });
+    const student = await studentDao.updateClickerId(email, clickerId);
+    res.json({
+      status: 200,
+      message: `Student updated`,
+      data: student,
+    });
   } catch (err) {
     next(err);
   }
@@ -179,11 +182,11 @@ Student.delete("/:email", async (req, res, next) => {
   const email = req.params.email;
   try {
     const student = await studentDao.deleteByEmail(email);
-      res.json({
-        status: 200,
-        message: `Student with email ${email} deleted`,
-        data: student,
-      });
+    res.json({
+      status: 200,
+      message: `Student with email ${email} deleted`,
+      data: student,
+    });
   } catch (err) {
     next(err);
   }
@@ -193,11 +196,11 @@ Student.delete("/:email/clickerId", async (req, res, next) => {
   const email = req.params.email;
   try {
     const student = await studentDao.deleteClickerId(email);
-      res.json({
-        status: 200,
-        message: `Student's clickerId with email ${email} deleted`,
-        data: student,
-      });
+    res.json({
+      status: 200,
+      message: `Student's clickerId with email ${email} deleted`,
+      data: student,
+    });
   } catch (err) {
     next(err);
   }
@@ -209,15 +212,15 @@ Student.delete("/:email/:semester/:sectionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
   try {
     const student = await studentDao.deleteFromHistory(
-        email,
-        semester,
-        sectionId
-      );
-      res.json({
-        status: 200,
-        message: `Student with email ${email} deleted`,
-        data: student,
-      });
+      email,
+      semester,
+      sectionId
+    );
+    res.json({
+      status: 200,
+      message: `Student with email ${email} deleted`,
+      data: student,
+    });
   } catch (err) {
     next(err);
   }

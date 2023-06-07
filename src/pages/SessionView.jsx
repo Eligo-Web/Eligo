@@ -110,13 +110,7 @@ function SessionView() {
   async function checkActiveSession() {
     await axios
       .get(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`,
-        {
-          headers: {
-            token: location.state.token,
-            email: location.state.email,
-          },
-        }
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
       )
       .then((res) => {
         if (!res.data.data.active) {
@@ -130,18 +124,10 @@ function SessionView() {
 
   async function closeSession() {
     await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`,
-      {
-        token: location.state.token,
-        email: location.state.email,
-      }
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`
     );
     await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`,
-      {
-        token: location.state.token,
-        email: location.state.email,
-      }
+      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
     );
     navigateBack();
   }
@@ -161,7 +147,6 @@ function SessionView() {
         permission: location.state.permission,
         email: location.state.email,
         clickerId: location.state.clickerId,
-        token: location.state.token,
       },
     });
   }
@@ -174,13 +159,7 @@ function SessionView() {
     async function checkActivePoll() {
       await axios
         .get(
-          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`,
-          {
-            headers: {
-              token: location.state.token,
-              email: location.state.email,
-            },
-          }
+          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`
         )
         .then(async (res) => {
           if (res.data.data) {
@@ -224,10 +203,8 @@ function SessionView() {
                 sessionId={location.state.sessionId}
                 pollId={pollId}
                 email={location.state.email}
-                token={location.state.token}
               />
             }
-            token={location.state.token}
             vote
           />
         );
@@ -306,13 +283,7 @@ function SessionView() {
     async function downloadSessionData() {
       await axios
         .get(
-          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`,
-          {
-            headers: {
-              token: location.state.token,
-              email: location.state.email,
-            },
-          }
+          `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
         )
         .then((res) => {
           let emails = Object.keys(res.data.data.students);
@@ -458,13 +429,7 @@ function SessionView() {
 
     await axios
       .get(
-        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`,
-        {
-          headers: {
-            token: location.state.token,
-            email: location.state.email,
-          },
-        }
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
       )
       .then((res) => {
         if (res.data.status === 200) {
@@ -479,8 +444,6 @@ function SessionView() {
           .put(
             `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`,
             {
-              token: location.state.token,
-              email: location.state.email,
               endTimestamp: Date.now(),
             }
           )
@@ -497,7 +460,6 @@ function SessionView() {
           activePoll={poll.active}
           pollInfo={poll}
           email={location.state.email}
-          token={location.state.token}
           poll
         />
       );
@@ -573,7 +535,6 @@ function SessionView() {
       currPollId: "",
       prevResponse: "",
       prevClickerId: "",
-      token: location.state.token,
       base: base,
     };
   }
@@ -596,8 +557,6 @@ function SessionView() {
     await axios.put(
       `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`,
       {
-        token: location.state.token,
-        email: location.state.email,
         endTimestamp: Date.now(),
       }
     );

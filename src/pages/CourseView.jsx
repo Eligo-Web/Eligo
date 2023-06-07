@@ -152,7 +152,6 @@ function CourseView() {
         semester: location.state.semester,
         weekNum: weekNum,
         clickerId: location.state.clickerId,
-        token: location.state.token,
       },
     });
   }
@@ -160,12 +159,7 @@ function CourseView() {
   async function handleViewRoster() {
     let students = [];
     await axios
-      .get(`${server}/course/${location.state.sectionId}`, {
-        headers: {
-          token: location.state.token,
-          email: location.state.email,
-        },
-      })
+      .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
         students = res.data.data.students;
       });
@@ -181,7 +175,6 @@ function CourseView() {
         semester: location.state.semester,
         students: students,
         clickerId: location.state.clickerId,
-        token: location.state.token,
       },
     });
   }
@@ -189,12 +182,7 @@ function CourseView() {
   async function populateSessionCards() {
     let courseSessions;
     await axios
-      .get(`${server}/course/${location.state.sectionId}`, {
-        headers: {
-          token: location.state.token,
-          email: location.state.email,
-        },
-      })
+      .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
         courseSessions = res.data.data.sessions;
         courseSessions = toMap(courseSessions).sort();
@@ -222,7 +210,6 @@ function CourseView() {
             sectionId={location.state.sectionId}
             refresh={refresh}
             setRefresh={setRefresh}
-            token={location.state.token}
             editSession
           />
         );
@@ -261,7 +248,6 @@ function CourseView() {
             permission: location.state.permission,
             email: location.state.email,
             clickerId: location.state.clickerId,
-            token: location.state.token,
           },
         })
       }
@@ -280,20 +266,11 @@ function CourseView() {
       session: "",
       sessionName: "",
       weekNum: "",
-      token: "",
     });
 
     async function checkSession() {
       await axios
-        .get(
-          `${server}/course/${location.state.sectionId}/${getWeekNumber()}`,
-          {
-            headers: {
-              token: location.state.token,
-              email: location.state.email,
-            },
-          }
-        )
+        .get(`${server}/course/${location.state.sectionId}/${getWeekNumber()}`)
         .then(async (res) => {
           const session = res.data.data;
           if (session) {
@@ -315,7 +292,6 @@ function CourseView() {
                   sessionName: session.activeSession.name,
                   weekNum: getWeekNumber(),
                   clickerId: location.state.clickerId,
-                  token: location.state.token,
                 },
               });
             }
@@ -332,7 +308,6 @@ function CourseView() {
               sessionName: session.activeSession.name,
               weekNum: getWeekNumber(),
               clickerId: location.state.clickerId,
-              token: location.state.token,
             };
             setEditPopup(
               <Overlay
@@ -443,7 +418,6 @@ function CourseView() {
                   sectionId={location.state.sectionId}
                   refresh={refresh}
                   setRefresh={setRefresh}
-                  token={location.state.token}
                   createSession
                 />
               )
