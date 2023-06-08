@@ -33,27 +33,29 @@ function SignIn() {
             permission: undefined,
           },
         });
-      }
-    });
-    await axios.post(`${server}/student/assert`).then((res) => {
-      if (res.data.status === 200) {
-        navigate("/overview", {
-          state: {
-            permission: role,
-            email: res.data.email,
-            name: res.data.name,
-            history: res.data.history,
-            clickerId: res.data.clickerId,
-          },
-        });
       } else {
-        navigate("/overview", {
-          state: {
-            permission: undefined,
-          },
-        });
+        window.location.href = res.data.data;
       }
     });
+    // await axios.post(`${server}/student/assert`).then((res) => {
+    //   if (res.data.status === 200) {
+    //     navigate("/overview", {
+    //       state: {
+    //         permission: role,
+    //         email: res.data.email,
+    //         name: res.data.name,
+    //         history: res.data.history,
+    //         clickerId: res.data.clickerId,
+    //       },
+    //     });
+    //   } else {
+    //     navigate("/overview", {
+    //       state: {
+    //         permission: undefined,
+    //       },
+    //     });
+    //   }
+    // });
   }
   return (
     <div className="sign-in-container">

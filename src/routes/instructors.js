@@ -44,7 +44,11 @@ Instructor.get("/signin", async (req, res, next) => {
         data: null,
       });
     }
-    res.redirect(login_url);
+    return res.json({
+      status: 200,
+      message: `Login URL created`,
+      data: login_url,
+    });
   });
 });
 
