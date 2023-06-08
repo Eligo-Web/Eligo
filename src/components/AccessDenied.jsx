@@ -29,7 +29,7 @@ export default function AccessDenied() {
         <Button
           variant="blank-state"
           className="large-title"
-          onClick={() => navigate("/signin")}
+          onClick={() => navigate("/")}
         >
           Sign in
         </Button>

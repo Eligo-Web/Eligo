@@ -99,7 +99,7 @@ function Menu(props) {
     if (navigator.hid) {
       sessionStorage.setItem("dismissBasePrompt", "false");
     }
-    navigate("/signin");
+    navigate("/");
   }
 
   async function updateClickerId() {

@@ -14,5 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export const server = "http://localhost:3000";
-// export const server = "https://eligo.cs.jhu.edu/api";
+// export const server = "http://localhost:3000";
+export const server = "https://eligo.cs.jhu.edu/api";

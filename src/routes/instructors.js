@@ -53,7 +53,10 @@ Instructor.get("/signin", async (req, res, next) => {
 });
 
 Instructor.post("/assert", async (req, res, next) => {
-  sp.post_assert(idp, {}, function (err, saml_response) {
+  const options = { request_body: req.body }
+  sp.redirect_assert(idp, options, function (err, saml_response) {
+    console.log(saml_response);
+    console.log(err);
     if (err != null) {
       return res.json({
         status: 500,
@@ -61,38 +64,39 @@ Instructor.post("/assert", async (req, res, next) => {
         data: null,
       });
     }
-
-    /* probably not right but for now */
-    const email = saml_response.user.attributes.email;
-    const name = saml_response.user.attributes.name;
-    const role = saml_response.user.attributes.role;
-    /* probably not right but for now */
-
-    if (role !== "instructor") {
-      return res.json({
-        status: 401,
-        message: `Unauthorized`,
-        data: null,
-      });
-    }
-    let instructor = instructorDao.readByEmail(email);
-    if (instructor === null) {
-      instructor = instructorDao.create({
-        email: email,
-        name: name,
-        role: role.toUpperCase(),
-      });
-    }
-    return res.json({
-      status: 200,
-      message: `Instructor found`,
-      data: {
-        email: instructor.email,
-        name: instructor.name,
-        role: instructor.role,
-      },
-    });
   });
+
+    // /* probably not right but for now */
+    // const email = saml_response.user.attributes.email;
+    // const name = saml_response.user.attributes.name;
+    // const role = saml_response.user.attributes.role;
+    // /* probably not right but for now */
+
+  //   if (role !== "instructor") {
+  //     return res.json({
+  //       status: 401,
+  //       message: `Unauthorized`,
+  //       data: null,
+  //     });
+  //   }
+  //   let instructor = instructorDao.readByEmail(email);
+  //   if (instructor === null) {
+  //     instructor = instructorDao.create({
+  //       email: email,
+  //       name: name,
+  //       role: role.toUpperCase(),
+  //     });
+  //   }
+  //   return res.json({
+  //     status: 200,
+  //     message: `Instructor found`,
+  //     data: {
+  //       email: instructor.email,
+  //       name: instructor.name,
+  //       role: instructor.role,
+  //     },
+  //   });
+  // });
 });
 
 Instructor.get("/:email", async (req, res, next) => {

@@ -38,7 +38,7 @@ export function PageNotFound() {
         <Button
           variant="blank-state"
           className="large-title"
-          onClick={() => navigate("/signin")}
+          onClick={() => navigate("/")}
         >
           Home
         </Button>
@@ -165,7 +165,7 @@ export function InstructorScreenAlert() {
         <Button
           variant="sign-in large-title"
           className="large-title"
-          onClick={() => navigate("/signin")}
+          onClick={() => navigate("/")}
         >
           Home
         </Button>
