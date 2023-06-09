@@ -62,45 +62,6 @@ Student.get("/signin", async (req, res, next) => {
   });
 });
 
-Student.post("/assert", async (req, res, next) => {
-  sp.post_assert(idp, {}, function (err, saml_response) {
-    if (err != null) {
-      return res.json({
-        status: 500,
-        message: `Error: ${err}`,
-        data: null,
-      });
-    }
-
-    /* probably not right but for now */
-    const email = saml_response.user.attributes.email;
-    const name = saml_response.user.attributes.name;
-    const role = saml_response.user.attributes.role;
-    /* probably not right but for now */
-
-    if (role !== "student") {
-      return res.json({
-        status: 401,
-        message: `Unauthorized`,
-        data: null,
-      });
-    }
-    let student = studentDao.readByEmail(email);
-    if (student === null) {
-      student = studentDao.create({
-        email: email,
-        name: name,
-        role: role.toUpperCase(),
-      });
-    }
-    return res.json({
-      status: 200,
-      message: `Student found`,
-      data: { email: student.email, name: student.name, role: student.role },
-    });
-  });
-});
-
 Student.get(
   "/clicker/:semester/:sectionId/:clickerId",
   async (req, res, next) => {

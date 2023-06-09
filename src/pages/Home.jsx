@@ -24,6 +24,14 @@ import studentIcon from "../assets/student-button.png";
 
 function Home() {
   const navigate = useNavigate();
+  const urlParams = new URLSearchParams(window.location.search);
+  const encodedUser = urlParams.get("user");
+  const decodedUser = Buffer.from(encodedUser, "base64").toString("ascii");
+  const parsedUser = JSON.parse(decodedUser);
+
+  if (parsedUser) {
+    console.log(parsedUser);
+  }
 
   async function handleSignin(role) {
     await axios.get(`${server}/${role.toLowerCase()}/signin`).then((res) => {

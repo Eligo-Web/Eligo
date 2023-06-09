@@ -20,15 +20,43 @@ import helmet from "helmet";
 import Course from "./routes/courses.js";
 import Instructor from "./routes/instructors.js";
 import Student from "./routes/students.js";
+import { sp, idp } from "./data/Auth.js";
 
 const app = express();
 
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
+app.use(express.urlencoded());
 app.use("/instructor", Instructor);
 app.use("/student", Student);
 app.use("/course", Course);
+
+app.post("/signin", async (req, res, next) => {
+  const options = { request_body: req.body }
+  sp.post_assert(idp, options, function (err, saml_response) {
+    if (err != null) {
+      return res.json({
+        status: 500,
+        message: `Error: ${err}`,
+        data: null,
+      });
+    }
+    const affiliation = saml_response.user.attributes.user_field_affiliation[0];
+    const first_name = "Amir";
+    const last_name = saml_response.user.attributes.lastname[0];
+    const email = saml_response.user.attributes["urn:oid:1.2.840.113556.1.4.656"][0];
+
+    const user = {
+      affiliation: affiliation,
+      first_name: first_name,
+      last_name: last_name,
+      email: email,
+    };
+
+    res.redirect(`/?user=${JSON.stringify(user)}`); 
+  });
+});
 
 app.use((err, req, res, next) => {
   if (err) {

@@ -23,7 +23,6 @@ import Overview from "../pages/Overview";
 import Roster from "../pages/Roster";
 import SessionView from "../pages/SessionView";
 import Home from "../pages/Home";
-import SignIn from "../pages/SignIn";
 
 export const ClickerContext = createContext(null);
 export const EditPopupContext = createContext(null);
@@ -39,7 +38,6 @@ function InAppContainer() {
       <EditPopupContext.Provider value={[editPopup, setEditPopup]}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<SignIn />} />
           <Route path="/overview" element={<Overview />} />
           <Route path="/class" element={<CourseView />} />
           <Route
