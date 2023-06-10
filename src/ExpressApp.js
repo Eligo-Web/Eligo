@@ -17,10 +17,11 @@
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import jwt from "jsonwebtoken";
+import { idp, sp, verifyToken } from "./data/Auth.js";
 import Course from "./routes/courses.js";
 import Instructor from "./routes/instructors.js";
 import Student from "./routes/students.js";
-import { sp, idp } from "./data/Auth.js";
 
 const app = express();
 
@@ -28,12 +29,13 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(verifyToken);
 app.use("/instructor", Instructor);
 app.use("/student", Student);
 app.use("/course", Course);
 
 app.post("/signin", async (req, res, next) => {
-  const options = { request_body: req.body }
+  const options = { request_body: req.body };
   sp.post_assert(idp, options, function (err, saml_response) {
     if (err != null) {
       return res.json({
@@ -45,7 +47,8 @@ app.post("/signin", async (req, res, next) => {
     const affiliation = saml_response.user.attributes.user_field_affiliation[0];
     const first_name = "Amir";
     const last_name = saml_response.user.attributes.lastname[0];
-    const email = saml_response.user.attributes["urn:oid:1.2.840.113556.1.4.656"][0];
+    const email =
+      saml_response.user.attributes["urn:oid:1.2.840.113556.1.4.656"][0];
 
     const user = {
       affiliation: affiliation,
@@ -53,8 +56,13 @@ app.post("/signin", async (req, res, next) => {
       last_name: last_name,
       email: email,
     };
-
-    res.redirect(`/?user=${JSON.stringify(user)}`); 
+    const token = jwt.sign(user, process.env.JWT_SECRET, {
+      expiresIn: "8h",
+    });
+    const stringifiedUser = Buffer.from(JSON.stringify(user)).toString(
+      "base64"
+    );
+    res.redirect(`/overview?user=${stringifiedUser}&token=${token}`);
   });
 });
 

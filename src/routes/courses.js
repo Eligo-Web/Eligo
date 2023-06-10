@@ -34,6 +34,13 @@ export function decodeEmail(str) {
 }
 
 Course.get("/", async (req, res, next) => {
+  if (req.headers.API_KEY !== process.env.API_KEY) {
+    return res.json({
+      status: 401,
+      message: `Unauthorized`,
+      data: null,
+    });
+  }
   try {
     const courses = await courseDao.readAll(req.query);
     res.json({

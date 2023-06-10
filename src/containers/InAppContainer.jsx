@@ -15,14 +15,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { createContext, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { PageNotFound } from "../components/BlankStates";
 import InstructorPoll from "../components/InstructorPoll";
 import CourseView from "../pages/CourseView";
+import Home from "../pages/Home";
 import Overview from "../pages/Overview";
 import Roster from "../pages/Roster";
 import SessionView from "../pages/SessionView";
-import Home from "../pages/Home";
 
 export const ClickerContext = createContext(null);
 export const EditPopupContext = createContext(null);

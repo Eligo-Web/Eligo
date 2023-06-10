@@ -23,6 +23,13 @@ const Instructor = express.Router();
 export const instructorDao = new InstructorDao();
 
 Instructor.get("/", async (req, res, next) => {
+  if (req.headers.API_KEY !== process.env.API_KEY) {
+    return res.json({
+      status: 401,
+      message: `Unauthorized`,
+      data: null,
+    });
+  }
   const instructors = await instructorDao.readAll(req.query);
   try {
     res.json({
@@ -53,7 +60,7 @@ Instructor.get("/signin", async (req, res, next) => {
 });
 
 Instructor.get("/:email", async (req, res, next) => {
-  const email = req.params.email;
+  const email = req.user.email;
   try {
     const instructor = await instructorDao.readByEmail(email);
     res.json({

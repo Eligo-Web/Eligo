@@ -23,6 +23,13 @@ const Student = express.Router();
 export const studentDao = new StudentDao();
 
 Student.get("/", async (req, res, next) => {
+  if (req.headers.API_KEY !== process.env.API_KEY) {
+    return res.json({
+      status: 401,
+      message: `Unauthorized`,
+      data: null,
+    });
+  }
   try {
     const students = await studentDao.readAll(req.query);
     res.json({
@@ -58,7 +65,11 @@ Student.get("/signin", async (req, res, next) => {
         data: null,
       });
     }
-    res.redirect(login_url);
+    return res.json({
+      status: 200,
+      message: `Login URL created`,
+      data: login_url,
+    });
   });
 });
 
