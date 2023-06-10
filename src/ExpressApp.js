@@ -62,7 +62,8 @@ app.post("/signin", async (req, res, next) => {
     const stringifiedUser = Buffer.from(JSON.stringify(user)).toString(
       "base64"
     );
-    res.redirect(`/overview?user=${stringifiedUser}&token=${token}`);
+    res.cookie("jwt", token, { httpOnly: true, secure: true });
+    res.redirect(`/overview?user=${stringifiedUser}`);
   });
 });
 

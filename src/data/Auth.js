@@ -26,7 +26,7 @@ export const sp = new saml2.ServiceProvider(sp_options);
 export const idp = new saml2.IdentityProvider(idp_options);
 
 export function verifyToken(req, res, next) {
-  const token = req.headers.authorization;
+  const token = req.cookies.jwt;
   if (!token) {
     res.redirect("/");
   }
