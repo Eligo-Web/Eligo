@@ -21,17 +21,18 @@ import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import instructorIcon from "../assets/instructor-button.png";
 import studentIcon from "../assets/student-button.png";
-import { Buffer } from "buffer";
 
 function Home() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const encodedUser = urlParams.get("user");
-  const decodedUser = Buffer.from(encodedUser, "base64").toString("ascii");
-  const parsedUser = JSON.parse(decodedUser);
+  if (encodedUser) {
+    const decodedUser = atob(encodedUser);
+    const parsedUser = JSON.parse(decodedUser || "{}");
 
-  if (parsedUser) {
-    console.log(parsedUser);
+    if (parsedUser) {
+      console.log(parsedUser);
+    }
   }
 
   async function handleSignin(role) {
