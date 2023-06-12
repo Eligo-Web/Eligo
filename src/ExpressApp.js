@@ -45,8 +45,8 @@ app.post("/signin", async (req, res, next) => {
       });
     }
     const affiliation = saml_response.user.attributes.user_field_affiliation[0];
-    const first_name = "Amir";
-    const last_name = saml_response.user.attributes.lastname[0];
+    const first_name = saml_response.user.attributes.firstName[0];
+    const last_name = saml_response.user.attributes.lastName[0];
     const email =
       saml_response.user.attributes["urn:oid:1.2.840.113556.1.4.656"][0];
 
