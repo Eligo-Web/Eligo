@@ -43,20 +43,24 @@ Instructor.get("/", async (req, res, next) => {
 });
 
 Instructor.get("/signin", async (req, res, next) => {
-  sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {
-    if (err != null) {
+  try {
+    sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {
+      if (err != null) {
+        return res.json({
+          status: 500,
+          message: `Error: ${err}`,
+          data: null,
+        });
+      }
       return res.json({
-        status: 500,
-        message: `Error: ${err}`,
-        data: null,
+        status: 200,
+        message: `Login URL created`,
+        data: login_url,
       });
-    }
-    return res.json({
-      status: 200,
-      message: `Login URL created`,
-      data: login_url,
     });
-  });
+  } catch (err) {
+    next(err);
+  }
 });
 
 Instructor.get("/:email", async (req, res, next) => {
