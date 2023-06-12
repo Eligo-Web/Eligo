@@ -63,7 +63,7 @@ app.post("/signin", async (req, res, next) => {
       "base64"
     );
     res.cookie("jwt", token, { httpOnly: true, secure: true });
-    res.redirect(`/overview?user=${stringifiedUser}`);
+    res.redirect(`/?user=${stringifiedUser}`);
   });
 });
 
