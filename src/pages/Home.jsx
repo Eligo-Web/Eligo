@@ -21,6 +21,7 @@ import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import instructorIcon from "../assets/instructor-button.png";
 import studentIcon from "../assets/student-button.png";
+import { Buffer } from "buffer";
 
 function Home() {
   const navigate = useNavigate();
