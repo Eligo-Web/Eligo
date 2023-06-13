@@ -31,22 +31,16 @@ function Home() {
     const parsedUser = JSON.parse(decodedUser || "{}");
 
     if (parsedUser) {
-      console.log(parsedUser);
+      handleRedirect(parsedUser);
     }
   }
 
   async function handleRedirect(props) {
-    let role = "";
-    switch (props.affiliation) {
-      case "STUDENT":
-        role = "STUDENT";
-        break;
-      default:
-        role = "INSTRUCTOR";
-    }
+    let user = {};
+    let role = sessionStorage.getItem("role");
     const fullName = `${props.firstName} ${props.lastName}`;
     await axios
-      .get(`${server}/${role.toLowerCase()}/${email}`)
+      .get(`${server}/${role.toLowerCase()}/${props.email}`)
       .then(async (res) => {
         if (res.data.status === 200) {
           user = res.data.data;
