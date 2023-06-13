@@ -35,7 +35,46 @@ function Home() {
     }
   }
 
+  async function handleRedirect(props) {
+    let role = "";
+    switch (props.affiliation) {
+      case "STUDENT":
+        role = "STUDENT";
+        break;
+      default:
+        role = "INSTRUCTOR";
+    }
+    const fullName = `${props.firstName} ${props.lastName}`;
+    await axios
+      .get(`${server}/${role.toLowerCase()}/${email}`)
+      .then(async (res) => {
+        if (res.data.status === 200) {
+          user = res.data.data;
+        } else if (res.data.status === 404) {
+          await axios
+            .post(`${server}/${role.toLowerCase()}`, {
+              name: fullName,
+              email: props.email,
+              role: role,
+            })
+            .then((res) => {
+              user = res.data.data;
+            });
+        }
+      });
+    navigate("/overview", {
+      state: {
+        permission: user.role,
+        email: user.email,
+        name: user.name,
+        history: user.history,
+        clickerId: user.clickerId,
+      },
+    });
+  }
+
   async function handleSignin(role) {
+    sessionStorage.setItem("role", role.toUpperCase());
     await axios.get(`${server}/${role.toLowerCase()}/signin`).then((res) => {
       if (res.data.status === 500) {
         navigate("/overview", {
