@@ -42,7 +42,6 @@ Student.get("/", async (req, res, next) => {
   }
 });
 
-
 Student.get("/signin", async (req, res, next) => {
   try {
     sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {

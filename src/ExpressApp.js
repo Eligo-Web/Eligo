@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
@@ -22,7 +23,6 @@ import { idp, sp } from "./data/Auth.js";
 import Course from "./routes/courses.js";
 import Instructor from "./routes/instructors.js";
 import Student from "./routes/students.js";
-import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -30,7 +30,7 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(verifyToken);
 app.use("/instructor", Instructor);
 app.use("/student", Student);
