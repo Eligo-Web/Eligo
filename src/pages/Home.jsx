@@ -31,11 +31,44 @@ function Home() {
     const parsedUser = JSON.parse(decodedUser || "{}");
 
     if (parsedUser) {
-      console.log(parsedUser);
+      handleRedirect(parsedUser);
     }
   }
 
+  async function handleRedirect(props) {
+    let user = {};
+    let role = sessionStorage.getItem("role");
+    const fullName = `${props.firstName} ${props.lastName}`;
+    await axios
+      .get(`${server}/${role.toLowerCase()}/${props.email}`)
+      .then(async (res) => {
+        if (res.data.status === 200) {
+          user = res.data.data;
+        } else if (res.data.status === 404) {
+          await axios
+            .post(`${server}/${role.toLowerCase()}`, {
+              name: fullName,
+              email: props.email,
+              role: role,
+            })
+            .then((res) => {
+              user = res.data.data;
+            });
+        }
+      });
+    navigate("/overview", {
+      state: {
+        permission: user.role,
+        email: user.email,
+        name: user.name,
+        history: user.history,
+        clickerId: user.clickerId,
+      },
+    });
+  }
+
   async function handleSignin(role) {
+    sessionStorage.setItem("role", role.toUpperCase());
     await axios.get(`${server}/${role.toLowerCase()}/signin`).then((res) => {
       if (res.data.status === 500) {
         navigate("/overview", {

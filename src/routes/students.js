@@ -42,20 +42,6 @@ Student.get("/", async (req, res, next) => {
   }
 });
 
-Student.get("/:email", async (req, res, next) => {
-  const email = req.params.email;
-  try {
-    const student = await studentDao.readByEmail(email);
-    res.json({
-      status: 200,
-      message: `Student found`,
-      data: student,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
-
 Student.get("/signin", async (req, res, next) => {
   try {
     sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {
@@ -71,6 +57,20 @@ Student.get("/signin", async (req, res, next) => {
         message: `Login URL created`,
         data: login_url,
       });
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+Student.get("/:email", async (req, res, next) => {
+  const email = req.params.email;
+  try {
+    const student = await studentDao.readByEmail(email);
+    res.json({
+      status: 200,
+      message: `Student found`,
+      data: student,
     });
   } catch (err) {
     next(err);

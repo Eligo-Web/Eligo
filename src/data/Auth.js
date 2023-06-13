@@ -24,25 +24,3 @@ const idp_options = {
 
 export const sp = new saml2.ServiceProvider(sp_options);
 export const idp = new saml2.IdentityProvider(idp_options);
-
-export function verifyToken(req, res, next) {
-  if (
-    req.path === "/instructor/signin" ||
-    req.path === "/student/signin" ||
-    req.path === "/signin"
-  ) {
-    next();
-  } else {
-    try {
-      const token = req.cookies.jwt;
-      if (!token) {
-        res.redirect("/");
-      }
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;
-      next();
-    } catch (err) {
-      res.redirect("/");
-    }
-  }
-}

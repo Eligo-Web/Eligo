@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import jwt from "jsonwebtoken";
-import { idp, sp, verifyToken } from "./data/Auth.js";
+import { idp, sp } from "./data/Auth.js";
 import Course from "./routes/courses.js";
 import Instructor from "./routes/instructors.js";
 import Student from "./routes/students.js";
@@ -29,6 +30,7 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(cookieParser());
 app.use(verifyToken);
 app.use("/instructor", Instructor);
 app.use("/student", Student);
@@ -52,8 +54,8 @@ app.post("/signin", async (req, res, next) => {
 
     const user = {
       affiliation: affiliation,
-      first_name: first_name,
-      last_name: last_name,
+      firstName: first_name,
+      lastName: last_name,
       email: email,
     };
     const token = jwt.sign(user, process.env.JWT_SECRET, {
@@ -78,5 +80,27 @@ app.use((err, req, res, next) => {
   }
   next();
 });
+
+function verifyToken(req, res, next) {
+  if (
+    req.path === "/instructor/signin" ||
+    req.path === "/student/signin" ||
+    req.path === "/signin"
+  ) {
+    return next();
+  } else {
+    try {
+      const token = req.cookies.jwt;
+      if (!token) {
+        res.redirect("/");
+      }
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded;
+      next();
+    } catch (err) {
+      res.redirect("/");
+    }
+  }
+}
 
 export default app;
