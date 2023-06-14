@@ -71,6 +71,8 @@ export function Tooltip(props) {
     <div
       className={`tooltip ${props.className}`}
       style={{ transform: `translate(${props.X},${props.Y})` }}
+      onMouseOver={props.onMouseOver}
+      onMouseLeave={props.onMouseLeave}
     >
       {props.txt}
     </div>
@@ -82,29 +84,22 @@ export function FloatingButton(props) {
 
   useEffect(() => {
     if (!navigator.hid) return;
-    load();
-    async function load() {
+    async function initialize() {
+      // check whether use dismissed base-connect button
       const prompt = sessionStorage.getItem("dismissBasePrompt");
       if (prompt === "true") {
         return;
       }
+      // check base connection
       const devices = await navigator.hid.getDevices();
       if (props.base || devices.length) {
         await dismiss();
         return;
       }
       await pause(1000);
-      const btn = document.querySelector(".connect-base-btn");
-      if (btn && !props.base) {
-        const label = btn.querySelector(".connect-btn-label");
-        btn.style.opacity = 0.5;
-        if (label) label.style.width = "20rem";
-        await pause(50);
-        btn.style.opacity = 1;
-        await pause(100);
-        btn.style.pointerEvents = "all";
-      }
+      await display();
     }
+    initialize();
   }, [props.base]);
 
   useEffect(() => {
@@ -112,6 +107,19 @@ export function FloatingButton(props) {
       document.querySelector(".connect-base-btn").style.bottom = "2rem";
     }
   }, []);
+
+  async function display() {
+    const btn = document.querySelector(".connect-base-btn");
+    if (btn && !props.base) {
+      const label = btn.querySelector(".connect-btn-label");
+      btn.style.opacity = 0.5;
+      if (label) label.style.width = "20rem";
+      await pause(50);
+      btn.style.opacity = 1;
+      await pause(150);
+      btn.style.pointerEvents = "all";
+    }
+  }
 
   async function dismiss(event, saveState = false) {
     if (event) event.stopPropagation();

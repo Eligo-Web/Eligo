@@ -52,8 +52,9 @@ function Roster() {
     async function updateRoster() {
       const rosterItems = document.getElementById("roster-content");
       rosterItems.style.opacity = 0;
-      await pause(100);
+      await pause(75);
       populateRoster();
+      await pause(75);
       document.querySelector(".roster-wrapper").scrollTop = 0;
       rosterItems.style.opacity = 1;
     }

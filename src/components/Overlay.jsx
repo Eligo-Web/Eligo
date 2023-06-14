@@ -16,13 +16,19 @@
 
 import { IconX } from "@tabler/icons-react";
 import { useContext, useEffect, useState } from "react";
-import { Button, Row } from "react-bootstrap";
-import { EditPopupContext } from "../containers/InAppContainer";
+import { Button } from "react-bootstrap";
+import { GlobalPopupContext } from "../containers/InAppContainer";
 import "../styles/overlay.css";
 import { CreateClass, EditClass } from "./CreateOrEditClass";
 import { CreateSession, EditSession } from "./CreateOrEditSession";
 import { ClosedPoll } from "./InstructorPoll";
-import { ConfirmDelete, Default, JoinClass, JoinSession } from "./Popups";
+import {
+  ConfirmDelete,
+  Default,
+  JoinClass,
+  JoinSession,
+  SessionExpired,
+} from "./Popups";
 import { closePopup } from "./Utils";
 
 /**
@@ -33,7 +39,7 @@ export default function Overlay(props) {
   const [childState, setChildState] = useState(false);
   const [markDelete, setMarkDelete] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [popup, setPopup] = useContext(EditPopupContext);
+  const [popup, setPopup] = useContext(GlobalPopupContext);
 
   async function close() {
     if (!props.warning) setChildState(!childState);
@@ -66,12 +72,13 @@ export default function Overlay(props) {
     <div className="overlay-wrapper" id={props.id + "-popup"}>
       <div className="overlay pop-up" style={{ zIndex: 4 }}>
         <div className="pop-up-header">
-          <Row className="pop-up-title large-title">
+          <div className="pop-up-title large-title">
             {props.title || "Overlay Title"}
-          </Row>
+          </div>
           <Button
             variant="transparent absolute-hint"
             aria-label={`Close Overlay ${props.title}`}
+            style={{ display: props.sessionExpired ? "none" : "unset" }}
           >
             <IconX size={"1.7em"} color="black" onClick={() => close()} />
           </Button>
@@ -138,6 +145,8 @@ export default function Overlay(props) {
             unresolved={props.activePoll}
             email={props.email}
           />
+        ) : props.sessionExpired ? (
+          <SessionExpired />
         ) : (
           props.content || <Default />
         )}

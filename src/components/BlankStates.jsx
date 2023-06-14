@@ -26,6 +26,23 @@ import PollCard from "./PollCard";
 import SessionCard from "./SessionCard";
 import pause from "./Utils";
 
+function waitForImg(container, img) {
+  if (container) {
+    const imgDiv = container.childNodes[0];
+    imgDiv.style.background = `url(${img.src}) no-repeat`;
+    container.style.opacity = 1;
+  }
+}
+
+function fadeIn(imgSource) {
+  pause(250).then(() => {
+    const container = document.querySelector(".img-container");
+    const img = new Image();
+    img.onload = () => waitForImg(container, img);
+    img.src = imgSource;
+  });
+}
+
 export function PageNotFound() {
   const navigate = useNavigate();
   return (
@@ -50,8 +67,8 @@ export function PageNotFound() {
 export function LoadingOverview() {
   return (
     <Container className="card-container loading">
-      <div className="card-title divisor-blank"></div>
-      {Array.from(Array(8), (_, i) => (
+      <div className="card-title divisor-blank transparent" />
+      {Array.from(Array(16), (_, i) => (
         <Card key={i} />
       ))}
     </Container>
@@ -59,22 +76,12 @@ export function LoadingOverview() {
 }
 
 export function EmptyOverview(props) {
-  useEffect(() => {
-    async function fadeIn() {
-      await pause(250);
-      const img = document.querySelector(".img-container");
-      if (img) img.style.opacity = 1;
-    }
-    fadeIn();
-  }, []);
+  useEffect(() => fadeIn(emptyOverviewImg), []);
+
   return (
     <div className="d-flex fill-centered">
       <div className="img-container">
-        <img
-          className="empty-state-img"
-          src={emptyOverviewImg}
-          alt="No Courses"
-        />
+        <div className="empty-state-img" alt="No Courses" />
         <center className="blank-state-msg p-2">
           {props.student
             ? "You have not joined a class yet. Join one and it will appear here."
@@ -88,26 +95,24 @@ export function EmptyOverview(props) {
 export function LoadingCourseView() {
   return (
     <Container className="card-container loading">
-      <div className="card-title divisor-blank"></div>
-      {Array.from(Array(12), (_, i) => (
+      <div className="card-title divisor-blank" />
+      {Array.from(Array(4), (_, i) => (
         <SessionCard blank key={i} />
+      ))}
+      <div className="card-title divisor-blank" />
+      {Array.from(Array(12), (_, i) => (
+        <SessionCard blank key={i + 4} />
       ))}
     </Container>
   );
 }
 
 export function EmptyCourseView() {
-  useEffect(() => {
-    async function fadeIn() {
-      await pause(250);
-      const img = document.querySelector(".img-container");
-      if (img) img.style.opacity = 1;
-    }
-    fadeIn();
-  }, []);
+  useEffect(() => fadeIn(emptyCourseImg), []);
+
   return (
     <div className="img-container">
-      <img className="empty-state-img" src={emptyCourseImg} alt="No sessions" />
+      <div className="empty-state-img" alt="No sessions" />
       <center className="blank-state-msg p-2">
         This class has no sessions. Create a session and it will appear here.
       </center>
@@ -118,8 +123,8 @@ export function EmptyCourseView() {
 export function LoadingSessionView() {
   return (
     <Container className="poll-card-container loading">
-      <div className="card-title divisor-blank"></div>
-      {Array.from(Array(12), (_, i) => (
+      <div className="card-title divisor-blank transparent"></div>
+      {Array.from(Array(24), (_, i) => (
         <PollCard blank key={i} />
       ))}
     </Container>
@@ -127,17 +132,11 @@ export function LoadingSessionView() {
 }
 
 export function EmptySessionView(props) {
-  useEffect(() => {
-    async function fadeIn() {
-      await pause(250);
-      const img = document.querySelector(".img-container");
-      if (img) img.style.opacity = 1;
-    }
-    fadeIn();
-  }, []);
+  useEffect(() => fadeIn(emptySessionImg), []);
+
   return (
     <div className="img-container">
-      <img className="empty-state-img" src={emptySessionImg} alt="No polls" />
+      <div className="empty-state-img" alt="No polls" />
       <center className="blank-state-msg p-2">
         {props.open
           ? "You have created no polls yet. Create some and they will appear here!"

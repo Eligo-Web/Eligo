@@ -31,8 +31,15 @@ import * as clicker from "../components/ClickerBase";
 import Menu from "../components/Menu";
 import MenuBar from "../components/MenuBar";
 import Overlay from "../components/Overlay";
-import pause, { openPopup } from "../components/Utils";
-import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
+import pause, {
+  openPopup,
+  reconnectBase,
+  sessionValid,
+} from "../components/Utils";
+import {
+  ClickerContext,
+  GlobalPopupContext,
+} from "../containers/InAppContainer";
 import "../styles/cards.css";
 import "../styles/overlay.css";
 
@@ -43,7 +50,8 @@ function OverView() {
   const [refresh, setRefresh] = useState(false);
   const [cards, setCards] = useState(<LoadingOverview />);
   const [base, setBase] = useContext(ClickerContext);
-  const [editPopup, setEditPopup] = useContext(EditPopupContext);
+  const [globalPopup, setGlobalPopup] = useContext(GlobalPopupContext);
+  const [loaded, setLoaded] = useState(false);
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
@@ -62,23 +70,11 @@ function OverView() {
 
   useEffect(() => {
     if (!navigator.hid) return;
-    async function reconnectBase() {
-      const devices = await navigator.hid.getDevices();
-      if (devices.length && !devices[0].opened) {
-        const device = devices[0];
-        setBase(device);
-        try {
-          await device.open();
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    }
-    reconnectBase();
+    reconnectBase(setBase);
   }, []);
 
   useEffect(() => {
-    setEditPopup(null);
+    setGlobalPopup(null);
     if (
       navigator.userAgent.indexOf("Safari") != -1 &&
       navigator.userAgent.indexOf("Chrome") == -1
@@ -111,9 +107,10 @@ function OverView() {
     await axios
       .get(`${server}/${role.toLowerCase()}/${location.state.email}`)
       .then((res) => {
+        if (!sessionValid(res, setGlobalPopup)) return;
         history = res.data.data.history;
       });
-
+    if (!history) return;
     const semesterList = [];
 
     for (let semester in history) {
@@ -126,6 +123,7 @@ function OverView() {
         await axios
           .get(`${server}/course/${history[semester][i]}`)
           .then((res) => {
+            if (!sessionValid(res, setGlobalPopup)) return;
             const course = res.data.data;
             const popup = (
               <Overlay
@@ -149,7 +147,7 @@ function OverView() {
                     ? `${course.SISId} (${course.section})`
                     : `Section ${course.section}`
                 }
-                onEdit={() => setEditPopup(popup)}
+                onEdit={() => setGlobalPopup(popup)}
                 onClick={() => {
                   handleViewClass(
                     course.name,
@@ -176,29 +174,32 @@ function OverView() {
     return semesterList;
   }
 
+  async function loadContent(role) {
+    const container = document.querySelector(".semester-container");
+    const semesterList = await populateCourseCards(role);
+    await pause(250);
+    container.style.opacity = 0;
+    await pause(150);
+    setCards(semesterList);
+    container.style.opacity = 1;
+    container.style.pointerEvents = "all";
+    setLoaded(true);
+  }
+
   function studentContent() {
     useEffect(() => {
-      const container = document.querySelector(".semester-container");
-      async function loadContent() {
-        const semesterList = await populateCourseCards("STUDENT");
-        await pause(250);
-        container.style.opacity = 0;
-        await pause(100);
-        setCards(semesterList);
-        container.style.opacity = 1;
-      }
-      loadContent();
+      loadContent("STUDENT");
     }, [refresh]);
 
     useEffect(() => {
-      if (editPopup) {
-        openPopup(editPopup.key);
+      if (globalPopup) {
+        openPopup(globalPopup.key);
       }
-    }, [editPopup]);
+    }, [globalPopup]);
 
     return (
       <div className={cards ? "" : "d-flex fill-centered"}>
-        {editPopup}
+        {globalPopup}
         {cards ? null : <EmptyOverview student />}
         <div className="semester-container">{cards}</div>
       </div>
@@ -207,29 +208,19 @@ function OverView() {
 
   function instructorContent() {
     useEffect(() => {
-      const container = document.querySelector(".semester-container");
-      async function loadContent() {
-        const semesterList = await populateCourseCards("INSTRUCTOR");
-        await pause(250);
-        container.style.opacity = 0;
-        await pause(100);
-        setCards(semesterList);
-        container.style.opacity = 1;
-        container.style.pointerEvents = "all";
-      }
-      loadContent();
+      loadContent("INSTRUCTOR");
     }, [refresh]);
 
     useEffect(() => {
-      if (editPopup) {
-        openPopup(editPopup.key);
+      if (globalPopup) {
+        openPopup(globalPopup.key);
       }
-    }, [editPopup]);
+    }, [globalPopup]);
 
     return (
       <div style={{ height: "100%" }}>
         <InstructorScreenAlert />
-        {editPopup}
+        {globalPopup}
         {cards ? null : <EmptyOverview />}
         <div className="semester-container">{cards}</div>
       </div>
@@ -241,9 +232,11 @@ function OverView() {
   ) : (
     <div>
       <title>Your Courses | Eligo</title>
-      {location.state.permission === "STUDENT" ? null : (
-        <FloatingButton base={base} onClick={() => loadBase()} bottom />
-      )}
+      {location.state.permission === "STUDENT"
+        ? null
+        : loaded && (
+            <FloatingButton base={base} onClick={() => loadBase()} bottom />
+          )}
       <div className="overview-wrapper">
         <Menu
           popup={

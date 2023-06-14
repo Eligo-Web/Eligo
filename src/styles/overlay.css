@@ -16,6 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+body {
+  --open-bezier: 0.5s cubic-bezier(0.5, 0.05, 0, 1);
+  --close-bezier: 0.5s cubic-bezier(0.7, 0, 0.5, 1);
+}
+
 .overlay {
   display: flex;
   height: 100vh;
@@ -35,7 +40,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: 0.5s cubic-bezier(0.5, 0.05, 0, 1);
+  transition: var(--open-bezier);
   overflow: hidden;
 }
 
@@ -48,18 +53,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   height: 100%;
   background-color: #032a4a77;
   opacity: 0;
-  transition: 0.5s cubic-bezier(0.5, 0.05, 0, 1);
+  transition: var(--open-bezier);
 }
 
 .menu {
-  left: -18rem;
-  width: 18rem;
+  --menu-shadow: 0.5rem 0 2rem rgba(5, 32, 65, 0.15);
+  right: 100%;
+  min-width: 18rem;
+  width: fit-content;
   height: 100%;
   overflow: hidden;
   background: linear-gradient(163.19deg, #b8e3fb -8.42%, #80a7e1 189.03%);
-  box-shadow: 0.5rem 0 2rem rgba(5, 32, 65, 0.15);
   align-content: space-between;
-  transition: 0.5s cubic-bezier(0.5, 0.05, 0, 1);
   display: grid;
   position: fixed;
 }
@@ -74,7 +79,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .menu-overlay-back {
-  align-self: center;
+  position: absolute;
   padding: 1rem;
 }
 
@@ -87,6 +92,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
   max-width: 100%;
   max-height: fit-content;
+  width: min-content;
   height: auto;
   opacity: 0;
 
@@ -127,7 +133,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   gap: 1rem;
 }
 
-.join-ss-width,
+.alert-width,
+.join-session-width,
 .join-class-width {
   width: 27rem !important;
 }
@@ -145,7 +152,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  padding-left: 1.5rem;
+  padding-left: 1rem;
   min-width: 0;
 }
 
@@ -196,6 +203,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 .input-error {
   mix-blend-mode: normal;
   color: #213d67;
+  --tooltip-show: 0;
+  --tooltip-point: none;
+  --icon-color: #ac494b;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  position: relative;
 }
 
 .form-control,
@@ -229,7 +246,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 .form-control:focus,
 .form-select:focus {
   background-color: #d6e3fb;
-  border-color: rgb(83, 97, 119);
+  border-color: #344155;
 }
 
 .form-select,
@@ -253,30 +270,35 @@ select {
 .field-error,
 .field-error:focus {
   background-color: #ffe6e9;
-  border-color: #e8321e98;
   color: #600000 !important;
+  border-color: #e8321e98;
   padding-right: 2.1rem;
 }
 
-.input-error:hover .input-error-icon {
-  color: #d59999eb;
+.field-error:focus {
+  background-color: #faf2f3;
+  border-color: #9e1102b4;
+}
+
+.input-error-icon path {
+  pointer-events: none;
 }
 
 .input-error-icon {
-  position: absolute;
-  transition: 0.1s ease;
   z-index: 1;
-  right: 0.6rem;
-  bottom: 0.58rem;
-  color: #a33a3aeb;
-  padding-left: 0.3rem;
+  height: 100%;
   width: 1.7rem;
+  right: 0.6rem;
+  color: var(--icon-color);
+  position: absolute;
+  padding-left: 0.3rem;
+  transition: 0.1s ease;
 }
 
 .field-error::placeholder,
 .field-error:hover::placeholder,
 .field-error:focus::placeholder {
-  color: #6000009e !important;
+  color: #90000090 !important;
   opacity: 100% !important;
 }
 

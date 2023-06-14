@@ -18,12 +18,12 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { server } from "../ServerUrl";
-import { EditPopupContext } from "../containers/InAppContainer";
+import { GlobalPopupContext } from "../containers/InAppContainer";
 import "../styles/newpoll.css";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField, { SelectField } from "./InputField";
 import { FloatError } from "./Popups";
-import pause, { closePopup } from "./Utils";
+import pause, { closePopup, toCourseID_JHU } from "./Utils";
 
 function toSectionId(name, section, semester) {
   const idStr = `${name}~${section}~${semester}`;
@@ -70,8 +70,10 @@ function CreateOrEditClass(props) {
   const [showError, setShowError] = useState(false);
   const [refresh, setRefresh] = [props.refresh, props.setRefresh];
   const [saving, setSaving] = useState(false);
-  const [popup, setPopup] = useContext(EditPopupContext);
+  const [popup, setPopup] = useContext(GlobalPopupContext);
   const validCharset = /^[^~]*$/;
+  const validSISId = /^[A-Z]{2}\.\d{3}\.\d{3}$/;
+  const posInt = /^\d+$/;
   const location = useLocation();
   const popupName = props.editMode
     ? toSectionId(props.name, props.section, props.semester)
@@ -79,7 +81,6 @@ function CreateOrEditClass(props) {
   const [nameInputErr, setNameInputErr] = useState("");
   const [sisIDInputErr, setSisIDInputErr] = useState("");
   const [sectionInputErr, setSectionInputErr] = useState("");
-  let valid = true;
 
   useEffect(() => {
     if (props.editMode) return;
@@ -100,6 +101,20 @@ function CreateOrEditClass(props) {
       handleDelete();
     }
   }, [props.confirmDelete]);
+
+  useEffect(() => {
+    if (name) checkName();
+  }, [name]);
+
+  useEffect(() => {
+    if (section) checkSection();
+  }, [section]);
+
+  useEffect(() => {
+    if (sisId.length === 10 || !sisId) {
+      checkSisId();
+    }
+  }, [sisId]);
 
   const handleKeyPresses = (event) => {
     switch (event.key) {
@@ -153,13 +168,12 @@ function CreateOrEditClass(props) {
     closePopup(popupName, setPopup);
   }
 
-  function paramsValid() {
-    const overlay = document.getElementById(popupName);
+  function checkName(overlay) {
+    if (!overlay) {
+      overlay = document.getElementById(popupName);
+    }
     const nameField = overlay.querySelector(".name-input");
-    const sectionField = overlay.querySelector(".section-input");
-    const sisIdField = overlay.querySelector(".sis-id-input");
-    valid = true;
-
+    let valid = true;
     if (!name) {
       setNameInputErr("• Required field");
       nameField.parentNode.parentNode.className += " input-error";
@@ -175,14 +189,22 @@ function CreateOrEditClass(props) {
       nameField.parentNode.parentNode.className = "input-field";
       nameField.className = "name-input form-control";
     }
+    return valid;
+  }
 
+  function checkSection(overlay) {
+    if (!overlay) {
+      overlay = document.getElementById(popupName);
+    }
+    const sectionField = overlay.querySelector(".section-input");
+    let valid = true;
     if (!section) {
       setSectionInputErr("• Required field");
       sectionField.parentNode.parentNode.className += " input-error";
       sectionField.className += " field-error";
       valid = false;
-    } else if (isNaN(section) || section < 1) {
-      setSectionInputErr("• Invalid section");
+    } else if (!posInt.test(section) || section < 1) {
+      setSectionInputErr("• Invalid section number");
       sectionField.parentNode.parentNode.className += " input-error";
       sectionField.className += " field-error";
       valid = false;
@@ -191,8 +213,16 @@ function CreateOrEditClass(props) {
       sectionField.parentNode.parentNode.className = "input-field-small";
       sectionField.className = "section-input form-control";
     }
+    return valid;
+  }
 
-    if (sisId && !/^[A-Z]{2}\.\d{3}\.\d{3}$/.test(sisId)) {
+  function checkSisId(overlay) {
+    if (!overlay) {
+      overlay = document.getElementById(popupName);
+    }
+    const sisIdField = overlay.querySelector(".sis-id-input");
+    let valid = true;
+    if (sisId && !validSISId.test(sisId)) {
       setSisIDInputErr("• Invalid format");
       sisIdField.parentNode.parentNode.className += " input-error";
       sisIdField.className += " field-error";
@@ -203,6 +233,14 @@ function CreateOrEditClass(props) {
       sisIdField.className = "sis-id-input form-control";
     }
     return valid;
+  }
+
+  function paramsValid() {
+    const overlay = document.getElementById(popupName);
+    const valid1 = checkName(overlay);
+    const valid2 = checkSection(overlay);
+    const valid3 = checkSisId(overlay);
+    return valid1 && valid2 && valid3;
   }
 
   async function handleSaveCreate() {
@@ -365,7 +403,17 @@ function CreateOrEditClass(props) {
           label="Course ID (opt.)"
           input="ex: AB.123.456"
           default={props.sisId || ""}
-          onChange={(e) => setSISId(e.target.value.toUpperCase())}
+          onChange={(e) => {
+            let str = e.target.value;
+            const lastChar = sisId.slice(-1);
+            if (e.nativeEvent.data) {
+              str = toCourseID_JHU(str);
+            } else if (lastChar === ".") {
+              str = str.slice(0, -1);
+            }
+            e.target.value = str;
+            setSISId(str);
+          }}
           style={{ textTransform: "uppercase" }}
           errorState={sisIDInputErr}
         />

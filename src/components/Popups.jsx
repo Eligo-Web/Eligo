@@ -19,7 +19,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { server } from "../ServerUrl";
-import { EditPopupContext } from "../containers/InAppContainer";
+import { GlobalPopupContext } from "../containers/InAppContainer";
 import "../styles/newpoll.css";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import InputField from "./InputField";
@@ -91,7 +91,7 @@ export function JoinSession(props) {
   const [passInputError, setpassInputError] = useState("");
   const [showError, setShowError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [popup, setPopup] = useContext(EditPopupContext);
+  const [popup, setPopup] = useContext(GlobalPopupContext);
   const navigate = useNavigate();
   const control = props.control;
   props = props.childProps;
@@ -102,7 +102,7 @@ export function JoinSession(props) {
 
   function getKmDistanceFromCoords(lat1, long1, lat2, long2) {
     let R = 6371; // Radius of the earth in km
-    let dLat = deg2rad(lat2 - lat1); // deg2rad below
+    let dLat = deg2rad(lat2 - lat1); // get radians
     let dLong = deg2rad(long2 - long1);
     let a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -258,7 +258,7 @@ export function JoinSession(props) {
 
   return (
     <div
-      className="pop-up-content join-ss-width"
+      className="pop-up-content join-session-width"
       id="content-join-session-popup"
       onKeyDown={handleKeyPresses}
     >
@@ -266,11 +266,8 @@ export function JoinSession(props) {
         class="passcode-input"
         label="Passcode"
         input="ex: 1234"
-        onChange={(e) => {
-          setPasscode(e.target.value);
-        }}
+        onChange={(e) => setPasscode(e.target.value)}
         errorState={passInputError}
-        type="password"
       />
       <FloatError msg={showError} />
       <div className="button-row">
@@ -413,6 +410,27 @@ export function JoinClass(props) {
           loading={loading}
         />
       </div>
+    </div>
+  );
+}
+
+export function SessionExpired(props) {
+  const navigate = useNavigate();
+  return (
+    <div className="pop-up-content hug">
+      <div
+        className="flex-center gap-2 error-banner"
+        style={{ margin: "0 1rem", whiteSpace: "nowrap" }}
+      >
+        <IconAlertTriangleFilled />
+        Your session has timed out. Please log back in.
+      </div>
+      <PrimaryButton
+        label="Ok"
+        onClick={() => {
+          navigate("/signin");
+        }}
+      />
     </div>
   );
 }

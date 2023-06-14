@@ -26,6 +26,15 @@ body {
     #aed6fb 0%,
     #6a86ce 100%
   );
+  --loading-card-shimmer: linear-gradient(
+      to right,
+      #c7d3ea 0%,
+      #808080 10%,
+      #afc1e4 20%,
+      #afc1e4 50%,
+      #afc1e4 85%,
+      #c7d3ea 100%
+    ) -100vw 0 / 200vw 100vh #fff;
   background: var(--body-bg);
   overflow-y: overlay;
   min-height: 70vh;
@@ -37,13 +46,28 @@ body {
   }
 }
 
+font {
+  vertical-align: unset !important;
+}
+
 svg {
   flex-shrink: 0;
+}
+
+.hug {
+  width: 100% !important;
+  max-width: max-content !important;
 }
 
 .fill-centered {
   width: 100%;
   height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-center {
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -180,11 +204,11 @@ svg {
 }
 
 .divisor-blank {
-  background-color: transparent;
-  min-width: 100%;
-  height: 2.2rem;
-  margin: 0.4rem 0;
+  min-width: 20rem;
+  height: 1.5rem;
+  margin: 0.8rem calc(100% - 20rem) 0.7rem 0;
   border-radius: 1rem;
+  opacity: 90%;
 }
 
 .error-banner {
@@ -207,7 +231,7 @@ svg {
   background-color: #a3c2ea;
   transition: 0.1s ease-in-out;
   box-shadow: 0 0.5rem 2rem rgba(5, 32, 65, 0.15);
-  border-radius: 5rem;
+  border-radius: 2rem;
   margin: 1rem 0;
 }
 
@@ -229,8 +253,27 @@ svg {
   overflow: hidden;
 }
 
+.loading .card,
+.divisor-blank {
+  background-attachment: fixed !important;
+  background: var(--loading-card-shimmer);
+  animation: shimmer 1s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -50vw 0;
+  }
+  45% {
+    background-position: 150vw 0;
+  }
+  100% {
+    background-position: 150vw 0;
+  }
+}
+
 .vote-btn {
-  color: hsl(212, 100%, 3%, 0.75);
+  color: hsl(211, 100%, 3%, 0.75);
 }
 
 .form-control {
@@ -251,7 +294,7 @@ svg {
   display: flex;
   height: inherit;
   align-items: center;
-  margin-right: auto;
+  margin: auto;
 }
 
 .poll-card-title {
@@ -266,18 +309,23 @@ svg {
 .session-card-subtitle {
   display: flex;
   max-width: fit-content;
-  padding-right: 0.1rem;
+  padding: 0.5rem 0.1rem;
   justify-content: end;
   align-items: center;
   text-align: right;
   font-weight: 600;
   gap: 0.5rem;
+  flex: 2;
 }
 
-.btn:hover .tooltip,
-.input-error:hover .err-tooltip {
+.btn:hover .tooltip {
   opacity: 100%;
   pointer-events: all;
+}
+
+.err-tooltip {
+  opacity: var(--tooltip-show);
+  pointer-events: var(--tooltip-point) !important;
 }
 
 .tooltip-TR {
@@ -356,10 +404,18 @@ svg {
   z-index: 5;
 }
 
-@media screen and (max-width: 30rem) {
+@media screen and (max-width: 33rem) {
   .screen-alert-wrapper {
     opacity: 100% !important;
     pointer-events: all !important;
+  }
+}
+
+@media screen and (max-width: 30rem) {
+  .floating-banner {
+    gap: 1rem;
+    max-width: 90%;
+    padding-right: 1.8rem;
   }
 }
 
@@ -395,7 +451,7 @@ svg {
 }
 
 /* Firefox special case */
-div {
+html {
   scrollbar-color: #0e215270 transparent;
   scrollbar-width: auto;
 }

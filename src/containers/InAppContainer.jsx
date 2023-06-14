@@ -25,17 +25,17 @@ import Roster from "../pages/Roster";
 import SessionView from "../pages/SessionView";
 
 export const ClickerContext = createContext(null);
-export const EditPopupContext = createContext(null);
+export const GlobalPopupContext = createContext(null);
 export const NewPollContext = createContext(null);
 
 function InAppContainer() {
   const [base, setBase] = useState(null);
-  const [editPopup, setEditPopup] = useState(null);
+  const [globalPopup, setGlobalPopup] = useState(null);
   const [pollWinInfo, setPollWinInfo] = useState(null);
 
   return (
     <ClickerContext.Provider value={[base, setBase]}>
-      <EditPopupContext.Provider value={[editPopup, setEditPopup]}>
+      <GlobalPopupContext.Provider value={[globalPopup, setGlobalPopup]}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/overview" element={<Overview />} />
@@ -52,7 +52,7 @@ function InAppContainer() {
           <Route path="/roster" element={<Roster />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      </EditPopupContext.Provider>
+      </GlobalPopupContext.Provider>
     </ClickerContext.Provider>
   );
 }

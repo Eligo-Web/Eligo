@@ -19,7 +19,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import { server } from "../ServerUrl";
-import { EditPopupContext } from "../containers/InAppContainer";
+import { GlobalPopupContext } from "../containers/InAppContainer";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { FloatError } from "./Popups";
@@ -61,7 +61,7 @@ function CreateOrEditSession(props) {
   );
   const [locError, setLocError] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [popup, setPopup] = useContext(EditPopupContext);
+  const [popup, setPopup] = useContext(GlobalPopupContext);
   const timeStamp = props.id.replace("session-", "");
   const popupId = `content-${props.id}-popup`;
 
@@ -234,6 +234,11 @@ function CreateOrEditSession(props) {
           disabled={props.editMode}
         />
         <div className="location-switch-info d-grid">
+          <div className="location-tooltip">
+            When enabled, students must enable location services to join the
+            session. You can access their location by downloading the session
+            data.
+          </div>
           <IconInfoCircle size="1.1em" stroke="0.14rem" />
         </div>
       </div>

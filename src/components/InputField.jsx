@@ -38,7 +38,7 @@ export default function InputField(props) {
         {props.label || "Title Text"}
         {props.disabled && <IconLock size="1em" stroke="0.15rem" />}
       </div>
-      <div className="d-flex flex-row align-content-center">
+      <div className="form-wrapper">
         <Form.Control
           className={props.class}
           placeholder={props.input || "Placeholder Text"}
@@ -62,13 +62,48 @@ export default function InputField(props) {
         {props.errorState && (
           <IconAlertCircle
             className="input-error-icon"
-            size="1.2em"
-            stroke="0.15rem"
+            size="1.25em"
+            stroke="0.17rem"
+            onMouseOver={(event) => {
+              const field = event.target.parentNode.parentNode;
+              if (field) {
+                field.style.setProperty("--tooltip-point", "all");
+                field.style.setProperty("--tooltip-show", "100%");
+                field.style.setProperty("--icon-color", "#d59999eb");
+              }
+            }}
+            onMouseLeave={(event) => {
+              const field = event.target.parentNode.parentNode;
+              if (field) {
+                field.style.setProperty("--tooltip-point", "none");
+                field.style.setProperty("--tooltip-show", 0);
+                field.style.setProperty("--icon-color", "#ac494b");
+              }
+            }}
           />
         )}
       </div>
       {props.errorState && (
-        <Tooltip className="err-tooltip" txt={props.errorState} />
+        <Tooltip
+          className="err-tooltip"
+          txt={props.errorState}
+          onMouseOver={(event) => {
+            const field = event.target.parentNode;
+            if (field) {
+              field.style.setProperty("--tooltip-point", "all");
+              field.style.setProperty("--tooltip-show", "100%");
+              field.style.setProperty("--icon-color", "#d59999eb");
+            }
+          }}
+          onMouseLeave={(event) => {
+            const field = event.target.parentNode;
+            if (field) {
+              field.style.setProperty("--tooltip-point", "none");
+              field.style.setProperty("--tooltip-show", 0);
+              field.style.setProperty("--icon-color", "#ac494b");
+            }
+          }}
+        />
       )}
     </div>
   );
@@ -96,8 +131,9 @@ export function SelectField(props) {
   return (
     <div className={props.section ? "input-field-small" : "input-field"}>
       {props.label || "Title Text"}
-      <div className="d-flex flex-row align-content-center">
+      <div className="form-wrapper">
         <Form.Select
+          name={props.class}
           className={props.class}
           placeholder="Select Semester"
           defaultValue={props.default || options[0]}

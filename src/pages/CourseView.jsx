@@ -43,8 +43,13 @@ import pause, {
   displayMessage,
   encodeEmail,
   openPopup,
+  reconnectBase,
+  sessionValid,
 } from "../components/Utils";
-import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
+import {
+  ClickerContext,
+  GlobalPopupContext,
+} from "../containers/InAppContainer";
 import "../styles/cards.css";
 
 function CourseView() {
@@ -54,7 +59,7 @@ function CourseView() {
   const [hideLabels, setHideLabels] = useState(window.innerWidth < 650);
   const [refresh, setRefresh] = useState(false);
   const [base, setBase] = useContext(ClickerContext);
-  const [editPopup, setEditPopup] = useContext(EditPopupContext);
+  const [globalPopup, setGlobalPopup] = useContext(GlobalPopupContext);
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
@@ -74,7 +79,7 @@ function CourseView() {
   }
 
   useEffect(() => {
-    setEditPopup(null);
+    setGlobalPopup(null);
     if (
       navigator.userAgent.indexOf("Safari") != -1 &&
       navigator.userAgent.indexOf("Chrome") == -1
@@ -89,26 +94,14 @@ function CourseView() {
 
   useEffect(() => {
     if (!navigator.hid) return;
-    async function reconnectBase() {
-      const devices = await navigator.hid.getDevices();
-      if (devices.length && !devices[0].opened) {
-        const device = devices[0];
-        setBase(device);
-        try {
-          await device.open();
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    }
-    reconnectBase();
+    reconnectBase(setBase);
   }, []);
 
   useEffect(() => {
-    if (editPopup) {
-      openPopup(editPopup.key);
+    if (globalPopup) {
+      openPopup(globalPopup.key);
     }
-  }, [editPopup]);
+  }, [globalPopup]);
 
   window.onresize = function () {
     setHideLabels(window.innerWidth < 650);
@@ -161,6 +154,7 @@ function CourseView() {
     await axios
       .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
+        if (!sessionValid(res, setGlobalPopup)) return;
         students = res.data.data.students;
       });
 
@@ -184,9 +178,11 @@ function CourseView() {
     await axios
       .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
+        if (!sessionValid(res, setGlobalPopup)) return;
         courseSessions = res.data.data.sessions;
         courseSessions = toMap(courseSessions).sort();
       });
+    if (!courseSessions) return;
     const sessionList = [];
 
     for (let [weekNum, week] of courseSessions) {
@@ -219,7 +215,7 @@ function CourseView() {
             id={id}
             title={session.name}
             active={session.active}
-            onEdit={() => setEditPopup(popup)}
+            onEdit={() => setGlobalPopup(popup)}
             onClick={() => handleViewSession(id, session, weekNum)}
           />
         );
@@ -272,6 +268,7 @@ function CourseView() {
       await axios
         .get(`${server}/course/${location.state.sectionId}/${getWeekNumber()}`)
         .then(async (res) => {
+          if (!sessionValid(res, setGlobalPopup)) return;
           const session = res.data.data;
           if (session) {
             if (
@@ -309,7 +306,7 @@ function CourseView() {
               weekNum: getWeekNumber(),
               clickerId: location.state.clickerId,
             };
-            setEditPopup(
+            setGlobalPopup(
               <Overlay
                 key="join-session"
                 title="Join Session"
@@ -330,11 +327,14 @@ function CourseView() {
 
     return (
       <div className="d-flex flex-column ">
-        {editPopup}
+        {globalPopup}
         {backButton}
         <div className="card-wrapper-student">
           <div className="img-container" style={{ padding: "3rem 0" }}>
-            <img src={waitingCourseImg} className="waiting-state-img" />
+            <div
+              style={{ background: `url(${waitingCourseImg}) no-repeat` }}
+              className="waiting-state-img"
+            />
             <div className="blank-state-msg m-1">
               {joining
                 ? `Please wait. Joining "${joining}"...`
@@ -348,7 +348,7 @@ function CourseView() {
                 className="large-title"
                 onClick={() => {
                   sessionOpen
-                    ? setEditPopup(
+                    ? setGlobalPopup(
                         <Overlay
                           key="join-session"
                           title="Join Session"
@@ -371,6 +371,7 @@ function CourseView() {
 
   function instructorContent() {
     const [cards, setCards] = useState(<LoadingCourseView />);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
       const container = document.querySelector(".semester-container");
@@ -378,9 +379,10 @@ function CourseView() {
         const sessionList = await populateSessionCards("INSTRUCTOR");
         await pause(250);
         container.style.opacity = 0;
-        await pause(100);
+        await pause(150);
         setCards(sessionList);
         container.style.opacity = 1;
+        setLoaded(true);
       }
       loadContent();
     }, [refresh]);
@@ -389,8 +391,8 @@ function CourseView() {
       <div className="d-flex flex-column ">
         <InstructorScreenAlert />
         {backButton}
-        {editPopup}
-        <FloatingButton base={base} onClick={() => loadBase()} />
+        {globalPopup}
+        {loaded && <FloatingButton base={base} onClick={() => loadBase()} />}
         <div className="card-wrapper">
           {cards ? null : <EmptyCourseView />}
           <div className="semester-container">{cards}</div>
@@ -410,7 +412,7 @@ function CourseView() {
             label="Create Session"
             icon={<IoMdAddCircleOutline size="1.7em" />}
             onClick={() =>
-              setEditPopup(
+              setGlobalPopup(
                 <Overlay
                   key="create-session"
                   title="Create Session"

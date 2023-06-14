@@ -27,7 +27,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { server } from "../ServerUrl";
 import logo from "../assets/eligo-logo.svg";
 import * as clicker from "../components/ClickerBase";
-import { ClickerContext, EditPopupContext } from "../containers/InAppContainer";
+import {
+  ClickerContext,
+  GlobalPopupContext,
+} from "../containers/InAppContainer";
 import "../styles/buttons.css";
 import "../styles/overlay.css";
 import "../styles/text.css";
@@ -41,7 +44,7 @@ function Menu(props) {
   const [clickerId, setClickerId] = useState(location.state.clickerId || "");
   const [showError, setShowError] = useState(false);
   const [base, setBase] = useContext(ClickerContext);
-  const [popup, setPopup] = useContext(EditPopupContext);
+  const [popup, setPopup] = useContext(GlobalPopupContext);
   const [baseButton, setBaseButton] = useState(null);
   let getLabel = "Join Class";
   if (location.state.permission === "INSTRUCTOR") {
@@ -81,16 +84,20 @@ function Menu(props) {
     }
   }
 
-  function closeMenu() {
+  async function closeMenu() {
     const menuContainer = document.getElementById("side-menu");
     const menuBG = menuContainer.querySelector(".overlay-bg");
     const menu = menuContainer.querySelector(".menu");
     menuBG.style.pointerEvents = "none";
     menuBG.style.opacity = 0;
-    menuBG.style.transition = "0.5s cubic-bezier(0.7, 0, 0.5, 1)";
-    menu.style.transition = "0.5s cubic-bezier(0.7, 0, 0.5, 1)";
-    menu.style.transform = "translate(-18rem,0)";
-    pause(10).then(() => (document.body.style.overflowY = "overlay"));
+    menuBG.style.transition = "var(--close-bezier)";
+    menu.style.transition = "var(--close-bezier)";
+    menu.style.transform = "translate(0, 0)";
+    menu.style.boxShadow = "none";
+    await pause(10);
+    document.body.style.overflowY = "overlay";
+    menu.style.left = "unset";
+    menu.style.right = "100%";
   }
 
   async function handleSignOut() {

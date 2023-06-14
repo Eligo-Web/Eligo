@@ -31,10 +31,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 .empty-state-img,
 .waiting-state-img {
   flex-shrink: 0;
-  object-fit: cover;
+  background-size: contain !important;
+  background-position: center !important;
   overflow: hidden;
-  max-width: 80%;
-  max-height: 75%;
+  width: 80%;
+  height: 75%;
   vertical-align: bottom;
   opacity: 75%;
 }

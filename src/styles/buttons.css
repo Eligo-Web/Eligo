@@ -57,6 +57,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   justify-content: flex-start;
   gap: 1.5rem;
   padding: 0.5rem 1.2rem;
+  padding-right: 1.6rem;
   border-radius: 1rem;
 }
 
@@ -330,8 +331,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   padding: 0.5rem;
   bottom: 0.5rem;
   right: 0.5rem;
-  z-index: 5;
   opacity: 75%;
+  z-index: 5;
 }
 
 .session-edit-button {
@@ -348,12 +349,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 .edit-button:hover,
 .session-edit-button:hover {
   background: #10294650;
+  transform: scale(1.04);
 }
 
 .edit-button:active,
 .session-edit-button:active {
   opacity: 100%;
   background: #071f3a5f;
+  transform: scale(1.1);
 }
 
 .connect-base-btn {
@@ -369,7 +372,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   padding: 0.7rem 1.1rem;
   border-radius: 5rem;
   border: 0.25rem solid transparent;
-  box-shadow: 0 0.1rem 0.3rem #05204116;
+  box-shadow: 0 0.3rem 0.9rem #05204116;
   pointer-events: none;
   cursor: pointer;
   opacity: 0;
@@ -377,9 +380,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 .connect-base-btn:hover,
 .connect-base-btn:focus {
-  box-shadow: 0 0.6rem 1.2rem #05204116;
+  box-shadow: 0 1rem 2rem #05204116;
   background-color: #ffeed6;
   border-color: #ffffffde;
+  transform: scale(1.01);
 }
 
 .connect-base-btn:active {
@@ -456,7 +460,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   transition: inherit;
 }
 
+.form-check-input:checked:hover {
+  background-color: #162b42 !important;
+}
+
 .form-check-input:disabled ~ .form-check-label {
+  pointer-events: none;
   opacity: 100%;
 }
 
@@ -477,14 +486,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   color: #22384fb4;
 }
 
-.location-switch-info::before {
-  content: "When enabled, students must enable location services to join the session. You can access their location by downloading the session data.";
+.location-switch-info .location-tooltip {
   position: absolute;
   background: #16232e;
   overflow: hidden;
   font-size: 0.9rem;
   font-weight: 400;
-  width: 20rem;
+  width: min(100vw - 20.5rem, 20rem);
   color: #f2f8ff;
   border-radius: 1rem 1rem 1rem 0.2rem;
   box-shadow: 0 0.5rem 1rem #05204128;
@@ -496,7 +504,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   opacity: 0;
 }
 
-.location-switch-info:hover::before {
+.location-switch-info:hover .location-tooltip {
   pointer-events: all;
   opacity: 100%;
 }

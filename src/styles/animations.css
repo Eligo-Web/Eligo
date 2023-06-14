@@ -33,49 +33,41 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /* loading ellipse dots */
 .loading-ellipse {
   position: relative;
+  margin: calc((1.95rem - 0.8rem) / 2) 0;
+  animation: flash-dot 0.3s infinite alternate ease;
+  animation-delay: 0.15s;
+}
+.loading-ellipse,
+.loading-ellipse::before,
+.loading-ellipse::after {
   width: 0.8rem;
   height: 0.8rem;
-  margin: calc((1.95rem - 0.8rem) / 2) 0;
   border-radius: 5rem;
-  background-color: #003c0a;
-  color: #003c0a;
-  animation: flash-dot 0.3s infinite linear alternate;
-  animation-delay: 0.15s;
+  background: #113b1889;
 }
 .loading-ellipse::before,
 .loading-ellipse::after {
   content: "";
+  animation: flash-dot 0.3s infinite alternate ease;
   display: inline-block;
   position: absolute;
   top: 0;
 }
 .loading-ellipse::before {
   left: -1.4rem;
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 5rem;
-  background-color: #003c0a;
-  color: #003c0a;
-  animation: flash-dot 0.3s infinite alternate;
   animation-delay: 0s;
 }
 .loading-ellipse::after {
   left: 1.4rem;
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 5rem;
-  background-color: #003c0a;
-  color: #003c0a;
-  animation: flash-dot 0.3s infinite alternate;
   animation-delay: 0.3s;
 }
 
 @keyframes flash-dot {
   0% {
-    background-color: #003c0a;
+    background: #003c0a;
   }
   40%,
   100% {
-    background-color: #113b1889;
+    background: #113b1889;
   }
 }

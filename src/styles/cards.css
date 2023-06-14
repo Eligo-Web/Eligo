@@ -200,6 +200,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   border-bottom: 0.18rem solid #3d5d8457;
 }
 
+.transparent {
+  opacity: 0 !important;
+}
+
 .vote-btn-container {
   transition: 0.1s ease-in-out;
   display: flex;
@@ -235,13 +239,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   flex: 1;
 }
 
+@media screen and (max-width: 40rem) {
+  .poll-card-container > * {
+    flex: 0 calc((100% / 3) - 0.4rem);
+  }
+}
+
 @media screen and (max-width: 35rem) {
   .card-container > * {
     flex: 0 100%;
-  }
-
-  .poll-card-container > * {
-    flex: 0 calc((100% / 3) - 0.4rem);
   }
 
   .vote-btn-container {
@@ -251,18 +257,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
   .vote-button {
     width: 100%;
-  }
-}
-
-@media screen and (max-width: 25rem) {
-  .poll-card-container > * {
-    flex: 0 calc(50% - 0.3rem);
-  }
-}
-
-@media screen and (max-width: 15rem) {
-  .poll-card-container > * {
-    flex: 0 100%;
   }
 }
 

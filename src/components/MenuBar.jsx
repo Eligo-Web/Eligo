@@ -43,16 +43,21 @@ function MenuBar(props) {
     const menu = menuContainer.querySelector(".menu");
     menuBG.style.pointerEvents = "all";
     menuBG.style.opacity = 1;
-    menuBG.style.transition = "0.5s cubic-bezier(0.5, 0.05, 0, 1)";
-    menu.style.transition = "0.5s cubic-bezier(0.5, 0.05, 0, 1)";
-    menu.style.transform = "translate(18rem,0)";
+    menuBG.style.transition = "var(--open-bezier)";
+    menu.style.transition = "var(--open-bezier)";
+    menu.style.transform = `translate(${menu.clientWidth}px, 0)`;
+    menu.style.boxShadow = "var(--menu-shadow)";
+    menu.style.left = `-${menu.clientWidth}px`;
+    menu.style.right = "unset";
   }
 
   function copyDescription() {
     if (props.clickable) {
       try {
+        const chip = document.querySelector(".copy-success");
+        const width = chip.children[0].clientWidth;
         navigator.clipboard.writeText(props.description);
-        setCopied(true);
+        setCopied(width);
         setTimeout(() => setCopied(false), 5000);
       } catch (err) {
         console.error("Failed to copy!", err);
@@ -79,14 +84,13 @@ function MenuBar(props) {
                 className="copy-success"
                 style={{
                   opacity: copied ? "100%" : 0,
-                  width: copied ? "8.8rem" : 0,
+                  width: copied ? `calc(${copied}px + 4.4rem)` : 0,
                 }}
               >
-                Copied!
+                <span>Copied!</span>
                 <IconCheck
                   stroke="0.16rem"
-                  style={{ flexShrink: 0 }}
-                  alt="Icon indicator of successful copy"
+                  alt="Successfully copied to clipboard"
                 />
               </div>
             )}

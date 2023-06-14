@@ -33,7 +33,7 @@ import Papa from "papaparse";
 import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { server } from "../ServerUrl";
-import { EditPopupContext } from "../containers/InAppContainer";
+import { GlobalPopupContext } from "../containers/InAppContainer";
 import "../styles/animations.css";
 import "../styles/newpoll.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
@@ -281,8 +281,10 @@ export default function InstructorPoll() {
     await baseEndPoll();
   }
 
-  window.onload = function () {
+  window.onload = async function () {
     if (window["name"] === "New Poll") {
+      resizeToContent();
+      await pause(50);
       resizeToContent();
     }
   };
@@ -320,7 +322,7 @@ export default function InstructorPoll() {
               {numResponses}
             </div>
             <Stopwatch running={running} setRunning={setRunning} />
-            {showChart ? (
+            {showChart && !justOpened ? (
               <IconChartBarOff
                 className="data-chart"
                 size="2.8rem"
@@ -331,6 +333,8 @@ export default function InstructorPoll() {
                 className="data-chart"
                 size="2.8rem"
                 onClick={() => setShowChart(!showChart)}
+                pointerEvents={justOpened ? "none" : "all"}
+                color={justOpened ? "#6e727b" : "#1b2543"}
               />
             )}
             {minimized ? (
@@ -356,7 +360,7 @@ export default function InstructorPoll() {
           >
             <InputField
               label="Poll Name"
-              input={justOpened ? "ex: Question 1" : "Saving..."}
+              input="ex: Question 1"
               value={pollName || ""}
               onChange={(e) => {
                 setPollName(e.target.value);
@@ -398,7 +402,7 @@ export default function InstructorPoll() {
 export function ClosedPoll(props) {
   const [pollInfo, setPollInfo] = useState(props.pollInfo);
   const [chartRef, setChartRef] = useState(null);
-  const [editPopup, setEditPopup] = useContext(EditPopupContext);
+  const [globalPopup, setGlobalPopup] = useContext(GlobalPopupContext);
   const thisPollData = {
     labels: ["A", "B", "C", "D", "E"],
     datasets: [
@@ -423,7 +427,7 @@ export function ClosedPoll(props) {
     await axios.delete(
       `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
     );
-    closePopup(props.pollId, setEditPopup);
+    closePopup(props.pollId, setGlobalPopup);
     if (props.setRefresh) {
       props.setRefresh(!props.refresh);
     }

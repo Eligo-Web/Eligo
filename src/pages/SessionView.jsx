@@ -37,10 +37,16 @@ import MenuBar from "../components/MenuBar";
 import Overlay from "../components/Overlay";
 import PollCard from "../components/PollCard";
 import { Poll } from "../components/Popups";
-import pause, { closePopup, decodeEmail, openPopup } from "../components/Utils";
+import pause, {
+  closePopup,
+  decodeEmail,
+  openPopup,
+  reconnectBase,
+  sessionValid,
+} from "../components/Utils";
 import {
   ClickerContext,
-  EditPopupContext,
+  GlobalPopupContext,
   NewPollContext,
 } from "../containers/InAppContainer";
 
@@ -50,7 +56,7 @@ function SessionView() {
   const authorized = location.state && location.state.permission;
   const [refresh, setRefresh] = useState(null);
   const [base, setBase] = useContext(ClickerContext);
-  const [editPopup, setEditPopup] = useContext(EditPopupContext);
+  const [globalPopup, setGlobalPopup] = useContext(GlobalPopupContext);
   const [pollWinInfo, setPollWinInfo] = useContext(NewPollContext);
   const [popup, setPopup] = useState(pollWinInfo);
 
@@ -92,19 +98,7 @@ function SessionView() {
 
   useEffect(() => {
     if (!navigator.hid) return;
-    async function reconnectBase() {
-      const devices = await navigator.hid.getDevices();
-      if (devices.length && !devices[0].opened) {
-        const device = devices[0];
-        setBase(device);
-        try {
-          await device.open();
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    }
-    reconnectBase();
+    reconnectBase(setBase);
   }, []);
 
   async function checkActiveSession() {
@@ -113,6 +107,7 @@ function SessionView() {
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
       )
       .then((res) => {
+        if (!sessionValid(res, setGlobalPopup)) return;
         if (!res.data.data.active) {
           navigateBack();
         }
@@ -162,6 +157,7 @@ function SessionView() {
           `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`
         )
         .then(async (res) => {
+          if (!sessionValid(res, setGlobalPopup)) return;
           if (res.data.data) {
             setPollId(res.data.data.activePollId);
             setPollOpen(true);
@@ -232,7 +228,10 @@ function SessionView() {
           {pollOpen && votePopup}
           <div className="img-container" style={{ padding: "3rem 0" }}>
             {/* illustration to be changed */}
-            <img src={waitingSessionImg} className="waiting-state-img" />
+            <div
+              style={{ background: `url(${waitingSessionImg}) no-repeat` }}
+              className="waiting-state-img"
+            />
             <div className="vote-container-student" id="vote-container">
               <Button
                 variant="blank-state"
@@ -259,26 +258,28 @@ function SessionView() {
   function instructorContent() {
     const [polls, setPolls] = useState(<LoadingSessionView />);
     const [hideLabels, setHideLabels] = useState(window.innerWidth < 900);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
       async function loadContent() {
         const pollContainer = await populatePollCards();
         await pause(250);
         document.querySelector(".poll-container").style.opacity = 0;
-        await pause(100);
+        await pause(150);
         setPolls(pollContainer);
         document.querySelector(".poll-container").style.opacity = 1;
+        setLoaded(true);
       }
       loadContent();
     }, [refresh]);
 
     useEffect(() => {
-      if (editPopup) {
+      if (globalPopup) {
         pause(5).then(() => {
-          openPopup(editPopup.key);
+          openPopup(globalPopup.key);
         });
       }
-    }, [editPopup]);
+    }, [globalPopup]);
 
     async function downloadSessionData() {
       await axios
@@ -286,6 +287,7 @@ function SessionView() {
           `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
         )
         .then((res) => {
+          if (!sessionValid(res, setGlobalPopup)) return;
           let emails = Object.keys(res.data.data.students);
           for (let i = 0; i < emails.length; i++) {
             emails[i] = decodeEmail(emails[i]);
@@ -365,8 +367,8 @@ function SessionView() {
           label={location.state.courseName}
           onClick={() => navigateBack()}
         />
-        {editPopup}
-        {location.state.sessionActive && (
+        {globalPopup}
+        {location.state.sessionActive && loaded && (
           <FloatingButton base={base} onClick={() => loadBase()} />
         )}
         <div className="card-wrapper">
@@ -432,11 +434,14 @@ function SessionView() {
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
       )
       .then((res) => {
+        if (!sessionValid(res, setGlobalPopup)) return;
         if (res.data.status === 200) {
           newPolls = Object.entries(res.data.data.polls);
           newPolls = new Map([...newPolls.sort()]);
         }
       });
+
+    if (!newPolls) return;
 
     for (let [pollId, poll] of newPolls) {
       if (poll.active && poll.endTimestamp < 0 && !popup) {
@@ -481,7 +486,7 @@ function SessionView() {
             title={poll.name}
             key={pollId}
             id={pollId}
-            onClick={() => setEditPopup(newPopup)}
+            onClick={() => setGlobalPopup(newPopup)}
             inactive
           />
         );
