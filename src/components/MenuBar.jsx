@@ -45,10 +45,8 @@ function MenuBar(props) {
     menuBG.style.opacity = 1;
     menuBG.style.transition = "var(--open-bezier)";
     menu.style.transition = "var(--open-bezier)";
-    menu.style.transform = `translate(${menu.clientWidth}px, 0)`;
+    menu.style.transform = `translateX(${menu.clientWidth}px)`;
     menu.style.boxShadow = "var(--menu-shadow)";
-    menu.style.left = `-${menu.clientWidth}px`;
-    menu.style.right = "unset";
   }
 
   function copyDescription() {

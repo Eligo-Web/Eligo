@@ -92,12 +92,10 @@ function Menu(props) {
     menuBG.style.opacity = 0;
     menuBG.style.transition = "var(--close-bezier)";
     menu.style.transition = "var(--close-bezier)";
-    menu.style.transform = "translate(0, 0)";
+    menu.style.transform = "translateX(0px)";
     menu.style.boxShadow = "none";
     await pause(10);
     document.body.style.overflowY = "overlay";
-    menu.style.left = "unset";
-    menu.style.right = "100%";
   }
 
   async function handleSignOut() {
