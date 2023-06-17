@@ -18,21 +18,6 @@ import ApiError from "../model/ApiError.js";
 import Instructor from "../model/Instructor.js";
 
 class InstructorDao {
-  async readAll({ name, email, role }) {
-    const filter = {};
-    if (name) {
-      filter.name = name.toLowerCase();
-    }
-    if (email) {
-      filter.email = email.toLowerCase();
-    }
-    if (role) {
-      filter.role = role;
-    }
-    const instructors = await Instructor.find(filter);
-    return instructors;
-  }
-
   async read(id) {
     const instructor = await Instructor.findById(id);
     if (!instructor) {

@@ -22,26 +22,6 @@ import { toSectionId } from "./courses.js";
 const Instructor = express.Router();
 export const instructorDao = new InstructorDao();
 
-Instructor.get("/", async (req, res, next) => {
-  if (req.headers.API_KEY !== process.env.API_KEY) {
-    return res.json({
-      status: 401,
-      message: `Unauthorized`,
-      data: null,
-    });
-  }
-  const instructors = await instructorDao.readAll(req.query);
-  try {
-    res.json({
-      status: 200,
-      message: `${instructors.length} instructors found`,
-      data: instructors,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
-
 Instructor.get("/signin", async (req, res, next) => {
   try {
     sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {

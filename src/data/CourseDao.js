@@ -19,24 +19,6 @@ import Course from "../model/Course.js";
 import { decodeEmail, encodeEmail } from "../routes/courses.js";
 
 class CourseDao {
-  async readAll({ name, instructor, section, semester }) {
-    const filter = {};
-    if (name) {
-      filter.name = name;
-    }
-    if (instructor) {
-      filter.instructor = instructor;
-    }
-    if (section) {
-      filter.section = section;
-    }
-    if (semester) {
-      filter.semester = semester;
-    }
-    const courses = await Course.find(filter);
-    return courses;
-  }
-
   async readBySectionId(sectionId) {
     const course = await Course.findOne({ sectionId: sectionId });
     if (!course) {
