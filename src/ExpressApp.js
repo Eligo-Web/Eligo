@@ -19,6 +19,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import jwt from "jsonwebtoken";
+import RateLimit from "express-rate-limit";
 import { idp, sp } from "./data/Auth.js";
 import Course from "./routes/courses.js";
 import Instructor from "./routes/instructors.js";
@@ -32,6 +33,11 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(cookieParser());
 app.use(verifyToken);
+let limiter = new RateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 app.use("/instructor", Instructor);
 app.use("/student", Student);
 app.use("/course", Course);
