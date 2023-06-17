@@ -588,7 +588,7 @@ class CourseDao {
         section: { $eq: courseSection },
         semester: { $eq: courseSemester },
         sisId: { $eq: newSisId },
-        passcode: passcode,
+        passcode: { $eq: passcode },
       },
       { new: true }
     );
