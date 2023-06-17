@@ -33,25 +33,41 @@ export function decodeEmail(str) {
   return str.replace(/[$]/g, ".");
 }
 
+export function validateName(name) {
+  return name && name.length > 0 && /^[a-zA-Z0-9]+$/.test(name);
+}
+
+export function validateSection(section) {
+  return section && section.length > 0 && /^[1-9]\d*$/.test(section);
+}
+
+export function validateSemester(semester) {
+  return semester && semester.length > 0 && /^[a-zA-Z]+\s\d{2}$/.test(semester);
+}
+
+export function validatePasscode(passcode) {
+  return passcode && passcode.length > 0 && /^[A-Z\d]{8}$/.test(passcode);
+}
+
+export function validateSectionId(sectionId) {
+  return (
+    sectionId &&
+    sectionId.length > 0 &&
+    /^([\w\d]+)~([\w\d]+)~([\w\d]+)$/.test(sectionId)
+  );
+}
+
+export function validateSisId(sisId) {
+  !sisId || sisId.length === 0 || /^[A-Z]{2}\.\d{3}\.\d{3}$/.test(sisId);
+}
+
 export function validateCourse(course) {
-  const { name, section, sectionId, semester, passcode } = course;
-  if (!name || !section || !semester || !passcode) {
-    return false;
-  }
-  const matches = course.sectionId.match(/^([\w\d]+)~([\w\d]+)~([\w\d]+)$/);
-  if (!matches) {
-    return false;
-  } else {
-    const [_, courseName, courseSection, courseSemester] = matches;
-    if (
-      courseName !== name ||
-      courseSection !== section ||
-      courseSemester !== semester
-    ) {
-      return false;
-    }
-  }
-  return true;
+  return (
+    validateName(course.name) &&
+    validateSection(course.section) &&
+    validateSemester(course.semester) &&
+    validatePasscode(course.passcode)
+  );
 }
 
 Course.get("/:sectionId", async (req, res, next) => {
