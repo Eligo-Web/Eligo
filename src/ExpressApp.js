@@ -17,9 +17,9 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import RateLimit from "express-rate-limit";
 import helmet from "helmet";
 import jwt from "jsonwebtoken";
-import RateLimit from "express-rate-limit";
 import { idp, sp } from "./data/Auth.js";
 import Course from "./routes/courses.js";
 import Instructor from "./routes/instructors.js";

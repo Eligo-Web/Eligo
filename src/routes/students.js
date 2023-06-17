@@ -21,27 +21,6 @@ import { decodeEmail } from "./courses.js";
 
 const Student = express.Router();
 export const studentDao = new StudentDao();
-
-Student.get("/", async (req, res, next) => {
-  if (req.headers.API_KEY !== process.env.API_KEY) {
-    return res.json({
-      status: 401,
-      message: `Unauthorized`,
-      data: null,
-    });
-  }
-  try {
-    const students = await studentDao.readAll(req.query);
-    res.json({
-      status: 200,
-      message: `${students.length} students found`,
-      data: students,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
-
 Student.get("/signin", async (req, res, next) => {
   try {
     sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {

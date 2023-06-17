@@ -33,25 +33,26 @@ export function decodeEmail(str) {
   return str.replace(/[$]/g, ".");
 }
 
-Course.get("/", async (req, res, next) => {
-  if (req.headers.API_KEY !== process.env.API_KEY) {
-    return res.json({
-      status: 401,
-      message: `Unauthorized`,
-      data: null,
-    });
+export function validateCourse(course) {
+  const { name, section, sectionId, semester, passcode } = course;
+  if (!name || !section || !semester || !passcode) {
+    return false;
   }
-  try {
-    const courses = await courseDao.readAll(req.query);
-    res.json({
-      status: 200,
-      message: `${courses.length} courses found`,
-      data: courses,
-    });
-  } catch (err) {
-    next(err);
+  const matches = course.sectionId.match(/^([\w\d]+)~([\w\d]+)~([\w\d]+)$/);
+  if (!matches) {
+    return false;
+  } else {
+    const [_, courseName, courseSection, courseSemester] = matches;
+    if (
+      courseName !== name ||
+      courseSection !== section ||
+      courseSemester !== semester
+    ) {
+      return false;
+    }
   }
-});
+  return true;
+}
 
 Course.get("/:sectionId", async (req, res, next) => {
   const sectionId = req.params.sectionId;
@@ -443,6 +444,14 @@ Course.post("/", async (req, res, next) => {
   );
   req.body.sectionId = sectionId;
   try {
+    if (!validateCourse(req.body)) {
+      res.json({
+        status: 400,
+        message: "Invalid course",
+        data: req.body,
+      });
+      return;
+    }
     let course = await courseDao.create(req.body);
     res.json({
       status: 201,
@@ -463,6 +472,14 @@ Course.put("/:sectionId", async (req, res, next) => {
   const passcode = req.body.passcode;
   const newSectionId = toSectionId(name, section, semester);
   try {
+    if (!validateCourse(req.body)) {
+      res.json({
+        status: 400,
+        message: "Invalid course",
+        data: req.body,
+      });
+      return;
+    }
     const course = await courseDao.update(
       sectionId,
       newSectionId,
