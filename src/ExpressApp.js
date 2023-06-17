@@ -27,17 +27,18 @@ import Student from "./routes/students.js";
 
 const app = express();
 
+let limiter = new RateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cookieParser());
-app.use(verifyToken);
-let limiter = new RateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-});
 app.use(limiter);
+app.use(verifyToken);
 app.use("/instructor", Instructor);
 app.use("/student", Student);
 app.use("/course", Course);
