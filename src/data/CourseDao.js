@@ -16,7 +16,12 @@
 
 import ApiError from "../model/ApiError.js";
 import Course from "../model/Course.js";
-import { decodeEmail, encodeEmail } from "../routes/courses.js";
+import {
+  decodeEmail,
+  encodeEmail,
+  validateName,
+  validateSectionId,
+} from "../routes/courses.js";
 
 class CourseDao {
   async readBySectionId(sectionId) {
@@ -517,6 +522,12 @@ class CourseDao {
   }
 
   async create(course) {
+    if (!validateSectionId(course.sectionId)) {
+      throw new ApiError(
+        400,
+        `Invalid section id ${course.sectionId}. Must be in the format XXXX-XXX`
+      );
+    }
     const oldCourse = await Course.findOne({ sectionId: course.sectionId });
     if (oldCourse) {
       throw new ApiError(
@@ -550,6 +561,17 @@ class CourseDao {
     newSisId,
     passcode
   ) {
+    if (
+      !validateSectionId(oldSectionId) ||
+      !validateSectionId(newSectionId) ||
+      !validateName(courseName) ||
+      !validateSection(courseSection) ||
+      !validateSemester(courseSemester) ||
+      !validateSisId(newSisId) ||
+      !validatePasscode(passcode)
+    ) {
+      throw new ApiError(400, "Invalid course information");
+    }
     const oldCourse = await Course.findOneAndUpdate(
       { sectionId: oldSectionId },
       {
