@@ -240,7 +240,10 @@ class CourseDao {
       responses.get(email).answers = new Map();
       poll.numResponses++;
     } else {
-      poll.liveResults.set(responses.get(email).finalAnswer, poll.liveResults.get(responses.get(email).finalAnswer) - 1);
+      poll.liveResults.set(
+        responses.get(email).finalAnswer,
+        poll.liveResults.get(responses.get(email).finalAnswer) - 1
+      );
     }
     let answers = new Map(Object.entries(responses.get(email).answers));
     answers.set(timestamp, response);
@@ -288,7 +291,10 @@ class CourseDao {
       responses.get(clickerId).answers = new Map();
       poll.numResponses++;
     } else {
-      poll.liveResults.set(responses.get(clickerId).finalAnswer, poll.liveResults.get(responses.get(clickerId).finalAnswer) - 1);
+      poll.liveResults.set(
+        responses.get(clickerId).finalAnswer,
+        poll.liveResults.get(responses.get(clickerId).finalAnswer) - 1
+      );
     }
     let answers = new Map(Object.entries(responses.get(clickerId).answers));
     answers.set(timestamp, response);
@@ -528,7 +534,9 @@ class CourseDao {
         `Invalid section id ${course.sectionId}. Must be in the format XXXX-XXX`
       );
     }
-    const oldCourse = await Course.findOne({ sectionId: course.sectionId });
+    const oldCourse = await Course.findOne({
+      sectionId: { $eq: course.sectionId },
+    });
     if (oldCourse) {
       throw new ApiError(
         409,
@@ -576,10 +584,10 @@ class CourseDao {
       { sectionId: oldSectionId },
       {
         sectionId: newSectionId,
-        name: courseName,
-        section: courseSection,
-        semester: courseSemester,
-        SISId: newSisId,
+        name: { $eq: courseName },
+        section: { $eq: courseSection },
+        semester: { $eq: courseSemester },
+        sisId: { $eq: newSisId },
         passcode: passcode,
       },
       { new: true }
