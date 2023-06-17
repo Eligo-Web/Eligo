@@ -240,7 +240,7 @@ class CourseDao {
       responses.get(email).answers = new Map();
       poll.numResponses++;
     } else {
-      poll.liveResults.get(responses.get(email).finalAnswer) -= 1;
+      poll.liveResults.set(responses.get(email).finalAnswer, poll.liveResults.get(responses.get(email).finalAnswer) - 1);
     }
     let answers = new Map(Object.entries(responses.get(email).answers));
     answers.set(timestamp, response);
@@ -288,7 +288,7 @@ class CourseDao {
       responses.get(clickerId).answers = new Map();
       poll.numResponses++;
     } else {
-      poll.liveResults.get(responses.get(clickerId).finalAnswer) -= 1;
+      poll.liveResults.set(responses.get(clickerId).finalAnswer, poll.liveResults.get(responses.get(clickerId).finalAnswer) - 1);
     }
     let answers = new Map(Object.entries(responses.get(clickerId).answers));
     answers.set(timestamp, response);
