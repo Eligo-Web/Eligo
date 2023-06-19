@@ -26,7 +26,7 @@ Instructor.get("/signin", async (req, res, next) => {
   try {
     sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {
       if (err != null) {
-        return res.json({
+        return res.status(500).json({
           status: 500,
           message: `Error: ${err}`,
           data: null,
@@ -60,7 +60,7 @@ Instructor.get("/:email", async (req, res, next) => {
 Instructor.post("/", async (req, res, next) => {
   try {
     const instructor = await instructorDao.create(req.body);
-    res.json({
+    res.status(201).json({
       status: 201,
       message: "Instructor created",
       data: req.body,

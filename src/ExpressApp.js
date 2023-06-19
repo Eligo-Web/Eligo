@@ -45,41 +45,46 @@ app.use("/course", Course);
 
 app.post("/signin", async (req, res, next) => {
   const options = { request_body: req.body };
-  sp.post_assert(idp, options, function (err, saml_response) {
-    if (err != null) {
-      return res.json({
-        status: 500,
-        message: `Error: ${err}`,
-        data: null,
-      });
-    }
-    const affiliation = saml_response.user.attributes.user_field_affiliation[0];
-    const first_name = saml_response.user.attributes.firstName[0];
-    const last_name = saml_response.user.attributes.lastName[0];
-    const email =
-      saml_response.user.attributes["urn:oid:1.2.840.113556.1.4.656"][0];
+  try {
+    sp.post_assert(idp, options, function (err, saml_response) {
+      if (err != null) {
+        return res.status(500).json({
+          status: 500,
+          message: `Error: ${err}`,
+          data: null,
+        });
+      }
+      const affiliation =
+        saml_response.user.attributes.user_field_affiliation[0];
+      const first_name = saml_response.user.attributes.firstName[0];
+      const last_name = saml_response.user.attributes.lastName[0];
+      const email =
+        saml_response.user.attributes["urn:oid:1.2.840.113556.1.4.656"][0];
 
-    const user = {
-      affiliation: affiliation,
-      firstName: first_name,
-      lastName: last_name,
-      email: email,
-    };
-    const token = jwt.sign(user, process.env.JWT_SECRET, {
-      expiresIn: "8h",
+      const user = {
+        affiliation: affiliation,
+        firstName: first_name,
+        lastName: last_name,
+        email: email,
+      };
+      const token = jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn: "8h",
+      });
+      const stringifiedUser = Buffer.from(JSON.stringify(user)).toString(
+        "base64"
+      );
+      res.cookie("jwt", token, { httpOnly: true, secure: true });
+      res.redirect(`/?user=${stringifiedUser}`);
     });
-    const stringifiedUser = Buffer.from(JSON.stringify(user)).toString(
-      "base64"
-    );
-    res.cookie("jwt", token, { httpOnly: true, secure: true });
-    res.redirect(`/?user=${stringifiedUser}`);
-  });
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.use((err, req, res, next) => {
   if (err) {
     const code = err.status || 500;
-    res.json({
+    res.status(code).json({
       status: code,
       message: err.message || `Internal Server Error!`,
       data: null,

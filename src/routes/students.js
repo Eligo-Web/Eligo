@@ -25,7 +25,7 @@ Student.get("/signin", async (req, res, next) => {
   try {
     sp.create_login_request_url(idp, {}, function (err, login_url, request_id) {
       if (err != null) {
-        return res.json({
+        return res.status(500).json({
           status: 500,
           message: `Error: ${err}`,
           data: null,
@@ -82,7 +82,7 @@ Student.get(
 Student.post("/", async (req, res, next) => {
   try {
     const student = await studentDao.create(req.body);
-    res.json({
+    res.status(201).json({
       status: 201,
       message: "Student created",
       data: req.body,

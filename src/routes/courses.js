@@ -209,7 +209,7 @@ Course.post("/:sectionId/:sessionId", async (req, res, next) => {
       latitude,
       longitude
     );
-    res.json({
+    res.status(201).json({
       status: 201,
       message: `Session created`,
       data: session,
@@ -460,16 +460,8 @@ Course.post("/", async (req, res, next) => {
   );
   req.body.sectionId = sectionId;
   try {
-    if (!validateCourse(req.body)) {
-      res.json({
-        status: 400,
-        message: "Invalid course",
-        data: req.body,
-      });
-      return;
-    }
     let course = await courseDao.create(req.body);
-    res.json({
+    res.status(201).json({
       status: 201,
       message: "Course created",
       data: course,
@@ -488,14 +480,6 @@ Course.put("/:sectionId", async (req, res, next) => {
   const passcode = req.body.passcode;
   const newSectionId = toSectionId(name, section, semester);
   try {
-    if (!validateCourse(req.body)) {
-      res.json({
-        status: 400,
-        message: "Invalid course",
-        data: req.body,
-      });
-      return;
-    }
     const course = await courseDao.update(
       sectionId,
       newSectionId,
