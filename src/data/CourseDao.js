@@ -117,8 +117,8 @@ class CourseDao {
       passcode: passcode,
       latitude: latitude,
       longitude: longitude,
-      students: new Map(),
-      polls: new Map(),
+      students: Object.create(null),
+      polls: Object.create(null),
     });
     course.markModified("sessions");
     await course.save();
@@ -150,11 +150,11 @@ class CourseDao {
     if (session.passcode !== passcode) {
       throw new ApiError(401, `Incorrect passcode`);
     }
-    session.students.set(encodeEmail(email), {
+    session.students[encodeEmail(email)] = {
       latitude: latitude,
       longitude: longitude,
       distance: distance,
-    });
+    };
     course.markModified("sessions");
     await course.save();
     return session;

@@ -27,7 +27,7 @@ import Student from "./routes/students.js";
 
 const app = express();
 
-let limiter = new RateLimit({
+let limiter = RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
 });
