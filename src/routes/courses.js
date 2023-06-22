@@ -61,6 +61,17 @@ export function validateSisId(sisId) {
   !sisId || sisId.length === 0 || /^[A-Z]{2}\.\d{3}\.\d{3}$/.test(sisId);
 }
 
+export function validatePollId(pollId) {
+  return (
+    pollId &&
+    pollId.length > 0 &&
+    /^poll-\d+$/.test(pollId) &&
+    pollId !== "__proto__" &&
+    pollId !== "constructor" &&
+    pollId !== "prototype"
+  );
+}
+
 export function validateCourse(course) {
   return (
     validateName(course.name) &&

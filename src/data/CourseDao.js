@@ -21,6 +21,7 @@ import {
   encodeEmail,
   validateName,
   validateSectionId,
+  validatePollId
 } from "../routes/courses.js";
 
 class CourseDao {
@@ -185,6 +186,9 @@ class CourseDao {
       }
     }
     session.numPolls++;
+    if (!validatePollId(pollId)) {
+      throw new ApiError(403, ` Malicious input detected`);
+    }
     session.polls[pollId] = Object.create(null);
     session.polls[pollId].name = `Poll ${session.numPolls}`;
     session.polls[pollId].startTimestamp = startTimestamp;
@@ -224,6 +228,9 @@ class CourseDao {
     const session = week.get(sessionId);
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    if (!validatePollId(pollId)) {
+      throw new ApiError(403, ` Malicious input detected`);
     }
     if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
@@ -272,6 +279,9 @@ class CourseDao {
     const session = week.get(sessionId);
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    if (!validatePollId(pollId)) {
+      throw new ApiError(403, ` Malicious input detected`);
     }
     if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
@@ -439,6 +449,9 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
+    if (!validatePollId(pollId)) {
+      throw new ApiError(403, ` Malicious input detected`);
+    }
     if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
@@ -509,6 +522,9 @@ class CourseDao {
     const session = week.get(sessionId);
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
+    }
+    if (!validatePollId(pollId)) {
+      throw new ApiError(403, ` Malicious input detected`);
     }
     if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
