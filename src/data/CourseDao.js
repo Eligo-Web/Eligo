@@ -77,7 +77,7 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
-    const poll = session.polls.get(pollId);
+    const poll = session.polls[pollId];
     if (!poll) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
@@ -180,29 +180,28 @@ class CourseDao {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
     for (let id in session.polls) {
-      if (session.polls.get(id).active) {
-        session.polls.get(id).active = false;
+      if (session.polls[id].active) {
+        session.polls[id].active = false;
       }
     }
     session.numPolls++;
-    session.polls.set(pollId, new Map());
-    session.polls.get(pollId).name = `Poll ${session.numPolls}`;
-    session.polls.get(pollId).startTimestamp = startTimestamp;
-    session.polls.get(pollId).endTimestamp = -1;
-    session.polls.get(pollId).responses = new Map();
-    session.polls.get(pollId).numResponses = 0;
-    session.polls.get(pollId).active = true;
-    session.polls.get(pollId).liveResults = new Map([
+    session.polls[pollId] = Object.create(null);
+    session.polls[pollId].name = `Poll ${session.numPolls}`;
+    session.polls[pollId].startTimestamp = startTimestamp;
+    session.polls[pollId].endTimestamp = -1;
+    session.polls[pollId].responses = new Map();
+    session.polls[pollId].numResponses = 0;
+    session.polls[pollId].active = true;
+    session.polls[pollId].liveResults = new Map([
       ["A", 0],
       ["B", 0],
       ["C", 0],
       ["D", 0],
       ["E", 0],
     ]);
-
     course.markModified("sessions");
     await course.save();
-    return session.polls.get(pollId);
+    return session.polls[pollId];
   }
 
   async addResponseToPoll(
@@ -226,24 +225,21 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
-    if (!session.polls.get(pollId)) {
+    if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
-    if (!session.polls.get(pollId).active) {
+    if (!session.polls[pollId].active) {
       throw new ApiError(403, `Cannot vote, poll has closed`);
     }
-    let poll = session.polls.get(pollId);
+    let poll = session.polls[pollId];
     let responses = new Map(Object.entries(poll.responses));
     if (!responses.get(email)) {
-      responses.set(email, new Map());
+      responses.set(email, Object.create(null));
       responses.get(email).finalAnswer = response;
-      responses.get(email).answers = new Map();
+      responses.get(email).answers = Object.create(null);
       poll.numResponses++;
     } else {
-      poll.liveResults.set(
-        responses.get(email).finalAnswer,
-        poll.liveResults.get(responses.get(email).finalAnswer) - 1
-      );
+      poll.liveResults[response]++;
     }
     let answers = new Map(Object.entries(responses.get(email).answers));
     answers.set(timestamp, response);
@@ -277,30 +273,27 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
-    if (!session.polls.get(pollId)) {
+    if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
-    if (!session.polls.get(pollId).active) {
+    if (!session.polls[pollId].active) {
       throw new ApiError(403, `Cannot vote, poll has closed`);
     }
-    let poll = session.polls.get(pollId);
+    let poll = session.polls[pollId];
     let responses = new Map(Object.entries(poll.responses));
     if (!responses.get(clickerId)) {
-      responses.set(clickerId, new Map());
+      responses.set(clickerId, Object.create(null));
       responses.get(clickerId).finalAnswer = response;
-      responses.get(clickerId).answers = new Map();
+      responses.get(clickerId).answers = Object.create(null);
       poll.numResponses++;
     } else {
-      poll.liveResults.set(
-        responses.get(clickerId).finalAnswer,
-        poll.liveResults.get(responses.get(clickerId).finalAnswer) - 1
-      );
+      poll.liveResults[responses.get(clickerId).finalAnswer]--;
     }
     let answers = new Map(Object.entries(responses.get(clickerId).answers));
     answers.set(timestamp, response);
     responses.get(clickerId).answers = answers;
     responses.get(clickerId).finalAnswer = response;
-    poll.liveResults.set(response, poll.liveResults.get(response) + 1);
+    poll.liveResults[response]++;
     poll.responses = responses;
     course.markModified("sessions");
     await course.save();
@@ -347,8 +340,8 @@ class CourseDao {
     let activePoll = null;
     let activePollId = null;
     for (const pollId of Object.keys(session.polls)) {
-      if (session.polls.get(pollId).active) {
-        activePoll = session.polls.get(pollId);
+      if (session.polls[pollId].active) {
+        activePoll = session.polls[pollId];
         activePollId = pollId;
         break;
       }
@@ -446,19 +439,19 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
-    if (!session.polls.get(pollId)) {
+    if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
-    session.polls.get(pollId).active = false;
-    if (session.polls.get(pollId).endTimestamp < 0) {
-      session.polls.get(pollId).endTimestamp = endTimestamp;
+    session.polls[pollId].active = false;
+    if (session.polls[pollId].endTimestamp < 0) {
+      session.polls[pollId].endTimestamp = endTimestamp;
     }
     if (name && name !== "") {
-      session.polls.get(pollId).name = name;
+      session.polls[pollId].name = name;
     }
     course.markModified("sessions");
     await course.save();
-    return session.polls.get(pollId);
+    return session.polls[pollId];
   }
 
   async closeAllPolls(sectionId, weekNum, sessionId, endTimestamp) {
@@ -475,9 +468,9 @@ class CourseDao {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
     for (const pollId of Object.keys(session.polls)) {
-      if (session.polls.get(pollId).active) {
-        session.polls.get(pollId).active = false;
-        session.polls.get(pollId).endTimestamp = endTimestamp;
+      if (session.polls[pollId].active) {
+        session.polls[pollId].active = false;
+        session.polls[pollId].endTimestamp = endTimestamp;
       }
     }
     course.markModified("sessions");
@@ -517,10 +510,10 @@ class CourseDao {
     if (!session) {
       throw new ApiError(404, `Session with id ${sessionId} not found`);
     }
-    if (!session.polls.get(pollId)) {
+    if (!session.polls[pollId]) {
       throw new ApiError(404, `Poll with id ${pollId} not found`);
     }
-    delete session.polls.get(pollId);
+    delete session.polls[pollId];
     session.numPolls--;
     course.markModified("sessions");
     await course.save();
