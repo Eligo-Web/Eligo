@@ -43,6 +43,7 @@ export async function displayMessage(msg) {
 export function sessionValid(res, setPopup) {
   if (res.data.status === 401) {
     // session expired, prompt to sign back in
+    if (!setPopup) return false;
     setPopup(
       <Overlay
         key="session-expired"

@@ -36,7 +36,7 @@ import "../styles/overlay.css";
 import "../styles/text.css";
 import { IconButton, PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
-import pause from "./Utils";
+import pause, { sessionValid } from "./Utils";
 
 function Menu(props) {
   const location = useLocation();
@@ -104,7 +104,12 @@ function Menu(props) {
     if (navigator.hid) {
       sessionStorage.setItem("dismissBasePrompt", "false");
     }
-    navigate("/");
+    await axios
+      .delete(`${server}/${location.state.permission.toLowerCase()}/signout`)
+      .then(() => {
+        navigate("/");
+      })
+      .catch();
   }
 
   async function updateClickerId() {
@@ -113,11 +118,17 @@ function Menu(props) {
         setShowError(true);
         return;
       }
-      await axios.patch(
-        `${server}/student/${location.state.email}/${clickerId}`
-      );
+      await axios
+        .patch(`${server}/student/${location.state.email}/${clickerId}`)
+        .catch((err) => {
+          if (!sessionValid(err.response, setPopup)) return;
+        });
     } else {
-      await axios.delete(`${server}/student/${location.state.email}/clickerId`);
+      await axios
+        .delete(`${server}/student/${location.state.email}/clickerId`)
+        .catch((err) => {
+          if (!sessionValid(err.response, setPopup)) return;
+        });
       location.state.clickerId = "";
     }
     setShowError(false);
@@ -130,6 +141,9 @@ function Menu(props) {
         .get(`${server}/student/${location.state.email}`)
         .then((res) => {
           newClickerId = res.data.data.clickerId;
+        })
+        .catch((err) => {
+          if (!sessionValid(err.response, setPopup)) return;
         });
       setClickerId(newClickerId || "");
       location.state.clickerId = newClickerId || "";
@@ -140,12 +154,20 @@ function Menu(props) {
   }, []);
 
   async function leaveClass() {
-    await axios.delete(
-      `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`
-    );
-    await axios.delete(
-      `${server}/course/${location.state.sectionId}/${location.state.email}`
-    );
+    await axios
+      .delete(
+        `${server}/student/${location.state.email}/${location.state.semester}/${location.state.sectionId}`
+      )
+      .catch((err) => {
+        if (!sessionValid(err.response, setPopup)) return;
+      });
+    await axios
+      .delete(
+        `${server}/course/${location.state.sectionId}/${location.state.email}`
+      )
+      .catch((err) => {
+        if (!sessionValid(err.response, setPopup)) return;
+      });
     navigate("/overview", {
       state: {
         name: location.state.name,

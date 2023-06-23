@@ -43,6 +43,31 @@ Instructor.get("/signin", async (req, res, next) => {
   }
 });
 
+Instructor.get("/current-user", async (req, res, next) => {
+  try {
+    const user = await instructorDao.readByEmail(req.user.email);
+    res.json({
+      status: 200,
+      message: "Instructor found",
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+Instructor.delete("/signout", (req, res, next) => {
+  try {
+    res.clearCookie("jwt", { secure: true, httpOnly: true }).json({
+      status: 200,
+      message: "Cookie cleared",
+      data: null,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 Instructor.get("/:email", async (req, res, next) => {
   const email = req.user.email;
   try {

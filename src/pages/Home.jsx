@@ -42,19 +42,18 @@ function Home() {
     await axios
       .get(`${server}/${role.toLowerCase()}/${props.email}`)
       .then(async (res) => {
-        if (res.data.status === 200) {
-          user = res.data.data;
-        } else if (res.data.status === 404) {
-          await axios
-            .post(`${server}/${role.toLowerCase()}`, {
-              name: fullName,
-              email: props.email,
-              role: role,
-            })
-            .then((res) => {
-              user = res.data.data;
-            });
-        }
+        user = res.data.data;
+      })
+      .catch(async () => {
+        await axios
+          .post(`${server}/${role.toLowerCase()}`, {
+            name: fullName,
+            email: props.email,
+            role: role,
+          })
+          .then((res) => {
+            user = res.data.data;
+          });
       });
     navigate("/overview", {
       state: {
@@ -69,17 +68,34 @@ function Home() {
 
   async function handleSignin(role) {
     sessionStorage.setItem("role", role.toUpperCase());
-    await axios.get(`${server}/${role.toLowerCase()}/signin`).then((res) => {
-      if (res.data.status === 500) {
+    await axios
+      .get(`${server}/${role.toLowerCase()}/current-user`)
+      .then((res) => {
+        const user = res.data.data;
         navigate("/overview", {
           state: {
-            permission: undefined,
+            permission: user.role,
+            email: user.email,
+            name: user.name,
+            history: user.history,
+            clickerId: user.clickerId,
           },
         });
-      } else {
-        window.location.href = res.data.data;
-      }
-    });
+      })
+      .catch(async () => {
+        await axios
+          .get(`${server}/${role.toLowerCase()}/signin`)
+          .then((res) => {
+            window.location.href = res.data.data;
+          })
+          .catch(() => {
+            navigate("/overview", {
+              state: {
+                permission: undefined,
+              },
+            });
+          });
+      });
   }
   return (
     <div className="sign-in-container">

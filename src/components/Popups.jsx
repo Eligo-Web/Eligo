@@ -23,7 +23,7 @@ import { GlobalPopupContext } from "../containers/InAppContainer";
 import "../styles/newpoll.css";
 import { PrimaryButton, VoteButton } from "./Buttons.jsx";
 import InputField from "./InputField";
-import pause, { closePopup } from "./Utils";
+import pause, { closePopup, sessionValid } from "./Utils";
 
 export function Default() {
   return (
@@ -227,27 +227,27 @@ export function JoinSession(props) {
           distance: distance,
         }
       )
-      .then((res) => {
-        if (res.data.status === 200) {
-          clearContents();
-          navigate("/session", {
-            state: {
-              name: props.name,
-              permission: props.permission,
-              email: props.email,
-              sectionId: props.sectionId,
-              sessionId: props.sessionId,
-              session: props.session,
-              sessionName: props.sessionName,
-              weekNum: props.weekNum,
-              courseName: props.courseName,
-              clickerId: props.clickerId,
-            },
-          });
-        } else if (res.data.status === 401) {
-          setShowError("Failed to join session. Invalid passcode!");
-          valid = false;
-        }
+      .then(() => {
+        clearContents();
+        navigate("/session", {
+          state: {
+            name: props.name,
+            permission: props.permission,
+            email: props.email,
+            sectionId: props.sectionId,
+            sessionId: props.sessionId,
+            session: props.session,
+            sessionName: props.sessionName,
+            weekNum: props.weekNum,
+            courseName: props.courseName,
+            clickerId: props.clickerId,
+          },
+        });
+      })
+      .catch((err) => {
+        if (!sessionValid(err.response, setPopup)) return;
+        setShowError("Failed to join session. Invalid passcode!");
+        valid = false;
       });
     if (valid) {
       closePopup("join-session", setPopup);
@@ -288,6 +288,7 @@ export function JoinClass(props) {
   const [showError, setShowError] = useState("");
   const [passFieldError, setPassFieldError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useContext(GlobalPopupContext);
 
   const handleKeyPresses = (event) => {
     switch (event.key) {
@@ -350,35 +351,36 @@ export function JoinClass(props) {
     await axios
       .get(`${server}/course/student/${passcode.toUpperCase()}`)
       .then(async (res) => {
-        if (res.data.status === 404) {
-          setShowError("Course with given passcode not found!");
-          setLoading(false);
-          return;
-        }
-        if (res.data.status === 200) {
-          const sectionId = res.data.data.sectionId;
-          const semester = res.data.data.semester;
-          await axios
-            .put(`${server}/student/${props.email}`, {
-              sectionId: sectionId,
-              semester: semester,
-            })
-            .then((res) => {
-              if (res.data.status === 409) {
-                setShowError("You have already joined this course!");
-                setLoading(false);
-                return;
-              }
-              props.setRefresh(!props.refresh);
-              clearContents();
-            });
-          await axios.put(
-            `${server}/course/${res.data.data.sectionId}/${props.email}`,
-            {
-              name: props.name,
-            }
-          );
-        }
+        const sectionId = res.data.data.sectionId;
+        const semester = res.data.data.semester;
+        await axios
+          .put(`${server}/student/${props.email}`, {
+            sectionId: sectionId,
+            semester: semester,
+          })
+          .then(() => {
+            props.setRefresh(!props.refresh);
+            clearContents();
+          })
+          .catch((err) => {
+            if (!sessionValid(err.response, setPopup)) return;
+            setShowError("You have already joined this course!");
+            setLoading(false);
+            return;
+          });
+        await axios
+          .put(`${server}/course/${res.data.data.sectionId}/${props.email}`, {
+            name: props.name,
+          })
+          .catch((err) => {
+            if (!sessionValid(err.response, setPopup)) return;
+          });
+      })
+      .catch((err) => {
+        if (!sessionValid(err.response, setPopup)) return;
+        setShowError("Course with given passcode not found!");
+        setLoading(false);
+        return;
       });
   }
 
@@ -428,7 +430,7 @@ export function SessionExpired(props) {
       <PrimaryButton
         label="Ok"
         onClick={() => {
-          navigate("/signin");
+          navigate("/");
         }}
       />
     </div>
@@ -438,6 +440,7 @@ export function SessionExpired(props) {
 export function Poll(props) {
   const [selected, setSelected] = useState(null);
   const [voteButtons, setVoteButtons] = useState(null);
+  const [popup, setPopup] = useContext(GlobalPopupContext);
 
   useEffect(() => {
     if (voteButtons) return;
@@ -452,14 +455,18 @@ export function Poll(props) {
 
   async function makeSelection(choice) {
     setSelected(choice);
-    await axios.patch(
-      `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
-      {
-        email: props.email,
-        timestamp: Date.now().toString(),
-        response: choice,
-      }
-    );
+    await axios
+      .patch(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`,
+        {
+          email: props.email,
+          timestamp: Date.now().toString(),
+          response: choice,
+        }
+      )
+      .catch((err) => {
+        if (!sessionValid(err.response, setPopup)) return;
+      });
   }
 
   useEffect(() => {

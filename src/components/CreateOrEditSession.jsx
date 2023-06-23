@@ -23,7 +23,7 @@ import { GlobalPopupContext } from "../containers/InAppContainer";
 import { PrimaryButton } from "./Buttons.jsx";
 import InputField from "./InputField";
 import { FloatError } from "./Popups";
-import pause, { closePopup } from "./Utils";
+import pause, { closePopup, sessionValid } from "./Utils";
 
 export function CreateSession(props) {
   return (
@@ -102,12 +102,13 @@ function CreateOrEditSession(props) {
   async function createSession() {
     const sessionId = `session-${Date.now()}`;
     const locationSwitch = document.getElementById("location-switch");
-    await axios.put(
-      `${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`,
-      {
+    await axios
+      .put(`${server}/course/${props.sectionId}/${getWeekNumber()}/closeAll`, {
         email: props.email,
-      }
-    );
+      })
+      .catch((err) => {
+        if (!sessionValid(err.response, setPopup)) return;
+      });
     let latitude = 0;
     let longitude = 0;
     let thisError = 0;
@@ -129,14 +130,18 @@ function CreateOrEditSession(props) {
       }
     }
     if (!thisError) {
-      await axios.post(`${server}/course/${props.sectionId}/${sessionId}`, {
-        name: sessionName ? sessionName : new Date().toDateString(),
-        passcode: Math.random().toString(10).slice(-4),
-        weekNum: getWeekNumber(),
-        latitude: latitude,
-        longitude: longitude,
-        email: props.email,
-      });
+      await axios
+        .post(`${server}/course/${props.sectionId}/${sessionId}`, {
+          name: sessionName ? sessionName : new Date().toDateString(),
+          passcode: Math.random().toString(10).slice(-4),
+          weekNum: getWeekNumber(),
+          latitude: latitude,
+          longitude: longitude,
+          email: props.email,
+        })
+        .catch((err) => {
+          if (!sessionValid(err.response, setPopup)) return;
+        });
       props.setRefresh(!props.refresh);
       closePopup(props.id, setPopup);
     } else {
@@ -150,21 +155,29 @@ function CreateOrEditSession(props) {
       setSaving(false);
       return;
     }
-    await axios.patch(
-      `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
-      {
-        name: sessionName ? sessionName : new Date().toDateString(),
-        email: props.email,
-      }
-    );
+    await axios
+      .patch(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`,
+        {
+          name: sessionName ? sessionName : new Date().toDateString(),
+          email: props.email,
+        }
+      )
+      .catch((err) => {
+        if (!sessionValid(err.response, setPopup)) return;
+      });
     props.setRefresh(!props.refresh);
     closePopup(props.id, setPopup);
   }
 
   async function handleDelete() {
-    await axios.delete(
-      `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`
-    );
+    await axios
+      .delete(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.id}`
+      )
+      .catch((err) => {
+        if (!sessionValid(err.response, setPopup)) return;
+      });
     props.setRefresh(!props.refresh);
     closePopup(props.id, setPopup);
   }

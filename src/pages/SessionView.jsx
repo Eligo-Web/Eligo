@@ -107,23 +107,31 @@ function SessionView() {
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
       )
       .then((res) => {
-        if (!sessionValid(res, setGlobalPopup)) return;
         if (!res.data.data.active) {
           navigateBack();
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        if (!sessionValid(err.response, setGlobalPopup)) return;
         navigateBack();
       });
   }
 
   async function closeSession() {
-    await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`
-    );
-    await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
-    );
+    await axios
+      .put(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/closeAll`
+      )
+      .catch((err) => {
+        if (!sessionValid(err.response, setGlobalPopup)) return;
+      });
+    await axios
+      .put(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/close`
+      )
+      .catch((err) => {
+        if (!sessionValid(err.response, setGlobalPopup)) return;
+      });
     navigateBack();
   }
 
@@ -157,7 +165,6 @@ function SessionView() {
           `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/openPoll`
         )
         .then(async (res) => {
-          if (!sessionValid(res, setGlobalPopup)) return;
           if (res.data.data) {
             setPollId(res.data.data.activePollId);
             setPollOpen(true);
@@ -166,6 +173,9 @@ function SessionView() {
             await pause(250);
             setPollOpen(false);
           }
+        })
+        .catch((err) => {
+          if (!sessionValid(err.response, setGlobalPopup)) return;
         });
     }
 
@@ -287,7 +297,6 @@ function SessionView() {
           `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
         )
         .then((res) => {
-          if (!sessionValid(res, setGlobalPopup)) return;
           let emails = Object.keys(res.data.data.students);
           for (let i = 0; i < emails.length; i++) {
             emails[i] = decodeEmail(emails[i]);
@@ -352,6 +361,9 @@ function SessionView() {
           link.setAttribute("href", url);
           link.setAttribute("download", `${res.data.data.name}.csv`);
           link.click();
+        })
+        .catch((err) => {
+          if (!sessionValid(err.response, setGlobalPopup)) return;
         });
     }
 
@@ -434,11 +446,11 @@ function SessionView() {
         `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}`
       )
       .then((res) => {
-        if (!sessionValid(res, setGlobalPopup)) return;
-        if (res.data.status === 200) {
-          newPolls = Object.entries(res.data.data.polls);
-          newPolls = new Map([...newPolls.sort()]);
-        }
+        newPolls = Object.entries(res.data.data.polls);
+        newPolls = new Map([...newPolls.sort()]);
+      })
+      .catch((err) => {
+        if (!sessionValid(err.response, setGlobalPopup)) return;
       });
 
     if (!newPolls) return;
@@ -452,7 +464,10 @@ function SessionView() {
               endTimestamp: Date.now(),
             }
           )
-          .then((res) => (poll = res.data.data));
+          .then((res) => (poll = res.data.data))
+          .catch((err) => {
+            if (!sessionValid(err.response, setGlobalPopup)) return;
+          });
       }
       const newPopup = (
         <Overlay
@@ -559,12 +574,16 @@ function SessionView() {
       await clicker.setScreen(base, 2, new Date().toLocaleTimeString());
       await pause();
     }
-    await axios.put(
-      `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`,
-      {
-        endTimestamp: Date.now(),
-      }
-    );
+    await axios
+      .put(
+        `${server}/course/${location.state.sectionId}/${location.state.weekNum}/${location.state.sessionId}/${pollId}/close`,
+        {
+          endTimestamp: Date.now(),
+        }
+      )
+      .catch((err) => {
+        if (!sessionValid(err.response, setGlobalPopup)) return;
+      });
     if (!popup.props || popup.props.sessionId === location.state.sessionId) {
       setRefresh(!refresh);
     }

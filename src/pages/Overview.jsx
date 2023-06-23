@@ -52,6 +52,34 @@ function OverView() {
   const [base, setBase] = useContext(ClickerContext);
   const [globalPopup, setGlobalPopup] = useContext(GlobalPopupContext);
   const [loaded, setLoaded] = useState(false);
+  if (location.state && !authorized && !location.state.unauthorized) {
+    loadUser();
+  }
+
+  async function loadUser() {
+    const role = sessionStorage.getItem("role").toLowerCase();
+    await axios
+      .get(`${server}/${role}/current-user`)
+      .then((res) => {
+        const user = res.data.data;
+        navigate("/overview", {
+          state: {
+            permission: user.role,
+            email: user.email,
+            name: user.name,
+            history: user.history,
+            clickerId: user.clickerId,
+          },
+        });
+      })
+      .catch(() => {
+        navigate("/overview", {
+          state: {
+            unauthorized: true,
+          },
+        });
+      });
+  }
 
   async function loadBase() {
     let newBase = await clicker.openDevice();
@@ -107,8 +135,10 @@ function OverView() {
     await axios
       .get(`${server}/${role.toLowerCase()}/${location.state.email}`)
       .then((res) => {
-        if (!sessionValid(res, setGlobalPopup)) return;
         history = res.data.data.history;
+      })
+      .catch((err) => {
+        if (!sessionValid(err.response, setGlobalPopup)) return;
       });
     if (!history) return;
     const semesterList = [];
@@ -123,7 +153,6 @@ function OverView() {
         await axios
           .get(`${server}/course/${history[semester][i]}`)
           .then((res) => {
-            if (!sessionValid(res, setGlobalPopup)) return;
             const course = res.data.data;
             const popup = (
               <Overlay
@@ -159,6 +188,9 @@ function OverView() {
                 editable={role === "INSTRUCTOR"}
               />
             );
+          })
+          .catch((err) => {
+            if (!sessionValid(err.response, setGlobalPopup)) return;
           });
       }
       semesterList.push(

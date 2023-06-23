@@ -154,8 +154,10 @@ function CourseView() {
     await axios
       .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
-        if (!sessionValid(res, setGlobalPopup)) return;
         students = res.data.data.students;
+      })
+      .catch((err) => {
+        if (!sessionValid(err.response, setGlobalPopup)) return;
       });
 
     navigate("/roster", {
@@ -178,9 +180,11 @@ function CourseView() {
     await axios
       .get(`${server}/course/${location.state.sectionId}`)
       .then((res) => {
-        if (!sessionValid(res, setGlobalPopup)) return;
         courseSessions = res.data.data.sessions;
         courseSessions = toMap(courseSessions).sort();
+      })
+      .catch((err) => {
+        if (!sessionValid(err.response, setGlobalPopup)) return;
       });
     if (!courseSessions) return;
     const sessionList = [];
@@ -268,7 +272,6 @@ function CourseView() {
       await axios
         .get(`${server}/course/${location.state.sectionId}/${getWeekNumber()}`)
         .then(async (res) => {
-          if (!sessionValid(res, setGlobalPopup)) return;
           const session = res.data.data;
           if (session) {
             if (
@@ -317,6 +320,9 @@ function CourseView() {
             );
             setProps(thisProps);
           }
+        })
+        .catch((err) => {
+          if (!sessionValid(err.response, setGlobalPopup)) return;
         });
       document.querySelector(".img-container").style.opacity = 1;
     }

@@ -104,7 +104,11 @@ function verifyToken(req, res, next) {
     try {
       const token = req.cookies.jwt;
       if (!token) {
-        res.redirect("/");
+        res.status(401).json({
+          status: 401,
+          message: "Unauthorized",
+          data: null,
+        });
       }
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;

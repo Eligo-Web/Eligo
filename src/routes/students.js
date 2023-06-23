@@ -42,6 +42,31 @@ Student.get("/signin", async (req, res, next) => {
   }
 });
 
+Student.get("/current-user", async (req, res, next) => {
+  try {
+    const user = await studentDao.readByEmail(req.user.email);
+    res.json({
+      status: 200,
+      message: "Student found",
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+Student.delete("/signout", (req, res, next) => {
+  try {
+    res.clearCookie("jwt", { secure: true, httpOnly: true }).json({
+      status: 200,
+      message: "Cookie cleared",
+      data: null,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 Student.get("/:email", async (req, res, next) => {
   const email = req.params.email;
   try {

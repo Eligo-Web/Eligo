@@ -19,9 +19,14 @@ import Course from "../model/Course.js";
 import {
   decodeEmail,
   encodeEmail,
+  validateCourse,
   validateName,
+  validatePasscode,
+  validatePollId,
+  validateSection,
   validateSectionId,
-  validatePollId
+  validateSemester,
+  validateSisId,
 } from "../routes/courses.js";
 
 class CourseDao {
@@ -537,10 +542,10 @@ class CourseDao {
   }
 
   async create(course) {
-    if (!validateSectionId(course.sectionId)) {
+    if (!validateCourse(course)) {
       throw new ApiError(
         400,
-        `Invalid section id ${course.sectionId}. Must be in the format XXXX-XXX`
+        `Invalid course ${course.sectionId}`
       );
     }
     const oldCourse = await Course.findOne({

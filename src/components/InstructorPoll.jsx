@@ -119,27 +119,38 @@ export default function InstructorPoll() {
           if (res.data.data) {
             email = res.data.data.email;
           }
+        })
+        .catch(() => {
+          window.close();
         });
       if (email) {
-        await axios.patch(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}`,
-          {
-            email: email,
-            timestamp: Date.now().toString(),
-            response: prevResponse,
-            requester: window.props.email,
-          }
-        );
+        await axios
+          .patch(
+            `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}`,
+            {
+              email: email,
+              timestamp: Date.now().toString(),
+              response: prevResponse,
+              requester: window.props.email,
+            }
+          )
+          .catch(() => {
+            window.close();
+          });
       } else {
-        await axios.patch(
-          `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}/unknownClicker`,
-          {
-            clickerId: prevClickerId,
-            timestamp: Date.now().toString(),
-            response: prevResponse,
-            requester: window.props.email,
-          }
-        );
+        await axios
+          .patch(
+            `${server}/course/${window.props.sectionId}/${window.props.weekNum}/${window.props.sessionId}/${window.props.currPollId}/unknownClicker`,
+            {
+              clickerId: prevClickerId,
+              timestamp: Date.now().toString(),
+              response: prevResponse,
+              requester: window.props.email,
+            }
+          )
+          .catch(() => {
+            window.close();
+          });
       }
       if (chartRef && chartRef.getContext("2d").chart) {
         chartRef.getContext("2d").chart.update();
@@ -201,6 +212,9 @@ export default function InstructorPoll() {
           numUpdate = res.data.data.numResponses;
           setNumResponses(res.data.data.numResponses);
           setPollData(pollUpdate);
+        })
+        .catch(() => {
+          window.close();
         });
       chartRef.getContext("2d").chart.update();
       if (window.props && window.props.base) {
@@ -254,6 +268,9 @@ export default function InstructorPoll() {
       )
       .then((res) => {
         setPollName(res.data.data.name);
+      })
+      .catch(() => {
+        window.close();
       });
     window.props.currPollId = newPollId;
     setPrevResponse("");
@@ -277,6 +294,9 @@ export default function InstructorPoll() {
       .then(() => {
         window.props.currPollId = "";
         window.opener.refreshPolls();
+      })
+      .catch(() => {
+        window.close();
       });
     await baseEndPoll();
   }
@@ -424,9 +444,13 @@ export function ClosedPoll(props) {
   const chart = PollChart(thisPollData, setChartRef);
 
   async function deletePoll() {
-    await axios.delete(
-      `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
-    );
+    await axios
+      .delete(
+        `${server}/course/${props.sectionId}/${props.weekNum}/${props.sessionId}/${props.pollId}`
+      )
+      .catch(() => {
+        window.close();
+      });
     closePopup(props.pollId, setGlobalPopup);
     if (props.setRefresh) {
       props.setRefresh(!props.refresh);
@@ -457,13 +481,18 @@ export function ClosedPoll(props) {
       for (const timestamp in pollInfo.responses[email].answers) {
         if (email.includes("@")) {
           emails.push(email);
-          await axios.get(`${server}/student/${email}`).then((res) => {
-            if (res.data.data.clickerId) {
-              clickerIds.push(res.data.data.clickerId);
-            } else {
-              clickerIds.push("N/A");
-            }
-          });
+          await axios
+            .get(`${server}/student/${email}`)
+            .then((res) => {
+              if (res.data.data.clickerId) {
+                clickerIds.push(res.data.data.clickerId);
+              } else {
+                clickerIds.push("N/A");
+              }
+            })
+            .catch(() => {
+              window.close();
+            });
         } else {
           emails.push("N/A");
           clickerIds.push(email);
